@@ -27,3 +27,13 @@ html[dark] {
   --kyt-outline: rgba(255, 255, 255, 0.1); /* Figma #2a2a2a on #111 */
   --kyt-outline-focus: rgba(255, 255, 255, 0.35);
 }
+
+/* Figma icons (core/icon.ts): the SVG is a mask, color comes from currentColor. */
+.kyt-icon {
+  display: inline-block;
+  flex: none;
+  width: var(--kyt-icon-size, 24px);
+  height: var(--kyt-icon-size, 24px);
+  background-color: currentColor;
+  mask: var(--kyt-icon-src) center / contain no-repeat;
+}

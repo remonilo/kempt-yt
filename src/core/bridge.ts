@@ -1,17 +1,39 @@
 // Isolated world -> main-world.ts. JSON strings in `detail` because Firefox drops objects across worlds.
+// content.js may start before main-world.js is listening, so calls wait for its `kyt-mw` ready flag.
+// Event names carry the build id: stale main-world copies from earlier builds stay in tabs and must not answer.
+import BUILD from 'kyt:build';
+
+const REQ = `kyt:req:${BUILD}`;
+const RES = `kyt:res:${BUILD}`;
 let seq = 0;
 
-export function call<T = unknown>(method: string, ...args: unknown[]): Promise<T> {
+const ready = new Promise<void>((resolve) => {
+  if (document.documentElement.getAttribute('kyt-mw') === BUILD) return resolve();
+  document.addEventListener(`kyt:ready:${BUILD}`, () => resolve(), { once: true });
+});
+
+export async function call<T = unknown>(method: string, ...args: unknown[]): Promise<T> {
+  await ready;
   const id = ++seq;
   return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      document.removeEventListener(RES, onRes);
+      reject(new Error(`kyt: bridge call "${method}" timed out`));
+    }, 15_000);
     const onRes = (e: Event) => {
-      const msg = JSON.parse((e as CustomEvent<string>).detail);
-      if (msg.id !== id) return;
-      document.removeEventListener('kyt:res', onRes);
+      let msg;
+      try {
+        msg = JSON.parse((e as CustomEvent<string>).detail); // page scripts can fire kyt:res too
+      } catch {
+        return;
+      }
+      if (msg?.id !== id) return;
+      clearTimeout(timer);
+      document.removeEventListener(RES, onRes);
       if (msg.error) reject(new Error(msg.error));
       else resolve(msg.result as T);
     };
-    document.addEventListener('kyt:res', onRes);
-    document.dispatchEvent(new CustomEvent('kyt:req', { detail: JSON.stringify({ id, method, args }) }));
+    document.addEventListener(RES, onRes);
+    document.dispatchEvent(new CustomEvent(REQ, { detail: JSON.stringify({ id, method, args }) }));
   });
 }
