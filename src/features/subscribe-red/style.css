@@ -1,0 +1,8 @@
+/* Unsubscribed state only: YouTube renders it Filled; Subscribed is Tonal and stays neutral. */
+html[kyt-subscribe-red] :is(ytd-subscribe-button-renderer, yt-subscribe-button-view-model) button.ytSpecButtonShapeNextFilled {
+  background-color: var(--kyt-subscribe-bg) !important;
+  color: var(--kyt-subscribe-fg) !important;
+}
+html[kyt-subscribe-red] :is(ytd-subscribe-button-renderer, yt-subscribe-button-view-model) button.ytSpecButtonShapeNextFilled:hover {
+  filter: brightness(1.12);
+}

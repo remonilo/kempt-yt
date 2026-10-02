@@ -1,0 +1,47 @@
+/* Sidebar entries (full + mini guide) and feed/search chips: accent-tinted background for hover and selected,
+   accent icon when selected. Selected chips use the stronger tint because unselected chips are already grey. YouTube paints the guide background on the entry host (radius 10px), so we do too
+   and keep the inner #endpoint / paper-item transparent (YouTube adds a white 10% hover layer there). Text stays --kyt-fg: accent text on the dark tint is under 3:1. */
+html[kyt-selected-bg] :is(ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer) {
+  border-radius: var(--kyt-radius);
+}
+html[kyt-selected-bg] ytd-guide-entry-renderer :is(#endpoint, tp-yt-paper-item),
+html[kyt-selected-bg] ytd-mini-guide-entry-renderer #endpoint {
+  background-color: transparent !important;
+}
+html[kyt-selected-bg] :is(ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer):hover,
+html[kyt-selected-bg] .ytChipShapeChip.ytChipShapeInactive:hover {
+  background-color: var(--kyt-hover-bg) !important;
+}
+html[kyt-selected-bg] :is(ytd-guide-entry-renderer[active], ytd-mini-guide-entry-renderer[is-active]) {
+  background-color: var(--kyt-selected-bg) !important;
+}
+html[kyt-selected-bg] .ytChipShapeChip.ytChipShapeActive {
+  background-color: var(--kyt-selected-strong-bg) !important;
+  color: var(--kyt-fg) !important;
+}
+html[kyt-selected-bg] :is(ytd-guide-entry-renderer[active], ytd-mini-guide-entry-renderer[is-active]):hover {
+  background-color: var(--kyt-selected-hover-bg) !important;
+}
+/* YouTube's own hover layer (1px stroke + white fill) would sit on top of the tint. */
+html[kyt-selected-bg] :is(ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer) yt-interaction {
+  display: none !important;
+}
+html[kyt-selected-bg] :is(ytd-guide-entry-renderer[active], ytd-mini-guide-entry-renderer[is-active]) .guide-icon {
+  color: var(--kyt-accent) !important;
+  fill: var(--kyt-accent) !important;
+}
+/* Masthead icon buttons (☰, back, notifications, narrow search) are the older yt-icon-button: 40px host,
+   hover drawn by yt-interaction. Give them the same tint as the newer buttons (search, mic, create). */
+html[kyt-selected-bg] ytd-masthead yt-icon-button {
+  border-radius: 50%;
+}
+html[kyt-selected-bg] ytd-masthead yt-icon-button:hover {
+  background-color: var(--kyt-hover-bg);
+}
+html[kyt-selected-bg] ytd-masthead yt-icon-button yt-interaction {
+  display: none !important;
+}
+/* The notification wrapper paints its own white 20% hover under the button; only our tint should show. */
+html[kyt-selected-bg] ytd-masthead #buttons > *:hover {
+  background-color: transparent !important;
+}

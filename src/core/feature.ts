@@ -1,0 +1,69 @@
+import { call } from './bridge.ts';
+import type { Route } from './router.ts';
+import type { Settings } from './settings.ts';
+
+export type Option = { label: string; cssVar?: string } & (
+  | { type: 'boolean'; default: boolean }
+  | { type: 'color'; default: string }
+  | { type: 'number'; default: number; min?: number; max?: number }
+);
+
+export interface Ctx {
+  /** Aborted when the feature is turned off or leaves its routes. Undo your DOM work on abort. */
+  signal: AbortSignal;
+  /** Live option value. */
+  option<T = unknown>(key: string): T;
+  /** Call a main-world.ts handler. */
+  call: typeof call;
+}
+
+export interface Feature {
+  /** Also the CSS gate: html[kyt-<id>] */
+  id: string;
+  label: string;
+  defaultOn: boolean;
+  /** Omit = every page. */
+  routes?: Route[];
+  /** `cssVar` options are written to <html> as custom properties while the feature is on. */
+  options?: Record<string, Option>;
+  /** Omit for CSS-only features. Listen to `kyt:navigate` for same-route navigation. */
+  run?(ctx: Ctx): void | Promise<void>;
+}
+
+export const isOn = (f: Feature, s: Settings) => s.features[f.id] ?? f.defaultOn;
+export const optionValue = (f: Feature, key: string, s: Settings) =>
+  s.options[`${f.id}.${key}`] ?? f.options?.[key]?.default;
+
+export function createRunner(features: Feature[]) {
+  const running = new Map<string, AbortController>();
+  const html = document.documentElement;
+  let current: Settings;
+
+  return function update(route: Route, settings: Settings): void {
+    current = settings;
+    for (const f of features) {
+      const on = isOn(f, settings);
+      html.toggleAttribute(`kyt-${f.id}`, on);
+      for (const [key, opt] of Object.entries(f.options ?? {})) {
+        if (!opt.cssVar) continue;
+        if (on) html.style.setProperty(opt.cssVar, String(optionValue(f, key, settings)));
+        else html.style.removeProperty(opt.cssVar);
+      }
+
+      const should = on && !!f.run && (!f.routes || f.routes.includes(route));
+      const ctl = running.get(f.id);
+      if (ctl && !should) {
+        ctl.abort();
+        running.delete(f.id);
+      } else if (!ctl && should) {
+        const c = new AbortController();
+        running.set(f.id, c);
+        const ctx: Ctx = { signal: c.signal, option: (k) => optionValue(f, k, current) as never, call };
+        // One broken feature must not take down the rest.
+        Promise.resolve()
+          .then(() => f.run!(ctx))
+          .catch((e) => console.error(`kyt:${f.id}`, e));
+      }
+    }
+  };
+}

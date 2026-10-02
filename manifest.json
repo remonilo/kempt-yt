@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Kempt for YouTube",
+  "version": "0.1.0",
+  "description": "A consistent redesign of YouTube's UI.",
+  "permissions": ["storage"],
+  "host_permissions": ["https://www.youtube.com/*"],
+  "action": { "default_popup": "popup.html" },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["main-world.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": { "id": "kempt-yt@hypnoglaze", "strict_min_version": "128.0" }
+  }
+}
