@@ -1,0 +1,14 @@
+/* Structural selectors only: shelf titles and tab names are localized.
+   History keeps its Shorts, otherwise days of only Shorts show as empty dates. Clicks there still open /watch. */
+html[kyt-shorts] :is(
+  ytd-reel-shelf-renderer,
+  ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[is-shorts]),
+  grid-shelf-view-model:has(ytm-shorts-lockup-view-model),
+  ytd-rich-item-renderer:has(ytm-shorts-lockup-view-model, [overlay-style="SHORTS"]),
+  :is(ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer):has(a#thumbnail[href^="/shorts/"]),
+  yt-lockup-view-model:has(a[href^="/shorts/"]),
+  :is(ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer)[kyt-icon^="TAB_SHORTS"],
+  yt-tab-shape[kyt-tab="shorts"]
+):not(ytd-browse[page-subtype="history"] *) {
+  display: none !important;
+}
