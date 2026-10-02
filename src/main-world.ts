@@ -14,7 +14,7 @@ function iconName(el: any): string | undefined {
   return d?.iconName ?? d?.icon?.iconType ?? d?.buttonViewModel?.iconName;
 }
 
-const BUTTONS = 'yt-button-view-model, ytd-button-renderer, ytd-toggle-button-renderer';
+const BUTTONS = 'yt-button-view-model, ytd-button-renderer, ytd-toggle-button-renderer, ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer';
 
 function stampAll(root: Element) {
   for (const el of root.querySelectorAll(BUTTONS)) {
@@ -23,7 +23,30 @@ function stampAll(root: Element) {
   }
 }
 
-const watched = new WeakSet<Element>();
+/** kyt-tab="<url slug>" on channel tabs (featured, videos, shorts, ...). The DOM has only the localized title. */
+function stampTabs(group: Element) {
+  const tabs = (group.closest('ytd-browse') as any)?.data?.contents?.twoColumnBrowseResultsRenderer?.tabs ?? [];
+  group.querySelectorAll('yt-tab-shape').forEach((el, i) => {
+    const r = tabs[i]?.tabRenderer ?? tabs[i]?.expandableTabRenderer; // same order as the DOM
+    const slug = r?.endpoint?.commandMetadata?.webCommandMetadata?.url?.split('/').pop();
+    if (!slug) el.removeAttribute('kyt-tab');
+    else if (el.getAttribute('kyt-tab') !== slug) el.setAttribute('kyt-tab', slug);
+  });
+}
+
+const watched = new WeakMap<Element, Set<string>>();
+
+/**
+ * Runs `fn` now and again whenever YouTube re-renders under `root`, once per root and kind.
+ * Synchronous (before paint): a rAF delay paints re-rendered elements unstamped for one frame (flicker).
+ */
+function keepStamped(root: Element, kind: string, fn: () => void, init: MutationObserverInit = { childList: true, subtree: true }) {
+  fn();
+  const kinds = watched.get(root) ?? new Set();
+  if (kinds.has(kind)) return;
+  watched.set(root, kinds.add(kind));
+  new MutationObserver(fn).observe(root, init);
+}
 
 /** Innertube POST with the signed-in user's session (SAPISIDHASH auth, as YouTube's own web client does). */
 async function innertube(endpoint: string, body: Record<string, unknown>): Promise<any> {
@@ -74,17 +97,31 @@ const handlers: Record<string, (...args: any[]) => unknown> = {
     return flag() === true;
   },
 
-  /** Sets kyt-icon="<ICON_TYPE>" on buttons under `sel`, and keeps doing so as YouTube re-renders them. */
+  /** Sets kyt-icon="<ICON_TYPE>" on buttons and guide entries under `sel`, and keeps doing so as YouTube re-renders them. */
   stamp(sel: string) {
     const root = document.querySelector(sel);
-    if (!root) return false;
-    stampAll(root);
-    if (!watched.has(root)) {
-      watched.add(root);
-      // Synchronous (before paint): a rAF delay paints re-rendered buttons unstamped for one frame (flicker).
-      new MutationObserver(() => stampAll(root)).observe(root, { childList: true, subtree: true });
-    }
-    return true;
+    if (root) keepStamped(root, 'icon', () => stampAll(root));
+    return !!root;
+  },
+
+  /** Sets kyt-tab="<slug>" on the channel tabs in `sel` (a yt-tab-group-shape), kept across re-renders. */
+  stampTabs(sel: string) {
+    const root = document.querySelector(sel);
+    if (root) keepStamped(root, 'tabs', () => stampTabs(root), { childList: true, subtree: true, attributeFilter: ['tab-title'] });
+    return !!root;
+  },
+
+  /** SPA navigation through YouTube's own router (no page reload). Only /watch?v= URLs for now. */
+  navigate(url: string) {
+    const videoId = new URL(url, location.origin).searchParams.get('v');
+    document.querySelector('ytd-app')?.dispatchEvent(new CustomEvent('yt-navigate', {
+      bubbles: true,
+      composed: true,
+      detail: { endpoint: {
+        commandMetadata: { webCommandMetadata: { url, webPageType: 'WEB_PAGE_TYPE_WATCH', rootVe: 3832 } },
+        watchEndpoint: { videoId },
+      } },
+    }));
   },
 
   async inWatchLater(videoId: string) {

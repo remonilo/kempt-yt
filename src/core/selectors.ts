@@ -7,6 +7,8 @@ export const S = {
   mastheadButtons: 'ytd-masthead #buttons',
   mastheadMenu: 'ytd-masthead #buttons > ytd-topbar-menu-button-renderer', // avatar (signed in)
   guide: 'ytd-guide-renderer #sections',
+  miniGuide: 'ytd-mini-guide-renderer',
+  channelTabs: 'ytd-browse[page-subtype="channels"] yt-tab-group-shape',
   watchFlexy: 'ytd-watch-flexy',
   watchMetadata: 'ytd-watch-metadata',
   watchActions: 'ytd-watch-metadata #actions',

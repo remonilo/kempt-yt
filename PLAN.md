@@ -181,15 +181,18 @@ Feature CSS may use `!important`: it has to beat YouTube's own rules, and every 
 Content scripts cannot see YouTube's JS objects (`ytcfg`, Polymer `.data` on elements). `main-world.ts` exposes a few handlers. The isolated side calls them:
 
 ```ts
-bridge.call('guideData')                 -> sidebar data (subscriptions, playlists, explore)
-bridge.call('stampIcons', rootSelector)  -> sets data-kyt-icon="SHARE" etc. from element data
-bridge.call('addToWatchLater', videoId)  -> POST /youtubei/v1/browse/edit_playlist (playlistId "WL")
-bridge.call('navigate', '/watch?v=..')   -> SPA navigation, no full reload
+call('signedIn')                  -> ytcfg LOGGED_IN
+call('stamp', rootSelector)       -> kyt-icon="SHARE" etc. on buttons and guide entries, kept across re-renders
+call('stampTabs', rootSelector)   -> kyt-tab="shorts" etc. on channel tabs (slug from the tab's URL)
+call('inWatchLater', videoId)     -> playlist/get_add_to_playlist
+call('setWatchLater', id, add)    -> browse/edit_playlist (playlistId "WL")
+call('navigate', '/watch?v=..')   -> SPA navigation via YouTube's yt-navigate event, no reload
+call('guideData')                 -> (phase 4) sidebar data
 ```
 
 Transport: `CustomEvent` on `document` with a JSON string in `detail` plus a request id. Strings, because Firefox drops object `detail` across worlds.
 
-`stampIcons` exists because YouTube's `aria-label`s are localized. The icon type in the element's data (`SHARE`, `PLAYLIST_ADD`, `VIDEO_CALL`) is the same in every language. It runs only on small, known containers (masthead, guide, watch action row).
+Stamping exists because YouTube's `aria-label`s are localized. The icon type in the element's data (`SHARE`, `PLAYLIST_ADD`, `VIDEO_CALL`) is the same in every language. It runs only on small, known containers (masthead, guide, watch action row).
 
 ### 4.8 Design tokens
 
@@ -297,7 +300,7 @@ Each phase ends shippable.
 | 0 | Scaffold: manifest, build, core (feature runner, router, settings, dom, bridge, selectors), tokens, popup | Empty feature list loads on YouTube with no errors; popup renders |
 | 1 ✅ | CSS wins: `accent` (+ custom color), `selected-bg`, `subscribe-red`, `search-bar`, `create-icon` (pulled forward: no stamping needed) | Toggling each in popup applies/removes instantly |
 | 2 ✅ | Stamping + `action-icons`, `settings-topbar`, `watch-later-btn`. Verified signed in, in two UI languages | Works in English and one other UI language |
-| 3 | `shorts` | No Shorts visible anywhere; every Shorts entry point opens `/watch` |
+| 3 🧪 | `shorts`. Built and checked logged out; signed-in feeds await user test. Known gap: the search "Shorts" filter chip stays (no language-independent marker) | No Shorts visible anywhere; every Shorts entry point opens `/watch` |
 | 4 | `sidebar` | Three dropdowns work, expanded/mini guide both fine, active item highlights |
 | 5 | `watch-tabs` | All tabs work on normal video, stream, premiere; theater and narrow layouts; toggling off restores native layout |
 | 6 | `subs-timeline` | Infinite scroll keeps appending to the right day |

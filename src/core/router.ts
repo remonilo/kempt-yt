@@ -12,6 +12,9 @@ export function routeOf(path: string): Route {
   return 'other';
 }
 
+/** Video id of a /shorts/<id> path, else undefined. */
+export const shortsId = (path: string) => path.match(/^\/shorts\/([\w-]{11})/)?.[1];
+
 /** Calls cb on every SPA navigation and fires `kyt:navigate` ({ route, url }) on document. */
 export function onRoute(cb: (route: Route) => void): void {
   let last = location.href;

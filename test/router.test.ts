@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { routeOf } from '../src/core/router.ts';
+import { routeOf, shortsId } from '../src/core/router.ts';
 
 test('routeOf', () => {
   const cases: [string, string][] = [
@@ -15,4 +15,11 @@ test('routeOf', () => {
     ['/feed/history', 'other'],
   ];
   for (const [path, route] of cases) assert.equal(routeOf(path), route, path);
+});
+
+test('shortsId', () => {
+  assert.equal(shortsId('/shorts/b7MVW0XgZI8'), 'b7MVW0XgZI8');
+  assert.equal(shortsId('/shorts/a-b_c1234XY/'), 'a-b_c1234XY');
+  assert.equal(shortsId('/shorts/'), undefined);
+  assert.equal(shortsId('/watch'), undefined);
 });
