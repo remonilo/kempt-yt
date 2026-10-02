@@ -1,0 +1,66 @@
+/* [🔍 query ............ 🎤] in one outlined pill. The search button moves left, the grey segment goes,
+   the voice button (a sibling of yt-searchbox) is pulled into the pill's right end. Both are 32px circles
+   inset 8px so their hover/press circle sits inside the outline and the icons land 15px from each end (Figma). */
+html[kyt-search-bar] yt-searchbox.ytSearchboxComponentHost {
+  border: 1px solid var(--kyt-outline);
+  border-radius: 40px;
+  height: 40px;
+  box-sizing: border-box;
+  padding: 0 48px 0 8px; /* right: room for the mic */
+  margin-right: 0;
+  align-items: center;
+}
+html[kyt-search-bar] yt-searchbox.ytSearchboxComponentHost:focus-within {
+  border-color: var(--kyt-outline-focus);
+}
+html[kyt-search-bar] .ytSearchboxComponentInputBox,
+html[kyt-search-bar] .ytSearchboxComponentSearchButton {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+}
+html[kyt-search-bar] .ytSearchboxComponentInputBox {
+  padding-left: 4px !important;
+}
+/* YouTube adds a second magnifier inside the input on focus. */
+html[kyt-search-bar] .ytSearchboxComponentInnerSearchIcon {
+  display: none !important;
+}
+html[kyt-search-bar] .ytSearchboxComponentSearchButton,
+html[kyt-search-bar] ytd-masthead #voice-search-button button {
+  order: -1;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  background: transparent !important;
+}
+html[kyt-search-bar] .ytSearchboxComponentSearchButton:hover,
+html[kyt-search-bar] ytd-masthead #voice-search-button button:hover {
+  background: var(--kyt-hover-bg) !important;
+}
+html[kyt-search-bar] :is(.ytSearchboxComponentSearchButton, #voice-search-button) :is(.ytIconWrapperHost, .yt-icon-shape) {
+  width: var(--kyt-icon) !important;
+  height: var(--kyt-icon) !important;
+}
+html[kyt-search-bar] ytd-masthead #voice-search-button {
+  width: 32px;
+  height: 32px;
+  margin-left: -41px; /* 32px button + 8px inset + 1px border */
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
+}
+html[kyt-search-bar] ytd-masthead #voice-search-button button .ytSpecButtonShapeNextIcon {
+  margin: 0 !important;
+}
+html[kyt-search-bar] ytd-masthead #voice-search-button button .ytSpecButtonShapeNextIcon {
+  width: var(--kyt-icon) !important;
+  height: var(--kyt-icon) !important;
+}

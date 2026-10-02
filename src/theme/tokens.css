@@ -1,0 +1,29 @@
+/* Design tokens. Features read only these: YouTube's --yt-spec-* vars are not defined on <html>.
+   The accent feature's color option overrides --kyt-accent inline on <html>.
+   Source: Juxtopposed Figma (file 67JrsVl1sPE1qzZZL0iuNG, frame "Home" 4:11081). */
+html {
+  --kyt-accent: #cb274a;
+  /* Figma's selected sidebar row is #ffaabb @ 14% over #111 = #322629. We derive the pink from the accent
+     (default ≈ #eaa9b7) so a custom accent re-tints everything; translucent, so it works on any background. */
+  --kyt-tint: color-mix(in srgb, var(--kyt-accent) 40%, #fff);
+  --kyt-fg: #0f0f0f;
+  --kyt-selected-bg: color-mix(in srgb, var(--kyt-tint) 30%, transparent);
+  --kyt-selected-hover-bg: color-mix(in srgb, var(--kyt-tint) 42%, transparent);
+  --kyt-hover-bg: var(--kyt-selected-bg); /* hover = selected tint, like YouTube does with grey */
+  /* Selected items whose unselected siblings are already grey (chips): the light tint would vanish. */
+  --kyt-selected-strong-bg: color-mix(in srgb, var(--kyt-tint) 55%, transparent);
+  --kyt-subscribe-bg: var(--kyt-accent);
+  --kyt-subscribe-fg: #fff;
+  --kyt-outline: rgba(0, 0, 0, 0.1);
+  --kyt-outline-focus: rgba(0, 0, 0, 0.4);
+  --kyt-radius: 10px;
+  --kyt-icon: 20px; /* Figma uses 24px with thinner strokes; raise to 24px when the Figma icon set lands */
+}
+html[dark] {
+  --kyt-fg: #f1f1f1;
+  --kyt-selected-bg: color-mix(in srgb, var(--kyt-tint) 14%, transparent); /* ≈ #322629 on #111 */
+  --kyt-selected-hover-bg: color-mix(in srgb, var(--kyt-tint) 20%, transparent);
+  --kyt-selected-strong-bg: color-mix(in srgb, var(--kyt-tint) 30%, transparent);
+  --kyt-outline: rgba(255, 255, 255, 0.1); /* Figma #2a2a2a on #111 */
+  --kyt-outline-focus: rgba(255, 255, 255, 0.35);
+}
