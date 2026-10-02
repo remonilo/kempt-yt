@@ -42,6 +42,6 @@ html[kyt-selected-bg] ytd-masthead yt-icon-button yt-interaction {
   display: none !important;
 }
 /* The notification wrapper paints its own white 20% hover under the button; only our tint should show. */
-html[kyt-selected-bg] ytd-masthead #buttons > *:hover {
+html[kyt-selected-bg] ytd-masthead #buttons > ytd-notification-topbar-button-renderer:hover {
   background-color: transparent !important;
 }

@@ -1,5 +1,5 @@
 // Dev check: like shot.mjs, but runs a JS file's body in the page (with every feature on) and prints the result.
-// usage: node scripts/probe.mjs <url> <file.js> [--off] [--hover=<selector>]   (file body may `return` a string; async ok)
+// usage: node scripts/probe.mjs <url> <file.js> [--off] [--hover=<selector>] [--shot=<out.png>:<clip-selector>]   (file body may `return` a string; async ok)
 import puppeteer from 'puppeteer-core';
 import { readFile } from 'node:fs/promises';
 
@@ -23,8 +23,13 @@ try {
     await page.evaluate((ids) => ids.forEach((id) => document.documentElement.setAttribute(`kyt-${id}`, '')), ids);
   }
   const hover = process.argv.find((a) => a.startsWith('--hover='))?.slice(8);
-  if (hover) await page.hover(hover);
   console.log(await page.evaluate(`(async () => { ${await readFile(file, 'utf8')} })()`));
+  if (hover) await page.hover(hover); // after the script, so it can create the hover target
+  const shot = process.argv.find((a) => a.startsWith('--shot='))?.slice(7);
+  if (shot) {
+    const [path, sel] = shot.split(/:(.*)/);
+    await (await page.$(sel)).screenshot({ path });
+  }
 } finally {
   await browser.close();
 }

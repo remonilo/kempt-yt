@@ -40,6 +40,7 @@ const { images } = await api(`images/${FILE}?ids=${icons.map((i) => i.id).join('
 
 await rm(OUT, { recursive: true, force: true });
 await mkdir(OUT, { recursive: true });
+// Saved as exported: icons are CSS masks (core/icon.ts), so only alpha matters, not the white fill.
 await Promise.all(icons.map(async ({ id, name }) => {
   const res = await fetch(images[id]);
   return writeFile(`${OUT}/${name}.svg`, await res.text());

@@ -1,0 +1,12 @@
+/* Share / Save on the watch page: drop the label, become a 40px circle like YouTube's icon buttons. */
+html[kyt-action-icons] ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"]) button {
+  width: 40px;
+  padding: 0;
+  justify-content: center;
+}
+html[kyt-action-icons] ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"]) .ytSpecButtonShapeNextIcon {
+  margin: 0 !important; /* signed-in builds keep the 6px label gap otherwise */
+}
+html[kyt-action-icons] ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"]) .ytSpecButtonShapeNextButtonTextContent {
+  display: none;
+}

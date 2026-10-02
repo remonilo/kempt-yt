@@ -1,10 +1,14 @@
 import type { Feature } from '../core/feature.ts';
 import { accent } from './accent/index.ts';
+import { actionIcons } from './action-icons/index.ts';
 import { createIcon } from './create-icon/index.ts';
 import { searchBar } from './search-bar/index.ts';
 import { selectedBg } from './selected-bg/index.ts';
+import { settingsTopbar } from './settings-topbar/index.ts';
 import { subscribeRed } from './subscribe-red/index.ts';
+import { watchLaterBtn } from './watch-later-btn/index.ts';
 
 // The ONLY list of features. Add a folder under features/, import it, append it here.
 // Its style.css is picked up by build.mjs automatically.
-export const features: Feature[] = [accent, selectedBg, subscribeRed, searchBar, createIcon];
+export const features: Feature[] = [accent, selectedBg, subscribeRed, searchBar, createIcon,
+  actionIcons, settingsTopbar, watchLaterBtn];

@@ -153,7 +153,7 @@ waitFor(sel, { root = document, signal, timeout = 10_000 }): Promise<Element>
 ```
 One `MutationObserver` on `root` only, disconnects on match, abort, or timeout. On timeout it logs `kyt: selector "<name>" not found`, which is your early warning when YouTube changes markup.
 
-DOM writes from observers are batched into one `requestAnimationFrame`.
+Observers that repair YouTube's re-renders (`keep()`, the `stamp` handler) write inside the `MutationObserver` callback itself. It runs before the next paint, while a `requestAnimationFrame` delay can paint the un-repaired DOM for one frame, which shows as flicker. The MutationObserver already batches records, so the repair work stays cheap: one small `querySelectorAll` and an idempotent position check.
 
 ### 4.6 Selectors
 
@@ -270,7 +270,7 @@ No core file changes. It appears in the popup, it gets `--kyt-accent` for free, 
 |---|---|---|
 | `content.js` + `content.css` | < 60 KB total | No framework, icons as one generated CSS file |
 | JS per navigation | < 5 ms scripting | Route gating; CSS does most work |
-| Long tasks added | 0 | rAF batching, no sync layout reads in loops |
+| Long tasks added | 0 | small observer roots, idempotent writes, no sync layout reads in loops |
 | Observers alive | Only scoped ones for running features | `waitFor` disconnects; signals abort the rest |
 | Timers / polling | None | YouTube events only |
 
@@ -296,7 +296,7 @@ Each phase ends shippable.
 |---|---|---|
 | 0 | Scaffold: manifest, build, core (feature runner, router, settings, dom, bridge, selectors), tokens, popup | Empty feature list loads on YouTube with no errors; popup renders |
 | 1 ✅ | CSS wins: `accent` (+ custom color), `selected-bg`, `subscribe-red`, `search-bar`, `create-icon` (pulled forward: no stamping needed) | Toggling each in popup applies/removes instantly |
-| 2 | Stamping + `action-icons`, `settings-topbar`, `watch-later-btn` | Works in English and one other UI language |
+| 2 ✅ | Stamping + `action-icons`, `settings-topbar`, `watch-later-btn`. Verified signed in, in two UI languages | Works in English and one other UI language |
 | 3 | `shorts` | No Shorts visible anywhere; every Shorts entry point opens `/watch` |
 | 4 | `sidebar` | Three dropdowns work, expanded/mini guide both fine, active item highlights |
 | 5 | `watch-tabs` | All tabs work on normal video, stream, premiere; theater and narrow layouts; toggling off restores native layout |
@@ -307,7 +307,7 @@ Tests: `node --test` for `routeOf`, `bucketByDay`, `shortsIdFromUrl`. Everything
 
 Dev checks (logged-out YouTube in local Firefox, all features on, no extension install):
 - `node scripts/shot.mjs <url> <out.png> [selector] [--light] [--off]` screenshots the page or one element.
-- `node scripts/probe.mjs <url> <file.js>` runs a snippet in the page and prints its return value (computed styles, rects).
+- `node scripts/probe.mjs <url> <file.js> [--hover=sel] [--shot=out.png:sel]` runs a snippet in the page and prints its return value (computed styles, rects). Hover and shot happen after the snippet, so it can emulate main-world stamping or inject signed-in-only elements first.
 - `scripts/dump-dom.js` pasted in your signed-in console downloads a trimmed DOM sample for signed-in-only UI.
 
 ---

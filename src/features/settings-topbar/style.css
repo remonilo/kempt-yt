@@ -1,0 +1,17 @@
+html[kyt-settings-topbar] .kyt-settings {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-right: 8px;
+  border-radius: 50%;
+  color: var(--kyt-fg);
+}
+html[kyt-settings-topbar] .kyt-settings:hover {
+  background-color: var(--kyt-hover-bg);
+}
+/* The sidebar's Settings entry moves to the top bar. */
+html[kyt-settings-topbar] ytd-guide-entry-renderer:has(a[href="/account"]) {
+  display: none;
+}

@@ -1,0 +1,6 @@
+html[kyt-watch-later-btn] .kyt-wl {
+  margin-left: 8px;
+}
+html[kyt-watch-later-btn] .kyt-wl[aria-pressed="true"] {
+  color: var(--kyt-accent);
+}
