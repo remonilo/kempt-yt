@@ -12,6 +12,9 @@ test('routeOf', () => {
     ['/playlist', 'playlist'],
     ['/@mkbhd', 'channel'],
     ['/channel/UC123', 'channel'],
+    ['/@LofiGirl/live', 'watch'],
+    ['/channel/UC123/live', 'watch'],
+    ['/@LofiGirl/videos', 'channel'],
     ['/feed/history', 'other'],
   ];
   for (const [path, route] of cases) assert.equal(routeOf(path), route, path);

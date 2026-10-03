@@ -1,0 +1,31 @@
+/* YouTube's "Sort by" dropdown stays in the DOM (the chips click its items) but is not shown. */
+html[kyt-comment-sort] ytd-comments-header-renderer:has(.kyt-sort) #sort-menu {
+  display: none !important;
+}
+html[kyt-comment-sort] .kyt-sort {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* Same chip look as the feed chips: grey, accent tint when selected (selected-bg feature). */
+html[kyt-comment-sort] .kyt-sort > button {
+  all: unset;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 8px;
+  font: 500 14px/32px Roboto, Arial, sans-serif;
+  color: var(--kyt-fg);
+  background: var(--kyt-outline);
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+html[kyt-comment-sort] .kyt-sort > button:hover {
+  background: var(--kyt-hover-bg);
+}
+html[kyt-comment-sort] .kyt-sort > button[aria-pressed="true"] {
+  background: var(--kyt-selected-strong-bg);
+  cursor: default;
+}
+html[kyt-comment-sort] .kyt-sort > button:focus-visible {
+  outline: 2px solid var(--kyt-outline-focus);
+}

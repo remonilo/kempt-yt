@@ -3,7 +3,8 @@ export type Route =
 
 export function routeOf(path: string): Route {
   if (path === '/') return 'home';
-  if (path === '/watch') return 'watch';
+  // /@name/live plays the channel's current stream in the watch page.
+  if (path === '/watch' || /^\/(@|channel\/|c\/|user\/)[^/]+\/live$/.test(path)) return 'watch';
   if (path.startsWith('/shorts/')) return 'shorts';
   if (path === '/feed/subscriptions') return 'subscriptions';
   if (path === '/results') return 'search';

@@ -40,11 +40,18 @@ export function waitFor<T extends Element = Element>(
  * (it rebuilds lists like the masthead buttons and the watch action row, dropping foreign nodes).
  * `mount` must be idempotent and cheap: check position, insert only if wrong. Removes `el` on abort.
  * Runs in the observer callback (before paint), not a later frame, so the missing node is never painted.
+ * Pass several roots with `{ childList: true }` (no subtree) to watch only their direct children.
  */
-export function keep(el: Element, root: Node, mount: () => void, signal: AbortSignal): void {
+export function keep(
+  el: Element,
+  root: Node | Node[],
+  mount: () => void,
+  signal: AbortSignal,
+  init: MutationObserverInit = { childList: true, subtree: true },
+): void {
   const obs = new MutationObserver(mount);
   mount();
-  obs.observe(root, { childList: true, subtree: true });
+  for (const r of [root].flat()) obs.observe(r, init);
   signal.addEventListener('abort', () => {
     obs.disconnect();
     el.remove();

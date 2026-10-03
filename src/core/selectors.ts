@@ -19,5 +19,11 @@ export const S = {
   secondary: 'ytd-watch-flexy #secondary-inner',
   comments: 'ytd-watch-flexy ytd-comments#comments',
   liveChat: 'ytd-live-chat-frame#chat',
+  // YouTube moves these between #secondary-inner (two columns) and #below (one column). Always present.
+  panels: 'ytd-watch-flexy #panels', // engagement panels: transcript, Ask, ...
+  commentsPanel: 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-comments-section"]',
+  chatContainer: 'ytd-watch-flexy #chat-container',
+  description: 'ytd-watch-metadata #description',
+  askButton: 'ytd-watch-metadata [kyt-icon="SPARK"] button', // needs stamp(S.watchActions)
   subscribeBtn: 'ytd-subscribe-button-renderer, yt-subscribe-button-view-model',
 } as const;

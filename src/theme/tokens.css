@@ -6,6 +6,7 @@ html {
   /* Figma's selected sidebar row is #ffaabb @ 14% over #111 = #322629. We derive the pink from the accent
      (default ≈ #eaa9b7) so a custom accent re-tints everything; translucent, so it works on any background. */
   --kyt-tint: color-mix(in srgb, var(--kyt-accent) 40%, #fff);
+  --kyt-bg: #fff;
   --kyt-fg: #0f0f0f;
   --kyt-fg-muted: #606060;
   --kyt-selected-bg: color-mix(in srgb, var(--kyt-tint) 30%, transparent);
@@ -23,6 +24,7 @@ html {
   --kyt-icon: 20px; /* Figma uses 24px with thinner strokes; raise to 24px when the Figma icon set lands */
 }
 html[dark] {
+  --kyt-bg: #0f0f0f;
   --kyt-fg: #f1f1f1;
   --kyt-fg-muted: #aaa;
   --kyt-selected-bg: color-mix(in srgb, var(--kyt-tint) 14%, transparent); /* ≈ #322629 on #111 */

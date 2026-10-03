@@ -201,6 +201,11 @@ const handlers: Record<string, (...args: any[]) => unknown> = {
       });
   },
 
+  /** Re-measures text expanders under `sel` that rendered while hidden (their "...more" is missing otherwise). */
+  relayout(sel: string) {
+    for (const el of document.querySelectorAll<any>(`${sel} ytd-text-inline-expander`)) (el.polymerController ?? el.inst ?? el).resize?.(false);
+  },
+
   async inWatchLater(videoId: string) {
     const res = await innertube('playlist/get_add_to_playlist', { videoIds: [videoId] });
     return find(res, (x) => x.playlistId === 'WL' && 'containsSelectedVideos' in x)?.containsSelectedVideos === 'ALL';
