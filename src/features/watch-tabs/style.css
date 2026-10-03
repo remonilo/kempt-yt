@@ -195,7 +195,20 @@ html[kyt-watch-tabs] .kyt-tab-comments ytd-comments-header-renderer {
   margin-top: 4px;
 }
 
-/* The Ask AI tab replaces YouTube's Ask button (still clicked by the tab). */
-html[kyt-watch-tabs-askAi] ytd-watch-metadata yt-button-view-model[kyt-icon="SPARK"] {
+/* Ask AI. Off: index.ts takes Ask out of YouTube's data; this hides it until that lands. Tab: the tab
+   replaces the button (and still clicks it). Icon button: a 40px circle like Share and Save. */
+html[kyt-watch-tabs]:not([kyt-watch-tabs-ai]) ytd-watch-metadata yt-button-view-model[kyt-icon="SPARK"],
+html[kyt-watch-tabs-aiAs="tab"] ytd-watch-metadata yt-button-view-model[kyt-icon="SPARK"] {
   display: none !important;
+}
+html[kyt-watch-tabs-aiAs="button"] ytd-watch-metadata [kyt-icon="SPARK"] button {
+  width: 40px;
+  padding: 0;
+  justify-content: center;
+}
+html[kyt-watch-tabs-aiAs="button"] ytd-watch-metadata [kyt-icon="SPARK"] .ytSpecButtonShapeNextIcon {
+  margin: 0 !important;
+}
+html[kyt-watch-tabs-aiAs="button"] ytd-watch-metadata [kyt-icon="SPARK"] .ytSpecButtonShapeNextButtonTextContent {
+  display: none;
 }

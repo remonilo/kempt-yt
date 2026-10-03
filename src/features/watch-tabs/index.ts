@@ -24,7 +24,10 @@ export const watchTabs: Feature = {
   label: 'Info, comments and videos as tabs',
   defaultOn: true,
   routes: ['watch'],
-  options: { askAi: { type: 'boolean', label: 'Ask AI tab', default: false } },
+  options: {
+    ai: { type: 'boolean', label: 'Ask AI', default: true },
+    aiAs: { type: 'choice', label: 'Show as', default: 'button', choices: { button: 'Icon button', tab: 'Tab' }, parent: 'ai' },
+  },
   async run({ signal, call }) {
     const flexy = await waitFor(S.watchFlexy, { signal });
     const [desc, comments] = await Promise.all([waitFor(S.description, { signal }), waitFor(S.comments, { signal })]);
@@ -61,7 +64,7 @@ export const watchTabs: Feature = {
 
     const panelsEl = () => flexy.querySelector(S.panels);
     const available = (t: Tab) => t === 'chat' ? !!flexy.querySelector(`${S.chatContainer} > ${S.liveChat}:not([hidden])`)
-      : t === 'ai' ? html.hasAttribute('kyt-watch-tabs-askAi') && !!flexy.querySelector(S.askButton)
+      : t === 'ai' ? html.getAttribute('kyt-watch-tabs-aiAs') === 'tab' && !!flexy.querySelector(S.askButton)
       : true;
 
     // Theater (cinema) mode closes every tab: the right column sits under the full-width player there, so an
@@ -149,7 +152,19 @@ export const watchTabs: Feature = {
     styleChat();
     flexy.addEventListener('load', (e) => e.target instanceof HTMLIFrameElement && styleChat(), { capture: true, signal });
 
+    // Ask AI off: YouTube's Ask leaves the action row and the ⋯ menu. On: it goes first among the row's
+    // flexible items, which the row moves into ⋯ from the end as it narrows, so it stays out (main-world.ts).
+    // Re-applied when YouTube re-renders the row with its own data (Ask back, or not first).
+    const ai = () => call('askAi', html.hasAttribute('kyt-watch-tabs-ai') ? 'front' : 'off').catch(() => {});
+    const checkAi = () => {
+      const ask = flexy.querySelector(`${S.watchActions} [kyt-icon="SPARK"]`);
+      if (!ask) return;
+      const flex = ask.parentElement?.id === 'flexible-item-buttons';
+      if (!html.hasAttribute('kyt-watch-tabs-ai') || (flex && ask !== ask.parentElement!.firstElementChild)) ai();
+    };
+
     call('stamp', S.watchActions);
+    ai();
     const below = flexy.querySelector('#below')!;
     keep(bar, [flexy.querySelector('#secondary-inner')!, below, descHome, commentsHome], mount, signal, { childList: true });
     render();
@@ -162,8 +177,9 @@ export const watchTabs: Feature = {
       signal.addEventListener('abort', () => o.disconnect(), { once: true });
     };
     watch(flexy.querySelector(S.chatContainer), { childList: true, subtree: true, attributeFilter: ['hidden'] }, render);
-    watch(flexy.querySelector(S.watchActions), { subtree: true, attributeFilter: ['kyt-icon'] }, render);
-    watch(html, { attributeFilter: ['kyt-watch-tabs-askAi'] }, render);
+    watch(flexy.querySelector(S.watchActions), { subtree: true, attributeFilter: ['kyt-icon'] }, () => (checkAi(), render()));
+    // HTML lowercases attribute names: the runner's kyt-watch-tabs-aiAs lands as -aias.
+    watch(html, { attributeFilter: ['kyt-watch-tabs-ai', 'kyt-watch-tabs-aias'] }, () => (ai(), render()));
     watch(flexy, { attributeFilter: ['theater'] }, () => (render(), requestAnimationFrame(align)));
     watch(flexy, { attributeFilter: ['is-two-columns_'] }, render);
 
@@ -186,7 +202,7 @@ export const watchTabs: Feature = {
     watch(panelsEl(), { subtree: true, childList: true, characterData: true }, count);
 
     document.addEventListener('kyt:navigate', () => select('videos'), { signal });
-    document.addEventListener('yt-page-data-updated', render, { signal });
+    document.addEventListener('yt-page-data-updated', () => (ai(), render()), { signal });
 
     signal.addEventListener('abort', () => {
       const d = infoBox.firstElementChild;
@@ -200,6 +216,7 @@ export const watchTabs: Feature = {
       bar.style.marginTop = '';
       for (const p of flexy.querySelectorAll('[kyt-ai]')) p.removeAttribute('kyt-ai');
       chatDoc()?.getElementById('kyt-chat')?.remove();
+      call('askAi', 'restore').catch(() => {});
     }, { once: true });
   },
 };
