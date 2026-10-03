@@ -75,6 +75,8 @@ export const watchTabs: Feature = {
       bar.style.setProperty('--i', String(shown.indexOf(tab)));
       bar.style.setProperty('--n', String(shown.length));
       if (flexy.getAttribute('kyt-tab') !== open) flexy.setAttribute('kyt-tab', open);
+      // Two columns with a tab open: the tab scrolls, so the page's own scrollbar is hidden (style.css).
+      html.toggleAttribute('kyt-watch-tabs-open', open !== 'none' && flexy.hasAttribute('is-two-columns_'));
     };
 
     const select = (t: Tab) => {
@@ -151,6 +153,7 @@ export const watchTabs: Feature = {
     watch(flexy.querySelector(S.watchActions), { subtree: true, attributeFilter: ['kyt-icon'] }, render);
     watch(html, { attributeFilter: ['kyt-watch-tabs-askAi'] }, render);
     watch(flexy, { attributeFilter: ['theater'] }, () => (render(), requestAnimationFrame(align)));
+    watch(flexy, { attributeFilter: ['is-two-columns_'] }, render);
 
     // In theater the right column starts beside the title. Push the bar down to the action buttons' row.
     // Re-measured on theater toggles and whenever the metadata block resizes (title wraps, window resizes).
@@ -181,6 +184,7 @@ export const watchTabs: Feature = {
       infoBox.remove();
       commentsBox.remove();
       flexy.removeAttribute('kyt-tab');
+      html.removeAttribute('kyt-watch-tabs-open');
       bar.style.marginTop = '';
       for (const p of flexy.querySelectorAll('[kyt-ai]')) p.removeAttribute('kyt-ai');
       chatDoc()?.getElementById('kyt-chat')?.remove();

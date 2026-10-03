@@ -1,0 +1,105 @@
+/* Timeline (Figma Subs 96:3679, History 100:9034): a 9px dot and the date before each group,
+   a 3px line down the left joining them. index.ts inserts the .kyt-tl-head elements. */
+html[kyt-timeline] .kyt-tl-head {
+  position: relative;
+  font: 400 16px/20px Roboto, Arial, sans-serif;
+  color: var(--kyt-fg);
+}
+/* The dot. On Subscriptions one line runs the whole grid, so a ring in the page colour cuts it 8px around
+   each dot (not the first: the line starts below it, and the ring would cut into the chips above). */
+html[kyt-timeline] .kyt-tl-head::before {
+  content: "";
+  position: absolute;
+  left: -30px;
+  top: 5.5px;
+  width: 9px;
+  height: 9px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 2px solid var(--kyt-accent);
+  background: var(--kyt-bg);
+  transition: background-color 200ms;
+}
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents > .kyt-tl-head:not(:first-of-type)::before {
+  box-shadow: 0 0 0 8px var(--kyt-bg);
+}
+/* The group you're reading (index.ts spy). */
+html[kyt-timeline] .kyt-tl-head[kyt-current]::before {
+  background: var(--kyt-accent);
+}
+@media (prefers-reduced-motion: reduce) {
+  html[kyt-timeline] .kyt-tl-head::before {
+    transition: none;
+  }
+}
+
+/* Subscriptions: headers are full-width rows inside YouTube's flex-wrap grid. */
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] ytd-rich-grid-renderer > #contents:has(> .kyt-tl-head) {
+  box-sizing: border-box; /* YouTube sets its width; keep it, so the dot lines up with the chips above */
+  padding-left: 30px;
+  background: linear-gradient(var(--kyt-divider) 0 0) 3px 48px / 3px calc(100% - 48px) no-repeat;
+}
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents > .kyt-tl-head {
+  flex: 0 0 100%;
+  margin: 40px 0 24px;
+}
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents > .kyt-tl-head:first-of-type {
+  margin-top: 0;
+}
+/* YouTube zeroes the left margin of the first item in each row by index; headers break rows, so use one
+   margin for all: item width is 100%/n minus one item margin. */
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:has(> .kyt-tl-head) > ytd-rich-item-renderer {
+  margin-left: 0 !important;
+  margin-right: var(--ytd-rich-grid-item-margin) !important;
+}
+/* "Latest" and "Most relevant" shelves: Latest is the timeline's first row anyway, Most relevant repeats
+   feed items out of order. The Shorts shelf (when the shorts feature is off) moves to the top, off the line. */
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:has(> .kyt-tl-head) > ytd-rich-section-renderer:not(:has(ytd-rich-shelf-renderer[is-shorts])) {
+  display: none !important;
+}
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:has(> .kyt-tl-head) > ytd-rich-section-renderer {
+  order: -1;
+  box-shadow: -30px 0 0 var(--kyt-bg);
+}
+
+/* History: one ytd-item-section-renderer per day. Our header replaces YouTube's, the list becomes a grid. */
+html[kyt-timeline] ytd-browse[page-subtype="history"] ytd-item-section-renderer:has(.kyt-tl-head) {
+  padding-left: 30px;
+  margin-top: 0;
+  background: linear-gradient(var(--kyt-divider) 0 0) 3px 22px / 3px calc(100% - 30px) no-repeat;
+}
+html[kyt-timeline] ytd-browse[page-subtype="history"] .kyt-tl-head + ytd-item-section-header-renderer {
+  display: none !important;
+}
+html[kyt-timeline] ytd-browse[page-subtype="history"] .kyt-tl-head {
+  margin: 0 0 24px;
+}
+/* Room under YouTube's chips (Figma: 47px from toolbar to first date). */
+html[kyt-timeline] ytd-browse[page-subtype="history"] ytd-item-section-renderer:first-child:has(.kyt-tl-head) {
+  margin-top: 24px;
+}
+html[kyt-timeline] ytd-browse[page-subtype="history"] ytd-item-section-renderer:has(.kyt-tl-head) > #contents {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); /* 3 across in History's column */
+  gap: 32px 16px;
+  padding-bottom: 40px;
+}
+html[kyt-timeline] ytd-browse[page-subtype="history"] ytd-item-section-renderer > #contents > :not(yt-lockup-view-model) {
+  grid-column: 1 / -1; /* Shorts row, anything else YouTube adds */
+  margin: 0;
+}
+/* Horizontal list lockup -> vertical card. */
+html[kyt-timeline] ytd-browse[page-subtype="history"] ytd-item-section-renderer > #contents > yt-lockup-view-model {
+  margin: 0;
+  & .ytLockupViewModelHost {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  & .ytLockupViewModelContentImage {
+    width: auto !important;
+    margin: 0 0 12px !important;
+  }
+  & .ytLockupViewModelMetadata {
+    flex: none;
+  }
+}

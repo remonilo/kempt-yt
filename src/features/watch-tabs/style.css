@@ -102,6 +102,14 @@ html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab="ai"][is-two-columns_] #secondary-i
   overscroll-behavior: contain;
   scrollbar-width: thin;
 }
+/* The open tab is the scroller, so the page's scrollbar goes. The page still wheel-scrolls when the title and
+   actions under the player overflow a short window. Set by index.ts only in two columns with a tab open. */
+html[kyt-watch-tabs][kyt-watch-tabs-open] {
+  scrollbar-width: none;
+}
+html[kyt-watch-tabs][kyt-watch-tabs-open]::-webkit-scrollbar {
+  display: none;
+}
 /* Chat and Ask AI bring their own scrolling: stretch them to the tab instead of their fixed heights. */
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab="chat"][is-two-columns_] #chat-container {
   display: flex;
