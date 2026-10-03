@@ -7,12 +7,16 @@ type Tab = 'info' | 'comments' | 'videos' | 'chat' | 'ai';
 const TABS: [Tab, string][] = [['info', 'Info'], ['comments', ''], ['videos', 'Videos'], ['chat', 'Live chat'], ['ai', 'Ask AI']];
 const EXPANDED = '[visibility="ENGAGEMENT_PANEL_VISIBILITY_EXPANDED"]';
 const CHAT_CSS = 'yt-live-chat-header-renderer #close-button { display: none !important; }';
+const YT_PANELS = '#shopping-timely-shelf, #persistent-panel-container, #playlist, #panels, #chat-container, #inline-panels';
 
 /**
  * Tabs above the right column. Videos (#related) and Live chat (#chat-container) stay where YouTube put them
  * and are only shown or hidden, so the chat iframe never reloads. The description and comments move into
- * boxes after #panels and go back on abort. Everything anchors on #panels, which YouTube moves between
- * #secondary-inner and #below with the layout, so one-column layout works the same.
+ * boxes that go back on abort. Everything anchors on #panels, which YouTube moves between #secondary-inner
+ * and #below with the layout, so one-column layout works the same.
+ * YouTube's updatePanelsLocation (theater, fullscreen, column changes) expects its panels to be the first
+ * children of that parent, in order, and re-inserts all of them otherwise. So our nodes go after that run
+ * (YT_PANELS) and style.css restores the visual order with flex `order` (PLAN.md §13).
  * Hidden tabs are display:none: comments and related load lazily when their tab is first shown.
  */
 export const watchTabs: Feature = {
@@ -118,8 +122,16 @@ export const watchTabs: Feature = {
     const mount = () => {
       const panels = panelsEl();
       if (!panels) return;
-      if (bar.nextElementSibling !== panels) panels.before(bar);
-      if (panels.nextElementSibling !== infoBox || infoBox.nextElementSibling !== commentsBox) panels.after(infoBox, commentsBox);
+      // After YouTube's leading run of panels, skipping our own nodes. Moving nothing when already in place
+      // matters: re-inserting the comments box re-renders every loaded comment.
+      let anchor: Element = panels;
+      for (let el = panels.parentElement!.firstElementChild; el; el = el.nextElementSibling) {
+        if (el === bar || el === infoBox || el === commentsBox) continue;
+        if (!el.matches(YT_PANELS)) break;
+        anchor = el;
+      }
+      const ours = [bar, infoBox, commentsBox];
+      if (ours.some((n, i) => (i ? ours[i - 1] : anchor).nextElementSibling !== n)) anchor.after(...ours);
       const d = flexy.querySelector(S.description); // only matches while it's still in ytd-watch-metadata
       if (d) infoBox.replaceChildren(d);
       const c = [...flexy.querySelectorAll(S.comments)].find((x) => x.parentElement !== commentsBox);
