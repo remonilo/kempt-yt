@@ -26,4 +26,8 @@ export const S = {
   description: 'ytd-watch-metadata #description',
   askButton: 'ytd-watch-metadata [kyt-icon="SPARK"] button', // needs stamp(S.watchActions)
   subscribeBtn: 'ytd-subscribe-button-renderer, yt-subscribe-button-view-model',
+  subsGrid: 'ytd-browse[page-subtype="subscriptions"] ytd-rich-grid-renderer > #contents',
+  historyList: 'ytd-browse[page-subtype="history"] ytd-section-list-renderer > #contents', // one ytd-item-section-renderer per day
+  historyTitle: 'ytd-item-section-header-renderer #title', // "Today", "Thursday", "27 Sept"
+  lockupDate: '.ytContentMetadataViewModelMetadataText', // last one in a lockup is the age ("7 hr ago"), aria-label has the long form
 } as const;

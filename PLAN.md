@@ -3,6 +3,43 @@
 A browser extension (MV3, Chrome + Firefox 128+) that restyles YouTube into one consistent design system.
 Icon source: Juxtopposed "YouTube Redesign (Community)" Figma file.
 
+## Next up
+
+Keep this list current. It is the first thing a new session reads.
+
+Open in phase 5 (`watch-tabs`, `comment-sort`):
+
+- [ ] Player and right-column animation looks janky (theater toggle?). Waiting on a screen recording. Suspects: the bar paints beside the title for one frame before `align()` (rAF) moves it to the actions row; the page scrollbar appearing in theater shifts the layout by 15px; `kyt-tab-in` fades the column in while the player resizes.
+- [x] Page scrollbar hidden in two columns with a tab open (`html[kyt-watch-tabs-open]`); the tab keeps its own. Single column and theater keep the page scrollbar. Awaits user check.
+
+User-verified signed in: Ask AI tab and cinema from it, toggle-off restores native layout, single column, Download icon-only.
+
+Open in phase 4 (`sidebar`):
+
+- [ ] Signed-in check: open a `/watch` page in a fresh tab (sidebar never opened), or load any page under 1312px wide, then open ☰. Subscriptions and Playlists must be filled (innertube guide request, §13.10).
+
+User-verified signed in: Subscriptions and Playlists dropdowns, suggestions blur, footer divider. Help and Send feedback are absent from signed-in guide data, so they never render.
+
+Before release:
+
+- [ ] Localize tab labels (Info, Videos, Live chat, Ask AI), hardcoded English in `src/features/watch-tabs/index.ts` (`TABS`).
+- [ ] Timeline: `parseAge` reads English ages only; other locales get no Subscriptions headers (History is localized via Intl).
+
+Phase 6 `timeline` (in progress, decisions in §10.12 to 10.18). Samples: `samples/kyt-subscriptions.json`, `kyt-history.json`, `kyt-subs-order.json` (scripts `feed-dump.js`, `feed-order.js`).
+
+- [x] Date logic, pure and tested: `src/features/timeline/dates.ts` (`parseAge` long and short units, `groupOf`, `plan`, `historyDate`), `test/timeline.test.ts`.
+- [x] `src/features/timeline/{index.ts,style.css}`. Keeps YouTube's cards. Subs: inserts `.kyt-tl-head` rows into the rich grid `#contents` (one childList observer), hides Latest and Most relevant shelves, Shorts shelf to the top. History: our header before each day's `ytd-item-section-header-renderer` (hidden), day `#contents` as a CSS grid, horizontal lockups restyled as vertical cards. Subs CSS checked headless on a channel Videos grid (page-subtype swapped); history CSS unverified.
+- [x] Signed-in check, Subscriptions: user-verified aligned.
+- [x] Dot fill follows scroll (§10.18). User-verified on both pages.
+- [x] Fixed after first check (dot ring cut into YouTube's chips; 2 columns -> min card 240px for 3). User-verified History: full dates on day headers, grid cards look right (thumbnail, title, channel, menu), Shorts row inside each day, scroll loads more days, history search still works.
+- [ ] Cheap filters: type chips (All, Videos, Live, Shorts) and search, over loaded items only. History already has YouTube's own chips (All, Videos, Shorts, Podcasts, Music) under a "Watch history" title: keep those, so our chips are Subscriptions only.
+
+- [x] Popup opened only on the ~3rd click in Firefox: rows now render before `storage.sync` resolves (§13.34). User-verified.
+
+Later phases: "View as: Channels" on Subscriptions; Return YouTube Dislike compatibility (github.com/Anarios/return-youtube-dislike).
+
+Known gaps: the search "Shorts" filter chip stays (phase 3). Icons missing from the Figma set (§9).
+
 ---
 
 ## 1. Principles
@@ -320,9 +357,9 @@ Each phase ends shippable.
 | 1 ✅ | CSS wins: `accent` (+ custom color), `selected-bg`, `subscribe-red`, `search-bar`, `create-icon` (pulled forward: no stamping needed)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Toggling each in popup applies/removes instantly                                                                 |
 | 2 ✅ | Stamping + `action-icons`, `settings-topbar`, `watch-later-btn`. Verified signed in, in two UI languages                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Works in English and one other UI language                                                                       |
 | 3 ✅ | `shorts` (History keeps its Shorts). Known gap: the search "Shorts" filter chip stays (no language-independent marker)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | No Shorts visible anywhere; every Shorts entry point opens `/watch`                                              |
-| 4 ✅ | `sidebar`: own renderer from `ytd-guide-renderer.data` in Figma's layout (Sidebar 92:4870, dropdown rows `subs` 23:8475 / `playlist` 101:6372) at YouTube's own sizes (40px rows, 14px labels, 24px icons). Explore under Home; Explore, Playlists, Subscriptions dropdowns; "More from YouTube" entries as plain text links above YouTube's footer. Popup options hide You, Your channel, Your videos, Courses (all on by default; boolean options gate CSS via `html[kyt-<id>-<key>]`). Icons the Figma set lacks are drawn by a hidden `yt-icon` (`ytIcon`); brand logos keep their colours. Built; Subscriptions/Playlists dropdowns await signed-in test | Dropdowns work, hidden entries toggle live from the popup, active item highlights, SPA navigation                |
-| 5 🧪 | `watch-tabs`: tab bar above the right column (Info, Comments with count, Videos, Live chat on streams, Ask AI behind a popup option). White pill slides to the selected tab. Videos and chat are shown/hidden in place (chat iframe never reloads); description and comments move into boxes after `#panels` and go back on abort. `/@name/live` routes as watch. In two columns the right column is one viewport tall and only the open tab scrolls (video stays in view). Close (X) hidden on chat and Ask panels. `comment-sort`: sort dropdown as chips that click YouTube's hidden items. Download icon-only. Built; Ask AI and toggle-off await user test | All tabs work on normal video, stream, premiere; theater and narrow layouts; toggling off restores native layout |
-| 6    | `subs-timeline`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Infinite scroll keeps appending to the right day                                                                 |
+| 4 ✅ | `sidebar`: own renderer with Explore, Playlists, Subscriptions dropdowns, footer toggle, mini guide. Notes in §11. Subscriptions/Playlists dropdowns await signed-in test | Dropdowns work, hidden entries toggle live from the popup, active item highlights, SPA navigation                |
+| 5 🧪 | `watch-tabs`, `comment-sort`, Download icon-only. Notes in §12. Open items in Next up | All tabs work on normal video, stream, premiere; theater and narrow layouts; toggling off restores native layout |
+| 6    | `timeline` (Subscriptions + History, §10.12)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Infinite scroll keeps appending to the right day                                                                 |
 | 7    | `icons` (can start any time once SVGs are exported)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | No original YouTube icon left in masthead, guide, watch action row                                               |
 
 Tests: `node --test` for `routeOf`, `bucketByDay`, `shortsIdFromUrl`. Everything else is a manual checklist per phase.
@@ -360,6 +397,13 @@ Option B (scripted): `GET https://api.figma.com/v1/images/:fileKey?ids=<nodeIds>
 9. Selected sidebar/chip text stays primary color; only the icon turns accent. Accent text on the dark tint is under 3:1 contrast.
 10. Sidebar order: Home, Shorts, Explore | History, Liked, Downloads, Watch later, Playlists | Subscriptions (nav.ts `LIBRARY`). The collapsed sidebar is our own render of the same groups as icons; Explore there opens the full sidebar with Explore expanded. The foot dropdown opens above a static divider (bottom-aligned wipe).
 11. Watch tabs: Videos is the default tab on load. Title, channel row and actions stay under the player; only the description moves into Info. Tab visuals wait for the user's Figma design (same file); the selected-tab icon is decided there.
+12. Phase 6 is one feature, `timeline`, on Subscriptions and History (Figma Subs 96:3679, History 100:9034). It replaces `subs-timeline`.
+13. Timeline toolbar: type chips (All, Videos, Live, Shorts) and a search box, both filtering loaded items only. No Newest/Oldest or Date range: the feed loads newest-first, so those would need the whole feed (perf budget). Posts chip only if posts show up in the feed.
+14. Subscriptions dates: exact day under one week ("Today - 15 Dec 2024", "Yesterday - 14 Dec 2024"), then YouTube's own relative groups ("1 week ago", "2 weeks ago", "1 month ago"). No per-video date requests.
+15. History uses the same card grid and timeline as Subscriptions, on YouTube's own day groups (exact dates).
+16. Dropped: Figma's Collections tab (PocketTube covers it). Planned later: "View as: Channels", Return YouTube Dislike compatibility.
+17. Subscriptions shelves: "Most relevant" is hidden (its items are duplicates of feed items, checked in `kyt-subs-order.json`); "Latest" header hidden (its items are the feed's first row). Shorts shelf stays, moved to the top (only shown when `shorts` is off). History keeps its Shorts row inside each day. "N days ago" groups by day up to 13 days (YouTube rounds down); weeks and older are relative groups. Groups only move back in time: a stream labelled by start time, or "Scheduled for ...", stays in the current group. Other UI languages: no subs headers (English parse only, before release).
+18. Timeline dot fill marks the group you're reading (lowest header above mid-screen, one IntersectionObserver), not "today". 200ms fade, off under reduced motion.
 
 ---
 
@@ -371,6 +415,12 @@ Done (phase 4): all four below, plus a `video-library` icon (Google Material, `s
 - Animations: `.kyt-nav-children` (grid wrapper) > `.kyt-nav-list`, shared by dropdowns and the foot. Lists fill before opening so the height animates to the real size. Arrow rotates instead of swapping icons.
 - Suggestions: CSS only in `search-bar/style.css`, `--kyt-glass` token. Headless Firefox draws no `backdrop-filter`, so the blur is checked by hand.
 - Mini guide: `miniGuideIcons()` generates one `<style>` with per-install icon URLs; entries are stamped via `stamp(S.miniGuide)`.
+
+Sidebar build notes (moved from §8):
+
+- Own renderer from `ytd-guide-renderer.data` in Figma's layout (Sidebar 92:4870, dropdown rows `subs` 23:8475 / `playlist` 101:6372) at YouTube's own sizes (40px rows, 14px labels, 24px icons).
+- Popup options hide You, Your channel, Your videos, Courses (all on by default; boolean options gate CSS via `html[kyt-<id>-<key>]`).
+- Icons the Figma set lacks are drawn by a hidden `yt-icon` (`ytIcon`); brand logos keep their colours.
 
 Original requests:
 
@@ -390,3 +440,66 @@ Original requests:
 4. **Collapsed sidebar (mini-guide) consistency:**
    - When the sidebar is collapsed into the mini-guide, display only icons (remove text labels below).
    - Harmonize icons with the expanded sidebar state so disabled entries (such as "You") do not appear in the mini-guide.
+
+---
+
+## 12. Watch tabs notes
+
+Build notes for phase 5 (moved from §8):
+
+- Tab bar above the right column: Info, Comments (icon + count), Videos, Live chat on streams, Ask AI behind a popup option. White pill slides to the selected tab.
+- Videos and chat are shown/hidden in place, so the chat iframe never reloads. Description and comments move into boxes after `#panels` and go back on abort.
+- `/@name/live` routes as watch.
+- In two columns the right column is one viewport tall and only the open tab scrolls, so the video stays in view. Single column scrolls the whole page.
+- Cinema (theater) mode closes the open tab and remembers it; leaving cinema reopens it. Clicking a tab in cinema leaves cinema. Only a user click on a tab may click YouTube's cinema button (resets on navigation or Ask AI closing must not, or the player gets stuck half-switched). In cinema the bar aligns with the action buttons and is re-measured on theater toggle, title wrap and resize.
+- Close (X) hidden on chat and Ask panels. The chat X lives inside the chat iframe, so a hiding rule is injected into the frame on each load.
+- `comment-sort`: Top/Newest chips beside the comment count click YouTube's hidden sort menu items, so labels follow the UI language.
+
+---
+
+## 13. Lessons (mined from the phase 0 to 5 session)
+
+Things that already cost a debugging round. Check here before "fixing" something odd.
+
+YouTube DOM:
+
+1. `--yt-spec-*` vars are not defined at the page root. Feature CSS uses our `--kyt-*` tokens.
+2. Selected sidebar background goes on `ytd-guide-entry-renderer[active]` itself (YouTube's squircle), never the inner `tp-yt-paper-item`.
+3. YouTube stacks its own hover layers: 10% white on guide `#endpoint`, 1px rim on active rows, 20% white on `ytd-notification-topbar-button-renderer`. Clear each on its own element. Never clear masthead hovers with a broad `#buttons > *:hover` rule (it kills our `.kyt-settings` hover). Old `yt-icon-button` hovers via `yt-interaction`; button-shape components differ; cover both.
+4. Search box: YouTube adds a second magnifier on focus (hide it); the grey mic circle is the `#voice-search-button` wrapper. Setting `input.value` does not open suggestions; use real key events (`ext.mjs --type=`).
+5. Signed in, YouTube keeps a 6px right margin after Share/Save icons; our `margin: 0` needs `!important`.
+6. Signed in, YouTube redraws masthead `#buttons` (when Notifications arrives) and the action row (when Ask/`SPARK` arrives, and on the Subscribe animation) and drops nodes it didn't create. Anything inserted there goes through `keep()` in `src/core/dom.ts`.
+7. Isolated scripts can't read Polymer `.data` (Xray). Stamping, guide data and comment count run in `src/main-world.ts`.
+8. Trusted Types blocks `innerHTML`. Build nodes with `h()`.
+9. `ytcfg` exists at `document_start` but `LOGGED_IN` is set later. `signedIn` must wait for a value, or features skip silently.
+10. `ytd-guide-renderer` doesn't exist on watch pages or when the sidebar starts collapsed (< ~1312px) until the drawer opens. `guide()` falls back to one innertube guide request per page load.
+11. Signed-in guide data links only to `/feed/playlists`; the Playlists dropdown fetches playlists on first open. Guide data lacks Settings, Help, Send feedback.
+12. Entries behind YouTube's "Show more" (e.g. Memberships) have no drawn icon. `ytIcon` waits (~50 × 100ms) for the hidden `yt-icon` to render.
+13. Masking flattens multicolour brand icons (Premium, Music, Kids). Detect a non-`currentColor` fill and render as `<img>`.
+14. Comment count comes from the comments engagement panel's `contextualInfo` (short form, "2.4M"). It is stale for ~1s after SPA navigation. No panel = comments disabled = icon only.
+15. Description has an inline min-width (~381px); override it. On streams hide `#teaser-carousel` and `#comment-teaser` when watch-tabs is on.
+16. Theater toggles often don't change `#primary` width, so `ResizeObserver` won't fire. Re-align after the `theater` attribute changes, inside `requestAnimationFrame`.
+17. Hidden `#sort-menu` items still work when clicked. Find items by index (the list re-renders); sync chips from `aria-selected`.
+18. YouTube's continuation loaders use `IntersectionObserver` with a null root, so infinite scroll works inside our scroll containers. Add `overscroll-behavior: contain`.
+19. Stamp channel tabs by URL slug, never title. Mini guide root exists early; its entries render lazily.
+
+Tried and dropped:
+
+20. Signed-in check via `SAPISID` cookie: replaced by `ytcfg LOGGED_IN`. The real bug was timing plus redraws.
+21. rAF-deferred stamping/`keep()`: flashed full labels for one frame (see §4.5).
+22. esbuild `dataurl` loader for SVG: broke on `"` and `#`, icons rendered as squares. Inlining base64 icons in `content.js` blew the 60 KB budget. Final: copy `src/icons` to `dist/icons`, load as `web_accessible_resources` via CSS `mask-image`.
+23. Rewriting `fill` to `currentColor` in `fetch-icons.mjs`: pointless (masks use alpha only) and it fills shapes meant to be empty. Reverted.
+24. `grid-template-rows: 0fr → 1fr` on an empty list animates to the wrong height. Fill lists before opening.
+25. `setTimeout(Infinity)` fires immediately; `waitFor` needs an explicit no-timeout path.
+26. Iterator helpers need Firefox 131; we target 128. Use arrays.
+
+Testing:
+
+27. Firefox keeps the old `main-world.js` running in open tabs after a temporary add-on reload (`TypeError: c[s] is not a function`). The per-build id in `build.mjs` + `src/core/bridge.ts` fixes it. Keep it.
+28. `ext.mjs --remove` deletes our nodes to imitate a YouTube redraw. Each log line prints twice (first copy is a `robots.txt` load).
+29. `probe.mjs` eval is blocked by CSP on Home (Search allows it). Wrap snippets as an IIFE.
+30. Headless Firefox can't play live video; test chat on a live-now stream (e.g. Lofi Girl). Consent screens can hide chat. Launch and `waitFor` timeouts happen; retry before calling it a regression.
+31. Console paste in Firefox needs `allow pasting` once. Console scripts save to Downloads or the clipboard.
+32. When a fix works logged out but not for the user, ask for a `scripts/diag.js` report before guessing.
+33. CleanShot and download paths may contain a narrow no-break space. Use globs or `ls`, not typed names.
+34. Firefox sizes the action popup on its first layout. Build popup rows synchronously; `storage.sync` cold start is slow, and a popup that waited for it opened near-empty and closed (needed ~3 clicks). Headless Firefox cannot navigate to `moz-extension://` pages, so the popup needs a signed-in-side check.

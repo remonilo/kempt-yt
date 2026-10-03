@@ -1,5 +1,5 @@
 export type Route =
-  | 'home' | 'watch' | 'shorts' | 'subscriptions' | 'search' | 'channel' | 'playlist' | 'other';
+  | 'home' | 'watch' | 'shorts' | 'subscriptions' | 'history' | 'search' | 'channel' | 'playlist' | 'other';
 
 export function routeOf(path: string): Route {
   if (path === '/') return 'home';
@@ -7,6 +7,7 @@ export function routeOf(path: string): Route {
   if (path === '/watch' || /^\/(@|channel\/|c\/|user\/)[^/]+\/live$/.test(path)) return 'watch';
   if (path.startsWith('/shorts/')) return 'shorts';
   if (path === '/feed/subscriptions') return 'subscriptions';
+  if (path === '/feed/history') return 'history';
   if (path === '/results') return 'search';
   if (path === '/playlist') return 'playlist';
   if (/^\/(@|channel\/|c\/|user\/)/.test(path)) return 'channel';
