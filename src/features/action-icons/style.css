@@ -1,12 +1,13 @@
-/* Share / Save on the watch page: drop the label, become a 40px circle like YouTube's icon buttons. */
-html[kyt-action-icons] ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"]) button {
+/* Share / Save / Download on the watch page: drop the label, become a 40px circle like YouTube's icon buttons.
+   Download moves between the row and the ⋯ menu with the row's width; in the row it keeps its label otherwise. */
+html[kyt-action-icons] ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"]) button {
   width: 40px;
   padding: 0;
   justify-content: center;
 }
-html[kyt-action-icons] ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"]) .ytSpecButtonShapeNextIcon {
+html[kyt-action-icons] ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"]) .ytSpecButtonShapeNextIcon {
   margin: 0 !important; /* signed-in builds keep the 6px label gap otherwise */
 }
-html[kyt-action-icons] ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"]) .ytSpecButtonShapeNextButtonTextContent {
+html[kyt-action-icons] ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"]) .ytSpecButtonShapeNextButtonTextContent {
   display: none;
 }

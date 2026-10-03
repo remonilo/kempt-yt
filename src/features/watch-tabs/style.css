@@ -1,0 +1,172 @@
+/* Tab bar: Figma "Segmented button" (Video 38:10936). Selected = a white pill that slides between segments. */
+/* The outline is an inset shadow, painted under the pill, so the pill fills the full 36px. */
+html[kyt-watch-tabs] .kyt-tabs {
+  --i: 0;
+  --n: 3;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  flex: none;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  height: 36px;
+  margin-bottom: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--kyt-outline);
+}
+html[kyt-watch-tabs] .kyt-tabs-ind {
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: -1;
+  width: calc(100% / var(--n));
+  transform: translateX(calc(var(--i) * 100%));
+  background: var(--kyt-fg);
+  transition: transform 280ms cubic-bezier(0.2, 0, 0, 1), width 280ms cubic-bezier(0.2, 0, 0, 1), opacity 200ms;
+}
+/* No tab open (theater mode): the pill fades out where it is. */
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab="none"] .kyt-tabs-ind {
+  opacity: 0;
+}
+html[kyt-watch-tabs] .kyt-tab {
+  all: unset;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  font: 500 14px/20px Roboto, Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
+  color: var(--kyt-fg-muted);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 200ms, background-color 200ms;
+  --kyt-icon-size: 20px;
+}
+html[kyt-watch-tabs] .kyt-tab[hidden] {
+  display: none;
+}
+/* Separators sit under the pill (z -2 < -1), so none cuts across the selected tab's edge. */
+html[kyt-watch-tabs] .kyt-tab:not([hidden]) ~ .kyt-tab::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: -2;
+  width: 1px;
+  background: var(--kyt-outline);
+}
+html[kyt-watch-tabs] .kyt-tab:hover:not([aria-selected="true"]) {
+  background: var(--kyt-hover-bg);
+  color: var(--kyt-fg);
+}
+html[kyt-watch-tabs] .kyt-tab[aria-selected="true"] {
+  color: var(--kyt-bg);
+  cursor: default;
+}
+html[kyt-watch-tabs] .kyt-tab:focus-visible {
+  outline: 2px solid var(--kyt-outline-focus);
+  outline-offset: -3px;
+  border-radius: 999px;
+}
+
+/* Only the selected tab's content shows. [kyt-tab] is set by the script, so nothing hides before it runs. */
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="videos"]) #related,
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="chat"]) #chat-container,
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="info"]) .kyt-tab-info,
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="comments"]) .kyt-tab-comments,
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="ai"]) [kyt-ai] {
+  display: none !important;
+}
+/* Two columns: the right column is one viewport tall and only the open tab scrolls, so the page (and the
+   video) stays put. overscroll-behavior stops the scroll from passing on to the page at either end.
+   #secondary is as tall as the left column, so sticky keeps the tabs in view if that column is longer.
+   12px = the video's top margin (YouTube's --ytd-margin-3x), so the tabs line up with the video when stuck. */
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="none"])[is-two-columns_] #secondary-inner {
+  position: sticky;
+  top: calc(var(--ytd-masthead-height, 56px) + 12px);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--ytd-masthead-height, 56px) - 24px);
+}
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="none"])[is-two-columns_] #secondary-inner > * {
+  flex: none;
+}
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab="videos"][is-two-columns_] #secondary-inner > #related,
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab="info"][is-two-columns_] #secondary-inner > .kyt-tab-info,
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab="comments"][is-two-columns_] #secondary-inner > .kyt-tab-comments,
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab="chat"][is-two-columns_] #secondary-inner > #chat-container,
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab="ai"][is-two-columns_] #secondary-inner > #panels {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+/* Chat and Ask AI bring their own scrolling: stretch them to the tab instead of their fixed heights. */
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab="chat"][is-two-columns_] #chat-container {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab="chat"][is-two-columns_] #chat-container > #chat {
+  flex: 1;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+}
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab="ai"][is-two-columns_] #panels {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab="ai"][is-two-columns_] #panels > [kyt-ai] {
+  flex: 1;
+  height: auto !important;
+  max-height: none !important;
+}
+
+/* The tabs own opening and closing: no close (X) on the Ask panel or the chat (chat's is in its iframe,
+   see index.ts). Closing them would leave an empty tab. */
+html[kyt-watch-tabs] [kyt-ai] #visibility-button {
+  display: none !important;
+}
+
+/* Re-runs each time a panel goes from display:none to shown. */
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab] :is(#related, #chat-container, .kyt-tab-info, .kyt-tab-comments, [kyt-ai]) {
+  animation: kyt-tab-in 200ms cubic-bezier(0.2, 0, 0, 1);
+}
+@keyframes kyt-tab-in {
+  from {
+    opacity: 0;
+    translate: 0 6px;
+  }
+}
+
+/* Moved content must not widen the column (the description's hashtag line is nowrap). */
+html[kyt-watch-tabs] :is(.kyt-tab-info, .kyt-tab-comments) {
+  contain: inline-size;
+}
+/* Teasers under the actions that open what the tabs already hold: the comment preview, and the
+   "Live chat · Open panel" card that streams show even while chat is open. */
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab] ytd-watch-metadata #comment-teaser,
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab][live-chat-present-and-expanded] ytd-watch-metadata #teaser-carousel {
+  display: none !important;
+}
+
+/* The description no longer sits under the actions. */
+html[kyt-watch-tabs] .kyt-tab-info #description {
+  display: flow-root; /* keeps its inner 12px margin inside the grey box */
+  margin: 0;
+  min-width: 0; /* YouTube's max(381px, 50%) is sized for the row beside the actions */
+}
+html[kyt-watch-tabs] .kyt-tab-comments ytd-comments {
+  margin: 0;
+}
+html[kyt-watch-tabs] .kyt-tab-comments ytd-comments-header-renderer {
+  margin-top: 4px;
+}
+
+/* The Ask AI tab replaces YouTube's Ask button (still clicked by the tab). */
+html[kyt-watch-tabs-askAi] ytd-watch-metadata yt-button-view-model[kyt-icon="SPARK"] {
+  display: none !important;
+}
