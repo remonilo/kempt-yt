@@ -2,10 +2,13 @@ import { call } from './bridge.ts';
 import type { Route } from './router.ts';
 import type { Settings } from './settings.ts';
 
-export type Option = { label: string; cssVar?: string } & (
+/** `parent`: key of a boolean option of the same feature. While it's false this option is inactive (attribute
+ *  unset, popup row hidden). */
+export type Option = { label: string; cssVar?: string; parent?: string } & (
   | { type: 'boolean'; default: boolean }
   | { type: 'color'; default: string }
   | { type: 'number'; default: number; min?: number; max?: number }
+  | { type: 'choice'; default: string; choices: Record<string, string> }
 );
 
 export interface Ctx {
@@ -25,7 +28,8 @@ export interface Feature {
   /** Omit = every page. */
   routes?: Route[];
   /** `cssVar` options are written to <html> as custom properties while the feature is on.
-   *  Boolean options that are true set html[kyt-<id>-<key>], so CSS can gate on them. */
+   *  Boolean options that are true set html[kyt-<id>-<key>], choice options set html[kyt-<id>-<key>="<value>"],
+   *  so CSS can gate on them. */
   options?: Record<string, Option>;
   /** Omit for CSS-only features. Listen to `kyt:navigate` for same-route navigation. */
   run?(ctx: Ctx): void | Promise<void>;
@@ -34,6 +38,11 @@ export interface Feature {
 export const isOn = (f: Feature, s: Settings) => s.features[f.id] ?? f.defaultOn;
 export const optionValue = (f: Feature, key: string, s: Settings) =>
   s.options[`${f.id}.${key}`] ?? f.options?.[key]?.default;
+/** False while the option's parent option is off. */
+export const optionActive = (f: Feature, key: string, s: Settings) => {
+  const p = f.options?.[key]?.parent;
+  return !p || optionValue(f, p, s) === true;
+};
 
 export function createRunner(features: Feature[]) {
   const running = new Map<string, AbortController>();
@@ -46,7 +55,14 @@ export function createRunner(features: Feature[]) {
       const on = isOn(f, settings);
       html.toggleAttribute(`kyt-${f.id}`, on);
       for (const [key, opt] of Object.entries(f.options ?? {})) {
-        if (opt.type === 'boolean') html.toggleAttribute(`kyt-${f.id}-${key}`, on && optionValue(f, key, settings) === true);
+        const active = on && optionActive(f, key, settings);
+        const attr = `kyt-${f.id}-${key}`;
+        if (opt.type === 'boolean') html.toggleAttribute(attr, active && optionValue(f, key, settings) === true);
+        if (opt.type === 'choice') {
+          const v = String(optionValue(f, key, settings));
+          if (!active) html.removeAttribute(attr);
+          else if (html.getAttribute(attr) !== v) html.setAttribute(attr, v);
+        }
         if (!opt.cssVar) continue;
         if (on) html.style.setProperty(opt.cssVar, String(optionValue(f, key, settings)));
         else html.style.removeProperty(opt.cssVar);
