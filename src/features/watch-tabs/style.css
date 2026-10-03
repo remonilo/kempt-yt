@@ -24,6 +24,21 @@ html[kyt-watch-tabs] .kyt-tabs-ind {
   background: var(--kyt-fg);
   transition: transform 280ms cubic-bezier(0.2, 0, 0, 1), width 280ms cubic-bezier(0.2, 0, 0, 1), opacity 200ms;
 }
+/* DOM order is YouTube's panels first, then ours (see index.ts). Visually the bar goes back on top and
+   the boxes right after #panels, as if they sat before #chat-container. */
+html[kyt-watch-tabs] :is(#secondary-inner, #below):has(> .kyt-tabs) {
+  display: flex;
+  flex-direction: column;
+}
+html[kyt-watch-tabs] #below:has(> .kyt-tabs) > :is(#shopping-timely-shelf, #persistent-panel-container, #playlist) {
+  order: -3;
+}
+html[kyt-watch-tabs] :is(#secondary-inner, #below) > .kyt-tabs {
+  order: -2;
+}
+html[kyt-watch-tabs] :is(#secondary-inner, #below):has(> .kyt-tabs) > :is(#panels, .kyt-tab-info, .kyt-tab-comments) {
+  order: -1;
+}
 /* No tab open (theater mode): the pill fades out where it is. */
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab="none"] .kyt-tabs-ind {
   opacity: 0;
@@ -77,6 +92,12 @@ html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="comments"]) .kyt-tab
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="ai"]) [kyt-ai] {
   display: none !important;
 }
+/* Theater with live chat open: YouTube moves #chat-container into #columns, pins it fixed at the right
+   edge under its own masthead height ([fixed-panels]) and reserves a sidebar-wide strip for it, which
+   breaks under our topbar. Like TabView, theater shows the player alone: the chat hides with the other tabs
+   (rule above), the strip goes, and the Live chat tab leaves theater (index.ts). */
+html[kyt-watch-tabs] ytd-watch-flexy[fixed-panels] #columns { padding-right: 0 !important; }
+html[kyt-watch-tabs] ytd-watch-flexy[fixed-panels] #panels-full-bleed-container { display: none !important; }
 /* Two columns: the right column is one viewport tall and only the open tab scrolls, so the page (and the
    video) stays put. overscroll-behavior stops the scroll from passing on to the page at either end.
    #secondary is as tall as the left column, so sticky keeps the tabs in view if that column is longer.

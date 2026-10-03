@@ -3,13 +3,15 @@
 //   --width=N sets the viewport width (default 1400; under 1312 YouTube shows the collapsed mini guide).
 //   --type types into the search box (real key events) so the suggestions popup opens.
 //   --eval runs file.js (an async function body) in the page after load and prints its return value.
+//   --scrollbars forces classic (non-overlay) scrollbars, like macOS "Always show scroll bars".
 //   --fake-login makes ytcfg report LOGGED_IN so signed-in-only features mount (their API calls still fail).
 import puppeteer from 'puppeteer-core';
 import { resolve } from 'node:path';
 const [url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', shotPath] = process.argv.slice(2).filter((a) => !a.startsWith('--'));
 const browser = await puppeteer.launch({
   browser: 'firefox', executablePath: '/Applications/Firefox.app/Contents/MacOS/firefox', headless: true,
-  extraPrefsFirefox: { 'ui.systemUsesDarkTheme': 1, 'xpinstall.signatures.required': false },
+  extraPrefsFirefox: { 'ui.systemUsesDarkTheme': 1, 'xpinstall.signatures.required': false,
+    ...(process.argv.includes('--scrollbars') && { 'ui.useOverlayScrollbars': 0 }) },
 });
 try {
   await browser.installExtension(resolve('dist'));

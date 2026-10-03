@@ -9,14 +9,17 @@ Keep this list current. It is the first thing a new session reads.
 
 Open in phase 5 (`watch-tabs`, `comment-sort`):
 
-- [ ] Player and right-column animation looks janky (theater toggle?). Waiting on a screen recording. Suspects: the bar paints beside the title for one frame before `align()` (rAF) moves it to the actions row; the page scrollbar appearing in theater shifts the layout by 15px; `kyt-tab-in` fades the column in while the player resizes.
-- [x] Page scrollbar hidden in two columns with a tab open (`html[kyt-watch-tabs-open]`); the tab keeps its own. Single column and theater keep the page scrollbar. Awaits user check.
+- [ ] Spamming T froze the page and blacked out the player. Cause: our tab bar and boxes sat inside YouTube's panel run, so every theater toggle made `updatePanelsLocation` re-insert all panels and `keep()` move ours back, re-rendering comments (§13.35). Our nodes now go after the run, flex `order` keeps the look. Headless, 20 toggles with 20 comment threads loaded: 34.6k -> 9.1k mutations, worst frame 192 -> 92ms. User-verified on a video with comments disabled.
+- [ ] Theater with live chat open: YouTube moves `#chat-container` into `#columns` and pins it `position: fixed` under its own masthead height (`[fixed-panels]`), which broke under our topbar (overlap, half off-screen). Now done like TabView: theater shows the player alone (chat hidden, `#columns` padding and `#panels-full-bleed-container` removed), the Live chat tab leaves theater. Verified headless on `/@LofiGirl/live` (live chat loads there logged out): awaits signed-in check.
+- [x] Page scrollbar hidden in two columns with a tab open (`html[kyt-watch-tabs-open]`); the tab keeps its own. Single column and theater keep the page scrollbar.
+- [x] Theater animation itself: YouTube's own, not ours to fix (user, after commit).
 
 User-verified signed in: Ask AI tab and cinema from it, toggle-off restores native layout, single column, Download icon-only.
 
 Open in phase 4 (`sidebar`):
 
-- [ ] Signed-in check: open a `/watch` page in a fresh tab (sidebar never opened), or load any page under 1312px wide, then open ☰. Subscriptions and Playlists must be filled (innertube guide request, §13.10).
+- [x] Fresh `/watch` tab or under 1312px, then ☰: Subscriptions and Playlists filled. User-verified.
+- [ ] After phase 7 icons: sidebar dropdowns (Subscriptions, Playlists) get a hierarchy design, their child rows look out of place now (user request). Needs a Figma frame or a proposal.
 
 User-verified signed in: Subscriptions and Playlists dropdowns, suggestions blur, footer divider. Help and Send feedback are absent from signed-in guide data, so they never render.
 
@@ -503,3 +506,6 @@ Testing:
 32. When a fix works logged out but not for the user, ask for a `scripts/diag.js` report before guessing.
 33. CleanShot and download paths may contain a narrow no-break space. Use globs or `ls`, not typed names.
 34. Firefox sizes the action popup on its first layout. Build popup rows synchronously; `storage.sync` cold start is slow, and a popup that waited for it opened near-empty and closed (needed ~3 clicks). Headless Firefox cannot navigate to `moz-extension://` pages, so the popup needs a signed-in-side check.
+35. YouTube's `updatePanelsLocation` (theater, fullscreen, column changes) wants `#panels`, `#chat-container`, `#playlist`, `#inline-panels` (plus `#shopping-timely-shelf`, `#persistent-panel-container` in `#below`) as the first children of their parent, in order. Anything we insert inside that run makes it re-insert every panel on each call, and our re-mount then moves heavy subtrees (comments re-render, chat iframe reload). Insert after the run; reorder with CSS. Trace DOM moves by wrapping `Node.prototype.insertBefore` in an `ext.mjs --eval` snippet (main world sees YouTube's calls, not ours).
+36. `ext.mjs --scrollbars` forces classic scrollbars; headless defaults to overlay ones (0px wide), which hides scrollbar-width bugs.
+37. Theater with live chat: `updateChatLocation` moves `#chat-container` into `#columns` and sets `[fixed-panels]` (chat `position: fixed; top: var(--ytd-masthead-height-accounting-for-hidden)`, `#columns` padding-right = sidebar width). The `web_watch_theater_chat` flag TabView flips is no longer read; `web_watch_theater_chat_beside_player` picks `#panels-full-bleed-container` instead. Logged-out live chat to test with: `/@LofiGirl/live`.
