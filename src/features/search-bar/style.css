@@ -64,3 +64,21 @@ html[kyt-search-bar] ytd-masthead #voice-search-button button .ytSpecButtonShape
   width: var(--kyt-icon) !important;
   height: var(--kyt-icon) !important;
 }
+
+/* Suggestions: exactly the pill's width (left/width cover its 1px border; YouTube sets an inline min-width),
+   frosted like the masthead, and each row's icon in line with the pill's magnifier. */
+html[kyt-search-bar] .ytSearchboxComponentSuggestionsContainer {
+  left: -1px !important;
+  width: calc(100% + 2px) !important;
+  min-width: 0 !important;
+  margin-left: 0 !important;
+  box-sizing: border-box;
+  border: 1px solid var(--kyt-outline);
+  border-radius: 20px !important;
+  background: var(--kyt-glass) !important;
+  backdrop-filter: blur(48px);
+  box-shadow: none !important;
+}
+html[kyt-search-bar] .ytSuggestionComponentSuggestion {
+  padding-left: 6px !important;
+}

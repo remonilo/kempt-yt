@@ -7,7 +7,10 @@ export const S = {
   mastheadButtons: 'ytd-masthead #buttons',
   mastheadMenu: 'ytd-masthead #buttons > ytd-topbar-menu-button-renderer', // avatar (signed in)
   guide: 'ytd-guide-renderer #sections',
+  guideDrawer: 'tp-yt-app-drawer#guide', // always present; its ytd-guide-renderer appears on first open (watch pages)
+  guideRenderer: 'ytd-guide-renderer',
   miniGuide: 'ytd-mini-guide-renderer',
+  guideButton: 'ytd-masthead #guide-button button', // ☰
   channelTabs: 'ytd-browse[page-subtype="channels"] yt-tab-group-shape',
   watchFlexy: 'ytd-watch-flexy',
   watchMetadata: 'ytd-watch-metadata',

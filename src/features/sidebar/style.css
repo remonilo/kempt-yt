@@ -1,0 +1,200 @@
+/* Figma's sidebar layout (92:4870, dropdown rows 23:8475 / 101:6372) at YouTube's own sizes:
+   40px rows, 14px labels, 24px icons, 24px icon-label gap. Dropdown = label | 1px divider | arrow button.
+   YouTube's #sections hides only once our nav is in (sidebar/index.ts mounts it after the data loads). */
+html[kyt-sidebar] ytd-guide-renderer:has(> .kyt-nav) {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%; /* so the foot can sit at the bottom of a short sidebar */
+}
+html[kyt-sidebar] .kyt-nav { display: contents; }
+html[kyt-sidebar] .kyt-nav ~ :is(#sections, #footer) { display: none; }
+html[kyt-sidebar] .kyt-nav-main { order: 1; }
+html[kyt-sidebar] .kyt-foot { order: 2; }
+
+/* Entries the popup can hide; the icon type is the same in every language. */
+html[kyt-sidebar-hide-you] .kyt-nav-item[data-icon^='ACCOUNT_CIRCLE'],
+html[kyt-sidebar-hide-channel] .kyt-nav-item[data-icon^='ACCOUNT_BOX'],
+html[kyt-sidebar-hide-videos] .kyt-nav-item[data-icon^='MY_VIDEOS'],
+html[kyt-sidebar-hide-courses] .kyt-nav-item[data-icon^='COURSE'],
+html[kyt-settings-topbar] .kyt-nav-item[data-icon^='SETTINGS'] {
+  display: none !important; /* beats .kyt-mini's display: contents */
+}
+
+.kyt-nav-main { padding: 0 12px; }
+.kyt-nav-group { padding: 12px 0; }
+.kyt-nav-group + .kyt-nav-group::before {
+  content: '';
+  display: block;
+  height: 1px;
+  margin-bottom: 12px;
+  background: var(--kyt-divider);
+}
+
+.kyt-nav-row {
+  display: flex;
+  align-items: center;
+}
+.kyt-nav-link {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  gap: 24px;
+  height: 40px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--kyt-radius);
+  background: none;
+  color: var(--kyt-fg);
+  font: 400 14px / 20px Roboto, Arial, sans-serif;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+}
+.kyt-nav-title {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.kyt-nav-divider {
+  flex: none;
+  width: 1px;
+  height: 24px;
+  margin: 0 4px;
+  background: var(--kyt-outline);
+}
+.kyt-nav-arrow {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--kyt-radius);
+  background: none;
+  color: var(--kyt-fg);
+  cursor: pointer;
+}
+:is(.kyt-nav-link, .kyt-nav-arrow):hover { background-color: var(--kyt-hover-bg); }
+.kyt-nav-link[aria-current='page'] {
+  background-color: var(--kyt-selected-bg);
+  font-weight: 500;
+}
+.kyt-nav-link[aria-current='page']:hover { background-color: var(--kyt-selected-hover-bg); }
+.kyt-nav-link[aria-current='page'] .kyt-icon { color: var(--kyt-accent); }
+
+/* Dropdowns animate their height with grid rows 0fr -> 1fr (layout for 200ms per click, nothing while idle).
+   Closed lists are visibility: hidden so their links leave the tab order once the close finishes. */
+.kyt-nav-children {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 200ms ease;
+}
+.kyt-nav-list {
+  min-height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  transition: visibility 0s 200ms;
+}
+:is(.kyt-nav-item, .kyt-foot)[open] > .kyt-nav-children { grid-template-rows: 1fr; }
+:is(.kyt-nav-item, .kyt-foot)[open] > .kyt-nav-children > .kyt-nav-list {
+  visibility: visible;
+  transition-delay: 0s;
+}
+.kyt-nav-arrow .kyt-icon { transition: transform 200ms ease; } /* compositor-only */
+.kyt-nav-item[open] .kyt-nav-arrow .kyt-icon { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) {
+  .kyt-nav-children, .kyt-nav-arrow .kyt-icon { transition: none; }
+}
+.kyt-nav-avatar {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Foot: the centered copyright line under a divider, pinned to the bottom of a short sidebar. The copyright
+   toggles a reversed dropdown above the divider: "More from YouTube", the settings section, footer links.
+   The list is bottom-aligned, so the open/close is a wipe that rises from the divider; the divider and the
+   copyright stay put. */
+.kyt-foot {
+  margin: auto 12px 0; /* auto top: bottom of the sidebar */
+  padding-bottom: 12px;
+}
+.kyt-foot .kyt-nav-children { align-content: end; }
+.kyt-foot .kyt-nav-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.kyt-foot .kyt-nav-group { padding: 12px 0 0; }
+.kyt-foot-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 12px 12px;
+}
+.kyt-foot-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+}
+.kyt-foot-link {
+  color: var(--kyt-fg-muted);
+  font: 500 13px / 18px Roboto, Arial, sans-serif;
+  text-decoration: none;
+}
+.kyt-foot-toggle {
+  display: block;
+  width: 100%;
+  padding: 18px 0 6px;
+  border: 0;
+  border-top: 1px solid var(--kyt-divider);
+  background: none;
+  color: var(--kyt-fg-muted);
+  font: 400 12px / 18px Roboto, Arial, sans-serif;
+  text-align: center;
+  cursor: pointer;
+}
+:is(.kyt-foot-link, .kyt-foot-toggle):hover { color: var(--kyt-fg); }
+.kyt-foot[open] > .kyt-foot-toggle { color: var(--kyt-accent); }
+
+/* Collapsed sidebar: the expanded sidebar's groups as icons (Figma 92:4871), in place of YouTube's entries.
+   Every row is the same box, so icons share one center line. */
+html[kyt-sidebar] .kyt-mini ~ #items { display: none; }
+.kyt-mini {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 4px;
+}
+.kyt-mini-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 12px 0;
+}
+.kyt-mini-group + .kyt-mini-group { border-top: 1px solid var(--kyt-divider); }
+.kyt-mini .kyt-nav-item { display: contents; }
+.kyt-mini-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--kyt-radius);
+  background: none;
+  color: var(--kyt-fg);
+  cursor: pointer;
+}
+.kyt-mini-link:hover { background-color: var(--kyt-hover-bg); }
+.kyt-mini-link[aria-current='page'] { background-color: var(--kyt-selected-bg); }
+.kyt-mini-link[aria-current='page'] .kyt-icon { color: var(--kyt-accent); }

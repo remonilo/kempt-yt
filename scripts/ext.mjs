@@ -1,5 +1,8 @@
 // Dev check: loads dist/ as a real extension in logged-out Firefox and prints which kyt features mounted.
-// usage: node scripts/ext.mjs [url] [screenshot.png] [--fake-login]
+// usage: node scripts/ext.mjs [url] [screenshot.png] [--fake-login] [--type=query] [--eval=file.js]
+//   --width=N sets the viewport width (default 1400; under 1312 YouTube shows the collapsed mini guide).
+//   --type types into the search box (real key events) so the suggestions popup opens.
+//   --eval runs file.js (an async function body) in the page after load and prints its return value.
 //   --fake-login makes ytcfg report LOGGED_IN so signed-in-only features mount (their API calls still fail).
 import puppeteer from 'puppeteer-core';
 import { resolve } from 'node:path';
@@ -11,7 +14,8 @@ const browser = await puppeteer.launch({
 try {
   await browser.installExtension(resolve('dist'));
   const page = await browser.newPage();
-  await page.setViewport({ width: 1400, height: 900 });
+  const widthArg = process.argv.find((a) => a.startsWith('--width='));
+  await page.setViewport({ width: widthArg ? Number(widthArg.slice(8)) : 1400, height: 900 });
   if (process.argv.includes('--fake-login'))
     await page.evaluateOnNewDocument(() => {
       let cfg;
@@ -43,6 +47,18 @@ try {
     await page.evaluate(() => document.querySelectorAll('.kyt-settings, .kyt-wl').forEach((e) => e.remove()));
     await new Promise((r) => setTimeout(r, 500));
     console.log('after remove:', await page.evaluate(() => [!!document.querySelector('.kyt-settings'), !!document.querySelector('.kyt-wl')].join()));
+  }
+  const typeArg = process.argv.find((a) => a.startsWith('--type='));
+  if (typeArg) {
+    const { x, y, width, height } = await page.$eval('ytd-masthead yt-searchbox', (e) => e.getBoundingClientRect().toJSON());
+    await page.mouse.click(x + width / 2, y + height / 2);
+    await page.keyboard.type(typeArg.slice(7), { delay: 50 });
+    await new Promise((r) => setTimeout(r, 2000));
+  }
+  const evalArg = process.argv.find((a) => a.startsWith('--eval='));
+  if (evalArg) {
+    const { readFile } = await import('node:fs/promises');
+    console.log(await page.evaluate(`(async () => { ${await readFile(evalArg.slice(7), 'utf8')} })()`));
   }
   console.log(logs.join('\n'));
   if (shotPath) await page.screenshot({ path: shotPath });

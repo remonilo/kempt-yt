@@ -48,21 +48,23 @@ function keepStamped(root: Element, kind: string, fn: () => void, init: Mutation
   new MutationObserver(fn).observe(root, init);
 }
 
-/** Innertube POST with the signed-in user's session (SAPISIDHASH auth, as YouTube's own web client does). */
+/** Innertube POST with the signed-in user's session (SAPISIDHASH auth, as YouTube's own web client does).
+ *  Signed out it goes without auth, which public endpoints (guide) accept. */
 async function innertube(endpoint: string, body: Record<string, unknown>): Promise<any> {
-  const sapisid = cookie('SAPISID') ?? cookie('__Secure-3PAPISID');
-  if (!sapisid) throw new Error('signed out');
-  const ts = Math.floor(Date.now() / 1000);
-  const digest = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(`${ts} ${sapisid} ${location.origin}`));
-  const hash = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    Authorization: `SAPISIDHASH ${ts}_${hash}`,
     'X-Origin': location.origin,
     'X-Goog-AuthUser': String(ytcfg.get('SESSION_INDEX') ?? 0),
     'X-Youtube-Client-Name': String(ytcfg.get('INNERTUBE_CONTEXT_CLIENT_NAME')),
     'X-Youtube-Client-Version': String(ytcfg.get('INNERTUBE_CLIENT_VERSION')),
   };
+  const sapisid = cookie('SAPISID') ?? cookie('__Secure-3PAPISID');
+  if (sapisid) {
+    const ts = Math.floor(Date.now() / 1000);
+    const digest = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(`${ts} ${sapisid} ${location.origin}`));
+    const hash = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
+    headers.Authorization = `SAPISIDHASH ${ts}_${hash}`;
+  }
   const pageId = ytcfg.get('DELEGATED_SESSION_ID'); // brand accounts
   if (pageId) headers['X-Goog-PageId'] = pageId;
   const res = await fetch(`/youtubei/v1/${endpoint}?prettyPrint=false`, {
@@ -75,15 +77,42 @@ async function innertube(endpoint: string, body: Record<string, unknown>): Promi
   return res.json();
 }
 
-/** Depth-first search for the first object matching `test`. */
+/** Every object in `o`, depth-first. */
+function* walk(o: any): Generator<any> {
+  if (!o || typeof o !== 'object') return;
+  yield o;
+  for (const v of Object.values(o)) yield* walk(v);
+}
 function find(o: any, test: (x: any) => boolean): any {
-  if (!o || typeof o !== 'object') return undefined;
-  if (test(o)) return o;
-  for (const v of Object.values(o)) {
-    const hit = find(v, test);
-    if (hit) return hit;
-  }
-  return undefined;
+  for (const x of walk(o)) if (test(x)) return x;
+}
+
+const text = (t: any): string => t?.simpleText ?? t?.runs?.map((r: any) => r.text).join('') ?? t?.content ?? '';
+
+/** Endpoints of links we render ourselves, by URL, so navigate() can follow them like YouTube does. */
+const endpoints = new Map<string, any>();
+
+let guideFetch: Promise<any> | undefined;
+
+/** One guide entry as JSON. Entries without a URL (Shorts) get a `kyt:<icon>` key; navigate() resolves both. */
+function guideEntry(r: any, header?: boolean) {
+  const icon: string | undefined = r.icon?.iconType;
+  const url: string = r.navigationEndpoint?.commandMetadata?.webCommandMetadata?.url ?? `kyt:${icon}`;
+  if (r.navigationEndpoint) endpoints.set(url, r.navigationEndpoint);
+  return { title: r.formattedTitle?.simpleText ?? text(r.title), url, icon, thumb: r.thumbnail?.thumbnails?.[0]?.url, header };
+}
+
+/** Section items flattened: collapsibles ("Show more", "You") expanded in place, their header marked. */
+function guideEntries(items: any[] = []): ReturnType<typeof guideEntry>[] {
+  return items.flatMap((it) => {
+    const [type, r] = Object.entries(it)[0] as [string, any];
+    if (type === 'guideEntryRenderer') return [guideEntry(r)];
+    if (type === 'guideDownloadsEntryRenderer') return [guideEntry(r.entryRenderer.guideEntryRenderer)];
+    if (type === 'guideCollapsibleEntryRenderer') return guideEntries(r.expandableItems);
+    if (type === 'guideCollapsibleSectionEntryRenderer')
+      return [guideEntry(r.headerEntry.guideEntryRenderer, true), ...guideEntries(r.sectionItems)];
+    return []; // sign-in promo and anything new
+  });
 }
 
 const handlers: Record<string, (...args: any[]) => unknown> = {
@@ -111,17 +140,65 @@ const handlers: Record<string, (...args: any[]) => unknown> = {
     return !!root;
   },
 
-  /** SPA navigation through YouTube's own router (no page reload). Only /watch?v= URLs for now. */
+  /** SPA navigation through YouTube's own router (no page reload): links from guide()/playlists(), or /watch?v= URLs. */
   navigate(url: string) {
     const videoId = new URL(url, location.origin).searchParams.get('v');
-    document.querySelector('ytd-app')?.dispatchEvent(new CustomEvent('yt-navigate', {
-      bubbles: true,
-      composed: true,
-      detail: { endpoint: {
-        commandMetadata: { webCommandMetadata: { url, webPageType: 'WEB_PAGE_TYPE_WATCH', rootVe: 3832 } },
-        watchEndpoint: { videoId },
-      } },
-    }));
+    const endpoint = endpoints.get(url) ?? (videoId && {
+      commandMetadata: { webCommandMetadata: { url, webPageType: 'WEB_PAGE_TYPE_WATCH', rootVe: 3832 } },
+      watchEndpoint: { videoId },
+    });
+    if (!endpoint) return location.assign(url);
+    document.querySelector('ytd-app')?.dispatchEvent(new CustomEvent('yt-navigate', { bubbles: true, composed: true, detail: { endpoint } }));
+    const drawer = document.querySelector<any>('tp-yt-app-drawer#guide'); // the overlay guide (watch pages) closes, as for YouTube's own links
+    if (drawer?.opened && !drawer.persistent) drawer.close();
+  },
+
+  /** The sidebar's data as [{ type, title, entries }] (guide-dump.js shows the raw shape). Null if it never loads. */
+  async guide() {
+    let data;
+    for (let i = 0; i < 20 && !(data = (document.querySelector('ytd-guide-renderer') as any)?.data?.items); i++)
+      await new Promise((r) => setTimeout(r, 100));
+    // No expanded guide yet (collapsed sidebar, or an overlay guide never opened): fetch what it would show, once.
+    data ??= (await (guideFetch ??= innertube('guide', {}).catch(() => null)))?.items;
+    return data?.map((s: any) => {
+      const [type, r] = Object.entries(s)[0] as [string, any];
+      return { type, title: text(r.formattedTitle), entries: guideEntries(r.items) };
+    }) ?? null;
+  },
+
+  /** YouTube's own SVG for any icon type, for icons the Figma set lacks. Drawn by a hidden yt-icon,
+   *  so it works for entries YouTube hasn't rendered (collapsed "Show more" items such as Memberships). */
+  async ytIcon(type: string) {
+    const host = document.body.appendChild(document.createElement('div'));
+    host.hidden = true;
+    const icon: any = host.appendChild(document.createElement('yt-icon'));
+    icon.icon = type;
+    try {
+      for (let i = 0; i < 50; i++) {
+        const svg = icon.querySelector('svg');
+        if (svg) return new XMLSerializer().serializeToString(svg); // keeps xmlns, needed as a standalone image
+        await new Promise((r) => setTimeout(r, 100));
+      }
+      return null;
+    } finally {
+      host.remove();
+    }
+  },
+
+  /** The signed-in user's playlists, newest activity first. */
+  async playlists() {
+    // ponytail: the add-to-playlist list (any video id works) has every playlist but no thumbnails;
+    // browse FEplaylist_aggregation if the dropdown ever shows them.
+    const res = await innertube('playlist/get_add_to_playlist', { videoIds: ['dQw4w9WgXcQ'] });
+    return [...walk(res)].filter((x) => typeof x.playlistId === 'string' && 'containsSelectedVideos' in x && x.playlistId !== 'WL')
+      .map((x) => {
+        const url = `/playlist?list=${x.playlistId}`;
+        endpoints.set(url, {
+          commandMetadata: { webCommandMetadata: { url, webPageType: 'WEB_PAGE_TYPE_PLAYLIST', rootVe: 5754 } },
+          browseEndpoint: { browseId: `VL${x.playlistId}` },
+        });
+        return { title: text(x.title), url };
+      });
   },
 
   async inWatchLater(videoId: string) {

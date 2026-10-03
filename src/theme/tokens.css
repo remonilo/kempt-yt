@@ -7,6 +7,7 @@ html {
      (default ≈ #eaa9b7) so a custom accent re-tints everything; translucent, so it works on any background. */
   --kyt-tint: color-mix(in srgb, var(--kyt-accent) 40%, #fff);
   --kyt-fg: #0f0f0f;
+  --kyt-fg-muted: #606060;
   --kyt-selected-bg: color-mix(in srgb, var(--kyt-tint) 30%, transparent);
   --kyt-selected-hover-bg: color-mix(in srgb, var(--kyt-tint) 42%, transparent);
   --kyt-hover-bg: var(--kyt-selected-bg); /* hover = selected tint, like YouTube does with grey */
@@ -16,16 +17,21 @@ html {
   --kyt-subscribe-fg: #fff;
   --kyt-outline: rgba(0, 0, 0, 0.1);
   --kyt-outline-focus: rgba(0, 0, 0, 0.4);
+  --kyt-divider: rgba(0, 0, 0, 0.1);
+  --kyt-glass: rgba(255, 255, 255, 0.8); /* YouTube's frosted masthead, with blur(48px) */
   --kyt-radius: 10px;
   --kyt-icon: 20px; /* Figma uses 24px with thinner strokes; raise to 24px when the Figma icon set lands */
 }
 html[dark] {
   --kyt-fg: #f1f1f1;
+  --kyt-fg-muted: #aaa;
   --kyt-selected-bg: color-mix(in srgb, var(--kyt-tint) 14%, transparent); /* ≈ #322629 on #111 */
   --kyt-selected-hover-bg: color-mix(in srgb, var(--kyt-tint) 20%, transparent);
   --kyt-selected-strong-bg: color-mix(in srgb, var(--kyt-tint) 30%, transparent);
   --kyt-outline: rgba(255, 255, 255, 0.1); /* Figma #2a2a2a on #111 */
   --kyt-outline-focus: rgba(255, 255, 255, 0.35);
+  --kyt-divider: rgba(255, 255, 255, 0.15); /* Figma sidebar lines */
+  --kyt-glass: rgba(15, 15, 15, 0.8);
 }
 
 /* Figma icons (core/icon.ts): the SVG is a mask, color comes from currentColor. */
@@ -36,4 +42,8 @@ html[dark] {
   height: var(--kyt-icon-size, 24px);
   background-color: currentColor;
   mask: var(--kyt-icon-src) center / contain no-repeat;
+}
+.kyt-icon.kyt-icon-color {
+  background: var(--kyt-icon-src) center / contain no-repeat;
+  mask: none;
 }

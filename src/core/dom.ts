@@ -5,7 +5,7 @@ interface WaitOpts {
 }
 
 /**
- * Resolves with the first match under `root`, or null on abort/timeout.
+ * Resolves with the first match under `root`, or null on abort/timeout (`timeout: Infinity` waits until abort).
  * Observes only `root`; pass the narrowest container you can.
  */
 export function waitFor<T extends Element = Element>(
@@ -26,7 +26,7 @@ export function waitFor<T extends Element = Element>(
       const el = root.querySelector<T>(sel);
       if (el) done(el);
     });
-    const timer = setTimeout(() => {
+    const timer = timeout === Infinity ? undefined : setTimeout(() => {
       console.warn(`kyt: "${sel}" not found after ${timeout}ms`);
       done(null);
     }, timeout);
