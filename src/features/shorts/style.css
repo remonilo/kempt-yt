@@ -8,7 +8,8 @@ html[kyt-shorts] :is(
   :is(ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer):has(a#thumbnail[href^="/shorts/"]),
   yt-lockup-view-model:has(a[href^="/shorts/"]),
   :is(ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer)[kyt-icon^="TAB_SHORTS"],
-  yt-tab-shape[kyt-tab="shorts"]
+  yt-tab-shape[kyt-tab="shorts"],
+  .kyt-nav-item[data-icon^="TAB_SHORTS"]
 ):not(ytd-browse[page-subtype="history"] *) {
   display: none !important;
 }

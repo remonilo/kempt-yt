@@ -24,7 +24,8 @@ export interface Feature {
   defaultOn: boolean;
   /** Omit = every page. */
   routes?: Route[];
-  /** `cssVar` options are written to <html> as custom properties while the feature is on. */
+  /** `cssVar` options are written to <html> as custom properties while the feature is on.
+   *  Boolean options that are true set html[kyt-<id>-<key>], so CSS can gate on them. */
   options?: Record<string, Option>;
   /** Omit for CSS-only features. Listen to `kyt:navigate` for same-route navigation. */
   run?(ctx: Ctx): void | Promise<void>;
@@ -45,6 +46,7 @@ export function createRunner(features: Feature[]) {
       const on = isOn(f, settings);
       html.toggleAttribute(`kyt-${f.id}`, on);
       for (const [key, opt] of Object.entries(f.options ?? {})) {
+        if (opt.type === 'boolean') html.toggleAttribute(`kyt-${f.id}-${key}`, on && optionValue(f, key, settings) === true);
         if (!opt.cssVar) continue;
         if (on) html.style.setProperty(opt.cssVar, String(optionValue(f, key, settings)));
         else html.style.removeProperty(opt.cssVar);

@@ -2,8 +2,6 @@ import type { Feature } from '../../core/feature.ts';
 import { keep, waitFor } from '../../core/dom.ts';
 import { icon, setIcon } from '../../core/icon.ts';
 import { S } from '../../core/selectors.ts';
-import off from '../../icons/watch-later.svg';
-import on from '../../icons/watch-later-selected.svg';
 
 export const watchLaterBtn: Feature = {
   id: 'watch-later-btn',
@@ -17,13 +15,13 @@ export const watchLaterBtn: Feature = {
     const btn = document.createElement('button');
     btn.className = 'ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono ytSpecButtonShapeNextSizeM ytSpecButtonShapeNextIconButton kyt-wl';
     btn.title = btn.ariaLabel = 'Watch later';
-    const ico = icon(off);
+    const ico = icon('watch-later');
     btn.append(ico);
 
     let videoId = '';
     let saved = false;
     const render = () => {
-      setIcon(ico, saved ? on : off);
+      setIcon(ico, saved ? 'watch-later-selected' : 'watch-later');
       btn.ariaPressed = String(saved);
     };
 
