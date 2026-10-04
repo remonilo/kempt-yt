@@ -13,7 +13,7 @@ import { routeOf } from '../../core/router.ts';
 /** Figma icons style.css paints. CSS can't build a url() from parts and the extension origin differs per install
  *  and browser, so each is a custom property on <html>: --kyt-i-<name>. */
 const NAMES = ['menu', 'arrow-left', 'search', 'mic', 'close', 'add', 'notifs', 'more', 'you',
-  'liked', 'liked-selected', 'dislike', 'dislike-selected', 'share', 'save', 'download', 'clip'];
+  'liked', 'liked-selected', 'dislike', 'dislike-selected', 'share', 'save', 'download', 'clip', 'ask', 'thanks'];
 
 export const icons: Feature = {
   id: 'icons',
