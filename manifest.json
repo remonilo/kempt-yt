@@ -5,7 +5,11 @@
   "description": "A consistent redesign of YouTube's UI.",
   "permissions": ["storage"],
   "host_permissions": ["https://www.youtube.com/*"],
-  "action": { "default_popup": "popup.html" },
+  "icons": { "16": "brand/16.png", "32": "brand/32.png", "48": "brand/48.png", "128": "brand/128.png" },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": { "16": "brand/16.png", "32": "brand/32.png" }
+  },
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/*"],
@@ -24,6 +28,10 @@
     { "resources": ["icons/*.svg", "fonts/*.woff2"], "matches": ["https://www.youtube.com/*"] }
   ],
   "browser_specific_settings": {
-    "gecko": { "id": "kempt-yt@hypnoglaze", "strict_min_version": "128.0" }
+    "gecko": {
+      "id": "kempt-yt@hypnoglaze",
+      "strict_min_version": "128.0",
+      "data_collection_permissions": { "required": ["none"] }
+    }
   }
 }
