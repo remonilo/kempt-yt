@@ -71,7 +71,7 @@ One accent color and icon set, and less clutter. Every change is a switch you ca
   - comment sort as chips
 - A switch for every change in the popup <details> <summary><sup>click to see the popup</sup></summary><img src="site/public/screenshots/popup.png" alt="Kempt popup" width="260" /></details>
 - Labels in 11 languages that follow YouTube's UI language
-- No polling, no page-wide observers and compositor-only animations, with reduced motion respected
+- No polling or page-wide observers and compositor-only animations, with reduced motion respected
 
 ## Quick start
 
