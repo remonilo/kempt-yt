@@ -37,7 +37,7 @@ function isHere(url: string): boolean {
 
 export const sidebar: Feature = {
   id: 'sidebar',
-  label: 'Redesigned sidebar',
+  label: 'Redesigned sidebar', group: 'navigation', icon: 'menu',
   defaultOn: true,
   options: {
     'hide-you': { type: 'boolean', label: 'Hide "You"', default: true },

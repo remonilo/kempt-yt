@@ -25,9 +25,11 @@ export const S = {
   chatContainer: 'ytd-watch-flexy #chat-container',
   description: 'ytd-watch-metadata #description',
   askButton: 'ytd-watch-metadata [kyt-icon="SPARK"] button', // needs stamp(S.watchActions)
+  watchSubscribe: 'ytd-watch-metadata ytd-subscribe-button-renderer', // its bell needs stampBell
   subscribeBtn: 'ytd-subscribe-button-renderer, yt-subscribe-button-view-model',
   subsGrid: 'ytd-browse[page-subtype="subscriptions"] ytd-rich-grid-renderer > #contents',
   historyList: 'ytd-browse[page-subtype="history"] ytd-section-list-renderer > #contents', // one ytd-item-section-renderer per day
   historyTitle: 'ytd-item-section-header-renderer #title', // "Today", "Thursday", "27 Sept"
   lockupDate: '.ytContentMetadataViewModelMetadataText', // last one in a lockup is the age ("7 hr ago"), aria-label has the long form
+  lockupMeta: '.ytLockupViewModelMetadata', // title, channel and metadata rows of a lockup
 } as const;

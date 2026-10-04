@@ -7,3 +7,7 @@ html[kyt-accent] .ytp-play-progress {
 html[kyt-accent] .ytSpecIconBadgeShapeBadge {
   background-color: var(--kyt-accent) !important;
 }
+/* Topbar and guide-drawer YouTube logo: first path of the first group is the red rounded rectangle. */
+html[kyt-accent] ytd-topbar-logo-renderer #logo-icon svg > g:first-child > path:first-child {
+  fill: var(--kyt-accent);
+}

@@ -5,7 +5,7 @@ import { S } from '../../core/selectors.ts';
 
 export const settingsTopbar: Feature = {
   id: 'settings-topbar',
-  label: 'Settings button in top bar',
+  label: 'Settings in top bar', group: 'navigation', icon: 'settings',
   defaultOn: true,
   async run({ signal, call }) {
     if (!(await call('signedIn'))) return console.info('kyt: signed out, settings-topbar off');

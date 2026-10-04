@@ -11,7 +11,7 @@ const watchUrl = (path: string) => {
 // style.css hides Shorts shelves and cards. This file sends every Shorts link to the normal player.
 export const shorts: Feature = {
   id: 'shorts',
-  label: 'Hide Shorts, open them as normal videos',
+  label: 'Hide Shorts', hint: 'Opens them as normal videos', group: 'feeds', icon: 'shorts',
   defaultOn: true,
   async run({ signal, call }) {
     // Clicks inside YouTube: SPA jump straight to /watch, the Shorts player never loads.

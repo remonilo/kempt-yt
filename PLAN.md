@@ -7,22 +7,18 @@ Icon source: Juxtopposed "YouTube Redesign (Community)" Figma file.
 
 Keep this list current. It is the first thing a new session reads. Done work lives in §8 and the git log.
 
-Open work:
-
-- [ ] Sidebar dropdowns (Subscriptions, Playlists) get a hierarchy design; their child rows look out of place next to the phase 7 icons (user request). Needs a Figma frame or a proposal.
-- [ ] Timeline cheap filters: type chips (All, Videos, Live, Shorts) and search over loaded items, Subscriptions only (History keeps YouTube's own chips).
-- [ ] Subscribe notification bell: `notifs`/`notifs-selected`/`notifs-disabled` exist, but its state needs a stamp from the toggle's data. Player controls (play, pause, next, volume, cc, settings, theater, fullscreen, pip) have Figma icons but are outside phase 7: ask the user.
+Open work: none. Pick from Before release or Later phases.
 
 Before release:
 
 - [ ] Localize tab labels (Info, Videos, Live chat, Ask AI), hardcoded English in `src/features/watch-tabs/index.ts` (`TABS`).
-- [ ] Timeline: `parseAge` reads English ages only; other locales get no Subscriptions headers (History is localized via Intl).
+- [ ] Timeline: the toolbar labels (All, Videos, Live, Shorts, Search subscriptions) and the Live detection by metadata words (`LIVE_TEXT` in `src/features/timeline/filter.ts`) are English only; the thumbnail live badge works in any language. Also `parseAge` reads English ages only; other locales get no Subscriptions headers (History is localized via Intl).
 
 Later phases: "View as: Channels" on Subscriptions; Return YouTube Dislike compatibility (github.com/Anarios/return-youtube-dislike).
 
 Known gaps: the search "Shorts" filter chip stays (phase 3). Icons missing from the Figma set come from Hugeicons (§9, §10.23). Sidebar new-uploads dot has no count: guide data only flags `GUIDE_ENTRY_PRESENTATION_STYLE_NEW_CONTENT`.
 
-Nothing awaits a signed-in check. Last verified: Hugeicons Ask button, Figma `library` in Playlists, playlist panel outside Videos (Watch later), sidebar new-uploads dot, phases 5 and 7 (theater spam, theater + live chat, Ask AI setting, Create and bell icons, like/dislike pop).
+Nothing awaits a signed-in check. Last verified: Subscriptions filters, bell states, sidebar child hierarchy, popup redesign, Hugeicons Ask button, Figma `library` in Playlists, playlist panel outside Videos (Watch later), sidebar new-uploads dot, phases 5 and 7 (theater spam, theater + live chat, Ask AI setting, Create and bell icons, like/dislike pop).
 
 ---
 
@@ -264,6 +260,8 @@ Selected item text and icon use `--kyt-accent`.
 
 `popup.ts` imports `features/index.ts` and renders one toggle per feature plus its `options`. A new feature appears in the popup with no popup changes.
 
+Layout (decision 27): cards per `group` (`GROUPS` in `core/feature.ts`: Look, Navigation, Watch page, Feeds; none = Other), one 48px row per feature with its `icon` (src/icons name), `label`, optional muted `hint`, and an accent switch. Options open in a panel under the row (chevron). A feature whose only option is a color shows a dot in its row that opens the picker (`popup/color.ts`: swatches, hue/saturation wheel, brightness slider, hex field). Choice options are a segmented control. Live color drags save at most every 400ms (storage.sync allows 120 writes a minute).
+
 ---
 
 ## 5. Features
@@ -344,7 +342,7 @@ Each phase ends shippable.
 | 3 ✅ | `shorts` (History keeps its Shorts). Known gap: the search "Shorts" filter chip stays (no language-independent marker)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | No Shorts visible anywhere; every Shorts entry point opens `/watch`                                              |
 | 4 ✅ | `sidebar`: own renderer with Explore, Playlists, Subscriptions dropdowns, footer toggle, mini guide. Notes in §11. New-uploads dot on channels | Dropdowns work, hidden entries toggle live from the popup, active item highlights, SPA navigation                |
 | 5 ✅ | `watch-tabs`, `comment-sort`, Download icon-only, Ask AI setting, playlist panel inside Videos. Notes in §12 | All tabs work on normal video, stream, premiere; theater and narrow layouts; toggling off restores native layout |
-| 6 🧪 | `timeline` (Subscriptions + History, §10.12). User-verified on both pages; Subscriptions filters open in Next up                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Infinite scroll keeps appending to the right day                                                                 |
+| 6 ✅ | `timeline` (Subscriptions + History, §10.12). Subscriptions toolbar: type chips + search (§10.25). User-verified signed in                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Infinite scroll keeps appending to the right day                                                                 |
 | 7 ✅ | `icons`: masthead + watch action row (sidebar and mini guide already draw Figma icons). Missing Figma icons in Next up                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | No original YouTube icon left in masthead, guide, watch action row                                               |
 
 Tests: `node --test` for `routeOf`, `bucketByDay`, `shortsIdFromUrl`. Everything else is a manual checklist per phase.
@@ -394,6 +392,11 @@ Option B (scripted): `GET https://api.figma.com/v1/images/:fileKey?ids=<nodeIds>
 21. Watch tabs: the playlist panel (Watch later, any list) belongs to the Videos tab. It sits above `#related` in both layouts and hides in every other tab; theater keeps it. Hiding beat minimizing: a collapsed header inside Comments could be expanded over the comments again. The same goes for anything else in `#secondary-inner` (donation shelf, future shelves): other tabs keep a whitelist (bar, own box, `#panels`, `#chat-container`), so new shelves never stack under a tab's scroller.
 22. Sidebar new uploads: YouTube's 4px blue dot (`--yt-spec-call-to-action`) on channels flagged `NEW_CONTENT`, and on the closed Subscriptions row. No count: guide data has none, and counting would mean fetching every channel's uploads and tracking what was seen.
 23. Hugeicons fill the Figma gaps. Juxtopposed's set has the same 1.5px rounded strokes (checked side by side), while Google Material reads too bold next to it. Hugeicons have no filled `-selected` variant, so the sidebar keeps their outline when selected (`NO_SELECTED`). The Playlists dropdown uses Figma's `library` (same stacked-play shape as Material's `video-library`, which was dropped).
+24. Sidebar dropdown children (Subscriptions, Playlists, Explore): a 1px `--kyt-outline` guide line under the parent's icon centre, 12px step in, 36px rows, 13px text, 20px icons/avatars. Figma's open frames (`subs` 23:8476, `playlist` 101:6399) show flat children, so this is our call; picked from three mocks (flat, smaller without rail, rail) by the user. The foot dropdown is unchanged.
+25. Subscriptions toolbar (`kyt-bar`, first row of YouTube's grid, `order: -2`): chips All, Videos, Live, Shorts on the left, search pill on the right (Figma 97:3987, 97:3966). Items that miss get `kyt-off`; a date header whose group is empty gets it too; shelves hide for Videos, Live and any search. The Shorts chip is hidden when the `shorts` feature is on. Kind: `/shorts/` link = Short, live thumbnail badge or a streamed/watching/scheduled word = Live, else Video. Filters only what is loaded. YouTube loads the next page whenever its continuation row is on screen, and with most items hidden the row never leaves it, so the feed loaded to its end and froze the tab. Fix: while filtering the continuation row is hidden (`kyt-more` on the grid shows it) unless fewer than 24 items match and fewer than 300 are loaded; never for the Shorts chip.
+26. Subscribe bell (watch page): YouTube draws one Lottie icon for all three states, so `stampBell` (src/page/core.ts) sets `kyt-bell="all|none"` from the toggle's data (`states[currentStateId]` icon type NOTIFICATIONS_ACTIVE / NOTIFICATIONS_OFF; personalized has no stamp). Glyphs: Figma `notifs-selected` (all), `notifs` (personalized), `notifs-disabled` (off). Data shape is a guess from the old renderer: `scripts/bell-dump.js` prints it if the state never changes. Channel-page Subscribe (`yt-subscribe-button-view-model`) not covered yet.
+27. Popup redesign: grouped cards, switches, chevron panels, custom color wheel in place of `<input type=color>` (the native dialog looked out of place). Picked by the user from a mock (wheel + brightness over square + hue bar or swatches only). Popup is dark only and follows the chosen accent. Footer has the version and a two-click Reset all.
+28. Player controls keep YouTube's native icons (user decision). The Figma set has play, pause, next, volume, cc, settings, theater, fullscreen and pip glyphs, unused.
 
 ---
 
@@ -488,6 +491,8 @@ Testing:
 27. Firefox keeps the old `main-world.js` running in open tabs after a temporary add-on reload (`TypeError: c[s] is not a function`). The per-build id in `build.mjs` + `src/core/bridge.ts` fixes it. Keep it.
 28. `ext.mjs --remove` deletes our nodes to imitate a YouTube redraw. Each log line prints twice (first copy is a `robots.txt` load).
 29. `probe.mjs` eval is blocked by CSP on Home (Search allows it). Wrap snippets as an IIFE.
+39. Headless tests of Subscriptions: logged out there is no feed, so inject items into the grid. A created `ytd-rich-grid-renderer` or `ytd-rich-item-renderer` is upgraded by YouTube's own code, which stamps its template and wipes children added before. Add the metadata after about 1s. Content-script observers also seem to wait while `ext.mjs --eval` awaits, so inject in one `page.evaluate`, pause outside the page, then interact in a second one.
+40. Hiding feed items with CSS never shrinks the work YouTube does: its infinite scroll keys off the continuation row's visibility, so any filter that hides most items must also bound or hide that row.
 30. Headless Firefox can't play live video; test chat on a live-now stream (e.g. Lofi Girl). Consent screens can hide chat. Launch and `waitFor` timeouts happen; retry before calling it a regression.
 31. Console paste in Firefox needs `allow pasting` once. Console scripts save to Downloads or the clipboard.
 32. When a fix works logged out but not for the user, ask for a `scripts/diag.js` report before guessing.

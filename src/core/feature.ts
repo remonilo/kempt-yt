@@ -11,6 +11,10 @@ export type Option = { label: string; cssVar?: string; parent?: string } & (
   | { type: 'choice'; default: string; choices: Record<string, string> }
 );
 
+/** Popup sections, in display order. */
+export const GROUPS = { look: 'Look', navigation: 'Navigation', watch: 'Watch page', feeds: 'Feeds' } as const;
+export type Group = keyof typeof GROUPS;
+
 export interface Ctx {
   /** Aborted when the feature is turned off or leaves its routes. Undo your DOM work on abort. */
   signal: AbortSignal;
@@ -24,6 +28,12 @@ export interface Feature {
   /** Also the CSS gate: html[kyt-<id>] */
   id: string;
   label: string;
+  /** Muted second line in the popup. */
+  hint?: string;
+  /** Popup section; omitted = "Other". */
+  group?: Group;
+  /** Popup row icon: a file name in src/icons/ without .svg. */
+  icon?: string;
   defaultOn: boolean;
   /** Omit = every page. */
   routes?: Route[];

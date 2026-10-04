@@ -13,7 +13,8 @@ html[kyt-icons] :is(
   ytd-masthead ytd-topbar-menu-button-renderer yt-icon-button yt-icon,
   ytd-watch-metadata :is(like-button-view-model, dislike-button-view-model) .ytSpecButtonShapeNextIcon,
   ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"], [kyt-icon="CONTENT_CUT"], [kyt-icon="SPARK"], [kyt-icon="MONEY_HEART"]) .ytSpecButtonShapeNextIcon,
-  ytd-watch-metadata ytd-menu-renderer > #button-shape .ytSpecButtonShapeNextIcon
+  ytd-watch-metadata ytd-menu-renderer > #button-shape .ytSpecButtonShapeNextIcon,
+  ytd-watch-metadata ytd-subscription-notification-toggle-button-renderer-next .ytSpecButtonShapeNextIcon
 ) {
   background-color: currentColor;
   mask: var(--kyt-i) center / contain no-repeat;
@@ -76,6 +77,10 @@ html[kyt-icons] ytd-watch-metadata [kyt-icon="CONTENT_CUT"] .ytSpecButtonShapeNe
 /* Hugeicons: Figma has no Ask or Thanks */
 html[kyt-icons] ytd-watch-metadata [kyt-icon="SPARK"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-ask); }
 html[kyt-icons] ytd-watch-metadata [kyt-icon="MONEY_HEART"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-thanks); }
+/* Subscribe bell: YouTube's is one Lottie icon for every state. All = filled, off = slashed, personalized = outline. */
+html[kyt-icons] ytd-watch-metadata ytd-subscription-notification-toggle-button-renderer-next .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-notifs); }
+html[kyt-icons] ytd-watch-metadata ytd-subscription-notification-toggle-button-renderer-next[kyt-bell="all"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-notifs-selected); }
+html[kyt-icons] ytd-watch-metadata ytd-subscription-notification-toggle-button-renderer-next[kyt-bell="none"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-notifs-disabled); }
 html[kyt-icons] ytd-watch-metadata ytd-menu-renderer > #button-shape .ytSpecButtonShapeNextIcon {
   --kyt-i: var(--kyt-i-more);
   rotate: 90deg; /* Figma has only the vertical ⋮; the row's is horizontal */

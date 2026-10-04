@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { inType, kindOf, matches } from '../src/features/timeline/filter.ts';
 import { dayLabel, groupOf, historyDate, parseAge, plan } from '../src/features/timeline/dates.ts';
 
 const now = new Date(2024, 11, 15, 9, 0); // Sun 15 Dec 2024, 09:00 local
@@ -57,4 +58,26 @@ test('historyDate', () => {
   assert.equal(ymd(historyDate('Dec 20', now)), '2023-12-20');
   assert.equal(ymd(historyDate('Gestern', now, 'de')), '2024-12-14');
   assert.equal(historyDate('Shorts', now), null);
+});
+
+test('kindOf: shorts, streams (badge or text), plain videos', () => {
+  assert.equal(kindOf({ short: true, badge: false, meta: '' }), 'short');
+  assert.equal(kindOf({ short: false, badge: true, meta: 'xQc | 30k' }), 'live');
+  assert.equal(kindOf({ short: false, badge: false, meta: 'NHRL | 73k | Streamed 2 wk ago' }), 'live');
+  assert.equal(kindOf({ short: false, badge: false, meta: 'Ana | 12K watching' }), 'live');
+  assert.equal(kindOf({ short: false, badge: false, meta: 'NHRL | Scheduled for 04/10/2026, 06:00' }), 'live');
+  assert.equal(kindOf({ short: false, badge: false, meta: 'penguinz0 | 888k | 7 hr ago' }), 'video');
+});
+
+test('inType: chips', () => {
+  assert.ok(inType('video', 'all') && inType('short', 'all'));
+  assert.ok(inType('video', 'videos') && !inType('live', 'videos'));
+  assert.ok(inType('live', 'live') && !inType('video', 'live'));
+  assert.ok(inType('short', 'shorts') && !inType('video', 'shorts'));
+});
+
+test('matches: all words, any case, accents folded', () => {
+  assert.ok(matches('Amélie Poulain | Jesse James West', 'amelie west'));
+  assert.ok(matches('Anything', ''));
+  assert.ok(!matches('penguinz0 | 7 hr ago', 'penguinz0 fern'));
 });

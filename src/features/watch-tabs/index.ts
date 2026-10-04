@@ -21,7 +21,7 @@ const YT_PANELS = '#shopping-timely-shelf, #persistent-panel-container, #playlis
  */
 export const watchTabs: Feature = {
   id: 'watch-tabs',
-  label: 'Info, comments and videos as tabs',
+  label: 'Tabs', hint: 'Info, comments and videos', group: 'watch', icon: 'info',
   defaultOn: true,
   routes: ['watch'],
   options: {

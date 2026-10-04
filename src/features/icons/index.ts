@@ -12,12 +12,12 @@ import { routeOf } from '../../core/router.ts';
 
 /** Figma icons style.css paints. CSS can't build a url() from parts and the extension origin differs per install
  *  and browser, so each is a custom property on <html>: --kyt-i-<name>. */
-const NAMES = ['menu', 'arrow-left', 'search', 'mic', 'close', 'add', 'notifs', 'more', 'you',
+const NAMES = ['menu', 'arrow-left', 'search', 'mic', 'close', 'add', 'notifs', 'notifs-selected', 'notifs-disabled', 'more', 'you',
   'liked', 'liked-selected', 'dislike', 'dislike-selected', 'share', 'save', 'download', 'clip', 'ask', 'thanks'];
 
 export const icons: Feature = {
   id: 'icons',
-  label: 'Icons',
+  label: 'Icons', group: 'look', icon: 'explore',
   defaultOn: true,
   run({ signal, call }) {
     // Synchronous, before the first paint with html[kyt-icons]: a mask without its var paints a solid square.
@@ -29,7 +29,10 @@ export const icons: Feature = {
     // The action row persists across watch pages, so one stamp per page load is enough.
     let stamped = false;
     const onRoute = async (route: Route) => {
-      if (route !== 'watch' || stamped) return;
+      if (route !== 'watch') return;
+      // The Subscribe button's bell state; idempotent per root, so every watch page is fine.
+      waitFor(S.watchSubscribe, { signal }).then((el) => el && call('stampBell', S.watchSubscribe));
+      if (stamped) return;
       stamped = true;
       if (await waitFor(S.watchActions, { signal })) await call('stamp', S.watchActions);
       else stamped = false; // retry on the next watch page
