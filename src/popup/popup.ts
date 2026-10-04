@@ -14,8 +14,7 @@ const el = <K extends keyof HTMLElementTagNameMap>(tag: K, cls = '', ...kids: (N
   return e;
 };
 
-// Rows render synchronously with defaults so Firefox sizes the panel from its full content on the first
-// layout (PLAN.md §13.34). Input waits for storage.sync: the list is inert until it answers.
+// Rows render synchronously with defaults, inert until storage.sync answers (docs/internals/youtube-quirks).
 const settings = loadSettings();
 const app = document.getElementById('app')!;
 app.inert = true;

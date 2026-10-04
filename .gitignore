@@ -8,3 +8,14 @@ samples/
 # docs site: screenshots are committed, build output is not
 !site/public/screenshots/*.png
 site/.astro
+
+# local development only
+.env*
+AGENTS.md
+CLAUDE.md
+PLAN.md
+scripts/diag.js
+scripts/dump-dom.js
+scripts/guide-dump.js
+.pi/
+.claude/

@@ -115,11 +115,8 @@ const textOf = (item: Element) => (item.querySelector(S.lockupMeta) ?? item).tex
 const isOurs = (e: Element) => e.localName === 'kyt-bar' || e.classList.contains('kyt-tl-head');
 
 /**
- * Subscriptions: one date header per group, inside YouTube's grid. YouTube's cards stay where they are in the DOM;
- * style.css hides the Latest / Most relevant shelves.
- * Our toolbar and headers sit after all of YouTube's children and flex `order` draws them in place. YouTube
- * matches its grid's children to its data by index whenever the row count changes (sidebar, resize); anything of
- * ours between its items shifts every index, and it then moved every card in the feed (a second-long freeze).
+ * Subscriptions: one date header per group, inside YouTube's grid. Our toolbar and headers sit after all of
+ * YouTube's children and flex `order` draws them in place (never between its items: docs/internals/youtube-quirks).
  * The toolbar filters what is loaded: items that miss get `kyt-off`, headers left without items too.
  */
 function subscriptions(grid: Element, signal: AbortSignal): void {
@@ -156,8 +153,7 @@ function subscriptions(grid: Element, signal: AbortSignal): void {
     if (state.type === 'all') grid.removeAttribute('kyt-filter');
     else grid.setAttribute('kyt-filter', state.type);
     grid.toggleAttribute('kyt-query', state.query.trim() !== '');
-    // YouTube loads the next page whenever its loading row is on screen. With most items hidden that row never
-    // leaves the screen and the feed would load to its end, so style.css hides it unless more matches are wanted.
+    // With most items hidden YouTube's loading row stays on screen; style.css hides it unless more matches are wanted.
     grid.toggleAttribute('kyt-more', state.type !== 'shorts' && shown < WANT_VISIBLE && total < MAX_LOADED);
   };
   const bar = toolbar(state, apply, signal);

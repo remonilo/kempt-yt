@@ -109,7 +109,7 @@ npm run check    # typecheck
 npm test         # node --test
 ```
 
-Kempt is TypeScript with no framework or runtime dependencies. A feature is one folder in `src/features/<id>/` plus one line in `src/features/index.ts`. Start with [Adding a feature][add_link]. [`PLAN.md`](PLAN.md) records every design decision and the lessons learned about YouTube's DOM.
+Kempt is TypeScript with no framework or runtime dependencies. A feature is one folder in `src/features/<id>/` plus one line in `src/features/index.ts`. Start with [Adding a feature][add_link]. [YouTube quirks][quirks_link] records the lessons learned about YouTube's DOM.
 
 A bug report helps most when it includes your browser, window width, YouTube language, signed in or out, and the steps to reproduce.
 
@@ -140,4 +140,5 @@ Icons come from Juxtopposed's _YouTube Redesign (Community)_ [Figma](https://www
 [faq_link]: https://remonilo.github.io/kempt-yt/docs/faq/
 [internals_link]: https://remonilo.github.io/kempt-yt/docs/internals/architecture/
 [add_link]: https://remonilo.github.io/kempt-yt/docs/internals/adding-a-feature/
+[quirks_link]: https://remonilo.github.io/kempt-yt/docs/internals/youtube-quirks/
 [privacy_link]: https://remonilo.github.io/kempt-yt/docs/privacy/

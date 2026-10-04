@@ -13,9 +13,8 @@ function apply(shelf: Element) {
 
 export const gridPage = {
   /**
-   * Home's Shorts shelf draws only `elementsPerRow` of its items (one row, no Show more). YouTube resets that
-   * count on every width change and reflects it to the elements-per-row attribute, so we set it again on each
-   * change, and on shelves the grid adds later. n = 0 restores YouTube's own count.
+   * Sets Home's Shorts shelf `elementsPerRow` to n again on each change and on later shelves; 0 restores
+   * YouTube's count. See docs/internals/youtube-quirks.
    */
   shortsPerRow(sel: string, n: number) {
     perRow = n;

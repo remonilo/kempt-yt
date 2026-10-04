@@ -10,7 +10,7 @@ const more = [
 ];
 const explore = { type: 'guideSectionRenderer', title: 'Explore', entries: [e('Music', 'MUSIC_CAIRO'), e('Gaming', 'GAMING_LOGO_CAIRO')] };
 
-test('signed in (shape of a real guide-dump.js output)', () => {
+test('signed in (shape of a real guide output)', () => {
   const sections: Section[] = [
     { type: 'guideSectionRenderer', title: '', entries: [e('Home', 'TAB_HOME_CAIRO'), e('Shorts', 'TAB_SHORTS_CAIRO', { url: 'kyt:TAB_SHORTS_CAIRO' })] },
     { type: 'guideSubscriptionsSectionRenderer', title: '', entries: [

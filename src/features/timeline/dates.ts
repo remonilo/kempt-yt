@@ -19,11 +19,7 @@ const space = (s: string) => s.replace(/[\s\u00a0\u202f]+/g, ' ');
 const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const AGO = new Map<string, { re: RegExp; units: Unit[] }>();
 
-/**
- * One regex for every way `locale` writes "N <unit> ago": long, short and narrow, each plural form (0 to 111
- * covers them all). Built from Intl's own words, which match YouTube's long form (aria-label) in the ten
- * languages checked: "vor 2 Wochen", "hace 2 semanas", "2 週間前", "2주 전". Capture group i is `units[i]`.
- */
+/** One regex for every way `locale` writes "N <unit> ago" (long, short, narrow; plural forms 0 to 111). Group i is `units[i]`. */
 function agoRe(locale: string) {
   let r = AGO.get(locale);
   if (r) return r;
@@ -85,11 +81,7 @@ export function dayLabel(d: Date, now: Date, locale = 'en-GB'): string {
   return `${cap(name)} - ${date}`;
 }
 
-/**
- * Seconds to days give the upload day (YouTube rounds down, so "13 days ago" is still one day): group by it.
- * Weeks, months and years only give a range: group by YouTube's own wording ("2 weeks ago").
- * Returns null for text without an age ("Scheduled for ...").
- */
+/** Group key of an age: the upload day for seconds to days, YouTube's own wording beyond. Null without an age. */
 export function groupOf(text: string, now: Date, locale?: string): Group | null {
   const age = parseAge(text, locale);
   if (!age) return null;
@@ -103,10 +95,9 @@ export function groupOf(text: string, now: Date, locale?: string): Group | null 
 }
 
 /**
- * Splits a newest-first feed into groups: `starts[i]` is the group that begins at item i.
- * Groups only move back in time. YouTube orders streams by end time but labels them by start
- * ("Streamed 21 hr ago" between 14 and 15 hr), so an item that looks newer stays in the current group,
- * and so does one we can't read. Items before the first readable one get no group.
+ * Splits a newest-first feed into groups: `starts[i]` is the group that begins at item i. Groups only move back
+ * in time, so a newer-looking or unreadable item stays in the current group. Items before the first readable one
+ * get no group.
  */
 export function plan(texts: string[], now: Date, locale?: string): Map<number, Group> {
   const starts = new Map<number, Group>();

@@ -28,14 +28,9 @@ const CHAT_CSS = 'yt-live-chat-header-renderer #close-button { display: none !im
 const YT_PANELS = '#shopping-timely-shelf, #persistent-panel-container, #playlist, #panels, #chat-container, #inline-panels';
 
 /**
- * Tabs above the right column. Videos (#related) and Live chat (#chat-container) stay where YouTube put them
- * and are only shown or hidden, so the chat iframe never reloads. The description and comments move into
- * boxes that go back on abort. Everything anchors on #panels, which YouTube moves between #secondary-inner
- * and #below with the layout, so one-column layout works the same.
- * YouTube's updatePanelsLocation (theater, fullscreen, column changes) expects its panels to be the first
- * children of that parent, in order, and re-inserts all of them otherwise. So our nodes go after that run
- * (YT_PANELS) and style.css restores the visual order with flex `order` (PLAN.md §13).
- * Hidden tabs are display:none: comments and related load lazily when their tab is first shown.
+ * Tabs above the right column. Videos and Live chat stay in place and are only shown or hidden; the description
+ * and comments move into boxes that go back on abort. Our nodes go after YouTube's leading run of panels
+ * (YT_PANELS). Why: docs/internals/youtube-quirks.
  */
 export const watchTabs: Feature = {
   id: 'watch-tabs',
@@ -70,8 +65,7 @@ export const watchTabs: Feature = {
         b.append(Object.assign(document.createElement('span'), { textContent: words[t] }));
       }
       b.addEventListener('click', () => {
-        // A tab click in theater leaves theater (YouTube's own size button), then opens the tab. Only user
-        // clicks do this: select() also runs on navigation and when Ask AI closes, which must not leave theater.
+        // Only user clicks leave theater; select() also runs on navigation and when Ask AI closes.
         if (theater()) flexy.querySelector<HTMLElement>('.ytp-size-button')?.click();
         select(t);
       }, { signal });
@@ -90,8 +84,7 @@ export const watchTabs: Feature = {
       : t === 'ai' ? html.getAttribute('kyt-watch-tabs-aiAs') === 'tab' && !!flexy.querySelector(S.askButton)
       : true;
 
-    // Theater (cinema) mode closes every tab: the right column sits under the full-width player there, so an
-    // open tab would only make the page scroll. `tab` is kept and comes back when theater ends.
+    // Theater closes every tab (the column sits under the player); `tab` is kept and returns afterwards.
     const theater = () => flexy.hasAttribute('theater');
 
     const render = () => {
@@ -120,8 +113,7 @@ export const watchTabs: Feature = {
       if (t === 'info') call('relayout', '.kyt-tab-info');
     };
 
-    // Short, localized count ("2.4M") from the comments panel header. It updates about a second after an
-    // in-app navigation, so it's re-read whenever #panels changes; the early return keeps that cheap.
+    // Localized count ("2.4M") from the comments header. It lands ~1s after navigation, so re-read on #panels changes.
     let shownCount: string | undefined;
     const count = () => {
       const n = panelsEl()?.querySelector(`${S.commentsPanel} #contextual-info`)?.textContent?.trim() ?? '';
@@ -148,8 +140,7 @@ export const watchTabs: Feature = {
     const mount = () => {
       const panels = panelsEl();
       if (!panels) return;
-      // After YouTube's leading run of panels, skipping our own nodes. Moving nothing when already in place
-      // matters: re-inserting the comments box re-renders every loaded comment.
+      // After YouTube's leading run of panels. Never move what is in place: it re-renders every loaded comment.
       let anchor: Element = panels;
       for (let el = panels.parentElement!.firstElementChild; el; el = el.nextElementSibling) {
         if (el === bar || el === infoBox || el === commentsBox) continue;
@@ -164,8 +155,7 @@ export const watchTabs: Feature = {
       if (c) commentsBox.replaceChildren(c);
     };
 
-    // Live chat's close (X) is inside its same-origin iframe, out of reach of style.css. The iframe reloads
-    // with each stream, so this re-runs on every load (load doesn't bubble: capture).
+    // Live chat's close (X) is inside its iframe, out of CSS reach; re-run on every load (capture).
     const chatDoc = () => flexy.querySelector<HTMLIFrameElement>(`${S.liveChat} iframe`)?.contentDocument;
     const styleChat = () => {
       const doc = chatDoc();
@@ -175,9 +165,8 @@ export const watchTabs: Feature = {
     styleChat();
     flexy.addEventListener('load', (e) => e.target instanceof HTMLIFrameElement && styleChat(), { capture: true, signal });
 
-    // Ask AI off: YouTube's Ask leaves the action row and the ⋯ menu. On: it goes first among the row's
-    // flexible items, which the row moves into ⋯ from the end as it narrows, so it stays out (main-world.ts).
-    // Re-applied when YouTube re-renders the row with its own data (Ask back, or not first).
+    // Ask AI off: removed from the row and ⋯ menu. On: first among the flexible items, so it is dropped last.
+    // Re-applied when YouTube re-renders the row with its own data.
     const ai = () => call('askAi', html.hasAttribute('kyt-watch-tabs-ai') ? 'front' : 'off').catch(() => {});
     const checkAi = () => {
       const ask = flexy.querySelector(`${S.watchActions} [kyt-icon="SPARK"]`);
@@ -206,8 +195,7 @@ export const watchTabs: Feature = {
     watch(flexy, { attributeFilter: ['theater'] }, () => (render(), requestAnimationFrame(align)));
     watch(flexy, { attributeFilter: ['is-two-columns_'] }, render);
 
-    // In theater the right column starts beside the title. Push the bar down to the action buttons' row.
-    // Re-measured on theater toggles and whenever the metadata block resizes (title wraps, window resizes).
+    // In theater the column starts beside the title: push the bar down to the action row. Re-measured on resize.
     const align = () => {
       bar.style.marginTop = '';
       const btn = flexy.querySelector('ytd-watch-metadata #actions button');

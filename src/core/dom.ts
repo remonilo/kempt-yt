@@ -36,11 +36,8 @@ export function waitFor<T extends Element = Element>(
 }
 
 /**
- * Keeps an injected element in place: runs `mount` now and again whenever YouTube re-renders under `root`
- * (it rebuilds lists like the masthead buttons and the watch action row, dropping foreign nodes).
- * `mount` must be idempotent and cheap: check position, insert only if wrong. Removes `el` on abort.
- * Runs in the observer callback (before paint), not a later frame, so the missing node is never painted.
- * Pass several roots with `{ childList: true }` (no subtree) to watch only their direct children.
+ * Runs `mount` now and whenever YouTube re-renders under `root`, so an injected element survives. `mount` must be
+ * idempotent and cheap. Runs before paint; removes `el` on abort. Several roots: pass `{ childList: true }`.
  */
 export function keep(
   el: Element,
