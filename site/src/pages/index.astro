@@ -3,6 +3,7 @@ import manifest from '../../../manifest.json';
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const repo = 'https://github.com/remonilo/kempt-yt';
+const sponsor = 'https://github.com/sponsors/remonilo';
 // PLACEHOLDER: store listings, once published.
 const firefox = 'https://addons.mozilla.org/firefox/addon/PLACEHOLDER';
 const chrome = 'https://chromewebstore.google.com/detail/PLACEHOLDER';
@@ -70,6 +71,7 @@ const facts = [
         <a href={`${base}docs/faq/`}>FAQ</a>
       </nav>
       <div class="top-end">
+        <a class="pill" href={sponsor}>Sponsor</a>
         <a class="pill" href={repo}>GitHub</a>
         <a class="btn light small" href="#install">Install</a>
       </div>
@@ -131,7 +133,7 @@ const facts = [
   </main>
 
   <footer class="wrap foot">
-    <span>Kempt for YouTube · <a href={`${repo}/blob/main/LICENSE`}>MIT License</a></span>
+    <span>Kempt for YouTube · <a href={`${repo}/blob/main/LICENSE`}>MIT License</a> · <a href={sponsor}>Sponsor</a></span>
     <span>Not affiliated with YouTube or Google.</span>
   </footer>
 

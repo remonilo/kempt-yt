@@ -16,6 +16,7 @@
 [![Issues](https://img.shields.io/github/issues/remonilo/kempt-yt?style=flat-square)](https://github.com/remonilo/kempt-yt/issues)
 [![Stars](https://img.shields.io/github/stars/remonilo/kempt-yt?style=flat-square)](https://github.com/remonilo/kempt-yt/stargazers)
 [![License](https://img.shields.io/github/license/remonilo/kempt-yt?style=flat-square)](LICENSE)
+[![Sponsor](https://img.shields.io/badge/sponsor-%E2%9D%A4-ea4aaa?style=flat-square)](https://github.com/sponsors/remonilo)
 
 ### A kempt and consistent redesign of YouTube
 
@@ -126,6 +127,10 @@ YouTube's UI is built from many teams' parts. It mixes three icon styles, and it
 ## Credits
 
 Icons come from Juxtopposed's _YouTube Redesign (Community)_ [Figma](https://www.figma.com/community/file/1450380484645543336/youtube-redesign) with gaps filled from [Hugeicons](https://hugeicons.com) (MIT). Kempt is not affiliated with or endorsed by YouTube or Google.
+
+## Support
+
+Kempt is free and I maintain it alone. [Sponsor on GitHub](https://github.com/sponsors/remonilo) if it saves you some annoyance.
 
 ## License
 
