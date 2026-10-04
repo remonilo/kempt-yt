@@ -2,6 +2,13 @@ import type { Feature } from '../../core/feature.ts';
 import { keep, waitFor } from '../../core/dom.ts';
 import { icon, setIcon } from '../../core/icon.ts';
 import { S } from '../../core/selectors.ts';
+import { local } from '../../core/i18n.ts';
+
+/** YouTube's name for the Watch later playlist. */
+const WORDS = {
+  en: 'Watch later', es: 'Ver más tarde', pt: 'Assistir mais tarde', de: 'Später ansehen', fr: 'À regarder plus tard',
+  ru: 'Смотреть позже', ja: '後で見る', ko: '나중에 볼 동영상', hi: 'बाद में देखें', id: 'Tonton nanti', tr: 'Daha sonra izle',
+};
 
 export const watchLaterBtn: Feature = {
   id: 'watch-later-btn',
@@ -14,7 +21,7 @@ export const watchLaterBtn: Feature = {
     // Reuse YouTube's own button classes so it matches Share/Save exactly.
     const btn = document.createElement('button');
     btn.className = 'ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono ytSpecButtonShapeNextSizeM ytSpecButtonShapeNextIconButton kyt-wl';
-    btn.title = btn.ariaLabel = 'Watch later';
+    btn.title = btn.ariaLabel = local(WORDS);
     const ico = icon('watch-later');
     btn.append(ico);
 

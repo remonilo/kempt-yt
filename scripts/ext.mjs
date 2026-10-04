@@ -6,13 +6,16 @@
 //   --scrollbars forces classic (non-overlay) scrollbars, like macOS "Always show scroll bars".
 //   --fake-login makes ytcfg report LOGGED_IN so signed-in-only features mount (their API calls still fail).
 //   --with=<dir or .xpi> also installs another extension, e.g. Return YouTube Dislike (repeatable).
+//   --lang=de sets the browser language; logged out, YouTube follows it (its ?hl= is ignored).
 import puppeteer from 'puppeteer-core';
 import { resolve } from 'node:path';
 const [url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', shotPath] = process.argv.slice(2).filter((a) => !a.startsWith('--'));
+const lang = process.argv.find((a) => a.startsWith('--lang='))?.slice(7);
 const browser = await puppeteer.launch({
   browser: 'firefox', executablePath: '/Applications/Firefox.app/Contents/MacOS/firefox', headless: true,
   extraPrefsFirefox: { 'ui.systemUsesDarkTheme': 1, 'xpinstall.signatures.required': false,
-    ...(process.argv.includes('--scrollbars') && { 'ui.useOverlayScrollbars': 0 }) },
+    ...(process.argv.includes('--scrollbars') && { 'ui.useOverlayScrollbars': 0 }),
+    ...(lang && { 'intl.accept_languages': lang, 'intl.locale.requested': lang }) },
 });
 try {
   await browser.installExtension(resolve('dist'));

@@ -1,0 +1,22 @@
+/* YouTube writes its per-row counts inline on the grid, and Home's Shorts shelf may repeat them on itself; a
+   stylesheet !important beats a plain inline value. Item widths are calc(100% / per-row - margin), so they
+   follow. clamp() guards typed-in values. */
+html[kyt-grid] :is(ytd-rich-grid-renderer, ytd-rich-section-renderer, ytd-rich-shelf-renderer) {
+  --ytd-rich-grid-items-per-row: clamp(2, var(--kyt-grid-videos, 4), 8) !important;
+  --ytd-rich-grid-posts-per-row: clamp(2, var(--kyt-grid-videos, 4), 8) !important;
+  --ytd-rich-grid-slim-items-per-row: clamp(3, var(--kyt-grid-shorts, 6), 10) !important;
+  --ytd-rich-grid-content-max-width: none !important;
+}
+
+/* Home's Shorts shelf sizes its items by items-per-row, not the slim count. It draws only YouTube's own count
+   (elements-per-row), so a larger count leaves room at the row end. */
+html[kyt-grid] ytd-rich-shelf-renderer[is-shorts] {
+  --ytd-rich-grid-items-per-row: clamp(3, var(--kyt-grid-shorts, 6), 10) !important;
+}
+
+/* YouTube drops the left margin of items it counted as first in a row. Its count is not ours, so every item
+   gets the same margins: rows stay aligned at any count. */
+html[kyt-grid] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer {
+  margin-left: calc(var(--ytd-rich-grid-item-margin) / 2) !important;
+  margin-right: calc(var(--ytd-rich-grid-item-margin) / 2) !important;
+}

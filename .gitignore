@@ -3,3 +3,7 @@ dist
 *.png
 .env
 .DS_Store
+
+# docs site: screenshots are committed, build output is not
+!site/public/screenshots/*.png
+site/.astro

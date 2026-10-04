@@ -1,10 +1,28 @@
 import type { Feature } from '../../core/feature.ts';
 import { keep, waitFor } from '../../core/dom.ts';
 import { icon } from '../../core/icon.ts';
+import { local } from '../../core/i18n.ts';
 import { S } from '../../core/selectors.ts';
 
 type Tab = 'info' | 'comments' | 'videos' | 'chat' | 'ai';
-const TABS: [Tab, string][] = [['info', 'Info'], ['comments', ''], ['videos', 'Videos'], ['chat', 'Live chat'], ['ai', 'Ask AI']];
+const TABS: Tab[] = ['info', 'comments', 'videos', 'chat', 'ai'];
+/**
+ * Tab labels, short enough for five equal columns; `comments` is the tooltip of its tab (count or icon).
+ * Videos and Comments are YouTube's words. Longer ones still end in an ellipsis (style.css).
+ */
+const WORDS = {
+  en: { info: 'Info', comments: 'Comments', videos: 'Videos', chat: 'Live chat', ai: 'Ask AI' },
+  es: { info: 'Info', comments: 'Comentarios', videos: 'Vídeos', chat: 'Chat', ai: 'Preguntar' },
+  pt: { info: 'Info', comments: 'Comentários', videos: 'Vídeos', chat: 'Chat', ai: 'Perguntar' },
+  de: { info: 'Info', comments: 'Kommentare', videos: 'Videos', chat: 'Livechat', ai: 'KI fragen' },
+  fr: { info: 'Infos', comments: 'Commentaires', videos: 'Vidéos', chat: 'Chat', ai: 'Demander' },
+  ru: { info: 'Описание', comments: 'Комментарии', videos: 'Видео', chat: 'Чат', ai: 'Спросить' },
+  ja: { info: '概要', comments: 'コメント', videos: '動画', chat: 'チャット', ai: 'AI に質問' },
+  ko: { info: '정보', comments: '댓글', videos: '동영상', chat: '채팅', ai: 'AI 질문' },
+  hi: { info: 'जानकारी', comments: 'टिप्पणियां', videos: 'वीडियो', chat: 'चैट', ai: 'AI से पूछें' },
+  id: { info: 'Info', comments: 'Komentar', videos: 'Video', chat: 'Chat', ai: 'Tanya AI' },
+  tr: { info: 'Bilgi', comments: 'Yorumlar', videos: 'Videolar', chat: 'Sohbet', ai: 'Sor' },
+};
 const EXPANDED = '[visibility="ENGAGEMENT_PANEL_VISIBILITY_EXPANDED"]';
 const CHAT_CSS = 'yt-live-chat-header-renderer #close-button { display: none !important; }';
 const YT_PANELS = '#shopping-timely-shelf, #persistent-panel-container, #playlist, #panels, #chat-container, #inline-panels';
@@ -41,11 +59,16 @@ export const watchTabs: Feature = {
     bar.className = 'kyt-tabs';
     bar.role = 'tablist';
     bar.append(Object.assign(document.createElement('span'), { className: 'kyt-tabs-ind' }));
-    const btns = new Map(TABS.map(([t, label]) => {
+    const words = local(WORDS);
+    const btns = new Map(TABS.map((t) => {
       const b = document.createElement('button');
       b.className = 'kyt-tab';
       b.role = 'tab';
-      b.textContent = label;
+      // A span, so a long translation ends in an ellipsis inside its equal-width column; the title has it all.
+      if (t !== 'comments') {
+        b.title = words[t];
+        b.append(Object.assign(document.createElement('span'), { textContent: words[t] }));
+      }
       b.addEventListener('click', () => {
         // A tab click in theater leaves theater (YouTube's own size button), then opens the tab. Only user
         // clicks do this: select() also runs on navigation and when Ask AI closes, which must not leave theater.
@@ -74,7 +97,7 @@ export const watchTabs: Feature = {
     const render = () => {
       if (!available(tab)) tab = 'videos';
       const open = theater() ? 'none' : tab;
-      const shown = TABS.map(([t]) => t).filter(available);
+      const shown = TABS.filter(available);
       for (const [t, b] of btns) {
         b.hidden = !shown.includes(t);
         b.ariaSelected = String(t === open);
@@ -105,7 +128,7 @@ export const watchTabs: Feature = {
       if (n === shownCount) return;
       shownCount = n;
       const b = btns.get('comments')!;
-      b.title = b.ariaLabel = n ? `Comments (${n})` : 'Comments';
+      b.title = b.ariaLabel = n ? `${words.comments} (${n})` : words.comments;
       b.replaceChildren(n || icon('comments'));
     };
 

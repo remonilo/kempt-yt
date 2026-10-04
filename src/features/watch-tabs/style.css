@@ -58,6 +58,12 @@ html[kyt-watch-tabs] .kyt-tab {
   transition: color 200ms, background-color 200ms;
   --kyt-icon-size: 20px;
 }
+html[kyt-watch-tabs] .kyt-tab > span {
+  min-width: 0;
+  padding: 0 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 html[kyt-watch-tabs] .kyt-tab[hidden] {
   display: none;
 }

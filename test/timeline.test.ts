@@ -7,15 +7,34 @@ const now = new Date(2024, 11, 15, 9, 0); // Sun 15 Dec 2024, 09:00 local
 const ymd = (d: Date | null) => d && `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
 
 test('parseAge: long and short units', () => {
-  assert.deepEqual(parseAge('3 days ago'), { n: 3, unit: 'day' });
-  assert.deepEqual(parseAge('Streamed 1 hour ago'), { n: 1, unit: 'hour' });
-  assert.deepEqual(parseAge('7 hr ago'), { n: 7, unit: 'hour' });
-  assert.deepEqual(parseAge('12h ago'), { n: 12, unit: 'hour' });
-  assert.deepEqual(parseAge('2 wk ago'), { n: 2, unit: 'week' });
-  assert.deepEqual(parseAge('3 mo ago'), { n: 3, unit: 'month' });
-  assert.deepEqual(parseAge('5 min ago'), { n: 5, unit: 'minute' });
+  assert.deepEqual(parseAge('3 days ago'), { n: 3, unit: 'day', extra: false });
+  assert.deepEqual(parseAge('Streamed 1 hour ago'), { n: 1, unit: 'hour', extra: true });
+  assert.deepEqual(parseAge('7 hr ago'), { n: 7, unit: 'hour', extra: false });
+  assert.deepEqual(parseAge('12h ago'), { n: 12, unit: 'hour', extra: false });
+  assert.deepEqual(parseAge('Streamed 2w ago'), { n: 2, unit: 'week', extra: true });
+  assert.deepEqual(parseAge('3 mo ago'), { n: 3, unit: 'month', extra: false });
+  assert.deepEqual(parseAge('5 min ago'), { n: 5, unit: 'minute', extra: false });
   assert.equal(parseAge('vor 3 Tagen'), null);
   assert.equal(parseAge('Scheduled for 04/10/2026, 06:00'), null);
+  assert.equal(parseAge('2.4 thousand watching'), null);
+});
+
+// Long forms (aria-label) from YouTube in each UI language, logged out.
+test('parseAge: YouTube UI languages', () => {
+  const ok: [string, string, number, string, boolean][] = [
+    ['es', 'Emitido hace 2 semanas', 2, 'week', true], ['es', 'hace 1 año', 1, 'year', false],
+    ['pt', 'há 1 mês', 1, 'month', false], ['de', 'vor 1 Tag gestreamt', 1, 'day', true],
+    ['de', 'vor 8 Stunden', 8, 'hour', false], ['fr', 'Diffusé il y a 2 semaines', 2, 'week', true],
+    ['ru', 'Трансляция закончилась 5 месяцев назад', 5, 'month', true], ['ru', '1 год назад', 1, 'year', false],
+    ['ja', '2 週間前 に配信済み', 2, 'week', true], ['ja', '3 か月前', 3, 'month', false],
+    ['ko', '스트리밍 시간: 2주 전', 2, 'week', true], ['ko', '1년 전', 1, 'year', false],
+    ['hi', '3 माह पहले', 3, 'month', false], ['id', 'Streaming 2 minggu yang lalu', 2, 'week', true],
+    ['tr', '2 hafta önce yayınlandı', 2, 'week', true], ['tr', '1 yıl önce', 1, 'year', false],
+  ];
+  for (const [l, text, n, unit, extra] of ok) assert.deepEqual(parseAge(text, l), { n, unit, extra }, `${l}: ${text}`);
+  for (const [l, text] of [['de', 'Geplant für: 04.10.26, 08:00'], ['ja', '7582 人が視聴中'], ['ru', 'Зрителей: 75']]) {
+    assert.equal(parseAge(text, l), null, `${l}: ${text}`);
+  }
 });
 
 test('dayLabel', () => {
@@ -36,6 +55,7 @@ test('groupOf: days are exact, weeks and older are relative', () => {
   assert.equal(groupOf('Streamed 1 month ago', now)?.label, '1 month ago');
   assert.equal(groupOf('1 year ago', now)?.key, 'r:1year');
   assert.equal(groupOf('vor 3 Tagen', now), null);
+  assert.equal(groupOf('vor 3 Tagen', now, 'de')?.label, 'Donnerstag - 12. Dez. 2024');
 });
 
 test('plan: groups only move back in time', () => {
@@ -60,13 +80,17 @@ test('historyDate', () => {
   assert.equal(historyDate('Shorts', now), null);
 });
 
-test('kindOf: shorts, streams (badge or text), plain videos', () => {
-  assert.equal(kindOf({ short: true, badge: false, meta: '' }), 'short');
-  assert.equal(kindOf({ short: false, badge: true, meta: 'xQc | 30k' }), 'live');
-  assert.equal(kindOf({ short: false, badge: false, meta: 'NHRL | 73k | Streamed 2 wk ago' }), 'live');
-  assert.equal(kindOf({ short: false, badge: false, meta: 'Ana | 12K watching' }), 'live');
-  assert.equal(kindOf({ short: false, badge: false, meta: 'NHRL | Scheduled for 04/10/2026, 06:00' }), 'live');
-  assert.equal(kindOf({ short: false, badge: false, meta: 'penguinz0 | 888k | 7 hr ago' }), 'video');
+test('kindOf: shorts, streams (badge, words around the age, no age), plain videos', () => {
+  const k = (age: string, o: { short?: boolean; badge?: boolean; readable?: boolean; lang?: string } = {}) =>
+    kindOf({ short: !!o.short, badge: !!o.badge, age: parseAge(age, o.lang), readable: o.readable ?? true });
+  assert.equal(k('', { short: true }), 'short');
+  assert.equal(k('30K watching', { badge: true }), 'live');
+  assert.equal(k('Streamed 2 weeks ago'), 'live');
+  assert.equal(k('vor 2 Wochen gestreamt', { lang: 'de' }), 'live');
+  assert.equal(k('Scheduled for 04/10/2026, 06:00'), 'live');
+  assert.equal(k('7 hours ago'), 'video');
+  assert.equal(k('3 か月前', { lang: 'ja' }), 'video');
+  assert.equal(k('بث قبل ٣ أيام', { readable: false }), 'video'); // unreadable language: no guess
 });
 
 test('inType: chips', () => {
