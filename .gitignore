@@ -2,6 +2,7 @@ node_modules
 dist
 samples/
 *.png
+!src/brand/*.png
 .env
 .DS_Store
 
