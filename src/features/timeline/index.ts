@@ -3,10 +3,10 @@ import { waitFor } from '../../core/dom.ts';
 import { routeOf } from '../../core/router.ts';
 import { S } from '../../core/selectors.ts';
 import { icon } from '../../core/icon.ts';
-import { dayLabel, historyDate, plan } from './dates.ts';
+import { local, uiLang as lang } from '../../core/i18n.ts';
+import { dayLabel, historyDate, parseAge, plan } from './dates.ts';
 import { inType, kindOf, matches, type Type } from './filter.ts';
 
-const lang = () => document.documentElement.lang || navigator.language;
 
 function head(label: string, el: HTMLElement = document.createElement('div')): HTMLElement {
   el.className = 'kyt-tl-head';
@@ -55,7 +55,21 @@ function ageOf(item: Element): string {
   return last?.getAttribute('aria-label') || last?.textContent || '';
 }
 
-const TYPES: [Type, string][] = [['all', 'All'], ['videos', 'Videos'], ['live', 'Live'], ['shorts', 'Shorts']];
+/** Chip words are YouTube's own search filter chips in each language. */
+const WORDS = {
+  en: { all: 'All', videos: 'Videos', live: 'Live', shorts: 'Shorts', search: 'Search subscriptions' },
+  es: { all: 'Todo', videos: 'Vídeos', live: 'En directo', shorts: 'Shorts', search: 'Buscar en suscripciones' },
+  pt: { all: 'Tudo', videos: 'Vídeos', live: 'Ao vivo', shorts: 'Shorts', search: 'Pesquisar inscrições' },
+  de: { all: 'Alle', videos: 'Videos', live: 'Live', shorts: 'Shorts', search: 'Abos durchsuchen' },
+  fr: { all: 'Tout', videos: 'Vidéos', live: 'En direct', shorts: 'Shorts', search: 'Rechercher dans les abonnements' },
+  ru: { all: 'Все', videos: 'Видео', live: 'В эфире', shorts: 'Shorts', search: 'Поиск по подпискам' },
+  ja: { all: 'すべて', videos: '動画', live: 'ライブ', shorts: 'ショート', search: '登録チャンネルを検索' },
+  ko: { all: '전체', videos: '동영상', live: '라이브', shorts: 'Shorts', search: '구독 검색' },
+  hi: { all: 'सभी', videos: 'वीडियो', live: 'लाइव', shorts: 'Shorts', search: 'सदस्यता में खोजें' },
+  id: { all: 'Semua', videos: 'Video', live: 'Live', shorts: 'Shorts', search: 'Telusuri subscription' },
+  tr: { all: 'Tümü', videos: 'Videolar', live: 'Canlı', shorts: 'Shorts', search: 'Aboneliklerde ara' },
+};
+const TYPES: Type[] = ['all', 'videos', 'live', 'shorts'];
 
 /** Type chips and a search box (Figma Subs 96:3679). `onChange` runs after each click or keystroke. */
 function toolbar(state: { type: Type; query: string }, onChange: () => void, signal: AbortSignal): HTMLElement {
@@ -63,10 +77,11 @@ function toolbar(state: { type: Type; query: string }, onChange: () => void, sig
   const chips = document.createElement('div');
   chips.className = 'kyt-chips';
   chips.role = 'group';
-  for (const [type, label] of TYPES) {
+  const words = local(WORDS);
+  for (const type of TYPES) {
     const b = document.createElement('button');
     b.dataset.type = type;
-    b.textContent = label;
+    b.textContent = words[type];
     b.ariaPressed = String(type === state.type);
     chips.append(b);
   }
@@ -82,7 +97,7 @@ function toolbar(state: { type: Type; query: string }, onChange: () => void, sig
   search.className = 'kyt-search';
   const input = document.createElement('input');
   input.type = 'text';
-  input.placeholder = 'Search subscriptions';
+  input.placeholder = words.search;
   input.addEventListener('input', () => ((state.query = input.value), onChange()), { signal });
   search.append(icon('search'), input);
 
@@ -96,41 +111,47 @@ const MAX_LOADED = 300;
 
 const isItem = (e: Element) => e.localName === 'ytd-rich-item-renderer';
 const textOf = (item: Element) => (item.querySelector(S.lockupMeta) ?? item).textContent ?? '';
-const kindOfItem = (item: Element) => kindOf({
-  short: item.querySelector('a[href^="/shorts/"]') !== null,
-  badge: item.querySelector('[class*="thumbnail-live"]') !== null,
-  meta: textOf(item),
-});
+
+const isOurs = (e: Element) => e.localName === 'kyt-bar' || e.classList.contains('kyt-tl-head');
 
 /**
- * Subscriptions: one date header before the first item of each group, inside YouTube's grid.
- * YouTube's cards stay where they are; style.css hides the Latest / Most relevant shelves.
+ * Subscriptions: one date header per group, inside YouTube's grid. YouTube's cards stay where they are in the DOM;
+ * style.css hides the Latest / Most relevant shelves.
+ * Our toolbar and headers sit after all of YouTube's children and flex `order` draws them in place. YouTube
+ * matches its grid's children to its data by index whenever the row count changes (sidebar, resize); anything of
+ * ours between its items shifts every index, and it then moved every card in the feed (a second-long freeze).
  * The toolbar filters what is loaded: items that miss get `kyt-off`, headers left without items too.
  */
 function subscriptions(grid: Element, signal: AbortSignal): void {
   const heads = new Map<string, HTMLElement>();
+  const groupOf = new Map<Element, HTMLElement>();
   const dots = spy(signal);
   const state = { type: 'all' as Type, query: '' };
   const apply = () => {
-    let head: Element | undefined, seen = false, shown = 0, total = 0;
-    const flush = () => head?.toggleAttribute('kyt-off', !seen);
+    const seen = new Set<HTMLElement>();
+    let shown = 0, total = 0;
+    const locale = lang();
+    const ages = new Map(state.type === 'all' ? [] : [...grid.children].filter(isItem).map((c) => [c, parseAge(ageOf(c), locale)]));
+    const readable = [...ages.values()].some(Boolean);
+    const kindOfItem = (c: Element) => kindOf({
+      short: c.querySelector('a[href^="/shorts/"]') !== null,
+      badge: c.querySelector(S.liveBadge) !== null,
+      age: ages.get(c) ?? null,
+      readable,
+    });
     for (const c of grid.children) {
-      if (c.classList.contains('kyt-tl-head')) {
-        flush();
-        head = c;
-        seen = false;
-      } else if (isItem(c)) {
-        const off = (state.type !== 'all' && !inType(kindOfItem(c), state.type)) ||
-          (state.query !== '' && !matches(textOf(c), state.query));
-        c.toggleAttribute('kyt-off', off);
-        total++;
-        if (!off) {
-          seen = true;
-          shown++;
-        }
+      if (!isItem(c)) continue;
+      const off = (state.type !== 'all' && !inType(kindOfItem(c), state.type)) ||
+        (state.query !== '' && !matches(textOf(c), state.query));
+      c.toggleAttribute('kyt-off', off);
+      total++;
+      if (!off) {
+        const h = groupOf.get(c);
+        if (h) seen.add(h);
+        shown++;
       }
     }
-    flush();
+    for (const h of heads.values()) h.toggleAttribute('kyt-off', !seen.has(h));
     // Shelves (Shorts) have no items to test: style.css shows them only for All and Shorts, and not while searching.
     if (state.type === 'all') grid.removeAttribute('kyt-filter');
     else grid.setAttribute('kyt-filter', state.type);
@@ -141,14 +162,16 @@ function subscriptions(grid: Element, signal: AbortSignal): void {
   };
   const bar = toolbar(state, apply, signal);
   const sync = () => {
-    if (grid.firstElementChild !== bar) grid.prepend(bar);
     const items = [...grid.children].filter(isItem);
-    const now = new Date();
-    const starts = plan(items.map(ageOf), now, lang());
+    const starts = plan(items.map(ageOf), new Date(), lang());
+    const ours: HTMLElement[] = [bar];
+    const startOf = new Map<Element, HTMLElement>();
     for (const [i, g] of starts) {
       const h = head(g.label, heads.get(g.key));
       heads.set(g.key, h);
-      if (items[i].previousElementSibling !== h) items[i].before(h);
+      h.style.order = String(2 * ours.length - 1); // group n: header 2n-1, its cards 2n
+      startOf.set(items[i], h);
+      ours.push(h);
       dots.add(h);
     }
     const live = new Set([...starts.values()].map((g) => g.key));
@@ -158,6 +181,24 @@ function subscriptions(grid: Element, signal: AbortSignal): void {
       heads.delete(k);
       dots.drop(h);
     }
+    // YouTube's children take their group's order; shelves keep style.css's order -1.
+    groupOf.clear();
+    let cur: HTMLElement | undefined, n = 0;
+    for (const c of grid.children) {
+      if (isOurs(c)) continue;
+      const h = startOf.get(c);
+      if (h) {
+        cur = h;
+        n = ours.indexOf(h);
+      }
+      if (cur && isItem(c)) groupOf.set(c, cur);
+      if (c.localName === 'ytd-rich-section-renderer') continue;
+      const o = String(2 * n);
+      if ((c as HTMLElement).style.order !== o) (c as HTMLElement).style.order = o;
+    }
+    // Ours last, headers in group order (style.css's :first-of-type is the first header).
+    const tail = [...grid.children].slice(-ours.length);
+    if (tail.length !== ours.length || tail.some((e, i) => e !== ours[i])) grid.append(...ours);
     apply();
   };
   // Our own inserts re-trigger it once; the second pass changes nothing.
@@ -168,6 +209,7 @@ function subscriptions(grid: Element, signal: AbortSignal): void {
     obs.disconnect();
     heads.forEach((h) => h.remove());
     grid.querySelectorAll(':scope > [kyt-off]').forEach((e) => e.removeAttribute('kyt-off'));
+    for (const c of grid.children) (c as HTMLElement).style.removeProperty('order');
     for (const a of ['kyt-filter', 'kyt-query', 'kyt-more']) grid.removeAttribute(a);
     bar.remove();
   }, { once: true });

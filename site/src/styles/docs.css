@@ -1,0 +1,143 @@
+/* Docs theme: rift-docs' quiet, Apple-like greys and type, with Kempt's accent in place of blue. */
+:root {
+  --k-accent: #cb274a;
+  --k-bg: #111;
+  --k-nav: #161616;
+  --k-surface: #1c1c1e;
+  --k-active: #ffffff1a;
+  --k-hairline: #ffffff1f;
+  --k-fg: #fff;
+  --k-fg-2: #ccc;
+  --k-fg-3: #999;
+
+  --sl-font: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", system-ui, Roboto, Arial, sans-serif;
+  --sl-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --sl-nav-height: 3.25rem;
+  --sl-sidebar-width: 17.5rem;
+  --sl-content-width: 50rem;
+  --sl-text-body: 1.0625rem;
+  --sl-text-h1: 3rem;
+  --sl-text-h2: 2rem;
+  --sl-text-h3: 1.5rem;
+  --sl-text-h4: 1.25rem;
+
+  --sl-color-accent-low: color-mix(in srgb, var(--k-accent) 22%, #111);
+  --sl-color-accent: var(--k-accent);
+  --sl-color-accent-high: color-mix(in srgb, var(--k-accent) 45%, #fff);
+  --sl-color-white: var(--k-fg);
+  --sl-color-gray-1: #e5e5e7;
+  --sl-color-gray-2: var(--k-fg-2);
+  --sl-color-gray-3: var(--k-fg-3);
+  --sl-color-gray-4: #767676;
+  --sl-color-gray-5: #3a3a3c;
+  --sl-color-gray-6: #2a2a2a;
+  --sl-color-gray-7: #1c1c1e;
+  --sl-color-black: var(--k-bg);
+  --sl-color-bg: var(--k-bg);
+  --sl-color-bg-nav: #111111d1;
+  --sl-color-bg-sidebar: var(--k-nav);
+  --sl-color-hairline: var(--k-hairline);
+  --sl-color-hairline-light: var(--k-hairline);
+  --sl-color-hairline-shade: #000;
+}
+:root[data-theme='light'] {
+  --k-bg: #fff;
+  --k-nav: #f7f7f7;
+  --k-surface: #f5f5f7;
+  --k-active: #0000000f;
+  --k-hairline: #0000001f;
+  --k-fg: #000;
+  --k-fg-2: #555;
+  --k-fg-3: #767676;
+
+  --sl-color-accent-low: color-mix(in srgb, var(--k-accent) 14%, #fff);
+  --sl-color-accent-high: color-mix(in srgb, var(--k-accent) 80%, #000);
+  --sl-color-white: #17181c;
+  --sl-color-gray-1: #2c2c2e;
+  --sl-color-gray-2: var(--k-fg-2);
+  --sl-color-gray-3: var(--k-fg-3);
+  --sl-color-gray-4: #999;
+  --sl-color-gray-5: #ccc;
+  --sl-color-gray-6: #e8e8ed;
+  --sl-color-gray-7: var(--k-nav);
+  --sl-color-black: var(--k-bg);
+  --sl-color-bg-nav: #ffffffd1;
+  --sl-color-hairline-shade: #ddd;
+}
+
+/* Frosted header, like the extension's masthead. */
+header.header {
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+/* Sidebar: grey pill for the current page, quiet group labels. */
+.sidebar-content a {
+  border-radius: 6px;
+  padding-block: 0.3rem;
+}
+.sidebar-content a[aria-current='page'],
+.sidebar-content a[aria-current='page']:is(:hover, :focus-visible) {
+  background: var(--k-active);
+  color: var(--k-fg);
+  font-weight: 500;
+}
+.sidebar-content a:not([aria-current='page']):hover {
+  background: color-mix(in srgb, var(--k-accent) 10%, transparent);
+}
+.sidebar-content .group-label .large {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--k-fg-2);
+}
+.right-sidebar a[aria-current='true'] {
+  color: var(--k-fg);
+  font-weight: 500;
+}
+
+/* Type: tight headings, no rule under h2. */
+.sl-markdown-content :is(h1, h2, h3) {
+  letter-spacing: -0.018em;
+}
+.sl-markdown-content h2:not(:where(.not-content *)) {
+  margin-top: 2.5rem;
+  border: 0;
+  padding: 0;
+  font-weight: 600;
+}
+.content-panel h1#_top {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+/* Inline code and asides on the soft surface. */
+.sl-markdown-content :not(pre) > code {
+  background: var(--k-surface);
+  border: 1px solid var(--k-hairline);
+  border-radius: 5px;
+  padding: 0.1em 0.35em;
+}
+.starlight-aside {
+  border-radius: 10px;
+  border-width: 0 0 0 3px;
+}
+
+/* Screenshot placeholders until the real images land. */
+.shot {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--k-hairline);
+  background: var(--k-surface);
+}
+
+.site-title {
+  color: var(--k-fg);
+  font-weight: 600;
+  gap: 0.6rem;
+}
+.site-title img {
+  height: 1.6rem;
+}

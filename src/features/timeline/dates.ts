@@ -5,19 +5,62 @@
 const DAY = 864e5;
 const MS = { second: 1e3, minute: 6e4, hour: 36e5, day: DAY, week: 7 * DAY, month: 30 * DAY, year: 365 * DAY } as const;
 type Unit = keyof typeof MS;
-export interface Age { n: number; unit: Unit }
+/** `extra`: words around the age ("Streamed 3 days ago", "vor 3 Tagen gestreamt"), which plain uploads never have. */
+export interface Age { n: number; unit: Unit; extra: boolean }
 
-// Long and short forms: "hours", "hr", "h" ("12h ago" is the compact logged-out form). Month is "mo", never "m".
+// English compact forms Intl doesn't write: "7 hr ago", "12h ago", "2 wk ago". Month is "mo", never "m".
 const UNIT_RE: [RegExp, Unit][] = [
   [/^(seconds?|secs?|s)$/, 'second'], [/^(minutes?|mins?|m)$/, 'minute'], [/^(hours?|hrs?|h)$/, 'hour'],
   [/^(days?|d)$/, 'day'], [/^(weeks?|wks?|w)$/, 'week'], [/^(months?|mos?)$/, 'month'], [/^(years?|yrs?|y)$/, 'year'],
 ];
+const EN_RE = /(\d+)\s*([a-z]+)\.?\s+ago\b/i;
 
-/** "Streamed 3 days ago" -> { n: 3, unit: 'day' }. English only; other locales return null. */
-export function parseAge(text: string): Age | null {
-  const m = text.match(/(\d+)\s*([a-z]+)\.?\s+ago\b/i);
-  const unit = m && UNIT_RE.find(([re]) => re.test(m[2].toLowerCase()))?.[1];
-  return unit ? { n: Number(m[1]), unit } : null;
+const space = (s: string) => s.replace(/[\s\u00a0\u202f]+/g, ' ');
+const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const AGO = new Map<string, { re: RegExp; units: Unit[] }>();
+
+/**
+ * One regex for every way `locale` writes "N <unit> ago": long, short and narrow, each plural form (0 to 111
+ * covers them all). Built from Intl's own words, which match YouTube's long form (aria-label) in the ten
+ * languages checked: "vor 2 Wochen", "hace 2 semanas", "2 週間前", "2주 전". Capture group i is `units[i]`.
+ */
+function agoRe(locale: string) {
+  let r = AGO.get(locale);
+  if (r) return r;
+  const alts = new Map<string, Unit>();
+  for (const style of ['long', 'short', 'narrow'] as const) {
+    const rtf = new Intl.RelativeTimeFormat(`${locale}-u-nu-latn`, { style });
+    for (const unit of Object.keys(MS) as Unit[]) {
+      for (let n = 0; n <= 111; n++) {
+        const parts = rtf.formatToParts(-n, unit);
+        const i = parts.findIndex((p) => p.type === 'integer');
+        if (i < 0) continue;
+        const side = (ps: typeof parts) => esc(space(ps.map((p) => p.value).join('')));
+        const alt = `${side(parts.slice(0, i))}(\\d+)${side(parts.slice(i + 1))}`;
+        if (!alts.has(alt)) alts.set(alt, unit);
+      }
+    }
+  }
+  const keys = [...alts.keys()].sort((a, b) => b.length - a.length); // "3 semanas" before "3 sem."
+  r = { re: new RegExp(keys.join('|'), 'iu'), units: keys.map((k) => alts.get(k)!) };
+  AGO.set(locale, r);
+  return r;
+}
+
+/** "vor 3 Tagen gestreamt" in `de` -> { n: 3, unit: 'day', extra: true }. Null if no age is found. */
+export function parseAge(text: string, locale = 'en'): Age | null {
+  const t = space(text);
+  const age = (m: RegExpMatchArray, n: string, unit: Unit): Age =>
+    ({ n: Number(n), unit, extra: /\p{L}/u.test(t.replace(m[0], '')) });
+  const { re, units } = agoRe(locale);
+  const m = t.match(re);
+  if (m) {
+    const i = m.findIndex((g, j) => j > 0 && g !== undefined);
+    return age(m, m[i], units[i - 1]);
+  }
+  const en = t.match(EN_RE);
+  const unit = en && UNIT_RE.find(([r]) => r.test(en[2].toLowerCase()))?.[1];
+  return en && unit ? age(en, en[1], unit) : null;
 }
 
 export interface Group {
@@ -45,10 +88,10 @@ export function dayLabel(d: Date, now: Date, locale = 'en-GB'): string {
 /**
  * Seconds to days give the upload day (YouTube rounds down, so "13 days ago" is still one day): group by it.
  * Weeks, months and years only give a range: group by YouTube's own wording ("2 weeks ago").
- * Returns null for text we can't read (other UI languages, "Scheduled for ...").
+ * Returns null for text without an age ("Scheduled for ...").
  */
 export function groupOf(text: string, now: Date, locale?: string): Group | null {
-  const age = parseAge(text);
+  const age = parseAge(text, locale);
   if (!age) return null;
   const at = now.getTime() - age.n * MS[age.unit];
   if (age.unit === 'week' || age.unit === 'month' || age.unit === 'year') {

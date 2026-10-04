@@ -1,16 +1,22 @@
 // Subscriptions toolbar logic: what kind an item is, and whether a search matches it.
 // Pure: no DOM, so it's unit tested (test/timeline.test.ts).
 
+import type { Age } from './dates.ts';
+
 export type Kind = 'video' | 'live' | 'short';
 export type Type = 'all' | 'videos' | 'live' | 'shorts';
 
-/** Past and current streams carry a word in the metadata row ("Streamed 3 days ago", "1.2K watching"). English only. */
-const LIVE_TEXT = /\b(streamed|watching|waiting|scheduled)\b/i;
-
-/** `short`: links to /shorts/. `badge`: has YouTube's live thumbnail badge (any language, current streams only). */
-export function kindOf(o: { short: boolean; badge: boolean; meta: string }): Kind {
+/**
+ * `short`: links to /shorts/. `badge`: YouTube's live thumbnail badge (streams on now). `age`: the item's age part.
+ * Past streams have words around their age ("Streamed 2 weeks ago", "vor 2 Wochen gestreamt") and upcoming ones
+ * have no age ("Scheduled for ...", "1.2K waiting"), in every language. `readable`: some item of the feed had an
+ * age, so a missing one means upcoming and not a language we can't read.
+ */
+export function kindOf(o: { short: boolean; badge: boolean; age: Age | null; readable: boolean }): Kind {
   if (o.short) return 'short';
-  return o.badge || LIVE_TEXT.test(o.meta) ? 'live' : 'video';
+  if (o.badge) return 'live';
+  if (o.age) return o.age.extra ? 'live' : 'video';
+  return o.readable ? 'live' : 'video';
 }
 
 /** Does `kind` belong under the chip? */
