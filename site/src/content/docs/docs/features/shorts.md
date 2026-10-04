@@ -3,19 +3,19 @@ title: Shorts
 description: Hide Shorts, and open Shorts links as normal videos.
 ---
 
-Shorts shelves disappear from Home, Subscriptions, search, channels and the sidebar. A Shorts link, from anywhere, opens in the normal player with a seek bar, volume and the usual layout.
+Shorts shelves disappear from Home, Subscriptions, search, channels and the sidebar. A Shorts link, from anywhere, opens in the normal player, with its seek bar and volume control.
 
 ## Settings
 
-**Feeds → Hide Shorts.** No options.
+The switch is **Feeds → Hide Shorts**, with no options.
 
 ## How it works
 
 - **Hiding** is CSS: shelf elements such as `ytd-reel-shelf-renderer`, `ytd-rich-shelf-renderer[is-shorts]` and `grid-shelf-view-model`, the sidebar entry and the Shorts tab on channels.
 - **Redirecting** covers the three ways into a Short:
-  1. A click on a `/shorts/` link is caught before YouTube's handler and becomes an in-page navigation to `/watch?v=ID`.
-  2. An in-page navigation to a Shorts URL (from YouTube's own code) is caught at `yt-navigate-start` and sent to the same place.
-  3. Opening `/shorts/ID` directly is replaced with the watch URL before the page draws.
+  1. Kempt catches a click on a `/shorts/` link before YouTube's handler and turns it into an in-page navigation to `/watch?v=ID`.
+  2. Kempt catches an in-page navigation to a Shorts URL (from YouTube's own code) at `yt-navigate-start` and sends it to the same place.
+  3. When you open `/shorts/ID` directly, Kempt swaps in the watch URL before the page draws.
 
 Channel tabs have localized names, so the [page bridge](/kempt-yt/docs/internals/page-bridge/) stamps the Shorts tab from its data (`kyt-tab="shorts"`).
 

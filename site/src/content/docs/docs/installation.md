@@ -5,10 +5,10 @@ description: Install Kempt from a store or build it from source.
 
 ## From a store
 
-- **Firefox 128 or later:** [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/PLACEHOLDER)
-- **Chrome, Edge, Brave and other Chromium browsers:** [Chrome Web Store](https://chromewebstore.google.com/detail/PLACEHOLDER)
+- For Firefox 128 or later, use [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/PLACEHOLDER).
+- For Chrome, Edge, Brave and other Chromium browsers, use the [Chrome Web Store](https://chromewebstore.google.com/detail/PLACEHOLDER).
 
-Reload any YouTube tab that was open before you installed. Kempt starts with every feature on.
+Reload any YouTube tab that was open before you installed. Kempt starts with every feature on except Grid size.
 
 ## Build from source
 
@@ -43,4 +43,4 @@ Store installs update on their own. For a source build, pull, run `npm run build
 
 ## Uninstall
 
-Remove Kempt from your browser's extensions page. It leaves nothing behind on YouTube: your settings live in the browser's extension storage and go with it.
+Remove Kempt from your browser's extensions page. Your settings live in the browser's extension storage and go with it. One small key, `kyt:flags`, stays in YouTube's `localStorage` until you clear site data; it only lists which features were on.

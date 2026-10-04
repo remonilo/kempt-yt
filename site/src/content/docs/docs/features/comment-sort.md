@@ -7,10 +7,10 @@ The Sort by dropdown above comments becomes a row of chips beside the comment co
 
 ## Settings
 
-**Watch page → Comment sort as buttons.** No options.
+The switch is **Watch page → Comment sort as buttons**, with no options.
 
 ## How it works
 
-Each chip clicks the matching item in YouTube's dropdown, which stays in the page, hidden. YouTube still does the reload, so sorting behaves exactly as before.
+Each chip clicks the matching item in YouTube's dropdown, which stays hidden in the page. YouTube still reloads the comments, so sorting works as before.
 
-The chip labels are copied from the dropdown items, so they're in YouTube's UI language without a translation table. When YouTube re-renders the menu, Kempt updates the labels in place.
+Kempt copies the chip labels from the dropdown items, so they're in YouTube's UI language with no translation table. When YouTube re-renders the menu, Kempt updates the labels in place.

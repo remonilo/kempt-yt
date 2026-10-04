@@ -7,7 +7,8 @@ A content script can't see YouTube's JavaScript objects: `ytcfg`, or the data Yo
 
 - the sidebar reads the guide data,
 - the icons read each button's icon type,
-- Watch later sends YouTube's own requests.
+- Watch later sends YouTube's own requests,
+- Grid size sets the Home Shorts shelf's `elementsPerRow`.
 
 So a second script, `main-world.js`, runs in YouTube's page and answers calls from the content script.
 
@@ -18,7 +19,7 @@ So a second script, `main-world.js`, runs in YouTube's page and answers calls fr
 const saved = await ctx.call('inWatchLater', videoId);
 ```
 
-`call` is typed from the handler map. A wrong name, wrong arguments or a wrong result type fails `npm run check`.
+`call` is typed from the handler map. A wrong handler name fails `npm run check`, and so do wrong argument or result types.
 
 ## Writing handlers
 
@@ -48,10 +49,10 @@ Shared handlers live in `src/page/core.ts`:
 
 ## Transport
 
-Calls travel as `CustomEvent`s on `document`, with a JSON string in `detail` and a request id. JSON strings, because Firefox drops object `detail` between worlds. So arguments and results are plain data, never elements: pass a selector, get back a boolean or JSON.
+Calls travel as `CustomEvent`s on `document`, with a JSON string in `detail` and a request id. Kempt uses JSON strings because Firefox drops object `detail` between worlds. So arguments and results are plain data and never elements: you pass a selector and get back a boolean or JSON.
 
 Event names carry the build id. Firefox keeps an old `main-world.js` running in open tabs after an extension reload, and the build id stops the old one from answering.
 
 ## Why stamp?
 
-YouTube's `aria-label`s are translated. The icon type in an element's data (`SHARE`, `PLAYLIST_ADD`, `VIDEO_CALL`) is the same in every language. Stamping copies it onto an attribute that CSS can match. It runs only on small known containers: the top bar, the sidebar and the watch action row.
+YouTube's `aria-label`s are translated. The icon type in an element's data (`SHARE`, `PLAYLIST_ADD`, `VIDEO_CALL`) is the same in every language. Stamping copies it onto an attribute that CSS can match. It runs only on small known containers: the top bar, the sidebar, the watch action row and the channel tabs.

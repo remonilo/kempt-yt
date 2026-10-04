@@ -1,6 +1,6 @@
 ---
 title: Settings
-description: The popup, its switches and options.
+description: What each switch and option in the popup does.
 ---
 
 Click the Kempt icon in the browser toolbar. Changes apply to open YouTube tabs at once.
@@ -32,10 +32,10 @@ The dot in the Accent color row opens a picker: swatches, a hue and saturation w
 
 ## Sync and reset
 
-Settings are saved with `chrome.storage.sync`, so they follow your browser account to other computers. The popup footer shows the version and a **Reset all** button; click it twice to confirm.
+Kempt saves settings with `chrome.storage.sync`, so they follow your browser account to other computers. The popup footer shows the version and a **Reset all** button; click it twice to confirm.
 
 ## How it works
 
 The popup has no list of its own. It reads the same feature list the extension runs (`src/features/index.ts`) and draws one row per feature from its `label`, `hint`, `icon`, `group` and `options`. A new feature appears in the popup with no popup changes.
 
-A color option that names a `cssVar` is written straight onto `<html>` as a CSS variable. Boolean options become attributes such as `kyt-sidebar-hide-you`, which the feature's CSS matches. Live color drags save at most every 400 ms, because `storage.sync` allows 120 writes a minute.
+When a color option names a `cssVar`, Kempt writes it straight onto `<html>` as a CSS variable. Boolean options become attributes such as `kyt-sidebar-hide-you`, which the feature's CSS matches. Live color drags save at most every 400 ms, because `storage.sync` allows 120 writes a minute.

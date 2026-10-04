@@ -1,9 +1,9 @@
 ---
 title: Privacy
-description: What Kempt stores and sends. Short version, nothing leaves your browser.
+description: What Kempt stores and sends. In short, nothing leaves your browser.
 ---
 
-Kempt collects no data. It has no server, no analytics and no remote code.
+Kempt collects no data and has no server. It loads no remote code and runs no analytics.
 
 ## Permissions
 
@@ -14,10 +14,10 @@ Kempt collects no data. It has no server, no analytics and no remote code.
 
 ## Network requests
 
-Kempt makes requests only to `www.youtube.com`, from your page, with your session:
+Kempt sends requests only to `www.youtube.com`, from your page and with your session:
 
-- **Watch later button:** checks whether the video is in Watch later, and adds or removes it. These are the requests YouTube's own Save menu sends.
-- **Sidebar:** loads your sidebar entries and your playlist list when the page doesn't carry them yet. These are the requests YouTube's own sidebar and Save menu send.
+- The Watch later button checks whether the video is in Watch later, and adds or removes it. YouTube's own Save menu sends the same requests.
+- The sidebar loads your sidebar entries and your playlist list when the page doesn't carry them yet. YouTube's own sidebar and Save menu send the same requests.
 
 The answers stay in the page. Kempt keeps nothing from them.
 
@@ -27,4 +27,4 @@ Kempt mirrors which features are on into the page's `localStorage` under `kyt:fl
 
 ## Contact
 
-Questions about privacy: [open an issue](https://github.com/remonilo/kempt-yt/issues).
+For questions about privacy, [open an issue](https://github.com/remonilo/kempt-yt/issues).

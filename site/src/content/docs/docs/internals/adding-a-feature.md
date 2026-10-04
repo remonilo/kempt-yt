@@ -1,9 +1,9 @@
 ---
 title: Adding a feature
-description: One folder, one line, no core changes.
+description: A new feature is one folder and one line, with no core changes.
 ---
 
-A feature is a folder under `src/features/` and one line in `src/features/index.ts`. It appears in the popup, gets the accent for free and shuts off cleanly, with no change to the core.
+A feature is a folder under `src/features/` and one line in `src/features/index.ts`. It shows up in the popup and shuts off cleanly, and the core needs no change.
 
 ## A CSS-only feature
 
@@ -63,7 +63,7 @@ export const example: Feature = {
 - YouTube selectors used from JS go in `src/core/selectors.ts`. Prefer structure and YouTube's camelCase classes over translated `aria-label`s.
 - Every listener and observer takes `ctx.signal`. On abort, put YouTube's page back as you found it.
 - Labels you draw go through `local()` with a table for every language. See [Languages](/kempt-yt/docs/features/languages/).
-- Need YouTube's data? Add a `page.ts`. See [Page bridge](/kempt-yt/docs/internals/page-bridge/).
+- If you need YouTube's data, add a `page.ts`. See [Page bridge](/kempt-yt/docs/internals/page-bridge/).
 
 ## Checklist
 
@@ -71,6 +71,6 @@ export const example: Feature = {
 npm run check && npm test && npm run build
 ```
 
-`test/structure.test.ts` checks that the feature is registered, that every CSS rule is gated by `html[kyt-<id>]`, and that page handler names are unique. If it fails, fix the code, not the test.
+`test/structure.test.ts` checks that the feature is registered, that every CSS rule is gated by `html[kyt-<id>]`, that page handler names are unique, and that every `page.ts` is registered. If it fails, fix the code and leave the test alone.
 
 Before you open a PR, read the lessons section of [`PLAN.md`](https://github.com/remonilo/kempt-yt/blob/main/PLAN.md). Each entry there cost a debugging round.

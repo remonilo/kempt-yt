@@ -46,28 +46,29 @@ One accent color and icon set, and less clutter. Every change is a switch you ca
 <br>
 
 > [!NOTE]
-> **Kempt changes how YouTube looks, not what it shows.**
+> **Kempt only changes how YouTube looks.**
 >
-> It blocks no ads, downloads nothing and works around no restrictions. It moves and restyles YouTube's own elements, and every button keeps YouTube's own behavior.
+> It doesn't block ads or download anything. It moves and restyles YouTube's own elements, and every button keeps YouTube's own behavior.
 
 ## Features
 
-- **Watch page tabs.** Info, Comments, Videos, Live chat and Ask AI share one panel beside the player. Only the open tab scrolls. <details><summary><sup>click to see the tabs</sup></summary><img src="site/public/screenshots/tabs.png" alt="Watch page tabs" /></details>
-- **Subscriptions timeline.** Uploads under date headers, with All / Videos / Live / Shorts chips and a search box. History also gets the same headers.
-- **Redesigned sidebar.** Explore, Subscriptions and Playlists as dropdowns, and the entries you never use hidden.
-- **One accent and one icon set** across chips, tabs, the progress bar, Subscribe and every button. The icons are drawn over YouTube's own buttons.
-- **Font.** Plus Jakarta Sans for all of YouTube's text, or Inter, Geist, Figtree or your system font. The fonts ship inside the extension.
-- **Small fixes.** An outlined search bar, Settings in the top bar, a Watch later button, and comment sort as chips.
-- **Grid size.** Choose how many videos and Shorts fill each row on Home, Subscriptions and channels.
-- **No Shorts.** Shelves hidden everywhere and Shorts links open in the normal player.
-- **Every change is a switch.** Pop-up has all the settings needed, only a switch away. <details><summary><sup>click to see the popup</sup></summary><!-- PLACEHOLDER: popup --><br><img src="site/public/screenshots/popup.png" alt="Kempt popup" width="260" /></details>
-- **Your language.** Labels follow YouTube's UI language, in 11 languages.
-- **Light on battery.** no polling or page-wide observers, and compositor-only animations. Reduced motion is respected.
+- **Watch page tabs** put Info, Comments, Videos, Live chat and Ask AI in one panel beside the player, and only the open tab scrolls. <details><summary><sup>click to see the tabs</sup></summary><img src="site/public/screenshots/tabs.png" alt="Watch page tabs" /></details>
+- **The Subscriptions timeline** sorts uploads under date headers, with All / Videos / Live / Shorts chips and a search box. History gets the same headers.
+- **The redesigned sidebar** turns Explore, Subscriptions and Playlists into dropdowns and hides the entries you never use.
+- **One accent and one icon set** cover chips, tabs, the progress bar, Subscribe and every button. Kempt draws the icons over YouTube's own buttons.
+- **Plus Jakarta Sans** replaces Roboto in all of YouTube's text. You can pick Inter, Geist, Figtree or your system font instead, and the fonts ship inside the extension.
+- **Small fixes** include an outlined search bar, Settings in the top bar, a Watch later button and comment sort as chips.
+- **Grid size** sets how many videos and Shorts fill each row on Home, Subscriptions and channels.
+- **Hide Shorts** removes Shorts shelves everywhere and opens Shorts links in the normal player.
+- **Every change** has its own switch in the popup. <details><summary><sup>click to see the popup</sup></summary><!-- PLACEHOLDER: popup --><br><img src="site/public/screenshots/popup.png" alt="Kempt popup" width="260" /></details>
+- **Kempt's labels** follow YouTube's UI language and come in 11 languages.
+- **Battery use** stays low because Kempt does no polling, runs no page-wide observers and animates on the compositor only. It also respects reduced motion.
 
 ## Quick start
 
 [<kbd><br>install<br></kbd>][install_link]
 [<kbd><br>settings<br></kbd>][settings_link]
+[<kbd><br>faq<br></kbd>][faq_link]
 [<kbd><br>how it works<br></kbd>][internals_link]
 
 ## Installation
@@ -76,13 +77,13 @@ One accent color and icon set, and less clutter. Every change is a switch you ca
 
 Firefox 128 or later: [Firefox Add-ons][firefox_link].
 
-### Chrome, Edge, Brave
+### Chromium browsers
 
-Any Chromium browser: [Chrome Web Store][chrome_link].
+Chrome, Edge, Brave or any other Chromium browser: [Chrome Web Store][chrome_link].
 
 ### From source
 
-Needs Node.js 22 or later.
+You need Node.js 22 or later.
 
 ```sh
 git clone https://github.com/remonilo/kempt-yt
@@ -91,14 +92,14 @@ npm i
 npm run build
 ```
 
-- **Firefox:** `about:debugging` → This Firefox → Load Temporary Add-on → `dist/manifest.json`
-- **Chrome:** `chrome://extensions` → Developer mode → Load unpacked → `dist/`
+- In Firefox, open `about:debugging` → This Firefox → Load Temporary Add-on → `dist/manifest.json`.
+- In Chrome, open `chrome://extensions` → Developer mode → Load unpacked → `dist/`.
 
 Reload any YouTube tab that was open before.
 
 ## Privacy
 
-Kempt collects nothing and has no server. It asks for one permission, `storage`, for your settings, and runs on `www.youtube.com` only. The few requests it makes go to YouTube, from your session, the same ones YouTube's own menus send. [Details][privacy_link].
+Kempt collects nothing and has no server. It asks for one permission, `storage`, for your settings, and runs on `www.youtube.com` only. The few requests it makes go to YouTube with your session, and YouTube's own menus send the same ones. [Details][privacy_link].
 
 ## Contributing
 
@@ -108,19 +109,19 @@ npm run check    # typecheck
 npm test         # node --test
 ```
 
-TypeScript, no framework or runtime dependencies. A feature is one folder in `src/features/<id>/` plus one line in `src/features/index.ts`. Start with [Adding a feature][add_link]. [`PLAN.md`](PLAN.md) records every design decision and the lessons learned about YouTube's DOM.
+Kempt is TypeScript with no framework or runtime dependencies. A feature is one folder in `src/features/<id>/` plus one line in `src/features/index.ts`. Start with [Adding a feature][add_link]. [`PLAN.md`](PLAN.md) records every design decision and the lessons learned about YouTube's DOM.
 
-Bug reports help most with your browser, window width, YouTube language, signed in or out, and the steps to reproduce.
+A bug report helps most when it includes your browser, window width, YouTube language, signed in or out, and the steps to reproduce.
 
 The docs site lives in `site/` (Astro + Starlight): `cd site && npm i && npm run dev`.
 
 ## Translations
 
-Kempt's own labels exist in English, Spanish, Portuguese, German, French, Russian, Japanese, Korean, Hindi, Indonesian and Turkish. The non-English ones were written without a native speaker. If you speak one, read the `WORDS` tables in `src/features/*/index.ts` and open a PR.
+Kempt's own labels exist in English, Spanish, Portuguese, German, French, Russian, Japanese, Korean, Hindi, Indonesian and Turkish. No native speaker helped write the non-English ones. If you speak one, read the `WORDS` tables in `src/features/*/index.ts` and open a PR.
 
 ## Motivation
 
-YouTube's UI is built from many teams' parts: three icon styles, accents that change from page to page, unexplainable clutter from years of features added. Kempt brings it back to one design. It started from Juxtopposed's YouTube redesign concept and grew into something I use every day.
+YouTube's UI is built from many teams' parts. It mixes three icon styles, and its accents change from page to page. Years of added features left clutter on top. Kempt pulls it all into one design. It started from Juxtopposed's YouTube redesign concept and grew into something I use every day.
 
 ## Credits
 
@@ -136,6 +137,7 @@ Icons come from Juxtopposed's _YouTube Redesign (Community)_ [Figma](https://www
 [chrome_link]: https://chromewebstore.google.com/detail/PLACEHOLDER
 [install_link]: https://remonilo.github.io/kempt-yt/docs/installation/
 [settings_link]: https://remonilo.github.io/kempt-yt/docs/settings/
+[faq_link]: https://remonilo.github.io/kempt-yt/docs/faq/
 [internals_link]: https://remonilo.github.io/kempt-yt/docs/internals/architecture/
 [add_link]: https://remonilo.github.io/kempt-yt/docs/internals/adding-a-feature/
 [privacy_link]: https://remonilo.github.io/kempt-yt/docs/privacy/
