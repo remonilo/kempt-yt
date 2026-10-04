@@ -24,6 +24,6 @@ The button, its click handler and its tooltip stay YouTube's. Turning the featur
 
 ## Sources
 
-The set comes from Juxtopposed's *YouTube Redesign (Community)* Figma file. Glyphs it lacks (Ask, Thanks, Movies, Podcasts and a few more) come from [Hugeicons](https://hugeicons.com) Stroke Rounded, which has the same stroke. Anything still unmapped keeps YouTube's icon. Player controls keep YouTube's icons on purpose.
+The set comes from Juxtopposed's _YouTube Redesign (Community)_ [Figma](https://www.figma.com/community/file/1450380484645543336/youtube-redesign) file. Glyphs it lacks (Ask, Thanks, Movies, Podcasts and a few more) come from [Hugeicons](https://hugeicons.com) Stroke Rounded, which has the same stroke. Anything still unmapped keeps YouTube's icon. Player controls keep YouTube's icons on purpose.
 
 `npm run icons` re-exports the set into `src/icons/`.

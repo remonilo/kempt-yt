@@ -8,6 +8,7 @@ const repo = 'https://github.com/remonilo/kempt-yt';
 export default defineConfig({
   site: 'https://remonilo.github.io',
   base: '/kempt-yt',
+  compressHTML: false, // readable dist/*.html; Pages gzips anyway
   integrations: [
     starlight({
       title: 'Kempt',

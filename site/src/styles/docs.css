@@ -122,15 +122,11 @@ header.header {
   border-width: 0 0 0 3px;
 }
 
-/* Screenshot placeholders until the real images land. */
+/* Screenshots carry their own window border and drop shadow: no frame here. */
 .shot {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-  border-radius: 12px;
-  border: 1px solid var(--k-hairline);
-  background: var(--k-surface);
+  height: auto;
 }
 
 .site-title {

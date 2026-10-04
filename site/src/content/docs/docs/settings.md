@@ -13,6 +13,7 @@ Click the Kempt icon in the browser toolbar. Changes apply to open YouTube tabs 
 | --- | --- | --- | --- |
 | Look | [Accent color](/kempt-yt/docs/features/look/) | Any color | On, `#cb274a` |
 | | [Tinted hover & selected](/kempt-yt/docs/features/look/#tinted-hover-and-selected) | | On |
+| | [Font](/kempt-yt/docs/features/look/#font) | Plus Jakarta Sans, Inter, Geist, Figtree, System | On, Plus Jakarta Sans |
 | | [Accent Subscribe button](/kempt-yt/docs/features/look/#subscribe-button) | | On |
 | | [Outlined search bar](/kempt-yt/docs/features/look/#search-bar) | | On |
 | | [Icons](/kempt-yt/docs/features/icons/) | | On |

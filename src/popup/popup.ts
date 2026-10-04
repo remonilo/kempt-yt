@@ -1,6 +1,7 @@
 import { GROUPS, isOn, optionValue, type Feature, type Group, type Option } from '../core/feature.ts';
 import { loadSettings, saveSettings, type Settings } from '../core/settings.ts';
 import { features } from '../features/index.ts';
+import { faceCss, familyOf } from '../features/font/index.ts';
 import { colorPicker } from './color.ts';
 
 // One row per feature, grouped into cards by `group`. A feature's options sit in a panel under its row
@@ -70,6 +71,33 @@ function segmented(choices: Record<string, string>, on: (v: string) => void) {
   return { el: seg, set };
 }
 
+/** More choices than a segmented control fits: one row each, the chosen one tinted with a check.
+ *  `face` gives a row its own font-family (the font feature previews each font). */
+function choiceList(choices: Record<string, string>, on: (v: string) => void, face?: (v: string) => string) {
+  const list = el('div', 'kp-list');
+  list.role = 'radiogroup';
+  const btns = Object.entries(choices).map(([k, label]) => {
+    const b = el('button', '', el('span', '', label), icon('check'));
+    b.type = 'button';
+    b.role = 'radio';
+    b.dataset.value = k;
+    if (face) b.firstElementChild!.setAttribute('style', `font-family: ${face(k)}`);
+    b.addEventListener('click', () => (set(k), on(k)));
+    return b;
+  });
+  list.append(...btns);
+  const set = (v: unknown) => btns.forEach((b) => (b.ariaChecked = String(b.dataset.value === v)));
+  return { el: list, set };
+}
+
+/** Font previews in the popup: the same faces the page gets, from the popup's own fonts/ folder. */
+function fontFace(k: string) {
+  if (!document.querySelector('style.kp-faces')) {
+    document.head.append(Object.assign(el('style', 'kp-faces'), { textContent: faceCss((file) => `fonts/${file}`) }));
+  }
+  return k === 'system' ? 'system-ui' : `"${familyOf(k)}"`;
+}
+
 function number(opt: Extract<Option, { type: 'number' }>, on: (v: number) => void) {
   const i = el('input', 'kp-number');
   i.type = 'number';
@@ -136,6 +164,10 @@ function optionRows(f: Feature) {
       r = el('div', 'kp-item', row(opt.label, undefined, undefined, dot));
       r.append(panel(r, dot, picker.el));
       set = (v) => picker.set(v as string);
+    } else if (opt.type === 'choice' && Object.keys(opt.choices).length > 3) {
+      const c = choiceList(opt.choices, save, f.id === 'font' ? fontFace : undefined);
+      r = c.el;
+      set = c.set;
     } else {
       const c = opt.type === 'boolean' ? toggle(opt.label, save) : opt.type === 'choice' ? segmented(opt.choices, save) : number(opt, save);
       r = row(opt.label, undefined, undefined, c.el);

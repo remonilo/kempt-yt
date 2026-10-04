@@ -3,19 +3,19 @@ title: Kempt
 description: What Kempt changes on YouTube, and how these docs are organized.
 ---
 
-Kempt is a browser extension that restyles YouTube into one consistent design: one accent color, one icon set, and a few layout changes where YouTube's own layout gets in the way. It runs on Firefox 128+ and on Chromium browsers.
+Kempt is a browser extension that restyles YouTube into one consistent design. It runs on Firefox 128+ and on Chromium browsers.
 
 <img class="shot" src="/kempt-yt/screenshots/demo.png" alt="Kempt on a YouTube watch page" />
 
 ## What changes
 
-| Where | Change |
-| --- | --- |
-| Watch page | Info, Comments, Videos, Live chat and Ask AI as tabs beside the player. Comment sort as chips. A Watch later button. |
-| Subscriptions, History | A timeline with date headers, type chips and search. |
-| Sidebar | Explore, Subscriptions and Playlists as dropdowns. Hide the entries you don't use. |
-| Everywhere | One accent color, tinted hover and selection, one icon set, an outlined search bar, Settings in the top bar. |
-| Shorts | Hidden. Shorts links open in the normal player. |
+| Where                  | Change                                                                                                               |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Watch page             | Info, Comments, Videos, Live chat and Ask AI as tabs beside the player. Comment sort as chips. A Watch later button. |
+| Subscriptions, History | A timeline with date headers, type chips and search.                                                                 |
+| Sidebar                | Explore, Subscriptions and Playlists as dropdowns. Hide the entries you don't use.                                   |
+| Everywhere             | One accent color, tinted hover and selection, one icon set, an outlined search bar, Settings in the top bar.         |
+| Shorts                 | Hidden. Shorts links open in the normal player.                                                                      |
 
 Every change is a switch in the popup. Off means off: the feature's CSS stops matching, its code stops, and anything it moved goes back.
 
