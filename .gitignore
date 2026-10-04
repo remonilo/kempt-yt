@@ -11,3 +11,5 @@ site/.astro
 
 # local development only
 .env*
+
+*.zip

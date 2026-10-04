@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      created: ${{ steps.rp.outputs.release_created }}
+      tag: ${{ steps.rp.outputs.tag_name }}
+    steps:
+      - id: rp
+        uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  assets:
+    needs: release-please
+    if: needs.release-please.outputs.created == 'true'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: ${{ needs.release-please.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Package
+        run: |
+          (cd dist && zip -qr "../kempt-${TAG#v}.zip" .)
+          git archive -o "kempt-${TAG#v}-src.zip" HEAD
+      - run: gh release upload "$TAG" kempt-*.zip --clobber
