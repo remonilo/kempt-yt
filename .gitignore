@@ -20,3 +20,5 @@ scripts/dump-dom.js
 scripts/guide-dump.js
 .pi/
 .claude/
+
+*.zip
