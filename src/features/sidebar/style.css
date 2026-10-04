@@ -15,8 +15,7 @@ html[kyt-sidebar] .kyt-foot { order: 2; }
 html[kyt-sidebar-hide-you] .kyt-nav-item[data-icon^='ACCOUNT_CIRCLE'],
 html[kyt-sidebar-hide-channel] .kyt-nav-item[data-icon^='ACCOUNT_BOX'],
 html[kyt-sidebar-hide-videos] .kyt-nav-item[data-icon^='MY_VIDEOS'],
-html[kyt-sidebar-hide-courses] .kyt-nav-item[data-icon^='COURSE'],
-html[kyt-settings-topbar] .kyt-nav-item[data-icon^='SETTINGS'] {
+html[kyt-sidebar-hide-courses] .kyt-nav-item[data-icon^='COURSE'] {
   display: none !important; /* beats .kyt-mini's display: contents */
 }
 

@@ -5,6 +5,7 @@
 //   --eval runs file.js (an async function body) in the page after load and prints its return value.
 //   --scrollbars forces classic (non-overlay) scrollbars, like macOS "Always show scroll bars".
 //   --fake-login makes ytcfg report LOGGED_IN so signed-in-only features mount (their API calls still fail).
+//   --with=<dir or .xpi> also installs another extension, e.g. Return YouTube Dislike (repeatable).
 import puppeteer from 'puppeteer-core';
 import { resolve } from 'node:path';
 const [url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', shotPath] = process.argv.slice(2).filter((a) => !a.startsWith('--'));
@@ -15,6 +16,8 @@ const browser = await puppeteer.launch({
 });
 try {
   await browser.installExtension(resolve('dist'));
+  // --with=<dir or .xpi>: another extension alongside ours (compatibility checks), repeatable.
+  for (const a of process.argv.filter((a) => a.startsWith('--with='))) await browser.installExtension(resolve(a.slice(7)));
   const page = await browser.newPage();
   const widthArg = process.argv.find((a) => a.startsWith('--width='));
   await page.setViewport({ width: widthArg ? Number(widthArg.slice(8)) : 1400, height: 900 });
@@ -34,6 +37,7 @@ try {
   const logs = [];
   page.on('console', (m) => m.text().includes('kyt') && logs.push(m.text()));
   await page.goto(url, { waitUntil: 'load', timeout: 60_000 });
+  await page.bringToFront(); // an extension's welcome tab would leave YouTube in the background (no rAF, skeleton only)
   await new Promise((r) => setTimeout(r, 8000));
   console.log(await page.evaluate(() => JSON.stringify({
     flags: document.documentElement.getAttributeNames().filter((a) => a.startsWith('kyt')),

@@ -44,7 +44,7 @@ export const sidebar: Feature = {
   async run({ signal, call }) {
     const ytIcons = new Map<string, Promise<string | null>>();
     const ytIcon = (type: string) => {
-      if (!ytIcons.has(type)) ytIcons.set(type, call<string | null>('ytIcon', type).catch(() => null));
+      if (!ytIcons.has(type)) ytIcons.set(type, call('ytIcon', type).catch(() => null));
       return ytIcons.get(type)!;
     };
 
@@ -88,7 +88,7 @@ export const sidebar: Feature = {
     async function fill(box: HTMLElement, children: NonNullable<Row['children']>) {
       const cls = 'kyt-nav-link kyt-nav-child';
       if (children === 'playlists') {
-        playlists ??= call<Entry[]>('playlists').catch((err) => (console.warn('kyt: playlists failed', err), []));
+        playlists ??= call('playlists').catch((err) => (console.warn('kyt: playlists failed', err), []));
         box.replaceChildren(...(await playlists).map((c) => link(c, cls, icon('video-library'))));
       } else box.replaceChildren(...children.map((c) => link(c, cls)));
       setActive();
@@ -196,7 +196,7 @@ export const sidebar: Feature = {
 
     let json = '';
     async function refresh() {
-      const sections = await call<Section[] | null>('guide');
+      const sections = await call('guide');
       if (!sections || signal.aborted) return;
       const j = JSON.stringify(sections);
       if (j !== json) {
