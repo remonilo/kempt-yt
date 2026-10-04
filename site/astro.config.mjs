@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 const repo = 'https://github.com/remonilo/kempt-yt';
+const sponsor = 'https://github.com/sponsors/remonilo';
 
 // GitHub Pages project site: https://remonilo.github.io/kempt-yt/
 export default defineConfig({
@@ -14,7 +15,10 @@ export default defineConfig({
       title: 'Kempt',
       description: 'A browser extension that gives YouTube one consistent, quiet design.',
       favicon: '/favicon.svg',
-      social: [{ icon: 'github', label: 'GitHub', href: repo }],
+      social: [
+        { icon: 'heart', label: 'Sponsor', href: sponsor },
+        { icon: 'github', label: 'GitHub', href: repo },
+      ],
       editLink: { baseUrl: `${repo}/edit/main/site/` },
       customCss: ['./src/styles/docs.css'],
       lastUpdated: true,
