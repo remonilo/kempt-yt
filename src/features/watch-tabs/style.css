@@ -97,6 +97,12 @@ html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="ai"]) [kyt-ai] {
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="videos"], [kyt-tab="none"]) #playlist {
   display: none !important;
 }
+/* Likewise anything else YouTube puts in the right column (donation shelf, future shelves) belongs to Videos:
+   another tab keeps only the bar, its own box, #panels (Ask AI, transcript) and live chat, so no shelf stacks
+   under that tab's scroller. A whitelist, so new shelves are covered. In one column these sit under the player. */
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="videos"], [kyt-tab="none"]) #secondary-inner > :not(.kyt-tabs, .kyt-tab-info, .kyt-tab-comments, #panels, #chat-container) {
+  display: none !important;
+}
 /* Theater with live chat open: YouTube moves #chat-container into #columns, pins it fixed at the right
    edge under its own masthead height ([fixed-panels]) and reserves a sidebar-wide strip for it, which
    breaks under our topbar. Like TabView, theater shows the player alone: the chat hides with the other tabs

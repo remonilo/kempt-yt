@@ -4,15 +4,19 @@ import { icon, setIcon, setIconUrl } from '../../core/icon.ts';
 import { S } from '../../core/selectors.ts';
 import { buildNav, EXPLORE, type Entry, type Nav, type Row, type Section } from './nav.ts';
 
-/** YouTube icon type (minus _CAIRO) -> Figma icon. Unlisted types use YouTube's own SVG. */
+/** YouTube icon type (minus _CAIRO) -> icon in src/icons. Unlisted types use YouTube's own SVG. */
 const FIGMA: Record<string, string> = {
   TAB_HOME: 'home', EXPLORE: 'explore', TAB_SHORTS: 'shorts', TAB_SUBSCRIPTIONS: 'subs',
   ACCOUNT_CIRCLE: 'you', ACCOUNT_BOX: 'you', WATCH_HISTORY: 'history', PLAYLISTS: 'playlists',
   WATCH_LATER: 'watch-later', LIKES_PLAYLIST: 'liked-videos', OFFLINE_DOWNLOAD: 'download', COURSE: 'learning',
   MUSIC: 'music', GAMING_LOGO: 'games', NEWS: 'news', TROPHY: 'sports', STAR_SHOOTING_OUTLINE: 'trending',
-  FASHION: 'fashion', LIVE: 'live', FLAG: 'report', SETTINGS: 'settings',
+  FASHION: 'fashion', LIVE: 'live', FLAG: 'report', SETTINGS: 'settings', CONTENT_CUT: 'clip',
+  // Hugeicons (scripts/fetch-hugeicons.mjs). The signed-in types below CLAPPERBOARD are unverified guesses.
+  CLAPPERBOARD: 'movies', SPONSORSHIP_STAR: 'memberships',
+  MY_VIDEOS: 'your-videos', PODCAST: 'podcasts', PODCASTS: 'podcasts', BAG: 'shopping', HELP: 'help', FEEDBACK: 'feedback',
 };
-const NO_SELECTED = new Set(['download', 'report']); // Figma has no filled variant
+/** No filled variant: Figma's download, report, clip and every Hugeicon. */
+const NO_SELECTED = new Set(['download', 'report', 'clip', 'movies', 'memberships', 'your-videos', 'podcasts', 'shopping', 'help', 'feedback']);
 
 function el<K extends keyof HTMLElementTagNameMap>(tag: K, cls: string, ...kids: (Node | string)[]) {
   const e = document.createElement(tag);
@@ -90,7 +94,7 @@ export const sidebar: Feature = {
       const cls = 'kyt-nav-link kyt-nav-child';
       if (children === 'playlists') {
         playlists ??= call('playlists').catch((err) => (console.warn('kyt: playlists failed', err), []));
-        box.replaceChildren(...(await playlists).map((c) => link(c, cls, icon('video-library'))));
+        box.replaceChildren(...(await playlists).map((c) => link(c, cls, icon('library'))));
       } else box.replaceChildren(...children.map((c) => link(c, cls)));
       setActive();
     }

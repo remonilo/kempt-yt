@@ -11,7 +11,7 @@ Open work:
 
 - [ ] Sidebar dropdowns (Subscriptions, Playlists) get a hierarchy design; their child rows look out of place next to the phase 7 icons (user request). Needs a Figma frame or a proposal.
 - [ ] Timeline cheap filters: type chips (All, Videos, Live, Shorts) and search over loaded items, Subscriptions only (History keeps YouTube's own chips).
-- [ ] Icons Figma lacks: Ask (`SPARK`), Thanks, the subscribe notification bell (`notifs`/`notifs-selected`/`notifs-disabled` exist, but its state needs a stamp from the toggle's data). Player controls (play, pause, next, volume, cc, settings, theater, fullscreen, pip) have Figma icons but are outside phase 7: ask the user.
+- [ ] Subscribe notification bell: `notifs`/`notifs-selected`/`notifs-disabled` exist, but its state needs a stamp from the toggle's data. Player controls (play, pause, next, volume, cc, settings, theater, fullscreen, pip) have Figma icons but are outside phase 7: ask the user.
 
 Before release:
 
@@ -20,9 +20,9 @@ Before release:
 
 Later phases: "View as: Channels" on Subscriptions; Return YouTube Dislike compatibility (github.com/Anarios/return-youtube-dislike).
 
-Known gaps: the search "Shorts" filter chip stays (phase 3). Icons missing from the Figma set (§9). Sidebar new-uploads dot has no count: guide data only flags `GUIDE_ENTRY_PRESENTATION_STYLE_NEW_CONTENT`.
+Known gaps: the search "Shorts" filter chip stays (phase 3). Icons missing from the Figma set come from Hugeicons (§9, §10.23). Sidebar new-uploads dot has no count: guide data only flags `GUIDE_ENTRY_PRESENTATION_STYLE_NEW_CONTENT`.
 
-Nothing awaits a signed-in check. Last verified: playlist panel outside Videos (Watch later), sidebar new-uploads dot, phases 5 and 7 (theater spam, theater + live chat, Ask AI setting, Create and bell icons, like/dislike pop).
+Nothing awaits a signed-in check. Last verified: Hugeicons Ask button, Figma `library` in Playlists, playlist panel outside Videos (Watch later), sidebar new-uploads dot, phases 5 and 7 (theater spam, theater + live chat, Ask AI setting, Create and bell icons, like/dislike pop).
 
 ---
 
@@ -361,7 +361,7 @@ Dev checks (logged-out YouTube in local Firefox, all features on, no extension i
 
 Done: `node scripts/fetch-icons.mjs` (alias `npm run icons`) exports the `Icons` component set (9:8208, 133 variants) to `src/icons/`. Names are `<name>[-<quality>][-<direction>][-selected][-disabled].svg`, e.g. `home.svg`, `home-selected.svg`, `arrow-down.svg`. All 24x24, white fill, used as CSS masks so color comes from `currentColor`. Re-run after the Figma file changes.
 
-Watch-tab icons: `info`, `comments`, `chat` (live chat), `list` (related videos), `check` (selected-tab checkmark). Not in the set yet: Ask AI, Movies & TV, Podcasts, Shopping, Courses. Fallback: keep YouTube's icon for those until the Figma file adds them.
+Watch-tab icons: `info`, `comments`, `chat` (live chat), `list` (related videos), `check` (selected-tab checkmark). Not in the set: Ask, Thanks, Movies, Memberships, Podcasts, Shopping, Help, Feedback, Your videos. `node scripts/fetch-hugeicons.mjs` (chained in `npm run icons`, no token) adds them from Hugeicons Stroke Rounded (free, MIT, pinned `@hugeicons/core-free-icons` version, fetched from jsDelivr). Its `ICONS` map is file name -> Hugeicons name; `--out=/tmp/hi Name ...` fetches candidates for a contact sheet. It refuses to overwrite a Figma icon.
 
 Figma API access works: token in `.env` as `FIGMA_TOKEN` (gitignored). File key `67JrsVl1sPE1qzZZL0iuNG`; page `Design` (0:1) has frames Home 4:11081, Video 29:9551, Subs 96:3679, Search 117:7228, Shorts 156:7879, Components section 273:10907. Figma specs used so far: search pill 40px tall, 1px `#2a2a2a` outline, icons 15px from each end; icons 24px; sidebar row 45px, radius 10, Roboto 17/500, icon–label gap 20.
 
@@ -389,16 +389,17 @@ Option B (scripted): `GET https://api.figma.com/v1/images/:fileKey?ids=<nodeIds>
 16. Dropped: Figma's Collections tab (PocketTube covers it). Planned later: "View as: Channels", Return YouTube Dislike compatibility.
 17. Subscriptions shelves: "Most relevant" is hidden (its items are duplicates of feed items, checked in `kyt-subs-order.json`); "Latest" header hidden (its items are the feed's first row). Shorts shelf stays, moved to the top (only shown when `shorts` is off). History keeps its Shorts row inside each day. "N days ago" groups by day up to 13 days (YouTube rounds down); weeks and older are relative groups. Groups only move back in time: a stream labelled by start time, or "Scheduled for ...", stays in the current group. Other UI languages: no subs headers (English parse only, before release).
 18. Timeline dot fill marks the group you're reading (lowest header above mid-screen, one IntersectionObserver), not "today". 200ms fade, off under reduced motion.
-19. Icons: Figma's set replaces YouTube's by masking YouTube's own icon box (its svg stays, hidden), so buttons keep their behavior and toggling off restores them. Save maps to the bookmark (`save`), the action row ⋯ is `more` rotated 90°, like/dislike use the `-selected` fill when pressed. Icons Figma lacks keep YouTube's.
+19. Icons: Figma's set replaces YouTube's by masking YouTube's own icon box (its svg stays, hidden), so buttons keep their behavior and toggling off restores them. Save maps to the bookmark (`save`), the action row ⋯ is `more` rotated 90°, like/dislike use the `-selected` fill when pressed. Icons Figma lacks come from Hugeicons (10.23); anything still unmapped keeps YouTube's.
 20. Page world is split like the isolated world: `main-world.ts` is a 20-line dispatcher, handlers live in `src/page/core.ts` (shared) and `features/<id>/page.ts`, listed once in `features/page.ts`. `call` is typed from that map, so renames and argument changes fail `tsc`. Chosen over one growing `main-world.ts` (it had reached ~300 lines mixing six features) so a feature's page code sits in its folder and can be deleted with it. Conventions are enforced by `test/structure.test.ts`, not by review.
-21. Watch tabs: the playlist panel (Watch later, any list) belongs to the Videos tab. It sits above `#related` in both layouts and hides in every other tab; theater keeps it. Hiding beat minimizing: a collapsed header inside Comments could be expanded over the comments again.
+21. Watch tabs: the playlist panel (Watch later, any list) belongs to the Videos tab. It sits above `#related` in both layouts and hides in every other tab; theater keeps it. Hiding beat minimizing: a collapsed header inside Comments could be expanded over the comments again. The same goes for anything else in `#secondary-inner` (donation shelf, future shelves): other tabs keep a whitelist (bar, own box, `#panels`, `#chat-container`), so new shelves never stack under a tab's scroller.
 22. Sidebar new uploads: YouTube's 4px blue dot (`--yt-spec-call-to-action`) on channels flagged `NEW_CONTENT`, and on the closed Subscriptions row. No count: guide data has none, and counting would mean fetching every channel's uploads and tracking what was seen.
+23. Hugeicons fill the Figma gaps. Juxtopposed's set has the same 1.5px rounded strokes (checked side by side), while Google Material reads too bold next to it. Hugeicons have no filled `-selected` variant, so the sidebar keeps their outline when selected (`NO_SELECTED`). The Playlists dropdown uses Figma's `library` (same stacked-play shape as Material's `video-library`, which was dropped).
 
 ---
 
 ## 11. Sidebar & search polish
 
-Done (phase 4): all four below, plus a `video-library` icon (Google Material, `src/icons/video-library.svg`) left of each playlist in the Playlists dropdown. Implementation notes:
+Done (phase 4): all four below, plus Figma's `library` icon left of each playlist in the Playlists dropdown. Implementation notes:
 
 - Foot: `.kyt-foot` in `sidebar/index.ts` replaces YouTube's `#footer` (hidden); footer links are rebuilt from its anchors. `ytd-guide-renderer` gets `min-height: 100%` and the foot `margin-top: auto`.
 - Animations: `.kyt-nav-children` (grid wrapper) > `.kyt-nav-list`, shared by dropdowns and the foot. Lists fill before opening so the height animates to the real size. Arrow rotates instead of swapping icons.

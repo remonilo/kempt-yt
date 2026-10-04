@@ -12,7 +12,7 @@ html[kyt-icons] :is(
   ytd-masthead ytd-notification-topbar-button-renderer .ytSpecIconBadgeShapeIcon,
   ytd-masthead ytd-topbar-menu-button-renderer yt-icon-button yt-icon,
   ytd-watch-metadata :is(like-button-view-model, dislike-button-view-model) .ytSpecButtonShapeNextIcon,
-  ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"], [kyt-icon="CONTENT_CUT"]) .ytSpecButtonShapeNextIcon,
+  ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"], [kyt-icon="CONTENT_CUT"], [kyt-icon="SPARK"], [kyt-icon="MONEY_HEART"]) .ytSpecButtonShapeNextIcon,
   ytd-watch-metadata ytd-menu-renderer > #button-shape .ytSpecButtonShapeNextIcon
 ) {
   background-color: currentColor;
@@ -73,6 +73,9 @@ html[kyt-icons] ytd-watch-metadata [kyt-icon="SHARE"] .ytSpecButtonShapeNextIcon
 html[kyt-icons] ytd-watch-metadata [kyt-icon="PLAYLIST_ADD"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-save); }
 html[kyt-icons] ytd-watch-metadata [kyt-icon="OFFLINE_DOWNLOAD"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-download); }
 html[kyt-icons] ytd-watch-metadata [kyt-icon="CONTENT_CUT"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-clip); }
+/* Hugeicons: Figma has no Ask or Thanks */
+html[kyt-icons] ytd-watch-metadata [kyt-icon="SPARK"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-ask); }
+html[kyt-icons] ytd-watch-metadata [kyt-icon="MONEY_HEART"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-thanks); }
 html[kyt-icons] ytd-watch-metadata ytd-menu-renderer > #button-shape .ytSpecButtonShapeNextIcon {
   --kyt-i: var(--kyt-i-more);
   rotate: 90deg; /* Figma has only the vertical ⋮; the row's is horizontal */
