@@ -56,6 +56,7 @@ One accent color and icon set, and less clutter. Every change is a switch you ca
 - **Subscriptions timeline.** Uploads under date headers, with All / Videos / Live / Shorts chips and a search box. History also gets the same headers.
 - **Redesigned sidebar.** Explore, Subscriptions and Playlists as dropdowns, and the entries you never use hidden.
 - **One accent and one icon set** across chips, tabs, the progress bar, Subscribe and every button. The icons are drawn over YouTube's own buttons.
+- **Font.** Plus Jakarta Sans for all of YouTube's text, or Inter, Geist, Figtree or your system font. The fonts ship inside the extension.
 - **Small fixes.** An outlined search bar, Settings in the top bar, a Watch later button, and comment sort as chips.
 - **Grid size.** Choose how many videos and Shorts fill each row on Home, Subscriptions and channels.
 - **No Shorts.** Shelves hidden everywhere and Shorts links open in the normal player.

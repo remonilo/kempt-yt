@@ -1,0 +1,11 @@
+/* Font: one typeface for YouTube's UI text, ours included (they set Roboto in `font` shorthands).
+   index.ts declares the faces; the fallback is YouTube's own stack. Captions keep the user's caption font. */
+html[kyt-font] { --kyt-font: "kyt Plus Jakarta Sans"; }
+html[kyt-font][kyt-font-family="inter"] { --kyt-font: "kyt Inter"; }
+html[kyt-font][kyt-font-family="geist"] { --kyt-font: "kyt Geist"; }
+html[kyt-font][kyt-font-family="figtree"] { --kyt-font: "kyt Figtree"; }
+html[kyt-font][kyt-font-family="system"] { --kyt-font: system-ui; }
+
+html[kyt-font] :is(body, body :not(.ytp-caption-segment, code, pre, kbd, samp)) {
+  font-family: var(--kyt-font), Roboto, Arial, sans-serif !important;
+}

@@ -27,7 +27,7 @@ const groups = [
   },
   {
     id: 'look', date: 'Look', title: 'One accent, one icon set',
-    text: 'Chips, tabs, the progress bar and Subscribe share one color, and you pick it. A single icon set replaces YouTube\'s three, drawn over its own buttons so they keep working. The search bar becomes one outlined pill.',
+    text: 'Chips, tabs, the progress bar and Subscribe share one color, and you pick it. A single icon set replaces YouTube\'s three, drawn over its own buttons so they keep working. The search bar becomes one outlined pill, and all text is set in Plus Jakarta Sans or a font you pick.',
     shot: 'look', docs: 'docs/features/look/',
   },
   {
@@ -38,7 +38,7 @@ const groups = [
   {
     id: 'popup', date: 'Settings', title: 'Every change is a switch',
     text: 'Turn any feature off in the popup and its CSS and code are gone at once, with YouTube\'s page back as it was. No reload.',
-    shot: 'popup', docs: 'docs/settings/',
+    shot: 'popup-web', docs: 'docs/settings/',
   },
 ];
 
@@ -79,7 +79,7 @@ const facts = [
   <main class="frame">
     <section class="hero wrap">
       <h1>Kempt</h1>
-      <p class="lead">YouTube, kept tidy. One accent color, one icon set, and less clutter.</p>
+      <p class="lead">YouTube but kempt. One accent color and icon set, and less clutter.</p>
       <div class="buttons">
         <a class="btn light" href="#install">Install</a>
         <a class="btn" href={repo}>Source</a>
@@ -90,7 +90,7 @@ const facts = [
     </section>
 
     <div class="cross wrap" aria-hidden="true"></div>
-    <figure class="shot hero-shot wrap" data-label="Screenshot: watch page with Kempt">
+    <figure class="shot hero-shot wrap">
       <img src={shot('demo')} alt="Kempt on a YouTube watch page" />
     </figure>
 
@@ -106,7 +106,7 @@ const facts = [
                 <p>{g.text}</p>
                 <a class="more" href={`${base}${g.docs}`}>How it works</a>
               </div>
-              <figure class="shot" data-label={`Screenshot: ${g.date}`}>
+              <figure class="shot">
                 <img src={shot(g.shot)} alt={g.title} loading="lazy" />
               </figure>
             </div>
@@ -217,23 +217,16 @@ const facts = [
   .btn.light { background: var(--fg); color: #0a0a0a; border-color: var(--fg); }
   .btn.light:hover { background: #fff; }
   .btn.small { padding: 6px 12px; font-size: 14px; }
-  .meta { margin-top: 28px; font-size: 13px; color: var(--dim); display: flex; justify-content: center; flex-wrap: wrap; gap: 0 10px; }
+  .meta { margin-top: 28px; font-size: 13px; color: var(--dim); display: flex; justify-content: center; align-items: baseline; flex-wrap: wrap; gap: 0 10px; }
   .meta > * + *::before { content: "·"; margin-right: 10px; }
-  .meta code { color: var(--muted); }
+  .meta code { color: var(--muted); font-size: 1em; }
 
   .cross { height: 1px; background: var(--line); position: relative; margin-bottom: 0; }
 
-  /* Screenshot slots: the label shows until the real image loads over it. */
-  .shot {
-    position: relative; margin: 0; aspect-ratio: 16 / 10; overflow: hidden;
-    border: 1px solid var(--line); border-radius: 14px; background: var(--card);
-  }
-  .shot::before {
-    content: attr(data-label); position: absolute; inset: 0; display: grid; place-items: center;
-    color: var(--dim); font-size: 14px;
-  }
-  .shot img { position: relative; display: block; width: 100%; height: 100%; object-fit: cover; color: transparent; }
-  .hero-shot { margin-inline: auto; margin-top: 0; border-top-left-radius: 0; border-top-right-radius: 0; border-top: 0; }
+  /* Screenshots carry their own window border and drop shadow: no frame here. */
+  .shot { margin: 0; }
+  .shot img { display: block; width: 100%; height: auto; }
+  .hero-shot { margin-inline: auto; }
 
   .kicker { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dim); margin: 120px 0 40px; }
 

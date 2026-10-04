@@ -17,6 +17,7 @@ const ICONS = {
   help: 'HelpCircle',
   feedback: 'MessageSquareWarning',
   'your-videos': 'VideoReplay',
+  text: 'TextFont', // popup: Font
 };
 
 const args = process.argv.slice(2);

@@ -19,6 +19,7 @@ async function statics() {
   await cp('src/popup/popup.html', `${out}/popup.html`);
   await cp('src/popup/popup.css', `${out}/popup.css`);
   await cp('src/icons', `${out}/icons`, { recursive: true }); // loaded by name, see core/icon.ts
+  await cp('src/fonts', `${out}/fonts`, { recursive: true }); // features/font, see scripts/fetch-fonts.mjs
   await css();
 }
 
