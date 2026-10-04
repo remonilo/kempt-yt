@@ -8,7 +8,7 @@ export const settingsTopbar: Feature = {
   label: 'Settings button in top bar',
   defaultOn: true,
   async run({ signal, call }) {
-    if (!(await call<boolean>('signedIn'))) return console.info('kyt: signed out, settings-topbar off');
+    if (!(await call('signedIn'))) return console.info('kyt: signed out, settings-topbar off');
     const masthead = await waitFor(S.masthead, { signal });
     if (!masthead) return;
     const a = document.createElement('a');

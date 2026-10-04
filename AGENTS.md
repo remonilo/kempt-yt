@@ -37,6 +37,8 @@ Signed-in samples: `scripts/dump-dom.js`, `scripts/guide-dump.js`, `scripts/diag
 ## Conventions
 
 - Adding a feature: new `src/features/<id>/{index.ts,style.css}` + one line in `src/features/index.ts`. No core changes (PLAN.md §4.1).
+- Page-world code (ytcfg, element `.data`, Innertube) goes in `src/features/<id>/page.ts`, spread into `src/features/page.ts`; shared helpers in `src/page/` (PLAN.md §4.7). `ctx.call` is typed from that map; pass selectors and JSON, never elements.
+- `test/structure.test.ts` enforces registration, `html[kyt-<id>]` gating and unique handler names. Fix the code, not the test.
 - Every CSS rule is gated by `html[kyt-<id>]`. Every listener/observer takes `ctx.signal`; abort must restore YouTube's DOM.
 - YouTube selectors used from JS go in `src/core/selectors.ts`. Prefer structural selectors and 2025 camelCase classes over localized `aria-label`s.
 - No polling, no global observers, no timers.

@@ -9,7 +9,10 @@ export function icon(name: string): HTMLSpanElement {
   return s;
 }
 
-export const setIcon = (el: HTMLElement, name: string) => setIconUrl(el, chrome.runtime.getURL(`icons/${name}.svg`));
+/** URL of a Figma icon, for CSS: `url("${iconUrl(name)}")`. */
+export const iconUrl = (name: string) => chrome.runtime.getURL(`icons/${name}.svg`);
+
+export const setIcon = (el: HTMLElement, name: string) => setIconUrl(el, iconUrl(name));
 
 /** Any image URL as the mask, e.g. a data: URL of one of YouTube's own SVGs. */
 export const setIconUrl = (el: HTMLElement, url: string) => el.style.setProperty('--kyt-icon-src', `url("${url}")`);

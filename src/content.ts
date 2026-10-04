@@ -1,9 +1,10 @@
+import { call } from './core/bridge.ts';
 import { createRunner } from './core/feature.ts';
 import { onRoute, routeOf } from './core/router.ts';
 import { loadSettings, onSettingsChange, readCache, writeCache, type Settings } from './core/settings.ts';
 import { features } from './features/index.ts';
 
-const update = createRunner(features);
+const update = createRunner(features, call);
 let route = routeOf(location.pathname);
 let settings = readCache();
 const apply = () => update(route, settings);

@@ -1,4 +1,4 @@
-import { call } from './bridge.ts';
+import type { call } from './bridge.ts';
 import type { Route } from './router.ts';
 import type { Settings } from './settings.ts';
 
@@ -44,7 +44,9 @@ export const optionActive = (f: Feature, key: string, s: Settings) => {
   return !p || optionValue(f, p, s) === true;
 };
 
-export function createRunner(features: Feature[]) {
+/** Applies settings and route to every feature: html[kyt-*] flags and option vars, then starts or aborts run().
+ *  `bridge` is ctx.call (a parameter so tests can run the runner without the page world). */
+export function createRunner(features: Feature[], bridge: typeof call) {
   const running = new Map<string, AbortController>();
   const html = document.documentElement;
   let current: Settings;
@@ -76,7 +78,7 @@ export function createRunner(features: Feature[]) {
       } else if (!ctl && should) {
         const c = new AbortController();
         running.set(f.id, c);
-        const ctx: Ctx = { signal: c.signal, option: (k) => optionValue(f, k, current) as never, call };
+        const ctx: Ctx = { signal: c.signal, option: (k) => optionValue(f, k, current) as never, call: bridge };
         // One broken feature must not take down the rest.
         Promise.resolve()
           .then(() => f.run!(ctx))

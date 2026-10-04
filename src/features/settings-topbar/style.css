@@ -11,7 +11,10 @@ html[kyt-settings-topbar] .kyt-settings {
 html[kyt-settings-topbar] .kyt-settings:hover {
   background-color: var(--kyt-hover-bg);
 }
-/* The sidebar's Settings entry moves to the top bar. */
+/* The sidebar's Settings entry moves to the top bar: YouTube's, and the one the sidebar feature draws. */
 html[kyt-settings-topbar] ytd-guide-entry-renderer:has(a[href="/account"]) {
   display: none;
+}
+html[kyt-settings-topbar] .kyt-nav-item[data-icon^='SETTINGS'] {
+  display: none !important; /* beats .kyt-mini's display: contents */
 }

@@ -9,7 +9,7 @@ export const watchLaterBtn: Feature = {
   defaultOn: true,
   routes: ['watch'],
   async run({ signal, call }) {
-    if (!(await call<boolean>('signedIn'))) return console.info('kyt: signed out, watch-later-btn off');
+    if (!(await call('signedIn'))) return console.info('kyt: signed out, watch-later-btn off');
 
     // Reuse YouTube's own button classes so it matches Share/Save exactly.
     const btn = document.createElement('button');
@@ -29,7 +29,7 @@ export const watchLaterBtn: Feature = {
       const id = (videoId = new URLSearchParams(location.search).get('v') ?? '');
       saved = false;
       render();
-      const state = await call<boolean>('inWatchLater', id).catch((e) => (console.warn('kyt: watch later status failed', e), false));
+      const state = await call('inWatchLater', id).catch((e) => (console.warn('kyt: watch later status failed', e), false));
       if (id === videoId) {
         saved = state;
         render();

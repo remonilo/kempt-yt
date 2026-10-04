@@ -17,6 +17,17 @@ Open in phase 5 (`watch-tabs`, `comment-sort`):
 
 User-verified signed in: Ask AI tab and cinema from it, toggle-off restores native layout, single column, Download icon-only.
 
+Phase 7 `icons` (`src/features/icons/`, §10.19):
+
+- [x] Masthead: ☰, back (narrow search), search (pill and narrow), clear X, mic, Create (`add`), Sign in (`you`), Notifications bell (`notifs`), signed-out ⋮. Verified headless at 1400 and 600px, except Create and the bell (signed-in only).
+- [x] Watch action row: like/dislike (filled `-selected` when pressed, 300ms scale pop in place of YouTube's Lottie), Share, Save (`save` bookmark), Download, Clip, ⋯ (`more` rotated 90°). Verified headless, pressed state faked via `aria-pressed`.
+- [ ] Signed-in check: Create and bell icons in the masthead, like/dislike after a real click (pop plays, filled icon), Clip if it shows in the row.
+- [ ] Not covered, Figma lacks the icon: Ask (`SPARK`), Thanks, the subscribe notification bell (`notifs`/`notifs-selected`/`notifs-disabled` exist, but its state needs a stamp from the toggle's data). Player controls have Figma icons too (play, pause, next, volume, cc, settings, theater, fullscreen, pip): outside phase 7's scope, ask the user.
+
+- [x] Return YouTube Dislike: the signed-in dislike icon went missing only in Zen (older Gecko). Fine in Firefox with RYD 4.0.6; not ours. `scripts/ext.mjs --with=<dir|xpi>` loads another extension beside ours for such checks.
+
+Structure pass before 1.0 (§10.20), done: page-world handlers split per feature (`features/<id>/page.ts`, shared ones in `src/page/`), `ctx.call` typed from the handler map, runner takes `call` as a parameter, `test/structure.test.ts` guards registration, CSS gating and handler names. Runtime re-checked headless (guide, stamp, signedIn).
+
 Open in phase 4 (`sidebar`):
 
 - [x] Fresh `/watch` tab or under 1312px, then ☰: Subscriptions and Playlists filled. User-verified.
@@ -49,10 +60,10 @@ Known gaps: the search "Shorts" filter chip stays (phase 3). Icons missing from 
 ## 1. Principles
 
 1. **CSS before JS.** If a change is visual, it is a stylesheet rule. JS only when we must add elements, move elements, read page data, or change navigation.
-2. **Core knows nothing about features.** Features plug into a small runner. Adding one = one new folder + one line in `features/index.ts`.
+2. **Core knows nothing about features.** Features plug into a small runner. Adding one = one new folder + one line in `features/index.ts` (and one in `features/page.ts` if it has page-world handlers).
 3. **Every feature is toggleable and fully reversible.** Off means zero CSS applied and zero JS running.
 4. **No global observers, no polling.** Route changes come from YouTube's own `yt-navigate-finish` event. DOM waits are scoped to one container and disconnect as soon as they resolve.
-5. **All YouTube selectors live in one file.** When YouTube ships a DOM change, we fix one file.
+5. **YouTube selectors have one home each.** JS selectors live in `core/selectors.ts`; CSS selectors live in the feature's `style.css` next to their rules. When YouTube ships a DOM change, `grep` finds every use.
 
 ---
 
@@ -79,23 +90,28 @@ kempt-yt/
     build-icons.mjs         SVG folder -> theme/icons.css (CSS masks)
   src/
     content.ts              entry (isolated world): settings -> html attrs -> router -> runner
-    main-world.ts           entry (page world): reads YouTube page data, calls innertube, SPA navigate
-    core/
+    main-world.ts           entry (page world): answers bridge calls with features/page.ts
+    core/                   isolated world
       feature.ts            Feature / Ctx types + runner
       router.ts             Route from URL, fires on yt-navigate-finish
       settings.ts           typed get/set/onChange over chrome.storage.sync + localStorage cache
-      dom.ts                waitFor(), h() element helper
-      bridge.ts             request/response to main-world.ts
-      selectors.ts          EVERY YouTube selector, named
+      dom.ts                waitFor(), keep(), h() element helper
+      bridge.ts             call(): typed request/response to main-world.ts
+      selectors.ts          YouTube selectors used from JS, named
+      icon.ts               <span> masked by a Figma icon
+    page/                   page world, shared
+      youtube.ts            ytcfg, innertube(), walk/find/text over YouTube data, endpoints map
+      core.ts               handlers several features use: signedIn, stamp, stampTabs, navigate, ping
     theme/
       tokens.css            --kyt-* design tokens + overrides of YouTube's --yt-spec-* vars
-      icons.css             generated
-    icons/*.svg             exported from Figma
+    icons/*.svg             exported from Figma (npm run icons)
     features/
-      index.ts              the ONLY list of features
-      accent/               index.ts + style.css
-      search-bar/
-      ...
+      index.ts              the ONLY list of features (popup order)
+      page.ts               the ONLY list of page-world handlers (core + each feature's page.ts)
+      <id>/index.ts         the Feature
+      <id>/style.css        its CSS, every rule gated by html[kyt-<id>]
+      <id>/page.ts          optional: its page-world handlers
+      <id>/*.ts             optional: pure logic, unit tested (sidebar/nav.ts, timeline/dates.ts)
     popup/
       popup.html
       popup.ts              renders toggles/options from the feature list
@@ -152,7 +168,7 @@ export type Route =
 export interface Ctx {
   signal: AbortSignal; // aborted when the feature turns off or leaves its routes
   option<T>(key: string): T; // live option value
-  call: typeof call; // talk to main-world.ts
+  call: typeof call; // typed call to a page-world handler (features/page.ts)
 }
 
 export interface Feature {
@@ -238,19 +254,15 @@ Feature CSS may use `!important`: it has to beat YouTube's own rules, and every 
 
 ### 4.7 Bridge to the page world
 
-Content scripts cannot see YouTube's JS objects (`ytcfg`, Polymer `.data` on elements). `main-world.ts` exposes a few handlers. The isolated side calls them:
+Content scripts cannot see YouTube's JS objects (`ytcfg`, Polymer `.data` on elements). `main-world.ts` runs in the page and answers `ctx.call(name, ...args)` with a handler from `features/page.ts`:
 
-```ts
-call('signedIn')                  -> ytcfg LOGGED_IN
-call('stamp', rootSelector)       -> kyt-icon="SHARE" etc. on buttons and guide entries, kept across re-renders
-call('stampTabs', rootSelector)   -> kyt-tab="shorts" etc. on channel tabs (slug from the tab's URL)
-call('inWatchLater', videoId)     -> playlist/get_add_to_playlist
-call('setWatchLater', id, add)    -> browse/edit_playlist (playlistId "WL")
-call('navigate', '/watch?v=..')   -> SPA navigation via YouTube's yt-navigate event, no reload
-call('guideData')                 -> (phase 4) sidebar data
-```
+- `src/page/core.ts` has the shared ones: `signedIn`, `stamp(sel)` (kyt-icon="SHARE" etc., kept across re-renders), `stampTabs(sel)` (kyt-tab="shorts" on channel tabs), `navigate(url)` (SPA navigation via YouTube's `yt-navigate`).
+- A feature that needs the page world adds `features/<id>/page.ts` exporting an object of handlers, and spreads it into `features/page.ts`. Examples: `sidebar/page.ts` (`guide`, `ytIcon`, `playlists`), `watch-later-btn/page.ts` (`inWatchLater`, `setWatchLater`), `watch-tabs/page.ts` (`relayout`, `askAi`).
+- `src/page/youtube.ts` holds the helpers they share: `cfg()`, `innertube(endpoint, body)` with SAPISIDHASH auth, `walk`/`find`/`text` over YouTube's data, and the `endpoints` map `navigate` follows.
 
-Transport: `CustomEvent` on `document` with a JSON string in `detail` plus a request id. Strings, because Firefox drops object `detail` across worlds.
+`call` is typed from the handler map: a wrong name, wrong arguments or wrong result type fails `npm run check`. Handler names must be unique; `test/structure.test.ts` checks that and that every `page.ts` is registered.
+
+Transport: `CustomEvent` on `document` with a JSON string in `detail` plus a request id. Strings, because Firefox drops object `detail` across worlds. So arguments and results are plain data, never elements: pass a selector, get back a boolean or JSON. Event names carry the build id (lesson 27).
 
 Stamping exists because YouTube's `aria-label`s are localized. The icon type in the element's data (`SHARE`, `PLAYLIST_ADD`, `VIDEO_CALL`) is the same in every language. It runs only on small, known containers (masthead, guide, watch action row).
 
@@ -303,7 +315,7 @@ Legend: **CSS** = stylesheet only. **JS** = needs `run()`. **MW** = needs the ma
 | `watch-tabs`      | Info / Comments / Ask AI / Live chat / Videos as tabs on the right         | Tab bar at top of `#secondary-inner`. Move (not clone) description, `ytd-comments`, AI panel, `#chat`, related into panels. Tab = icon + label: Info, Videos, Live chat, Ask AI show their name; Comments shows only its icon + total count. Selected tab: white background, dark text, and its icon swaps to the checklist icon (same slot, so width doesn't jump). Hidden tabs keep layout (`content-visibility: hidden`) so YouTube's lazy loaders still fire when shown. Ask AI tab only when option is on AND the panel exists. Live chat tab only on streams. On abort, move everything back. | JS                      | High (most DOM-coupled; reference: "Tabview YouTube" userscript by CY Fung on Greasyfork) |
 | `shorts`          | Hide Shorts; Shorts links open as normal video                             | CSS hides shelves (`ytd-reel-shelf-renderer`, `ytd-rich-shelf-renderer[is-shorts]`, `grid-shelf-view-model`), guide entry, chips, search results. JS: capture-phase click on `a[href^="/shorts/"]` → `bridge.navigate('/watch?v=ID')`; `yt-navigate-start` to a shorts URL → same; direct load of `/shorts/ID` → `location.replace` at `document_start`.                                                                                                                                                                                                                                            | CSS + JS + MW           | Low (reference: "YouTube Shorts Redirect" userscripts on Greasyfork)                      |
 | `subs-timeline`   | Subscriptions page as dated timeline                                       | Route `subscriptions` only. Hide native items, keep the native continuation spinner visible below our list so infinite scroll still loads. Scoped observer on the grid `#contents` reads each new item (title, thumb, channel, duration, relative date), buckets by day, renders: red dot + date, vertical line on the left, that day's videos beside it.                                                                                                                                                                                                                                           | JS (+ MW for item data) | Medium (see 7)                                                                            |
-| `icons`           | Consistent icon set                                                        | `scripts/build-icons.mjs` turns `src/icons/*.svg` into CSS `mask-image` rules. Target `yt-icon` by stamped `data-kyt-icon`, or by `href` for guide links. Hide YouTube's inner svg, paint ours with `background: currentColor`. Pure CSS after stamping, survives re-renders.                                                                                                                                                                                                                                                                                                                       | CSS + MW stamp          | Medium (mapping table is the work)                                                        |
+| `icons`           | Consistent icon set | `index.ts` writes `--kyt-i-<name>: url(<extension URL>)` on `<html>` (CSS can't build the per-install URL). `style.css` turns each YouTube icon box into `background: currentColor` masked by `var(--kyt-i)` and hides its children. Masthead and like/dislike by structure, Share/Save/Download/Clip by stamped `kyt-icon`. Sidebar draws its own. | CSS + MW stamp | Medium |
 
 ### Extensibility check: custom progress bar later
 
@@ -364,7 +376,7 @@ Each phase ends shippable.
 | 4 ✅ | `sidebar`: own renderer with Explore, Playlists, Subscriptions dropdowns, footer toggle, mini guide. Notes in §11. Subscriptions/Playlists dropdowns await signed-in test | Dropdowns work, hidden entries toggle live from the popup, active item highlights, SPA navigation                |
 | 5 🧪 | `watch-tabs`, `comment-sort`, Download icon-only. Notes in §12. Open items in Next up | All tabs work on normal video, stream, premiere; theater and narrow layouts; toggling off restores native layout |
 | 6    | `timeline` (Subscriptions + History, §10.12)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Infinite scroll keeps appending to the right day                                                                 |
-| 7    | `icons` (can start any time once SVGs are exported)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | No original YouTube icon left in masthead, guide, watch action row                                               |
+| 7 🧪 | `icons`: masthead + watch action row (sidebar and mini guide already draw Figma icons). Open items in Next up                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | No original YouTube icon left in masthead, guide, watch action row                                               |
 
 Tests: `node --test` for `routeOf`, `bucketByDay`, `shortsIdFromUrl`. Everything else is a manual checklist per phase.
 
@@ -408,6 +420,8 @@ Option B (scripted): `GET https://api.figma.com/v1/images/:fileKey?ids=<nodeIds>
 16. Dropped: Figma's Collections tab (PocketTube covers it). Planned later: "View as: Channels", Return YouTube Dislike compatibility.
 17. Subscriptions shelves: "Most relevant" is hidden (its items are duplicates of feed items, checked in `kyt-subs-order.json`); "Latest" header hidden (its items are the feed's first row). Shorts shelf stays, moved to the top (only shown when `shorts` is off). History keeps its Shorts row inside each day. "N days ago" groups by day up to 13 days (YouTube rounds down); weeks and older are relative groups. Groups only move back in time: a stream labelled by start time, or "Scheduled for ...", stays in the current group. Other UI languages: no subs headers (English parse only, before release).
 18. Timeline dot fill marks the group you're reading (lowest header above mid-screen, one IntersectionObserver), not "today". 200ms fade, off under reduced motion.
+19. Icons: Figma's set replaces YouTube's by masking YouTube's own icon box (its svg stays, hidden), so buttons keep their behavior and toggling off restores them. Save maps to the bookmark (`save`), the action row ⋯ is `more` rotated 90°, like/dislike use the `-selected` fill when pressed. Icons Figma lacks keep YouTube's.
+20. Page world is split like the isolated world: `main-world.ts` is a 20-line dispatcher, handlers live in `src/page/core.ts` (shared) and `features/<id>/page.ts`, listed once in `features/page.ts`. `call` is typed from that map, so renames and argument changes fail `tsc`. Chosen over one growing `main-world.ts` (it had reached ~300 lines mixing six features) so a feature's page code sits in its folder and can be deleted with it. Conventions are enforced by `test/structure.test.ts`, not by review.
 
 ---
 
