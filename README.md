@@ -53,17 +53,25 @@ One accent color and icon set, and less clutter. Every change is a switch you ca
 
 ## Features
 
-- **Watch page tabs** put Info, Comments, Videos, Live chat and Ask AI in one panel beside the player, and only the open tab scrolls. <details><summary><sup>click to see the tabs</sup></summary><img src="site/public/screenshots/tabs.png" alt="Watch page tabs" /></details>
-- **The Subscriptions timeline** sorts uploads under date headers, with All / Videos / Live / Shorts chips and a search box. History gets the same headers.
-- **The redesigned sidebar** turns Explore, Subscriptions and Playlists into dropdowns and hides the entries you never use.
-- **One accent and one icon set** cover chips, tabs, the progress bar, Subscribe and every button. Kempt draws the icons over YouTube's own buttons.
-- **Plus Jakarta Sans** replaces Roboto in all of YouTube's text. You can pick Inter, Geist, Figtree or your system font instead, and the fonts ship inside the extension.
-- **Small fixes** include an outlined search bar, Settings in the top bar, a Watch later button and comment sort as chips.
-- **Grid size** sets how many videos and Shorts fill each row on Home, Subscriptions and channels.
-- **Hide Shorts** removes Shorts shelves everywhere and opens Shorts links in the normal player.
-- **Every change** has its own switch in the popup. <details><summary><sup>click to see the popup</sup></summary><!-- PLACEHOLDER: popup --><br><img src="site/public/screenshots/popup.png" alt="Kempt popup" width="260" /></details>
-- **Kempt's labels** follow YouTube's UI language and come in 11 languages.
-- **Battery use** stays low because Kempt does no polling, runs no page-wide observers and animates on the compositor only. It also respects reduced motion.
+- Watch page tabs for info, comments, videos, live chat and Ask AI, beside the player <details> <summary><sup>click to see the tabs</sup></summary><img src="site/public/screenshots/tabs.png" alt="Watch page tabs" /></details>
+- Subscriptions timeline with date headers, All / Videos / Live / Shorts chips and a search box
+  - History gets the same date headers
+- Sidebar with dropdowns for Explore, Subscriptions and Playlists
+  - hide the entries you never use
+- One accent color and one icon set across chips, tabs, the progress bar, Subscribe and every button
+- Font choice, bundled in the extension
+  - Plus Jakarta Sans by default
+  - Inter, Geist, Figtree or your system font instead
+- Grid size for videos and Shorts per row on Home, Subscriptions and channels
+- Hide Shorts, with Shorts links opening in the normal player
+- Small fixes
+  - outlined search bar
+  - Settings in the top bar
+  - Watch later button
+  - comment sort as chips
+- A switch for every change in the popup <details> <summary><sup>click to see the popup</sup></summary><img src="site/public/screenshots/popup.png" alt="Kempt popup" width="260" /></details>
+- Labels in 11 languages that follow YouTube's UI language
+- No polling, no page-wide observers and compositor-only animations, with reduced motion respected
 
 ## Quick start
 
