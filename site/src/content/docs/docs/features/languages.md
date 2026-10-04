@@ -3,9 +3,9 @@ title: Languages
 description: The labels Kempt draws follow YouTube's UI language.
 ---
 
-Kempt draws a few labels of its own: the watch page tabs, the timeline chips and search box, and a few tooltips. They follow **YouTube's** UI language, which you set in YouTube's account menu, not your browser's language.
+Kempt draws a few labels of its own: the watch page tabs, the timeline chips, the timeline search box and a few tooltips. They follow YouTube's UI language, which you set in YouTube's account menu. Kempt ignores your browser's language.
 
-Supported: English, Spanish, Portuguese, German, French, Russian, Japanese, Korean, Hindi, Indonesian and Turkish. Any other language gets English.
+Kempt supports English, Spanish, Portuguese, German, French, Russian, Japanese, Korean, Hindi, Indonesian and Turkish. Any other language falls back to English.
 
 Labels Kempt copies from YouTube, such as the comment sort chips and the sidebar entries, are in every language YouTube has.
 
@@ -27,4 +27,4 @@ Where YouTube already has a word, Kempt uses YouTube's: the chip names are YouTu
 
 ## Help translate
 
-The non-YouTube strings were written without a native speaker. If you speak one of the languages, read the `WORDS` tables in `src/features/*/index.ts` and open a PR.
+No native speaker helped write Kempt's own strings. If you speak one of the languages, read the `WORDS` tables in `src/features/*/index.ts` and open a PR.

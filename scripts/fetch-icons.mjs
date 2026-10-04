@@ -1,10 +1,27 @@
-// Exports the Figma "Icons" component set to src/icons/*.svg.
+// Exports the Figma "Icons" component set to src/icons/*.svg, then drops icons no source file names.
 // Needs FIGMA_TOKEN in .env (File content: read-only). Run: node scripts/fetch-icons.mjs
-import { readFile, writeFile, mkdir, rm } from 'node:fs/promises';
+// Prune only (no Figma): node scripts/fetch-icons.mjs --prune
+import { readFile, writeFile, mkdir, rm, readdir } from 'node:fs/promises';
 
 const FILE = '67JrsVl1sPE1qzZZL0iuNG';
 const SET = '9:8208';
 const OUT = 'src/icons';
+
+/** Deletes icons that no .ts/.css file under src/ names. `<name>-selected` stays if `<name>` is named
+ *  (the sidebar builds it from the base name). Over-keeping a few files is fine; a missing icon is not. */
+async function prune() {
+  const files = (await readdir('src', { recursive: true }))
+    .filter((f) => /\.(ts|css)$/.test(f) && !f.startsWith('icons/')).map((f) => readFile(`src/${f}`, 'utf8'));
+  const words = new Set((await Promise.all(files)).join('\n').match(/[a-z0-9]+(?:-[a-z0-9]+)*/g));
+  const gone = (await readdir(OUT)).map((f) => f.slice(0, -4))
+    .filter((n) => !words.has(n) && !(n.endsWith('-selected') && words.has(n.slice(0, -9))));
+  await Promise.all(gone.map((n) => rm(`${OUT}/${n}.svg`)));
+  console.log(`pruned ${gone.length} unused icons: ${gone.join(' ')}`);
+}
+if (process.argv.includes('--prune')) {
+  await prune();
+  process.exit();
+}
 
 const env = await readFile('.env', 'utf8').catch(() => '');
 const token = process.env.FIGMA_TOKEN ?? env.match(/^FIGMA_TOKEN=(.+)$/m)?.[1]?.trim();
@@ -46,3 +63,4 @@ await Promise.all(icons.map(async ({ id, name }) => {
   return writeFile(`${OUT}/${name}.svg`, await res.text());
 }));
 console.log(`exported ${icons.length} icons to ${OUT}/`);
+await prune();

@@ -33,7 +33,7 @@ Shorts shelves are hidden everywhere. The search filter chip has no marker that 
 
 ## Why does the sidebar dot have no count?
 
-YouTube's sidebar data only says that a channel has new content, not how much. Counting would mean fetching every channel's uploads.
+YouTube's sidebar data only flags that a channel has new content, with no count. Counting would mean fetching every channel's uploads.
 
 ## Is there a Safari version?
 

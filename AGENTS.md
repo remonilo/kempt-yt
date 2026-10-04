@@ -23,9 +23,8 @@ npm run icons    # re-export Figma icons to src/icons/ (needs FIGMA_TOKEN in .en
 
 Run `npm run check && npm test && npm run build` after every change. Then check visually in logged-out headless Firefox:
 
-- `node scripts/ext.mjs [url] [shot.png] [--width=N] [--fake-login] [--eval=file.js]` loads `dist/` as a real extension. Use it for anything JS. Under 1312px YouTube shows the mini guide.
-- `node scripts/shot.mjs <url> <out.png> [selector] [--off] [--light] [--hover=sel] [--click=sel]` injects `dist/content.css` only (CSS checks).
-- `node scripts/probe.mjs <url> <file.js> [--hover=sel] [--shot=out.png:sel]` prints a snippet's return value (rects, computed styles).
+- `node scripts/ext.mjs [url] [shot.png] [--width=N] [--fake-login] [--eval=file.js] [--clip=sel] [--hover=sel] [--click=sel]` loads `dist/` as a real extension. Use it for anything JS. Under 1312px YouTube shows the mini guide. `--eval` prints a snippet's return value (rects, computed styles).
+- Add `--css-only` to inject `dist/content.css` with every flag on instead (faster CSS checks), `--off` for plain YouTube, `--light` for the light theme. Full flag list at the top of the script.
 - Headless Firefox draws no `backdrop-filter`. Signed-in-only UI (Watch later, Subscriptions/Playlists data, Ask AI) cannot be verified here: list it for the user to check.
 
 ## Verifying changes (user side)

@@ -1,17 +1,17 @@
 ---
 title: Architecture
-description: The core model, the runner and how CSS is switched on and off.
+description: The core model, the runner, the router and how CSS switches on and off.
 ---
 
-Kempt is a Manifest V3 extension with no framework and no background worker. TypeScript is bundled by esbuild; tests run on `node:test`.
+Kempt is a Manifest V3 extension with no framework and no background worker. esbuild bundles the TypeScript, and tests run on `node:test`.
 
 ## Principles
 
-1. **CSS before JS.** A visual change is a stylesheet rule. JS runs only to add elements, move elements, read page data or change navigation.
-2. **Core knows nothing about features.** A feature is one folder plus one line in a list.
-3. **Every feature is toggleable and fully reversible.** Off means zero CSS applied and zero JS running.
-4. **No global observers, no polling.** Route changes come from YouTube's `yt-navigate-finish` event. DOM waits watch one container and disconnect as soon as they resolve.
-5. **YouTube selectors have one home each.** JS selectors live in `src/core/selectors.ts`; CSS selectors live in the feature's `style.css`.
+1. CSS before JS. A visual change is a stylesheet rule. JS runs only to add elements, move elements, read page data or change navigation.
+2. The core knows nothing about features. A feature is one folder plus one line in a list.
+3. Every feature can be turned off and fully reversed. When it's off, none of its CSS applies and none of its JS runs.
+4. No global observers and no polling. Route changes come from YouTube's `yt-navigate-finish` event. DOM waits watch one container and disconnect as soon as they resolve.
+5. YouTube selectors have one home each. JS selectors live in `src/core/selectors.ts`; CSS selectors live in the feature's `style.css`.
 
 ## Two scripts, two worlds
 
@@ -89,7 +89,7 @@ Every rule in a feature's `style.css` starts with `html[kyt-<id>]`:
 html[kyt-subscribe-red] ytd-subscribe-button-renderer button:not([subscribed]) { ... }
 ```
 
-All feature CSS ships as one `content.css`, injected by the manifest before YouTube paints. Toggling a feature flips one attribute: no style injection at runtime, no flash. `test/structure.test.ts` fails the build if a rule is missing its gate.
+All feature CSS ships as one `content.css`, which the manifest injects before YouTube paints. Toggling a feature flips one attribute, so nothing gets injected at runtime and nothing flashes. `test/structure.test.ts` fails the build if a rule is missing its gate.
 
 `chrome.storage` answers asynchronously, too late for the first paint. So `settings.ts` mirrors the enabled set to `localStorage['kyt:flags']`, and `content.ts` reads it synchronously at `document_start`. Storage stays the source of truth.
 

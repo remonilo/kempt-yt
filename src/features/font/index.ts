@@ -1,5 +1,5 @@
 import type { Feature } from '../../core/feature.ts';
-import { FACES } from './faces.ts';
+import { FACES, RANGES } from './faces.ts';
 
 /** Family names carry a prefix so a locally installed copy (another version) never stands in. */
 export const familyOf = (id: string) => `kyt ${FACES[id].family}`;
@@ -7,9 +7,9 @@ export const familyOf = (id: string) => `kyt ${FACES[id].family}`;
 /** @font-face rules for every bundled font; `url` maps a file in fonts/ to a loadable URL. Unused faces cost
  *  nothing: the browser downloads a face only when text on the page needs it. */
 export function faceCss(url: (file: string) => string): string {
-  return Object.entries(FACES).flatMap(([id, f]) => f.files.map(({ file, range }) =>
-    `@font-face{font-family:"${familyOf(id)}";src:url("${url(file)}") format("woff2");font-weight:100 900;` +
-    `font-display:block;unicode-range:${range}}`)).join('\n');
+  return Object.entries(FACES).flatMap(([id, f]) => f.subsets.map((sub) =>
+    `@font-face{font-family:"${familyOf(id)}";src:url("${url(`${id}-${sub}.woff2`)}") format("woff2");font-weight:100 900;` +
+    `font-display:block;unicode-range:${RANGES[sub]}}`)).join('\n');
 }
 
 /**
