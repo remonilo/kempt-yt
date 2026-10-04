@@ -10,6 +10,8 @@ export interface Entry {
   thumb?: string;
   /** Heads a collapsible section ("You", "Subscriptions"). */
   header?: boolean;
+  /** A channel with new uploads (YouTube's blue dot). */
+  isNew?: boolean;
 }
 
 export interface Section {

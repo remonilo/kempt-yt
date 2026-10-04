@@ -9,7 +9,9 @@ function guideEntry(r: any, header?: boolean) {
   const icon: string | undefined = r.icon?.iconType;
   const url: string = r.navigationEndpoint?.commandMetadata?.webCommandMetadata?.url ?? `kyt:${icon}`;
   if (r.navigationEndpoint) endpoints.set(url, r.navigationEndpoint);
-  return { title: r.formattedTitle?.simpleText ?? text(r.title), url, icon, thumb: r.thumbnail?.thumbnails?.[0]?.url as string | undefined, header };
+  // NEW_CONTENT is YouTube's blue dot on a channel with uploads the user hasn't seen. The data has no count.
+  const isNew = r.presentationStyle === 'GUIDE_ENTRY_PRESENTATION_STYLE_NEW_CONTENT' || undefined;
+  return { title: r.formattedTitle?.simpleText ?? text(r.title), url, icon, thumb: r.thumbnail?.thumbnails?.[0]?.url as string | undefined, header, isNew };
 }
 
 /** Section items flattened: collapsibles ("Show more", "You") expanded in place, their header marked. */

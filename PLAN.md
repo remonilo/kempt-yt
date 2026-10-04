@@ -5,55 +5,24 @@ Icon source: Juxtopposed "YouTube Redesign (Community)" Figma file.
 
 ## Next up
 
-Keep this list current. It is the first thing a new session reads.
+Keep this list current. It is the first thing a new session reads. Done work lives in §8 and the git log.
 
-Open in phase 5 (`watch-tabs`, `comment-sort`):
+Open work:
 
-- [ ] Spamming T froze the page and blacked out the player. Cause: our tab bar and boxes sat inside YouTube's panel run, so every theater toggle made `updatePanelsLocation` re-insert all panels and `keep()` move ours back, re-rendering comments (§13.35). Our nodes now go after the run, flex `order` keeps the look. Headless, 20 toggles with 20 comment threads loaded: 34.6k -> 9.1k mutations, worst frame 192 -> 92ms. User-verified on a video with comments disabled.
-- [ ] Theater with live chat open: YouTube moves `#chat-container` into `#columns` and pins it `position: fixed` under its own masthead height (`[fixed-panels]`), which broke under our topbar (overlap, half off-screen). Now done like TabView: theater shows the player alone (chat hidden, `#columns` padding and `#panels-full-bleed-container` removed), the Live chat tab leaves theater. Verified headless on `/@LofiGirl/live` (live chat loads there logged out): awaits signed-in check.
-- [ ] Ask AI setting (user request): `watch-tabs` options `ai` (parent toggle) and `aiAs` (`button` | `tab`, shown only while `ai` is on). Off: main-world `askAi('off')` drops Ask from the action row's menu data, so it is in neither the row nor ⋯. On: `askAi('front')` moves it first among the flexible items; YouTube's row moves flexible items into ⋯ from the end as it narrows (`shrinkFlexibleMenu`), so Ask stays out. Button mode is a 40px icon circle. New option machinery: `choice` type (popup `<select>`, `html[kyt-<id>-<key>="value"]`) and `parent`. Verified headless with a fake SPARK item (tab, off, button). Old `askAi` setting is dropped. Awaits signed-in check.
-- [x] Page scrollbar hidden in two columns with a tab open (`html[kyt-watch-tabs-open]`); the tab keeps its own. Single column and theater keep the page scrollbar.
-- [x] Theater animation itself: YouTube's own, not ours to fix (user, after commit).
-
-User-verified signed in: Ask AI tab and cinema from it, toggle-off restores native layout, single column, Download icon-only.
-
-Phase 7 `icons` (`src/features/icons/`, §10.19):
-
-- [x] Masthead: ☰, back (narrow search), search (pill and narrow), clear X, mic, Create (`add`), Sign in (`you`), Notifications bell (`notifs`), signed-out ⋮. Verified headless at 1400 and 600px, except Create and the bell (signed-in only).
-- [x] Watch action row: like/dislike (filled `-selected` when pressed, 300ms scale pop in place of YouTube's Lottie), Share, Save (`save` bookmark), Download, Clip, ⋯ (`more` rotated 90°). Verified headless, pressed state faked via `aria-pressed`.
-- [ ] Signed-in check: Create and bell icons in the masthead, like/dislike after a real click (pop plays, filled icon), Clip if it shows in the row.
-- [ ] Not covered, Figma lacks the icon: Ask (`SPARK`), Thanks, the subscribe notification bell (`notifs`/`notifs-selected`/`notifs-disabled` exist, but its state needs a stamp from the toggle's data). Player controls have Figma icons too (play, pause, next, volume, cc, settings, theater, fullscreen, pip): outside phase 7's scope, ask the user.
-
-- [x] Return YouTube Dislike: the signed-in dislike icon went missing only in Zen (older Gecko). Fine in Firefox with RYD 4.0.6; not ours. `scripts/ext.mjs --with=<dir|xpi>` loads another extension beside ours for such checks.
-
-Structure pass before 1.0 (§10.20), done: page-world handlers split per feature (`features/<id>/page.ts`, shared ones in `src/page/`), `ctx.call` typed from the handler map, runner takes `call` as a parameter, `test/structure.test.ts` guards registration, CSS gating and handler names. Runtime re-checked headless (guide, stamp, signedIn).
-
-Open in phase 4 (`sidebar`):
-
-- [x] Fresh `/watch` tab or under 1312px, then ☰: Subscriptions and Playlists filled. User-verified.
-- [ ] After phase 7 icons: sidebar dropdowns (Subscriptions, Playlists) get a hierarchy design, their child rows look out of place now (user request). Needs a Figma frame or a proposal.
-
-User-verified signed in: Subscriptions and Playlists dropdowns, suggestions blur, footer divider. Help and Send feedback are absent from signed-in guide data, so they never render.
+- [ ] Sidebar dropdowns (Subscriptions, Playlists) get a hierarchy design; their child rows look out of place next to the phase 7 icons (user request). Needs a Figma frame or a proposal.
+- [ ] Timeline cheap filters: type chips (All, Videos, Live, Shorts) and search over loaded items, Subscriptions only (History keeps YouTube's own chips).
+- [ ] Icons Figma lacks: Ask (`SPARK`), Thanks, the subscribe notification bell (`notifs`/`notifs-selected`/`notifs-disabled` exist, but its state needs a stamp from the toggle's data). Player controls (play, pause, next, volume, cc, settings, theater, fullscreen, pip) have Figma icons but are outside phase 7: ask the user.
 
 Before release:
 
 - [ ] Localize tab labels (Info, Videos, Live chat, Ask AI), hardcoded English in `src/features/watch-tabs/index.ts` (`TABS`).
 - [ ] Timeline: `parseAge` reads English ages only; other locales get no Subscriptions headers (History is localized via Intl).
 
-Phase 6 `timeline` (in progress, decisions in §10.12 to 10.18). Samples: `samples/kyt-subscriptions.json`, `kyt-history.json`, `kyt-subs-order.json` (scripts `feed-dump.js`, `feed-order.js`).
-
-- [x] Date logic, pure and tested: `src/features/timeline/dates.ts` (`parseAge` long and short units, `groupOf`, `plan`, `historyDate`), `test/timeline.test.ts`.
-- [x] `src/features/timeline/{index.ts,style.css}`. Keeps YouTube's cards. Subs: inserts `.kyt-tl-head` rows into the rich grid `#contents` (one childList observer), hides Latest and Most relevant shelves, Shorts shelf to the top. History: our header before each day's `ytd-item-section-header-renderer` (hidden), day `#contents` as a CSS grid, horizontal lockups restyled as vertical cards. Subs CSS checked headless on a channel Videos grid (page-subtype swapped); history CSS unverified.
-- [x] Signed-in check, Subscriptions: user-verified aligned.
-- [x] Dot fill follows scroll (§10.18). User-verified on both pages.
-- [x] Fixed after first check (dot ring cut into YouTube's chips; 2 columns -> min card 240px for 3). User-verified History: full dates on day headers, grid cards look right (thumbnail, title, channel, menu), Shorts row inside each day, scroll loads more days, history search still works.
-- [ ] Cheap filters: type chips (All, Videos, Live, Shorts) and search, over loaded items only. History already has YouTube's own chips (All, Videos, Shorts, Podcasts, Music) under a "Watch history" title: keep those, so our chips are Subscriptions only.
-
-- [x] Popup opened only on the ~3rd click in Firefox: rows now render before `storage.sync` resolves (§13.34). User-verified.
-
 Later phases: "View as: Channels" on Subscriptions; Return YouTube Dislike compatibility (github.com/Anarios/return-youtube-dislike).
 
-Known gaps: the search "Shorts" filter chip stays (phase 3). Icons missing from the Figma set (§9).
+Known gaps: the search "Shorts" filter chip stays (phase 3). Icons missing from the Figma set (§9). Sidebar new-uploads dot has no count: guide data only flags `GUIDE_ENTRY_PRESENTATION_STYLE_NEW_CONTENT`.
+
+Nothing awaits a signed-in check. Last verified: playlist panel outside Videos (Watch later), sidebar new-uploads dot, phases 5 and 7 (theater spam, theater + live chat, Ask AI setting, Create and bell icons, like/dislike pop).
 
 ---
 
@@ -373,10 +342,10 @@ Each phase ends shippable.
 | 1 ✅ | CSS wins: `accent` (+ custom color), `selected-bg`, `subscribe-red`, `search-bar`, `create-icon` (pulled forward: no stamping needed)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Toggling each in popup applies/removes instantly                                                                 |
 | 2 ✅ | Stamping + `action-icons`, `settings-topbar`, `watch-later-btn`. Verified signed in, in two UI languages                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Works in English and one other UI language                                                                       |
 | 3 ✅ | `shorts` (History keeps its Shorts). Known gap: the search "Shorts" filter chip stays (no language-independent marker)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | No Shorts visible anywhere; every Shorts entry point opens `/watch`                                              |
-| 4 ✅ | `sidebar`: own renderer with Explore, Playlists, Subscriptions dropdowns, footer toggle, mini guide. Notes in §11. Subscriptions/Playlists dropdowns await signed-in test | Dropdowns work, hidden entries toggle live from the popup, active item highlights, SPA navigation                |
-| 5 🧪 | `watch-tabs`, `comment-sort`, Download icon-only. Notes in §12. Open items in Next up | All tabs work on normal video, stream, premiere; theater and narrow layouts; toggling off restores native layout |
-| 6    | `timeline` (Subscriptions + History, §10.12)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Infinite scroll keeps appending to the right day                                                                 |
-| 7 🧪 | `icons`: masthead + watch action row (sidebar and mini guide already draw Figma icons). Open items in Next up                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | No original YouTube icon left in masthead, guide, watch action row                                               |
+| 4 ✅ | `sidebar`: own renderer with Explore, Playlists, Subscriptions dropdowns, footer toggle, mini guide. Notes in §11. New-uploads dot on channels | Dropdowns work, hidden entries toggle live from the popup, active item highlights, SPA navigation                |
+| 5 ✅ | `watch-tabs`, `comment-sort`, Download icon-only, Ask AI setting, playlist panel inside Videos. Notes in §12 | All tabs work on normal video, stream, premiere; theater and narrow layouts; toggling off restores native layout |
+| 6 🧪 | `timeline` (Subscriptions + History, §10.12). User-verified on both pages; Subscriptions filters open in Next up                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Infinite scroll keeps appending to the right day                                                                 |
+| 7 ✅ | `icons`: masthead + watch action row (sidebar and mini guide already draw Figma icons). Missing Figma icons in Next up                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | No original YouTube icon left in masthead, guide, watch action row                                               |
 
 Tests: `node --test` for `routeOf`, `bucketByDay`, `shortsIdFromUrl`. Everything else is a manual checklist per phase.
 
@@ -422,6 +391,8 @@ Option B (scripted): `GET https://api.figma.com/v1/images/:fileKey?ids=<nodeIds>
 18. Timeline dot fill marks the group you're reading (lowest header above mid-screen, one IntersectionObserver), not "today". 200ms fade, off under reduced motion.
 19. Icons: Figma's set replaces YouTube's by masking YouTube's own icon box (its svg stays, hidden), so buttons keep their behavior and toggling off restores them. Save maps to the bookmark (`save`), the action row ⋯ is `more` rotated 90°, like/dislike use the `-selected` fill when pressed. Icons Figma lacks keep YouTube's.
 20. Page world is split like the isolated world: `main-world.ts` is a 20-line dispatcher, handlers live in `src/page/core.ts` (shared) and `features/<id>/page.ts`, listed once in `features/page.ts`. `call` is typed from that map, so renames and argument changes fail `tsc`. Chosen over one growing `main-world.ts` (it had reached ~300 lines mixing six features) so a feature's page code sits in its folder and can be deleted with it. Conventions are enforced by `test/structure.test.ts`, not by review.
+21. Watch tabs: the playlist panel (Watch later, any list) belongs to the Videos tab. It sits above `#related` in both layouts and hides in every other tab; theater keeps it. Hiding beat minimizing: a collapsed header inside Comments could be expanded over the comments again.
+22. Sidebar new uploads: YouTube's 4px blue dot (`--yt-spec-call-to-action`) on channels flagged `NEW_CONTENT`, and on the closed Subscriptions row. No count: guide data has none, and counting would mean fetching every channel's uploads and tracking what was seen.
 
 ---
 

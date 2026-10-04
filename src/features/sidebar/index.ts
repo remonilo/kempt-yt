@@ -77,6 +77,7 @@ export const sidebar: Feature = {
     /** Page links are <a> (middle-click works); entries without a URL (Shorts) are buttons. */
     function link(e: Entry, cls = 'kyt-nav-link', ico = entryIcon(e)) {
       const a = el(e.url.startsWith('kyt:') ? 'button' : 'a', cls, ...(ico ? [ico] : []), el('span', 'kyt-nav-title', e.title));
+      if (e.isNew) a.append(el('span', 'kyt-nav-new'));
       if (a instanceof HTMLAnchorElement) a.href = e.url;
       a.dataset.url = e.url;
       return a;
@@ -102,6 +103,8 @@ export const sidebar: Feature = {
       box.append(head);
       if (!children) return box;
 
+      // A closed Subscriptions dropdown still shows that some channel inside has new uploads.
+      if (Array.isArray(children) && children.some((c) => c.isNew)) head.firstElementChild!.append(el('span', 'kyt-nav-new'));
       const arrow = el('button', 'kyt-nav-arrow', icon('arrow-down'));
       arrow.ariaLabel = entry.title;
       const list = el('div', 'kyt-nav-list');
