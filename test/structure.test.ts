@@ -1,4 +1,4 @@
-// Guards the conventions a new feature must follow (AGENTS.md "Conventions"), so a mistake fails `npm test`
+// Guards the conventions a new feature must follow (see docs/internals/adding-a-feature), so a mistake fails `npm test`
 // instead of leaking CSS into YouTube with the feature off.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';

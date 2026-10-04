@@ -13,10 +13,8 @@ export const watchTabs = {
   },
 
   /**
-   * YouTube's Ask (AI) button in the watch action row. It's a flexible item: the row drops flexible items from
-   * the end into the ⋯ menu as it narrows. 'front' moves it first so it's dropped last, 'off' takes it out of
-   * the row and the menu, 'restore' puts YouTube's data back. Reassigning `data` re-stamps the row.
-   * Returns whether the page has an Ask button at all.
+   * YouTube's Ask (AI) button: 'front' moves it first in the action row, 'off' removes it, 'restore' puts
+   * YouTube's data back. Returns whether the page has an Ask button. See docs/internals/youtube-quirks.
    */
   askAi(mode: 'front' | 'off' | 'restore') {
     const m = document.querySelector<any>('ytd-watch-metadata #actions ytd-menu-renderer');

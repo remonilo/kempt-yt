@@ -28,7 +28,7 @@ function guideEntries(items: any[] = []): ReturnType<typeof guideEntry>[] {
 }
 
 export const sidebar = {
-  /** The sidebar's data as [{ type, title, entries }] (guide-dump.js shows the raw shape). Null if it never loads. */
+  /** The sidebar's data as [{ type, title, entries }]. Null if it never loads. */
   async guide() {
     let data;
     for (let i = 0; i < 20 && !(data = (document.querySelector('ytd-guide-renderer') as any)?.data?.items); i++) await sleep(100);

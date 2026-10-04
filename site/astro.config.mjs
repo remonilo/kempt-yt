@@ -49,6 +49,7 @@ export default defineConfig({
           items: [
             { label: 'Architecture', slug: 'docs/internals/architecture' },
             { label: 'Page bridge', slug: 'docs/internals/page-bridge' },
+            { label: 'YouTube quirks', slug: 'docs/internals/youtube-quirks' },
             { label: 'Performance', slug: 'docs/internals/performance' },
             { label: 'Adding a feature', slug: 'docs/internals/adding-a-feature' },
             { label: 'Testing', slug: 'docs/internals/testing' },

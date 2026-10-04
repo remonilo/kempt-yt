@@ -7,10 +7,8 @@ export type Kind = 'video' | 'live' | 'short';
 export type Type = 'all' | 'videos' | 'live' | 'shorts';
 
 /**
- * `short`: links to /shorts/. `badge`: YouTube's live thumbnail badge (streams on now). `age`: the item's age part.
- * Past streams have words around their age ("Streamed 2 weeks ago", "vor 2 Wochen gestreamt") and upcoming ones
- * have no age ("Scheduled for ...", "1.2K waiting"), in every language. `readable`: some item of the feed had an
- * age, so a missing one means upcoming and not a language we can't read.
+ * `short`: links to /shorts/. `badge`: YouTube's live badge (on now). `age`: the item's age part; past streams have
+ * words around it, upcoming ones have none. `readable`: some item had an age, so a missing one means upcoming.
  */
 export function kindOf(o: { short: boolean; badge: boolean; age: Age | null; readable: boolean }): Kind {
   if (o.short) return 'short';

@@ -73,4 +73,4 @@ npm run check && npm test && npm run build
 
 `test/structure.test.ts` checks that the feature is registered, that every CSS rule is gated by `html[kyt-<id>]`, that page handler names are unique, and that every `page.ts` is registered. If it fails, fix the code and leave the test alone.
 
-Before you open a PR, read the lessons section of [`PLAN.md`](https://github.com/remonilo/kempt-yt/blob/main/PLAN.md). Each entry there cost a debugging round.
+Before you open a PR, read [YouTube quirks](/kempt-yt/docs/internals/youtube-quirks/). Each entry there cost a debugging round.
