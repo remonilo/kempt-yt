@@ -37,7 +37,7 @@ html[kyt-timeline] .kyt-tl-head[kyt-current]::before {
 html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] ytd-rich-grid-renderer > #contents:has(> .kyt-tl-head) {
   box-sizing: border-box; /* YouTube sets its width; keep it, so the dot lines up with the chips above */
   padding-left: 30px;
-  background: linear-gradient(var(--kyt-divider) 0 0) 3px 48px / 3px calc(100% - 48px) no-repeat;
+  background: linear-gradient(var(--kyt-divider) 0 0) 3px calc(48px + var(--kyt-bar, 0px)) / 3px calc(100% - 48px - var(--kyt-bar, 0px)) no-repeat;
 }
 html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents > .kyt-tl-head {
   flex: 0 0 100%;
@@ -101,5 +101,95 @@ html[kyt-timeline] ytd-browse[page-subtype="history"] ytd-item-section-renderer 
   }
   & .ytLockupViewModelMetadata {
     flex: none;
+  }
+}
+
+/* Subscriptions toolbar (Figma Subs 96:3679): type chips left, search right, 36px high, first row of the grid.
+   order -2 keeps it above the shelves (order -1). Its 47px margin is the gap to the first date (Figma), so
+   the line starts that much lower (--kyt-bar). */
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:has(> kyt-bar) {
+  --kyt-bar: 83px;
+}
+html[kyt-timeline] kyt-bar {
+  order: -2;
+  flex: 0 0 calc(100% + 30px); /* back over the 30px the line column takes, to line up with the dots */
+  margin: 0 0 47px -30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font: 500 14px / 36px Roboto, Arial, sans-serif;
+}
+html[kyt-timeline] kyt-bar .kyt-chips {
+  display: flex;
+  gap: 8px;
+}
+html[kyt-timeline] kyt-bar .kyt-chips > button {
+  all: unset;
+  box-sizing: border-box;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 8px;
+  color: var(--kyt-fg);
+  background: var(--kyt-outline);
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+html[kyt-timeline] kyt-bar .kyt-chips > button:hover {
+  background: var(--kyt-hover-bg);
+}
+html[kyt-timeline] kyt-bar .kyt-chips > button[aria-pressed="true"] {
+  background: var(--kyt-selected-strong-bg);
+  cursor: default;
+}
+html[kyt-timeline] kyt-bar .kyt-chips > button:focus-visible {
+  outline: 2px solid var(--kyt-outline-focus);
+}
+/* With the Shorts feature on there is no Shorts shelf to show. */
+html[kyt-timeline][kyt-shorts] kyt-bar [data-type="shorts"] {
+  display: none;
+}
+html[kyt-timeline] kyt-bar .kyt-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  width: 314px;
+  max-width: 50%;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 18px;
+  border: 1px solid transparent;
+  color: var(--kyt-fg);
+  background: color-mix(in srgb, var(--kyt-fg) 5%, transparent);
+  --kyt-icon-size: 20px;
+}
+html[kyt-timeline] kyt-bar .kyt-search:focus-within {
+  border-color: var(--kyt-outline-focus);
+}
+html[kyt-timeline] kyt-bar .kyt-search input {
+  all: unset;
+  flex: 1;
+  min-width: 0;
+  color: var(--kyt-fg);
+  font: 400 14px / 20px Roboto, Arial, sans-serif;
+}
+html[kyt-timeline] kyt-bar .kyt-search input::placeholder {
+  color: var(--kyt-fg-muted);
+}
+
+/* Filtered out by the toolbar (index.ts apply). Shelves: Shorts shows for All and Shorts, never while searching. */
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents > [kyt-off] {
+  display: none !important;
+}
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:is([kyt-query], [kyt-filter="videos"], [kyt-filter="live"]) > ytd-rich-section-renderer {
+  display: none !important;
+}
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:is([kyt-query], [kyt-filter]):not([kyt-more]) > ytd-continuation-item-renderer {
+  display: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html[kyt-timeline] kyt-bar .kyt-chips > button {
+    transition: none;
   }
 }

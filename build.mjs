@@ -17,6 +17,7 @@ async function statics() {
   await mkdir(out, { recursive: true });
   await cp('manifest.json', `${out}/manifest.json`);
   await cp('src/popup/popup.html', `${out}/popup.html`);
+  await cp('src/popup/popup.css', `${out}/popup.css`);
   await cp('src/icons', `${out}/icons`, { recursive: true }); // loaded by name, see core/icon.ts
   await css();
 }

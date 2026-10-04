@@ -29,6 +29,19 @@ function stampTabs(group: Element) {
   });
 }
 
+/** kyt-bell="all|none" on the Subscribe button's notification bell (personalized has no stamp: the default glyph).
+ *  The bell is one animated Lottie icon for every state, so the state comes from the toggle's data. */
+function stampBell(root: Element) {
+  for (const el of root.querySelectorAll<any>('ytd-subscription-notification-toggle-button-renderer-next, ytd-subscription-notification-toggle-button-renderer')) {
+    const d = el.data;
+    const cur = d?.states?.find((s: any) => s.stateId === d.currentStateId)?.state;
+    const type: string | undefined = (cur?.buttonRenderer ?? cur)?.icon?.iconType;
+    const v = type === 'NOTIFICATIONS_ACTIVE' ? 'all' : type === 'NOTIFICATIONS_OFF' ? 'none' : null;
+    if (v) el.setAttribute('kyt-bell', v);
+    else el.removeAttribute('kyt-bell');
+  }
+}
+
 const watched = new WeakMap<Element, Set<string>>();
 
 /**
@@ -58,6 +71,14 @@ export const core = {
   stamp(sel: string) {
     const root = document.querySelector(sel);
     if (root) keepStamped(root, 'icon', () => stampIcons(root));
+    return !!root;
+  },
+
+  /** Sets kyt-bell on the notification bell under `sel`, kept across re-renders and state changes (aria-label
+   *  changes with the state, which is the cheap signal that data changed). */
+  stampBell(sel: string) {
+    const root = document.querySelector(sel);
+    if (root) keepStamped(root, 'bell', () => stampBell(root), { childList: true, subtree: true, attributeFilter: ['aria-label'] });
     return !!root;
   },
 

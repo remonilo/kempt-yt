@@ -2,7 +2,7 @@ import type { Feature } from '../../core/feature.ts';
 
 export const accent: Feature = {
   id: 'accent',
-  label: 'Accent color',
+  label: 'Accent color', group: 'look', icon: 'dynamic',
   defaultOn: true,
   options: { color: { type: 'color', label: 'Color', default: '#cb274a', cssVar: '--kyt-accent' } },
 };

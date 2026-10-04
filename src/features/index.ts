@@ -15,5 +15,5 @@ import { watchTabs } from './watch-tabs/index.ts';
 // The ONLY list of features. Add a folder under features/, import it, append it here.
 // Its style.css is picked up by build.mjs automatically.
 export const features: Feature[] = [accent, selectedBg, subscribeRed, searchBar, icons,
-  settingsTopbar, watchLaterBtn, shorts, sidebar, watchTabs, commentSort,
+  sidebar, settingsTopbar, watchLaterBtn, shorts, watchTabs, commentSort,
   timeline];

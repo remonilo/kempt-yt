@@ -1,75 +1,210 @@
-import { isOn, optionValue, type Option } from '../core/feature.ts';
-import { loadSettings, saveSettings } from '../core/settings.ts';
+import { GROUPS, isOn, optionValue, type Feature, type Group, type Option } from '../core/feature.ts';
+import { loadSettings, saveSettings, type Settings } from '../core/settings.ts';
 import { features } from '../features/index.ts';
+import { colorPicker } from './color.ts';
 
-type Field = HTMLInputElement | HTMLSelectElement;
-const list = document.getElementById('list')!;
+// One row per feature, grouped into cards by `group`. A feature's options sit in a panel under its row
+// (chevron); a lone color option shows as a dot in the row and opens the picker instead.
 
-function row(text: string, input: Field, cls = ''): HTMLLabelElement {
-  const l = document.createElement('label');
-  l.className = cls;
-  l.append(text, input);
-  return l;
-}
-
-function input(opt: Option, onChange: (v: unknown) => void): Field {
-  if (opt.type === 'choice') {
-    const s = document.createElement('select');
-    for (const [value, label] of Object.entries(opt.choices)) s.add(new Option(label, value));
-    s.addEventListener('change', () => onChange(s.value));
-    return s;
-  }
-  const i = document.createElement('input');
-  i.type = opt.type === 'boolean' ? 'checkbox' : opt.type;
-  if (opt.type === 'number') {
-    if (opt.min != null) i.min = String(opt.min);
-    if (opt.max != null) i.max = String(opt.max);
-  }
-  i.addEventListener('input', () =>
-    onChange(opt.type === 'boolean' ? i.checked : opt.type === 'number' ? i.valueAsNumber : i.value),
-  );
-  return i;
-}
-
-const show = (i: Field, v: unknown) => {
-  if (i instanceof HTMLInputElement && i.type === 'checkbox') i.checked = v as boolean;
-  else i.value = String(v);
+const el = <K extends keyof HTMLElementTagNameMap>(tag: K, cls = '', ...kids: (Node | string)[]) => {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  e.append(...kids);
+  return e;
 };
 
 // Rows render synchronously with defaults so Firefox sizes the panel from its full content on the first
-// layout. Waiting for storage.sync first (slow cold start in Firefox) left a near-empty panel that closed.
+// layout (PLAN.md §13.34). Input waits for storage.sync: the list is inert until it answers.
 const settings = loadSettings();
-const inputs: Field[] = [];
-const add = (text: string, i: Field, cls?: string) => {
-  i.disabled = true;
-  inputs.push(i);
-  const r = row(text, i, cls);
-  list.append(r);
-  return r;
-};
+const app = document.getElementById('app')!;
+app.inert = true;
 
-if (!features.length) list.innerHTML = '<div class="empty">No features yet.</div>';
-for (const f of features) {
-  const toggle = input({ type: 'boolean', label: f.label, default: f.defaultOn }, (v) =>
-    settings.then((s) => ((s.features[f.id] = v as boolean), saveSettings(s))),
-  );
-  show(toggle, f.defaultOn);
-  add(f.label, toggle);
-  settings.then((s) => show(toggle, isOn(f, s)));
-  const rows = new Map<string, { field: Field; row: HTMLLabelElement }>();
-  // Rows of options with a parent show only while the parent box is checked.
+/** Saves a change. `live` (dragging) writes at most every 400ms: storage.sync allows 120 writes a minute. */
+let timer: ReturnType<typeof setTimeout> | undefined;
+function persist(change: (s: Settings) => void, live = false) {
+  settings.then((s) => {
+    change(s);
+    clearTimeout(timer);
+    if (live) timer = setTimeout(() => saveSettings(s), 400);
+    else saveSettings(s);
+  });
+}
+
+/** Popup accent follows the chosen color. */
+const tint = (hex: string) => document.documentElement.style.setProperty('--kp-accent', hex);
+
+function icon(name: string) {
+  const i = el('span', 'kp-icon');
+  i.style.maskImage = `url("icons/${name}.svg")`;
+  return i;
+}
+
+function toggle(label: string, on: (v: boolean) => void) {
+  const i = el('input', 'kp-switch');
+  i.type = 'checkbox';
+  i.role = 'switch';
+  i.ariaLabel = label;
+  i.addEventListener('change', () => on(i.checked));
+  return { el: i, set: (v: unknown) => (i.checked = v as boolean) };
+}
+
+/** Segmented control; equal-width segments so the pill moves by transform only. */
+function segmented(choices: Record<string, string>, on: (v: string) => void) {
+  const keys = Object.keys(choices);
+  const seg = el('div', 'kp-seg');
+  seg.role = 'radiogroup';
+  seg.style.setProperty('--n', String(keys.length));
+  const btns = keys.map((k) => {
+    const b = el('button', '', choices[k]);
+    b.type = 'button';
+    b.role = 'radio';
+    b.addEventListener('click', () => (set(k), on(k)));
+    return b;
+  });
+  seg.append(el('span', 'kp-pill'), ...btns);
+  const set = (v: unknown) => {
+    const i = Math.max(0, keys.indexOf(v as string));
+    seg.style.setProperty('--i', String(i));
+    btns.forEach((b, j) => (b.ariaChecked = String(i === j)));
+  };
+  return { el: seg, set };
+}
+
+function number(opt: Extract<Option, { type: 'number' }>, on: (v: number) => void) {
+  const i = el('input', 'kp-number');
+  i.type = 'number';
+  if (opt.min != null) i.min = String(opt.min);
+  if (opt.max != null) i.max = String(opt.max);
+  i.addEventListener('change', () => Number.isFinite(i.valueAsNumber) && on(i.valueAsNumber));
+  return { el: i, set: (v: unknown) => (i.value = String(v)) };
+}
+
+/** A grid-rows 0fr/1fr panel, opened by `trigger`. */
+function panel(item: HTMLElement, trigger: HTMLElement, content: HTMLElement) {
+  const p = el('div', 'kp-panel', el('div', 'kp-panel-inner', content));
+  trigger.addEventListener('click', () => {
+    const open = item.classList.toggle('open');
+    trigger.ariaExpanded = String(open);
+  });
+  trigger.ariaExpanded = 'false';
+  return p;
+}
+
+function row(label: string, hint: string | undefined, iconName: string | undefined, ...end: HTMLElement[]) {
+  const text = el('span', 'kp-label', label);
+  if (hint) text.append(el('small', '', hint));
+  return el('div', 'kp-row', ...(iconName ? [icon(iconName)] : []), text, ...end);
+}
+
+function chevron() {
+  const b = el('button', 'kp-chevron', icon('arrow-down'));
+  b.type = 'button';
+  b.ariaLabel = 'Options';
+  return b;
+}
+
+function colorDot(label: string) {
+  const b = el('button', 'kp-dot');
+  b.type = 'button';
+  b.ariaLabel = label;
+  return b;
+}
+
+/** Option rows of a feature. Rows whose `parent` is off are hidden. */
+function optionRows(f: Feature) {
+  const box = el('div', 'kp-options');
+  const rows = new Map<string, HTMLElement>();
+  const values = new Map<string, unknown>();
   const sync = () => {
     for (const [key, opt] of Object.entries(f.options ?? {})) {
-      const p = opt.parent && rows.get(opt.parent)?.field;
-      if (p instanceof HTMLInputElement) rows.get(key)!.row.hidden = !p.checked;
+      const r = rows.get(key); // undefined while the rows are still being built
+      if (r && opt.parent) r.hidden = values.get(opt.parent) !== true;
     }
   };
   for (const [key, opt] of Object.entries(f.options ?? {})) {
-    const i = input(opt, (v) => (sync(), settings.then((s) => ((s.options[`${f.id}.${key}`] = v), saveSettings(s)))));
-    show(i, opt.default);
-    rows.set(key, { field: i, row: add(opt.label, i, opt.parent ? 'opt sub' : 'opt') });
-    settings.then((s) => (show(i, optionValue(f, key, s)), sync()));
+    const save = (v: unknown, live = false) => {
+      values.set(key, v);
+      sync();
+      if (f.id === 'accent' && key === 'color') tint(v as string);
+      persist((s) => (s.options[`${f.id}.${key}`] = v), live);
+    };
+    let r: HTMLElement;
+    let set: (v: unknown) => void;
+    if (opt.type === 'color') {
+      const dot = colorDot(opt.label);
+      const picker = colorPicker(opt.default, (v) => save(v, true), (v) => save(v));
+      r = el('div', 'kp-item', row(opt.label, undefined, undefined, dot));
+      r.append(panel(r, dot, picker.el));
+      set = (v) => picker.set(v as string);
+    } else {
+      const c = opt.type === 'boolean' ? toggle(opt.label, save) : opt.type === 'choice' ? segmented(opt.choices, save) : number(opt, save);
+      r = row(opt.label, undefined, undefined, c.el);
+      set = c.set;
+    }
+    rows.set(key, r);
+    box.append(r);
+    const show = (v: unknown) => (values.set(key, v), set(v), sync());
+    show(opt.default);
+    settings.then((s) => show(optionValue(f, key, s)));
   }
-  sync();
+  return box;
 }
-settings.then(() => inputs.forEach((i) => (i.disabled = false)));
+
+function featureItem(f: Feature) {
+  const item = el('div', 'kp-item');
+  const sw = toggle(f.label, (v) => {
+    item.classList.toggle('off', !v);
+    persist((s) => (s.features[f.id] = v));
+  });
+  const opts = Object.entries(f.options ?? {});
+  const lone = opts.length === 1 && opts[0][1].type === 'color' ? opts[0] : null;
+
+  if (lone) {
+    // Color in the row itself (Accent color): the dot opens the picker.
+    const [key, opt] = lone;
+    const dot = colorDot(opt.label);
+    const save = (v: string, live = false) => {
+      if (f.id === 'accent') tint(v);
+      persist((s) => (s.options[`${f.id}.${key}`] = v), live);
+    };
+    const picker = colorPicker(opt.default as string, (v) => save(v, true), (v) => save(v));
+    item.append(row(f.label, f.hint, f.icon, dot, sw.el), panel(item, dot, picker.el));
+    settings.then((s) => {
+      const v = optionValue(f, key, s) as string;
+      picker.set(v);
+      if (f.id === 'accent') tint(v);
+    });
+  } else if (opts.length) {
+    const c = chevron();
+    item.append(row(f.label, f.hint, f.icon, c, sw.el), panel(item, c, optionRows(f)));
+  } else {
+    item.append(row(f.label, f.hint, f.icon, sw.el));
+  }
+
+  const show = (v: boolean) => (sw.set(v), item.classList.toggle('off', !v));
+  show(f.defaultOn);
+  settings.then((s) => show(isOn(f, s)));
+  return item;
+}
+
+const groups = new Map<Group | 'other', HTMLElement>();
+for (const key of [...Object.keys(GROUPS), 'other'] as (Group | 'other')[]) {
+  const card = el('div', 'kp-card');
+  groups.set(key, card);
+  app.append(el('section', 'kp-section', el('h2', '', key === 'other' ? 'Other' : GROUPS[key]), card));
+}
+for (const f of features) groups.get(f.group ?? 'other')!.append(featureItem(f));
+for (const card of groups.values()) if (!card.children.length) card.parentElement!.remove();
+
+// Footer: version and a two-click reset.
+const reset = el('button', 'kp-link', 'Reset all');
+reset.type = 'button';
+reset.addEventListener('click', () => {
+  if (reset.dataset.armed) return void saveSettings({ features: {}, options: {} }).then(() => location.reload());
+  reset.dataset.armed = '1';
+  reset.textContent = 'Click again to reset';
+});
+reset.addEventListener('blur', () => (delete reset.dataset.armed, (reset.textContent = 'Reset all')));
+app.append(el('footer', 'kp-footer', el('span', '', `v${chrome.runtime.getManifest().version}`), reset));
+
+settings.then(() => (app.inert = false));

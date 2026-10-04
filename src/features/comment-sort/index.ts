@@ -10,7 +10,7 @@ const ITEMS = '#sort-menu tp-yt-paper-listbox > a';
  */
 export const commentSort: Feature = {
   id: 'comment-sort',
-  label: 'Comment sort as buttons',
+  label: 'Comment sort as buttons', group: 'watch', icon: 'sort',
   defaultOn: true,
   routes: ['watch'],
   async run({ signal }) {

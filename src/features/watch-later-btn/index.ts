@@ -5,7 +5,7 @@ import { S } from '../../core/selectors.ts';
 
 export const watchLaterBtn: Feature = {
   id: 'watch-later-btn',
-  label: 'Watch later button',
+  label: 'Watch later button', group: 'navigation', icon: 'watch-later',
   defaultOn: true,
   routes: ['watch'],
   async run({ signal, call }) {

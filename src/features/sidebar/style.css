@@ -124,6 +124,25 @@ html[kyt-sidebar-hide-courses] .kyt-nav-item[data-icon^='COURSE'] {
   border-radius: 50%;
   object-fit: cover;
 }
+/* Dropdown children (Subscriptions channels, Playlists): a guide line under the parent's icon centre and a
+   step in, with smaller rows, text and icons, so they read as part of the parent and not as more top rows.
+   23px = 12px row padding + half the 24px icon - half the 1px line. */
+.kyt-nav-item > .kyt-nav-children > .kyt-nav-list {
+  margin-left: 23px;
+  padding-left: 12px;
+  border-left: 1px solid var(--kyt-outline);
+}
+.kyt-nav-child {
+  height: 36px;
+  padding: 0 8px;
+  gap: 12px;
+  font-size: 13px;
+  --kyt-icon-size: 20px;
+}
+.kyt-nav-child .kyt-nav-avatar {
+  width: 20px;
+  height: 20px;
+}
 
 /* Foot: the centered copyright line under a divider, pinned to the bottom of a short sidebar. The copyright
    toggles a reversed dropdown above the divider: "More from YouTube", the settings section, footer links.
