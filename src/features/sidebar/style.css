@@ -56,6 +56,15 @@ html[kyt-sidebar-hide-courses] .kyt-nav-item[data-icon^='COURSE'] {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+/* New uploads: YouTube's own blue dot (its call-to-action colour). On a dropdown head only while closed. */
+.kyt-nav-new {
+  flex: none;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--yt-spec-call-to-action, #3ea6ff);
+}
+.kyt-nav-item[open] > .kyt-nav-row .kyt-nav-new { display: none; }
 .kyt-nav-divider {
   flex: none;
   width: 1px;
