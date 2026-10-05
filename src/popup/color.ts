@@ -1,9 +1,8 @@
-// Accent color picker: preset swatches, a hue/saturation wheel, a brightness slider and a hex field.
 // Pure math first (tested in test/color.test.ts), DOM after.
+import { el } from '../core/dom.ts';
 
 export interface Hsv { h: number; s: number; v: number } // h 0-360, s and v 0-1
 
-/** '#abc' or '#aabbcc' (any case, '#' optional) to '#aabbcc', or null. */
 export function normHex(input: string): string | null {
   const m = input.trim().replace(/^#/, '').toLowerCase();
   if (/^[0-9a-f]{3}$/.test(m)) return `#${[...m].map((c) => c + c).join('')}`;
@@ -28,20 +27,13 @@ export function hsvToHex({ h, s, v }: Hsv): string {
   return `#${[f(5), f(3), f(1)].map((c) => c.toString(16).padStart(2, '0')).join('')}`;
 }
 
-/** Wheel point to hue/saturation. Hue 0 (red) at the top, clockwise, like conic-gradient's default. */
+// Hue 0 (red) at the top, clockwise, like conic-gradient's default.
 export function pointToHs(dx: number, dy: number, radius: number): { h: number; s: number } {
   const h = ((Math.atan2(dx, -dy) * 180) / Math.PI + 360) % 360;
   return { h, s: Math.min(1, Math.hypot(dx, dy) / radius) };
 }
 
 export const PRESETS = ['#cb274a', '#ff0033', '#f2711c', '#e5b80b', '#21ba45', '#00a6a6', '#3e8ef7', '#8e5cf7'];
-
-const el = <K extends keyof HTMLElementTagNameMap>(tag: K, cls: string, ...kids: (Node | string)[]) => {
-  const e = document.createElement(tag);
-  e.className = cls;
-  e.append(...kids);
-  return e;
-};
 
 export interface Picker {
   el: HTMLElement;
@@ -89,7 +81,7 @@ export function colorPicker(fallback: string, onInput: (hex: string) => void, on
   const root = el('div', 'kp', swatches,
     el('div', 'kp-main', wheel, el('div', 'kp-side', bright, el('label', 'kp-field', chip, field), reset)));
 
-  /** Repaints from `hsv` and `hex`; `typed` skips rewriting the hex field while the user types in it. */
+  // `typed` skips rewriting the hex field while the user types in it.
   function paint(typed = false) {
     const r = wheel.clientWidth / 2 || 66;
     const rad = (hsv.h * Math.PI) / 180;
@@ -162,7 +154,7 @@ export function colorPicker(fallback: string, onInput: (hex: string) => void, on
   });
   field.addEventListener('change', () => {
     const n = normHex(field.value);
-    if (n) (set(n), onCommit(n));
+    if (n) { set(n); onCommit(n); }
     else paint(); // invalid: put the current color back
   });
 

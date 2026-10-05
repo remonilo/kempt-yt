@@ -1,11 +1,8 @@
-import { waitFor } from '../../core/dom.ts';
+import { observe, waitFor } from '../../core/dom.ts';
 import type { Feature } from '../../core/feature.ts';
 import { S } from '../../core/selectors.ts';
 
-/**
- * Items per row of every rich grid: Home, Subscriptions, channel tabs. CSS only, except Home's Shorts shelf:
- * it draws just YouTube's own count of items, so page.ts raises that count.
- */
+// CSS only, except Home's Shorts shelf: it draws just YouTube's own count of items, so page.ts raises that count.
 export const grid: Feature = {
   id: 'grid', label: 'Grid size', hint: 'Home, Subscriptions and channels', group: 'feeds', icon: 'grid', defaultOn: false,
   routes: ['home'],
@@ -22,8 +19,7 @@ export const grid: Feature = {
     };
     send();
     // Option changes land as the --kyt-grid-shorts property on <html>.
-    const o = new MutationObserver(send);
-    o.observe(document.documentElement, { attributeFilter: ['style'] });
-    signal.addEventListener('abort', () => (o.disconnect(), call('shortsPerRow', S.homeGrid, 0)), { once: true });
+    observe(document.documentElement, { attributeFilter: ['style'] }, send, signal);
+    signal.addEventListener('abort', () => call('shortsPerRow', S.homeGrid, 0), { once: true });
   },
 };

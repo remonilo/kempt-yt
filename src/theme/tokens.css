@@ -1,4 +1,4 @@
-/* Design tokens. Features read only these: YouTube's --yt-spec-* vars are not defined on <html>.
+/* Features read only these: YouTube's --yt-spec-* vars are not defined on <html>.
    The accent feature's color option overrides --kyt-accent inline on <html>.
    Source: Juxtopposed Figma (file 67JrsVl1sPE1qzZZL0iuNG, frame "Home" 4:11081). */
 html {
@@ -36,7 +36,6 @@ html[dark] {
   --kyt-glass: rgba(15, 15, 15, 0.8);
 }
 
-/* Figma icons (core/icon.ts): the SVG is a mask, color comes from currentColor. */
 .kyt-icon {
   display: inline-block;
   flex: none;
@@ -48,4 +47,25 @@ html[dark] {
 .kyt-icon.kyt-icon-color {
   background: var(--kyt-icon-src) center / contain no-repeat;
   mask: none;
+}
+
+/* Features set size and font. */
+button.kyt-chip {
+  all: unset;
+  box-sizing: border-box;
+  border-radius: 8px;
+  color: var(--kyt-fg);
+  background: var(--kyt-outline);
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+button.kyt-chip:hover {
+  background: var(--kyt-hover-bg);
+}
+button.kyt-chip[aria-pressed="true"] {
+  background: var(--kyt-selected-strong-bg);
+  cursor: default;
+}
+button.kyt-chip:focus-visible {
+  outline: 2px solid var(--kyt-outline-focus);
 }

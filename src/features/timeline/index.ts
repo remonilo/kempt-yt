@@ -1,5 +1,5 @@
 import type { Feature } from '../../core/feature.ts';
-import { waitFor } from '../../core/dom.ts';
+import { el, observe, waitFor } from '../../core/dom.ts';
 import { routeOf } from '../../core/router.ts';
 import { S } from '../../core/selectors.ts';
 import { icon } from '../../core/icon.ts';
@@ -14,10 +14,7 @@ function head(label: string, el: HTMLElement = document.createElement('div')): H
   return el;
 }
 
-/**
- * Fills the dot of the group you're reading: the lowest header above mid-screen (else the first one).
- * The observer fires only when a header crosses that line, scrolling or when content above loads.
- */
+// The observer fires only when a header crosses mid-screen, scrolling or when content above loads.
 function spy(signal: AbortSignal) {
   const heads = new Set<HTMLElement>();
   let cur: HTMLElement | undefined;
@@ -48,7 +45,7 @@ function spy(signal: AbortSignal) {
   };
 }
 
-/** Age text of a grid item: the last metadata part, long form from aria-label ("7 hours ago"). */
+// aria-label has the long form ("7 hours ago").
 function ageOf(item: Element): string {
   const parts = item.querySelectorAll(S.lockupDate);
   const last = [...parts].at(-1);
@@ -71,15 +68,13 @@ const WORDS = {
 };
 const TYPES: Type[] = ['all', 'videos', 'live', 'shorts'];
 
-/** Type chips and a search box (Figma Subs 96:3679). `onChange` runs after each click or keystroke. */
 function toolbar(state: { type: Type; query: string }, onChange: () => void, signal: AbortSignal): HTMLElement {
   const bar = document.createElement('kyt-bar');
-  const chips = document.createElement('div');
-  chips.className = 'kyt-chips';
+  const chips = el('div', 'kyt-chips');
   chips.role = 'group';
   const words = local(WORDS);
   for (const type of TYPES) {
-    const b = document.createElement('button');
+    const b = el('button', 'kyt-chip');
     b.dataset.type = type;
     b.textContent = words[type];
     b.ariaPressed = String(type === state.type);
@@ -114,11 +109,9 @@ const textOf = (item: Element) => (item.querySelector(S.lockupMeta) ?? item).tex
 
 const isOurs = (e: Element) => e.localName === 'kyt-bar' || e.classList.contains('kyt-tl-head');
 
-/**
- * Subscriptions: one date header per group, inside YouTube's grid. Our toolbar and headers sit after all of
- * YouTube's children and flex `order` draws them in place (never between its items: docs/internals/youtube-quirks).
- * The toolbar filters what is loaded: items that miss get `kyt-off`, headers left without items too.
- */
+// Our toolbar and headers sit after all of YouTube's children and flex `order` draws them in place (never between
+// its items: docs/internals/youtube-quirks). The toolbar filters what is loaded: items that miss get `kyt-off`,
+// headers left without items too.
 function subscriptions(grid: Element, signal: AbortSignal): void {
   const heads = new Map<string, HTMLElement>();
   const groupOf = new Map<Element, HTMLElement>();
@@ -198,11 +191,9 @@ function subscriptions(grid: Element, signal: AbortSignal): void {
     apply();
   };
   // Our own inserts re-trigger it once; the second pass changes nothing.
-  const obs = new MutationObserver(sync);
-  obs.observe(grid, { childList: true });
+  observe(grid, { childList: true }, sync, signal);
   sync();
   signal.addEventListener('abort', () => {
-    obs.disconnect();
     heads.forEach((h) => h.remove());
     grid.querySelectorAll(':scope > [kyt-off]').forEach((e) => e.removeAttribute('kyt-off'));
     for (const c of grid.children) (c as HTMLElement).style.removeProperty('order');
@@ -211,7 +202,7 @@ function subscriptions(grid: Element, signal: AbortSignal): void {
   }, { once: true });
 }
 
-/** History: YouTube already groups by day. Replace each day's header with ours, carrying the full date. */
+// YouTube already groups History by day, so only its headers are replaced.
 function history(list: Element, signal: AbortSignal): void {
   const heads = new Set<HTMLElement>();
   const dots = spy(signal);
@@ -236,16 +227,11 @@ function history(list: Element, signal: AbortSignal): void {
     }
   };
   // Day sections are appended as you scroll (list), and a reused section can get new header text (headers).
-  const obs = new MutationObserver(sync);
-  obs.observe(list, { childList: true });
+  const obs = observe(list, { childList: true }, sync, signal);
   sync();
-  signal.addEventListener('abort', () => {
-    obs.disconnect();
-    heads.forEach((h) => h.remove());
-  }, { once: true });
+  signal.addEventListener('abort', () => heads.forEach((h) => h.remove()), { once: true });
 }
 
-/** Subscriptions and History as a dated timeline (Figma Subs 96:3679, History 100:9034). */
 export const timeline: Feature = {
   id: 'timeline',
   label: 'Timeline', hint: 'Subscriptions and History', group: 'feeds', icon: 'history',

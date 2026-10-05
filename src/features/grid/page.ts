@@ -1,10 +1,8 @@
-// Page-world handlers of grid (see main-world.ts).
+import { inst } from '../../page/youtube.ts';
 
 const SHELF = 'ytd-rich-shelf-renderer[is-shorts]';
 const observers = new Map<Element, MutationObserver>();
 let perRow = 0;
-
-const inst = (el: any) => el.polymerController ?? el.inst ?? el;
 
 function apply(shelf: Element) {
   const p = inst(shelf);
@@ -12,10 +10,7 @@ function apply(shelf: Element) {
 }
 
 export const gridPage = {
-  /**
-   * Sets Home's Shorts shelf `elementsPerRow` to n again on each change and on later shelves; 0 restores
-   * YouTube's count. See docs/internals/youtube-quirks.
-   */
+  // Re-applied on each change and on later shelves (docs/internals/youtube-quirks). 0 restores YouTube's count.
   shortsPerRow(sel: string, n: number) {
     perRow = n;
     const root = document.querySelector(sel);

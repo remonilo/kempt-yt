@@ -1,7 +1,5 @@
 import { find, innertube } from '../../page/youtube.ts';
 
-// Page-world handlers of watch-later-btn (see main-world.ts): read and edit the Watch later playlist.
-
 export const watchLater = {
   async inWatchLater(videoId: string) {
     const res = await innertube('playlist/get_add_to_playlist', { videoIds: [videoId] });

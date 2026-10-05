@@ -1,23 +1,17 @@
-export type Route =
-  | 'home' | 'watch' | 'shorts' | 'subscriptions' | 'history' | 'search' | 'channel' | 'playlist' | 'other';
+export type Route = 'home' | 'watch' | 'subscriptions' | 'history' | 'channel' | 'other';
 
 export function routeOf(path: string): Route {
   if (path === '/') return 'home';
   // /@name/live plays the channel's current stream in the watch page.
   if (path === '/watch' || /^\/(@|channel\/|c\/|user\/)[^/]+\/live$/.test(path)) return 'watch';
-  if (path.startsWith('/shorts/')) return 'shorts';
   if (path === '/feed/subscriptions') return 'subscriptions';
   if (path === '/feed/history') return 'history';
-  if (path === '/results') return 'search';
-  if (path === '/playlist') return 'playlist';
   if (/^\/(@|channel\/|c\/|user\/)/.test(path)) return 'channel';
   return 'other';
 }
 
-/** Video id of a /shorts/<id> path, else undefined. */
 export const shortsId = (path: string) => path.match(/^\/shorts\/([\w-]{11})/)?.[1];
 
-/** Calls cb on every SPA navigation and fires `kyt:navigate` ({ route, url }) on document. */
 export function onRoute(cb: (route: Route) => void): void {
   let last = location.href;
   const fire = () => {
@@ -25,7 +19,7 @@ export function onRoute(cb: (route: Route) => void): void {
     last = location.href;
     const route = routeOf(location.pathname);
     cb(route);
-    document.dispatchEvent(new CustomEvent('kyt:navigate', { detail: { route, url: last } }));
+    document.dispatchEvent(new CustomEvent('kyt:navigate', { detail: { route } }));
   };
   document.addEventListener('yt-navigate-finish', fire);
   window.addEventListener('popstate', fire);

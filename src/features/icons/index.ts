@@ -5,13 +5,8 @@ import { S } from '../../core/selectors.ts';
 import type { Route } from '../../core/router.ts';
 import { routeOf } from '../../core/router.ts';
 
-/**
- * Masthead and watch action row: Figma glyphs in place of YouTube's, and Create / Share / Save / Download
- * as icon-only circles. The sidebar draws its own icons (sidebar feature).
- */
-
-/** Figma icons style.css paints. CSS can't build a url() from parts and the extension origin differs per install
- *  and browser, so each is a custom property on <html>: --kyt-i-<name>. */
+// CSS can't build a url() from parts and the extension origin differs per install and browser, so each icon is a
+// custom property on <html>: --kyt-i-<name>.
 const NAMES = ['menu', 'arrow-left', 'search', 'mic', 'close', 'add', 'notifs', 'notifs-selected', 'notifs-disabled', 'more', 'you',
   'liked', 'liked-selected', 'dislike', 'dislike-selected', 'share', 'save', 'download', 'clip', 'ask', 'thanks'];
 

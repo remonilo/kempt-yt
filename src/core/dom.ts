@@ -54,3 +54,17 @@ export function keep(
     el.remove();
   }, { once: true });
 }
+
+export function el<K extends keyof HTMLElementTagNameMap>(tag: K, cls = '', ...kids: (Node | string)[]): HTMLElementTagNameMap[K] {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  e.append(...kids);
+  return e;
+}
+
+export function observe(target: Node | null, init: MutationObserverInit, fn: () => void, signal: AbortSignal): MutationObserver {
+  const obs = new MutationObserver(fn);
+  if (target) obs.observe(target, init);
+  signal.addEventListener('abort', () => obs.disconnect(), { once: true });
+  return obs;
+}

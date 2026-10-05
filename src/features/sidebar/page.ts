@@ -1,11 +1,10 @@
 import { endpoints, innertube, sleep, text, walk } from '../../page/youtube.ts';
-
-// Page-world handlers of the sidebar (see main-world.ts): YouTube's guide data, its icons, the user's playlists.
+import type { Entry, Section } from './nav.ts';
 
 let guideFetch: Promise<any> | undefined;
 
-/** One guide entry as JSON. Entries without a URL (Shorts) get a `kyt:<icon>` key; navigate resolves both. */
-function guideEntry(r: any, header?: boolean) {
+// Entries without a URL (Shorts) get a `kyt:<icon>` key; navigate resolves both.
+function guideEntry(r: any, header?: boolean): Entry {
   const icon: string | undefined = r.icon?.iconType;
   const url: string = r.navigationEndpoint?.commandMetadata?.webCommandMetadata?.url ?? `kyt:${icon}`;
   if (r.navigationEndpoint) endpoints.set(url, r.navigationEndpoint);
@@ -14,8 +13,7 @@ function guideEntry(r: any, header?: boolean) {
   return { title: r.formattedTitle?.simpleText ?? text(r.title), url, icon, thumb: r.thumbnail?.thumbnails?.[0]?.url as string | undefined, header, isNew };
 }
 
-/** Section items flattened: collapsibles ("Show more", "You") expanded in place, their header marked. */
-function guideEntries(items: any[] = []): ReturnType<typeof guideEntry>[] {
+function guideEntries(items: any[] = []): Entry[] {
   return items.flatMap((it) => {
     const [type, r] = Object.entries(it)[0] as [string, any];
     if (type === 'guideEntryRenderer') return [guideEntry(r)];
@@ -28,7 +26,6 @@ function guideEntries(items: any[] = []): ReturnType<typeof guideEntry>[] {
 }
 
 export const sidebar = {
-  /** The sidebar's data as [{ type, title, entries }]. Null if it never loads. */
   async guide() {
     let data;
     for (let i = 0; i < 20 && !(data = (document.querySelector('ytd-guide-renderer') as any)?.data?.items); i++) await sleep(100);
@@ -37,11 +34,11 @@ export const sidebar = {
     return (data?.map((s: any) => {
       const [type, r] = Object.entries(s)[0] as [string, any];
       return { type, title: text(r.formattedTitle), entries: guideEntries(r.items) };
-    }) ?? null) as { type: string; title: string; entries: ReturnType<typeof guideEntry>[] }[] | null;
+    }) ?? null) as Section[] | null;
   },
 
-  /** YouTube's own SVG for any icon type, for icons the Figma set lacks. Drawn by a hidden yt-icon,
-   *  so it works for entries YouTube hasn't rendered (collapsed "Show more" items such as Memberships). */
+  // Drawn by a hidden yt-icon, so it works for entries YouTube hasn't rendered (collapsed "Show more" items such
+  // as Memberships).
   async ytIcon(type: string) {
     const host = document.body.appendChild(document.createElement('div'));
     host.hidden = true;
@@ -59,7 +56,6 @@ export const sidebar = {
     }
   },
 
-  /** The signed-in user's playlists, newest activity first. */
   async playlists() {
     // ponytail: the add-to-playlist list (any video id works) has every playlist but no thumbnails;
     // browse FEplaylist_aggregation if the dropdown ever shows them.

@@ -1,4 +1,3 @@
-// Subscriptions toolbar logic: what kind an item is, and whether a search matches it.
 // Pure: no DOM, so it's unit tested (test/timeline.test.ts).
 
 import type { Age } from './dates.ts';
@@ -17,10 +16,9 @@ export function kindOf(o: { short: boolean; badge: boolean; age: Age | null; rea
   return o.readable ? 'live' : 'video';
 }
 
-/** Does `kind` belong under the chip? */
 export const inType = (kind: Kind, type: Type) => type === 'all' || `${kind}s`.replace('lives', 'live') === type;
 
-/** Every word of `query` appears in `text`, ignoring case and accents. Empty query matches. */
+/** Ignores case and accents. Empty query matches. */
 export function matches(text: string, query: string): boolean {
   const fold = (s: string) => s.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
   const hay = fold(text);

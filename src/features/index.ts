@@ -15,8 +15,7 @@ import { timeline } from './timeline/index.ts';
 import { watchLaterBtn } from './watch-later-btn/index.ts';
 import { watchTabs } from './watch-tabs/index.ts';
 
-// The ONLY list of features. Add a folder under features/, import it, append it here.
-// Its style.css is picked up by build.mjs automatically.
+// A feature's style.css is picked up by build.mjs automatically.
 export const features: Feature[] = [accent, font, selectedBg, subscribeRed, searchBar, icons,
   sidebar, settingsTopbar, watchLaterBtn, shorts, watchTabs, commentSort,
   timeline, grid, progressBar];

@@ -1,15 +1,12 @@
-// Helpers for code that runs in YouTube's page context (main-world.ts and features' page.ts):
-// YouTube's config, its Innertube API, its navigation, and digging through its data objects.
-
 declare const ytcfg: { get(key: string): any } | undefined;
 
-/** A ytcfg value, undefined before YouTube's config script has run. */
+// Undefined before YouTube's config script has run.
 export const cfg = (key: string): any => (typeof ytcfg === 'undefined' ? undefined : ytcfg.get(key));
 
 const cookie = (name: string) => document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))?.[1];
 
-/** Innertube POST with the signed-in user's session (SAPISIDHASH auth, as YouTube's own web client does).
- *  Signed out it goes without auth, which public endpoints (guide) accept. */
+// SAPISIDHASH auth, as YouTube's own web client does. Signed out it goes without auth, which public endpoints
+// (guide) accept.
 export async function innertube(endpoint: string, body: Record<string, unknown>): Promise<any> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -37,7 +34,6 @@ export async function innertube(endpoint: string, body: Record<string, unknown>)
   return res.json();
 }
 
-/** Every object in `o`, depth-first. */
 export function* walk(o: any): Generator<any> {
   if (!o || typeof o !== 'object') return;
   yield o;
@@ -48,12 +44,13 @@ export function find(o: any, test: (x: any) => boolean): any {
   for (const x of walk(o)) if (test(x)) return x;
 }
 
-/** Plain text of a YouTube text object ({ simpleText }, { runs }, { content }). */
 export const text = (t: any): string => t?.simpleText ?? t?.runs?.map((r: any) => r.text).join('') ?? t?.content ?? '';
 
-/** Navigation endpoints of links we render ourselves, by URL, so the `navigate` handler can follow them
- *  like YouTube does. Filled by handlers that return links (sidebar guide and playlists). */
+// By URL, so the `navigate` handler can follow links we render ourselves like YouTube does. Filled by handlers
+// that return links (sidebar guide and playlists).
 export const endpoints = new Map<string, any>();
 
-/** Resolves after `ms`. Page handlers use it for short bounded waits on YouTube's own late setup. */
+export const inst = (el: any) => el.polymerController ?? el.inst ?? el;
+
+// Only for short bounded waits on YouTube's own late setup.
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));

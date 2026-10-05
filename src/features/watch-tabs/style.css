@@ -1,4 +1,3 @@
-/* Tab bar: Figma "Segmented button" (Video 38:10936). Selected = a white pill that slides between segments. */
 /* The outline is an inset shadow, painted under the pill, so the pill fills the full 36px. */
 html[kyt-watch-tabs] .kyt-tabs {
   --i: 0;

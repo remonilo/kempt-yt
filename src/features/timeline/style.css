@@ -1,11 +1,9 @@
-/* Timeline (Figma Subs 96:3679, History 100:9034): a 9px dot and the date before each group,
-   a 3px line down the left joining them. index.ts inserts the .kyt-tl-head elements. */
 html[kyt-timeline] .kyt-tl-head {
   position: relative;
   font: 400 16px/20px Roboto, Arial, sans-serif;
   color: var(--kyt-fg);
 }
-/* The dot. On Subscriptions one line runs the whole grid, so a ring in the page colour cuts it 8px around
+/* On Subscriptions one line runs the whole grid, so a ring in the page colour cuts it 8px around
    each dot (not the first: the line starts below it, and the ring would cut into the chips above). */
 html[kyt-timeline] .kyt-tl-head::before {
   content: "";
@@ -23,7 +21,6 @@ html[kyt-timeline] .kyt-tl-head::before {
 html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents > .kyt-tl-head:not(:first-of-type)::before {
   box-shadow: 0 0 0 8px var(--kyt-bg);
 }
-/* The group you're reading (index.ts spy). */
 html[kyt-timeline] .kyt-tl-head[kyt-current]::before {
   background: var(--kyt-accent);
 }
@@ -88,7 +85,6 @@ html[kyt-timeline] ytd-browse[page-subtype="history"] ytd-item-section-renderer 
   grid-column: 1 / -1; /* Shorts row, anything else YouTube adds */
   margin: 0;
 }
-/* Horizontal list lockup -> vertical card. */
 html[kyt-timeline] ytd-browse[page-subtype="history"] ytd-item-section-renderer > #contents > yt-lockup-view-model {
   margin: 0;
   & .ytLockupViewModelHost {
@@ -104,8 +100,7 @@ html[kyt-timeline] ytd-browse[page-subtype="history"] ytd-item-section-renderer 
   }
 }
 
-/* Subscriptions toolbar (Figma Subs 96:3679): type chips left, search right, 36px high, first row of the grid.
-   order -2 keeps it above the shelves (order -1). Its 47px margin is the gap to the first date (Figma), so
+/* order -2 keeps the toolbar above the shelves (order -1). Its 47px margin is the gap to the first date (Figma), so
    the line starts that much lower (--kyt-bar). */
 html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:has(> kyt-bar) {
   --kyt-bar: 83px;
@@ -125,25 +120,8 @@ html[kyt-timeline] kyt-bar .kyt-chips {
   gap: 8px;
 }
 html[kyt-timeline] kyt-bar .kyt-chips > button {
-  all: unset;
-  box-sizing: border-box;
   height: 36px;
   padding: 0 16px;
-  border-radius: 8px;
-  color: var(--kyt-fg);
-  background: var(--kyt-outline);
-  cursor: pointer;
-  transition: background-color 150ms;
-}
-html[kyt-timeline] kyt-bar .kyt-chips > button:hover {
-  background: var(--kyt-hover-bg);
-}
-html[kyt-timeline] kyt-bar .kyt-chips > button[aria-pressed="true"] {
-  background: var(--kyt-selected-strong-bg);
-  cursor: default;
-}
-html[kyt-timeline] kyt-bar .kyt-chips > button:focus-visible {
-  outline: 2px solid var(--kyt-outline-focus);
 }
 /* With the Shorts feature on there is no Shorts shelf to show. */
 html[kyt-timeline][kyt-shorts] kyt-bar [data-type="shorts"] {
@@ -178,7 +156,7 @@ html[kyt-timeline] kyt-bar .kyt-search input::placeholder {
   color: var(--kyt-fg-muted);
 }
 
-/* Filtered out by the toolbar (index.ts apply). Shelves: Shorts shows for All and Shorts, never while searching. */
+/* Shelves: Shorts shows for All and Shorts, never while searching. */
 html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents > [kyt-off] {
   display: none !important;
 }

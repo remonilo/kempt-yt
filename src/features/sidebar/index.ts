@@ -1,10 +1,10 @@
 import type { Feature } from '../../core/feature.ts';
-import { keep, waitFor } from '../../core/dom.ts';
+import { el, keep, waitFor } from '../../core/dom.ts';
 import { icon, setIcon, setIconUrl } from '../../core/icon.ts';
 import { S } from '../../core/selectors.ts';
-import { buildNav, EXPLORE, type Entry, type Nav, type Row, type Section } from './nav.ts';
+import { buildNav, EXPLORE, type Entry, type Nav, type Row } from './nav.ts';
 
-/** YouTube icon type (minus _CAIRO) -> icon in src/icons. Unlisted types use YouTube's own SVG. */
+// Keys drop YouTube's _CAIRO suffix. Unlisted types use YouTube's own SVG.
 const FIGMA: Record<string, string> = {
   TAB_HOME: 'home', EXPLORE: 'explore', TAB_SHORTS: 'shorts', TAB_SUBSCRIPTIONS: 'subs',
   ACCOUNT_CIRCLE: 'you', ACCOUNT_BOX: 'you', WATCH_HISTORY: 'history', PLAYLISTS: 'playlists',
@@ -18,14 +18,7 @@ const FIGMA: Record<string, string> = {
 /** No filled variant: Figma's download, report, clip and every Hugeicon. */
 const NO_SELECTED = new Set(['download', 'report', 'clip', 'movies', 'memberships', 'your-videos', 'podcasts', 'shopping', 'help', 'feedback']);
 
-function el<K extends keyof HTMLElementTagNameMap>(tag: K, cls: string, ...kids: (Node | string)[]) {
-  const e = document.createElement(tag);
-  e.className = cls;
-  e.append(...kids);
-  return e;
-}
-
-/** Same page as `url`: equal path (or a sub-page of a channel), and every query param of `url` present. */
+// A sub-page of a channel counts as the channel.
 function isHere(url: string): boolean {
   if (!url.startsWith('/')) return false;
   const [path, query] = url.split('?');
@@ -142,7 +135,6 @@ export const sidebar: Feature = {
     });
     const nav = el('nav', 'kyt-nav', main, foot);
 
-    // ---- collapsed: the same groups as icons, in place of YouTube's mini guide ----
     const mini = el('nav', 'kyt-mini');
 
     /** Explore has no page: open the full sidebar with Explore expanded. */
@@ -162,7 +154,7 @@ export const sidebar: Feature = {
     nav.addEventListener('click', onClick, { signal });
     mini.addEventListener('click', onClick, { signal });
 
-    /** YouTube's footer (About, Press, ... Terms, Privacy) as plain links; its own #footer is hidden. */
+    // YouTube's own #footer is hidden.
     function setFooter(footer: Element) {
       footLinks.replaceChildren(...[...footer.querySelectorAll(':scope > [id^="guide-links"]')].map((line) =>
         el('div', 'kyt-foot-line', ...[...line.querySelectorAll('a')].map((a) => {
@@ -175,9 +167,8 @@ export const sidebar: Feature = {
     }
 
     function miniItem({ entry }: Row) {
-      const a = el(entry.url.startsWith('kyt:') ? 'button' : 'a', 'kyt-mini-link', ...[entryIcon(entry)].filter((x) => !!x));
-      if (a instanceof HTMLAnchorElement) a.href = entry.url;
-      a.dataset.url = entry.url;
+      const a = link(entry, 'kyt-mini-link');
+      a.querySelector(':scope > .kyt-nav-title')?.remove();
       a.title = a.ariaLabel = entry.title;
       const box = el('div', 'kyt-nav-item', a);
       if (entry.icon) box.dataset.icon = entry.icon; // same hide rules as the expanded sidebar
