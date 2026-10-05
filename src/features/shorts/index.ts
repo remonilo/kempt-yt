@@ -8,7 +8,6 @@ const watchUrl = (path: string) => {
   return id && `/watch?v=${id}`;
 };
 
-// style.css hides Shorts shelves and cards. This file sends every Shorts link to the normal player.
 export const shorts: Feature = {
   id: 'shorts',
   label: 'Hide Shorts', hint: 'Opens them as normal videos', group: 'feeds', icon: 'shorts',

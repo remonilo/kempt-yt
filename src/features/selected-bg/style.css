@@ -1,5 +1,4 @@
-/* Sidebar entries (full + mini guide) and feed/search chips: accent-tinted background for hover and selected,
-   accent icon when selected. Selected chips use the stronger tint because unselected chips are already grey. YouTube paints the guide background on the entry host (radius 10px), so we do too
+/* Selected chips use the stronger tint because unselected chips are already grey. YouTube paints the guide background on the entry host (radius 10px), so we do too
    and keep the inner #endpoint / paper-item transparent (YouTube adds a white 10% hover layer there). Text stays --kyt-fg: accent text on the dark tint is under 3:1. */
 html[kyt-selected-bg] :is(ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer) {
   border-radius: var(--kyt-radius);

@@ -1,25 +1,16 @@
+import { el } from '../core/dom.ts';
 import { GROUPS, isOn, optionValue, type Feature, type Group, type Option } from '../core/feature.ts';
 import { loadSettings, saveSettings, type Settings } from '../core/settings.ts';
 import { features } from '../features/index.ts';
 import { faceCss, familyOf } from '../features/font/index.ts';
 import { colorPicker } from './color.ts';
 
-// One row per feature, grouped into cards by `group`. A feature's options sit in a panel under its row
-// (chevron); a lone color option shows as a dot in the row and opens the picker instead.
-
-const el = <K extends keyof HTMLElementTagNameMap>(tag: K, cls = '', ...kids: (Node | string)[]) => {
-  const e = document.createElement(tag);
-  if (cls) e.className = cls;
-  e.append(...kids);
-  return e;
-};
-
 // Rows render synchronously with defaults, inert until storage.sync answers (docs/internals/youtube-quirks).
 const settings = loadSettings();
 const app = document.getElementById('app')!;
 app.inert = true;
 
-/** Saves a change. `live` (dragging) writes at most every 400ms: storage.sync allows 120 writes a minute. */
+// `live` (dragging) writes at most every 400ms: storage.sync allows 120 writes a minute.
 let timer: ReturnType<typeof setTimeout> | undefined;
 function persist(change: (s: Settings) => void, live = false) {
   settings.then((s) => {
@@ -30,7 +21,6 @@ function persist(change: (s: Settings) => void, live = false) {
   });
 }
 
-/** Popup accent follows the chosen color. */
 const tint = (hex: string) => document.documentElement.style.setProperty('--kp-accent', hex);
 
 function icon(name: string) {
@@ -48,7 +38,7 @@ function toggle(label: string, on: (v: boolean) => void) {
   return { el: i, set: (v: unknown) => (i.checked = v as boolean) };
 }
 
-/** Segmented control; equal-width segments so the pill moves by transform only. */
+// Equal-width segments so the pill moves by transform only.
 function segmented(choices: Record<string, string>, on: (v: string) => void) {
   const keys = Object.keys(choices);
   const seg = el('div', 'kp-seg');
@@ -70,8 +60,6 @@ function segmented(choices: Record<string, string>, on: (v: string) => void) {
   return { el: seg, set };
 }
 
-/** More choices than a segmented control fits: one row each, the chosen one tinted with a check.
- *  `face` gives a row its own font-family (the font feature previews each font). */
 function choiceList(choices: Record<string, string>, on: (v: string) => void, face?: (v: string) => string) {
   const list = el('div', 'kp-list');
   list.role = 'radiogroup';
@@ -89,7 +77,6 @@ function choiceList(choices: Record<string, string>, on: (v: string) => void, fa
   return { el: list, set };
 }
 
-/** Font previews in the popup: the same faces the page gets, from the popup's own fonts/ folder. */
 function fontFace(k: string) {
   if (!document.querySelector('style.kp-faces')) {
     document.head.append(Object.assign(el('style', 'kp-faces'), { textContent: faceCss((file) => `fonts/${file}`) }));
@@ -106,7 +93,6 @@ function number(opt: Extract<Option, { type: 'number' }>, on: (v: number) => voi
   return { el: i, set: (v: unknown) => (i.value = String(v)) };
 }
 
-/** A grid-rows 0fr/1fr panel, opened by `trigger`. */
 function panel(item: HTMLElement, trigger: HTMLElement, content: HTMLElement) {
   const p = el('div', 'kp-panel', el('div', 'kp-panel-inner', content));
   trigger.addEventListener('click', () => {
@@ -137,7 +123,6 @@ function colorDot(label: string) {
   return b;
 }
 
-/** Option rows of a feature. Rows whose `parent` is off are hidden. */
 function optionRows(f: Feature) {
   const box = el('div', 'kp-options');
   const rows = new Map<string, HTMLElement>();
@@ -149,21 +134,15 @@ function optionRows(f: Feature) {
     }
   };
   for (const [key, opt] of Object.entries(f.options ?? {})) {
+    if (opt.type === 'color') continue; // a lone color option sits in the feature row
     const save = (v: unknown, live = false) => {
       values.set(key, v);
       sync();
-      if (f.id === 'accent' && key === 'color') tint(v as string);
       persist((s) => (s.options[`${f.id}.${key}`] = v), live);
     };
     let r: HTMLElement;
     let set: (v: unknown) => void;
-    if (opt.type === 'color') {
-      const dot = colorDot(opt.label);
-      const picker = colorPicker(opt.default, (v) => save(v, true), (v) => save(v));
-      r = el('div', 'kp-item', row(opt.label, undefined, undefined, dot));
-      r.append(panel(r, dot, picker.el));
-      set = (v) => picker.set(v as string);
-    } else if (opt.type === 'choice' && Object.keys(opt.choices).length > 3) {
+    if (opt.type === 'choice' && Object.keys(opt.choices).length > 3) {
       const c = choiceList(opt.choices, save, f.id === 'font' ? fontFace : undefined);
       r = c.el;
       set = c.set;
@@ -218,16 +197,14 @@ function featureItem(f: Feature) {
   return item;
 }
 
-const groups = new Map<Group | 'other', HTMLElement>();
-for (const key of [...Object.keys(GROUPS), 'other'] as (Group | 'other')[]) {
+const groups = new Map<Group, HTMLElement>();
+for (const [key, title] of Object.entries(GROUPS) as [Group, string][]) {
   const card = el('div', 'kp-card');
   groups.set(key, card);
-  app.append(el('section', 'kp-section', el('h2', '', key === 'other' ? 'Other' : GROUPS[key]), card));
+  app.append(el('section', 'kp-section', el('h2', '', title), card));
 }
-for (const f of features) groups.get(f.group ?? 'other')!.append(featureItem(f));
-for (const card of groups.values()) if (!card.children.length) card.parentElement!.remove();
+for (const f of features) groups.get(f.group)!.append(featureItem(f));
 
-// Footer: version and a two-click reset.
 const reset = el('button', 'kp-link', 'Reset all');
 reset.type = 'button';
 reset.addEventListener('click', () => {

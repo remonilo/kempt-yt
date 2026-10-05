@@ -1,4 +1,4 @@
-/* Popup. Dark like YouTube's dark theme; the accent follows the user's color (--kp-accent, set by popup.ts). */
+/* Dark like YouTube's dark theme; --kp-accent follows the user's color. */
 :root {
   --kp-accent: #cb274a;
   --kp-bg: #0f0f0f;
@@ -45,7 +45,7 @@ button { cursor: pointer; }
 .kp-label { flex: 1; min-width: 0; }
 .kp-label small { display: block; color: var(--kp-muted); font-size: 12px; line-height: 16px; }
 
-/* Switch: native checkbox, thumb moves by transform. */
+/* The thumb moves by transform. */
 .kp-switch {
   appearance: none;
   flex: none;
@@ -81,7 +81,6 @@ button { cursor: pointer; }
 .kp-dot { flex: none; width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; background: var(--kp-accent); box-shadow: 0 0 0 2px var(--kp-bg), 0 0 0 3px rgba(255, 255, 255, 0.3); }
 .kp-options .kp-dot { background: var(--kp-color, var(--kp-accent)); }
 
-/* Options panel: grid rows 0fr to 1fr, like the sidebar dropdowns. */
 .kp-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 220ms var(--kp-ease); }
 .kp-item.open > .kp-panel { grid-template-rows: 1fr; }
 .kp-panel-inner { min-height: 0; overflow: hidden; }
@@ -90,7 +89,6 @@ button { cursor: pointer; }
 .kp-options .kp-row { min-height: 40px; padding: 4px 0; font-size: 13px; color: #ddd; }
 .kp-options > [hidden] { display: none; }
 
-/* Segmented choice: equal segments, the pill slides by --i. */
 .kp-seg {
   position: relative;
   display: grid;
@@ -113,7 +111,6 @@ button { cursor: pointer; }
   transform: translateX(calc(var(--i, 0) * 100%));
   transition: transform 220ms var(--kp-ease);
 }
-/* Choice list (more than three choices): the chosen row gets the accent tint and a check. */
 .kp-list { display: grid; gap: 2px; padding: 4px 0 6px; }
 .kp-list button {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
@@ -127,7 +124,6 @@ button { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { .kp-list button, .kp-list .kp-icon { transition: none; } }
 .kp-number { width: 64px; padding: 4px 8px; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; background: none; }
 
-/* Color picker */
 .kp { padding: 6px 12px 14px; }
 .kp-options .kp { padding: 0 0 8px; }
 .kp-swatches { display: flex; justify-content: space-between; margin-bottom: 14px; }

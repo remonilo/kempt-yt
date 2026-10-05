@@ -2,8 +2,7 @@ import type { call } from './bridge.ts';
 import type { Route } from './router.ts';
 import type { Settings } from './settings.ts';
 
-/** `parent`: key of a boolean option of the same feature. While it's false this option is inactive (attribute
- *  unset, popup row hidden). */
+/** While the `parent` boolean option is false, this option is inactive (attribute unset, popup row hidden). */
 export type Option = { label: string; cssVar?: string; parent?: string } & (
   | { type: 'boolean'; default: boolean }
   | { type: 'color'; default: string }
@@ -11,16 +10,13 @@ export type Option = { label: string; cssVar?: string; parent?: string } & (
   | { type: 'choice'; default: string; choices: Record<string, string> }
 );
 
-/** Popup sections, in display order. */
 export const GROUPS = { look: 'Look', navigation: 'Navigation', watch: 'Watch page', feeds: 'Feeds' } as const;
 export type Group = keyof typeof GROUPS;
 
 export interface Ctx {
-  /** Aborted when the feature is turned off or leaves its routes. Undo your DOM work on abort. */
+  /** Undo your DOM work on abort. */
   signal: AbortSignal;
-  /** Live option value. */
   option<T = unknown>(key: string): T;
-  /** Call a main-world.ts handler. */
   call: typeof call;
 }
 
@@ -28,11 +24,9 @@ export interface Feature {
   /** Also the CSS gate: html[kyt-<id>] */
   id: string;
   label: string;
-  /** Muted second line in the popup. */
   hint?: string;
-  /** Popup section; omitted = "Other". */
-  group?: Group;
-  /** Popup row icon: a file name in src/icons/ without .svg. */
+  group: Group;
+  /** A file name in src/icons/ without .svg. */
   icon?: string;
   defaultOn: boolean;
   /** Omit = every page. */
@@ -48,14 +42,12 @@ export interface Feature {
 export const isOn = (f: Feature, s: Settings) => s.features[f.id] ?? f.defaultOn;
 export const optionValue = (f: Feature, key: string, s: Settings) =>
   s.options[`${f.id}.${key}`] ?? f.options?.[key]?.default;
-/** False while the option's parent option is off. */
 export const optionActive = (f: Feature, key: string, s: Settings) => {
   const p = f.options?.[key]?.parent;
   return !p || optionValue(f, p, s) === true;
 };
 
-/** Applies settings and route to every feature: html[kyt-*] flags and option vars, then starts or aborts run().
- *  `bridge` is ctx.call (a parameter so tests can run the runner without the page world). */
+// `bridge` is ctx.call, a parameter so tests can run the runner without the page world.
 export function createRunner(features: Feature[], bridge: typeof call) {
   const running = new Map<string, AbortController>();
   const html = document.documentElement;

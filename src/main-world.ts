@@ -1,9 +1,6 @@
 import BUILD from 'kyt:build';
 import { handlers } from './features/page.ts';
 
-// Runs in YouTube's page context, where ytcfg and element data are readable. Answers bridge.ts calls with
-// the handlers in features/page.ts. Event names carry the build id (see bridge.ts).
-
 document.addEventListener(`kyt:req:${BUILD}`, async (e) => {
   let req;
   try {

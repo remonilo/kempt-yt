@@ -1,5 +1,3 @@
-// Date logic for the timeline: YouTube's relative upload times ("3 days ago", "Streamed 5 hr ago") on
-// Subscriptions, and its day headers ("Today", "Thursday", "27 Sept") on History.
 // Pure: no DOM, so it's unit tested (test/timeline.test.ts).
 
 const DAY = 864e5;
@@ -19,7 +17,7 @@ const space = (s: string) => s.replace(/[\s\u00a0\u202f]+/g, ' ');
 const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const AGO = new Map<string, { re: RegExp; units: Unit[] }>();
 
-/** One regex for every way `locale` writes "N <unit> ago" (long, short, narrow; plural forms 0 to 111). Group i is `units[i]`. */
+/** Capture group i is `units[i]`. */
 function agoRe(locale: string) {
   let r = AGO.get(locale);
   if (r) return r;
@@ -43,7 +41,6 @@ function agoRe(locale: string) {
   return r;
 }
 
-/** "vor 3 Tagen gestreamt" in `de` -> { n: 3, unit: 'day', extra: true }. Null if no age is found. */
 export function parseAge(text: string, locale = 'en'): Age | null {
   const t = space(text);
   const age = (m: RegExpMatchArray, n: string, unit: Unit): Age =>
@@ -60,10 +57,9 @@ export function parseAge(text: string, locale = 'en'): Age | null {
 }
 
 export interface Group {
-  /** Stable id: `d:2024-12-15` for a day, `r:2 weeks ago` for a relative bucket. */
   key: string;
   label: string;
-  /** Approximate upload time, only for ordering groups. */
+  /** Approximate: only for ordering groups. */
   at: number;
 }
 
@@ -71,7 +67,6 @@ const midnight = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate(
 export const dayKey = (d: Date) => `d:${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 const cap = (s: string) => s.charAt(0).toLocaleUpperCase() + s.slice(1);
 
-/** "Today - 15 Dec 2024", "Yesterday - 14 Dec 2024", "Friday - 12 Dec 2024", in `locale`. */
 export function dayLabel(d: Date, now: Date, locale = 'en-GB'): string {
   const diff = Math.round((midnight(now) - midnight(d)) / DAY);
   const date = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric' }).format(d);
@@ -81,7 +76,7 @@ export function dayLabel(d: Date, now: Date, locale = 'en-GB'): string {
   return `${cap(name)} - ${date}`;
 }
 
-/** Group key of an age: the upload day for seconds to days, YouTube's own wording beyond. Null without an age. */
+/** The upload day for seconds to days, YouTube's own wording beyond. */
 export function groupOf(text: string, now: Date, locale?: string): Group | null {
   const age = parseAge(text, locale);
   if (!age) return null;
@@ -95,9 +90,8 @@ export function groupOf(text: string, now: Date, locale?: string): Group | null 
 }
 
 /**
- * Splits a newest-first feed into groups: `starts[i]` is the group that begins at item i. Groups only move back
- * in time, so a newer-looking or unreadable item stays in the current group. Items before the first readable one
- * get no group.
+ * Groups only move back in time, so a newer-looking or unreadable item stays in the current group. Items before
+ * the first readable one get no group.
  */
 export function plan(texts: string[], now: Date, locale?: string): Map<number, Group> {
   const starts = new Map<number, Group>();
@@ -110,10 +104,7 @@ export function plan(texts: string[], now: Date, locale?: string): Map<number, G
   return starts;
 }
 
-/**
- * History day header ("Today", "Yesterday", "Thursday", "27 Sept", "27 Sept 2024") -> that day, or null.
- * Matches against Intl's own words for `locale`, so it follows the UI language.
- */
+// Matches against Intl's own words for `locale`, so it follows the UI language.
 export function historyDate(label: string, now: Date, locale = 'en-GB'): Date | null {
   const want = label.trim().toLocaleLowerCase();
   const rel = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });

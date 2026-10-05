@@ -3,7 +3,6 @@ html[kyt-accent] .ytp-swatch-background-color,
 html[kyt-accent] .ytp-play-progress {
   background: var(--kyt-accent) !important;
 }
-/* Notification count badge. */
 html[kyt-accent] .ytSpecIconBadgeShapeBadge {
   background-color: var(--kyt-accent) !important;
 }

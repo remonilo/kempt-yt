@@ -1,16 +1,13 @@
-// YouTube's guide sections (main-world guide()) -> Kempt's sidebar layout. Pure, so it's unit-tested.
+// Pure, so it's unit-tested.
 // Sections are told apart by renderer type and icon type, never by title: titles are localized.
 
 export interface Entry {
   title: string;
   /** Path or absolute URL; `kyt:<icon>` for entries without one (Shorts). */
   url: string;
-  /** YouTube icon type, e.g. TAB_HOME_CAIRO. */
   icon?: string;
   thumb?: string;
-  /** Heads a collapsible section ("You", "Subscriptions"). */
   header?: boolean;
-  /** A channel with new uploads (YouTube's blue dot). */
   isNew?: boolean;
 }
 
@@ -22,16 +19,13 @@ export interface Section {
 
 export interface Row {
   entry: Entry;
-  /** Dropdown contents; 'playlists' = fetched on first open. */
+  /** 'playlists' = fetched on first open. */
   children?: Entry[] | 'playlists';
-  /** The label toggles the dropdown too (no page behind it). */
   toggle?: boolean;
 }
 
 export interface Nav {
-  /** Rendered with dividers between. */
   groups: Row[][];
-  /** "More from YouTube" and every section after it, one array per section: the footer dropdown. */
   more: Entry[][];
 }
 
@@ -39,7 +33,7 @@ export const EXPLORE = 'kyt:EXPLORE';
 
 const is = (e: Entry | undefined, type: string) => !!e?.icon?.startsWith(type);
 
-/** Library order by icon type; types not listed keep YouTube's order after these. */
+// Types not listed keep YouTube's order after these.
 const LIBRARY = ['ACCOUNT_CIRCLE', 'WATCH_HISTORY', 'LIKES_PLAYLIST', 'OFFLINE_DOWNLOAD', 'WATCH_LATER', 'PLAYLISTS'];
 const rank = (e: Entry) => {
   const i = LIBRARY.findIndex((t) => is(e, t));
@@ -47,7 +41,6 @@ const rank = (e: Entry) => {
 };
 const rows = (...r: (Row | false | undefined)[]) => r.filter((x): x is Row => !!x);
 
-/** Home, Shorts, Explore | You, History, Liked, Downloads, Watch later, Playlists, others | Subscriptions; "More" at the bottom. */
 export function buildNav(sections: Section[]): Nav {
   const moreAt = sections.findIndex((s) => s.entries.some((e) => is(e, 'YOUTUBE_')));
   const top = moreAt < 0 ? sections : sections.slice(0, moreAt);

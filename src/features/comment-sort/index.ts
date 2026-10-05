@@ -1,13 +1,10 @@
 import type { Feature } from '../../core/feature.ts';
-import { keep, waitFor } from '../../core/dom.ts';
+import { el, keep, waitFor } from '../../core/dom.ts';
 
 const ITEMS = '#sort-menu tp-yt-paper-listbox > a';
 
-/**
- * Comment sort as a row of chips (Figma "Comments section") instead of YouTube's dropdown.
- * Each chip clicks the matching item in the hidden dropdown, so YouTube still does the reload.
- * Labels come from the dropdown items, so they follow the UI language.
- */
+// Each chip clicks the matching item in the hidden dropdown, so YouTube still does the reload.
+// Labels come from the dropdown items, so they follow the UI language.
 export const commentSort: Feature = {
   id: 'comment-sort',
   label: 'Comment sort as buttons', group: 'watch', icon: 'sort',
@@ -19,8 +16,7 @@ export const commentSort: Feature = {
     const header = first?.closest('ytd-comments-header-renderer');
     if (!header || signal.aborted) return;
 
-    const row = document.createElement('div');
-    row.className = 'kyt-sort';
+    const row = el('div', 'kyt-sort');
     row.role = 'group';
     row.addEventListener('click', (e) => {
       const b = (e.target as Element).closest('button');
@@ -33,7 +29,7 @@ export const commentSort: Feature = {
       if (!menu || !items.length) return;
       if (menu.nextElementSibling !== row) menu.after(row);
       items.forEach((a, i) => {
-        const b = row.children[i] ?? row.appendChild(document.createElement('button'));
+        const b = row.children[i] ?? row.appendChild(el('button', 'kyt-chip'));
         const label = a.querySelector('.item')?.textContent?.trim() ?? '';
         if (b.textContent !== label) b.textContent = label;
         const on = a.getAttribute('aria-selected') ?? 'false';

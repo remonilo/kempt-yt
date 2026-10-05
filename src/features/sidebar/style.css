@@ -1,5 +1,5 @@
 /* Figma's sidebar layout (92:4870, dropdown rows 23:8475 / 101:6372) at YouTube's own sizes:
-   40px rows, 14px labels, 24px icons, 24px icon-label gap. Dropdown = label | 1px divider | arrow button.
+   40px rows, 14px labels, 24px icons, 24px icon-label gap.
    YouTube's #sections hides only once our nav is in (sidebar/index.ts mounts it after the data loads). */
 html[kyt-sidebar] ytd-guide-renderer:has(> .kyt-nav) {
   display: flex;
@@ -144,9 +144,7 @@ html[kyt-sidebar-hide-courses] .kyt-nav-item[data-icon^='COURSE'] {
   height: 20px;
 }
 
-/* Foot: the centered copyright line under a divider, pinned to the bottom of a short sidebar. The copyright
-   toggles a reversed dropdown above the divider: "More from YouTube", the settings section, footer links.
-   The list is bottom-aligned, so the open/close is a wipe that rises from the divider; the divider and the
+/* The foot's list is bottom-aligned, so the open/close is a wipe that rises from the divider; the divider and the
    copyright stay put. */
 .kyt-foot {
   margin: auto 12px 0; /* auto top: bottom of the sidebar */
@@ -190,8 +188,7 @@ html[kyt-sidebar-hide-courses] .kyt-nav-item[data-icon^='COURSE'] {
 :is(.kyt-foot-link, .kyt-foot-toggle):hover { color: var(--kyt-fg); }
 .kyt-foot[open] > .kyt-foot-toggle { color: var(--kyt-accent); }
 
-/* Collapsed sidebar: the expanded sidebar's groups as icons (Figma 92:4871), in place of YouTube's entries.
-   Every row is the same box, so icons share one center line. */
+/* Every collapsed row is the same box, so icons share one center line. */
 html[kyt-sidebar] .kyt-mini ~ #items { display: none; }
 .kyt-mini {
   display: flex;

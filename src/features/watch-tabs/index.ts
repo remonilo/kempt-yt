@@ -1,15 +1,13 @@
 import type { Feature } from '../../core/feature.ts';
-import { keep, waitFor } from '../../core/dom.ts';
+import { el, keep, observe, waitFor } from '../../core/dom.ts';
 import { icon } from '../../core/icon.ts';
 import { local } from '../../core/i18n.ts';
 import { S } from '../../core/selectors.ts';
 
 type Tab = 'info' | 'comments' | 'videos' | 'chat' | 'ai';
 const TABS: Tab[] = ['info', 'comments', 'videos', 'chat', 'ai'];
-/**
- * Tab labels, short enough for five equal columns; `comments` is the tooltip of its tab (count or icon).
- * Videos and Comments are YouTube's words. Longer ones still end in an ellipsis (style.css).
- */
+// Short enough for five equal columns; `comments` is the tooltip of its tab (count or icon).
+// Videos and Comments are YouTube's words. Longer ones still end in an ellipsis (style.css).
 const WORDS = {
   en: { info: 'Info', comments: 'Comments', videos: 'Videos', chat: 'Live chat', ai: 'Ask AI' },
   es: { info: 'Info', comments: 'Comentarios', videos: 'Vídeos', chat: 'Chat', ai: 'Preguntar' },
@@ -27,11 +25,9 @@ const EXPANDED = '[visibility="ENGAGEMENT_PANEL_VISIBILITY_EXPANDED"]';
 const CHAT_CSS = 'yt-live-chat-header-renderer #close-button { display: none !important; }';
 const YT_PANELS = '#shopping-timely-shelf, #persistent-panel-container, #playlist, #panels, #chat-container, #inline-panels';
 
-/**
- * Tabs above the right column. Videos and Live chat stay in place and are only shown or hidden; the description
- * and comments move into boxes that go back on abort. Our nodes go after YouTube's leading run of panels
- * (YT_PANELS). Why: docs/internals/youtube-quirks.
- */
+// Videos and Live chat stay in place and are only shown or hidden; the description and comments move into boxes
+// that go back on abort. Our nodes go after YouTube's leading run of panels (YT_PANELS). Why:
+// docs/internals/youtube-quirks.
 export const watchTabs: Feature = {
   id: 'watch-tabs',
   label: 'Tabs', hint: 'Info, comments and videos', group: 'watch', icon: 'info',
@@ -50,19 +46,16 @@ export const watchTabs: Feature = {
     const commentsHome = comments.parentElement!;
     const descNext = desc.nextSibling;
 
-    const bar = document.createElement('div');
-    bar.className = 'kyt-tabs';
+    const bar = el('div', 'kyt-tabs', el('span', 'kyt-tabs-ind'));
     bar.role = 'tablist';
-    bar.append(Object.assign(document.createElement('span'), { className: 'kyt-tabs-ind' }));
     const words = local(WORDS);
     const btns = new Map(TABS.map((t) => {
-      const b = document.createElement('button');
-      b.className = 'kyt-tab';
+      const b = el('button', 'kyt-tab');
       b.role = 'tab';
       // A span, so a long translation ends in an ellipsis inside its equal-width column; the title has it all.
       if (t !== 'comments') {
         b.title = words[t];
-        b.append(Object.assign(document.createElement('span'), { textContent: words[t] }));
+        b.append(el('span', '', words[t]));
       }
       b.addEventListener('click', () => {
         // Only user clicks leave theater; select() also runs on navigation and when Ask AI closes.
@@ -72,8 +65,8 @@ export const watchTabs: Feature = {
       bar.append(b);
       return [t, b];
     }));
-    const infoBox = Object.assign(document.createElement('div'), { className: 'kyt-tab-info' });
-    const commentsBox = Object.assign(document.createElement('div'), { className: 'kyt-tab-comments' });
+    const infoBox = el('div', 'kyt-tab-info');
+    const commentsBox = el('div', 'kyt-tab-comments');
 
     let tab: Tab = 'videos';
     let back: Tab = 'videos'; // where Ask AI returns to when its panel closes
@@ -182,12 +175,7 @@ export const watchTabs: Feature = {
     render();
     count();
 
-    const watch = (target: Node | null, init: MutationObserverInit, fn: () => void) => {
-      if (!target) return;
-      const o = new MutationObserver(fn);
-      o.observe(target, init);
-      signal.addEventListener('abort', () => o.disconnect(), { once: true });
-    };
+    const watch = (target: Node | null, init: MutationObserverInit, fn: () => void) => observe(target, init, fn, signal);
     watch(flexy.querySelector(S.chatContainer), { childList: true, subtree: true, attributeFilter: ['hidden'] }, render);
     watch(flexy.querySelector(S.watchActions), { subtree: true, attributeFilter: ['kyt-icon'] }, () => (checkAi(), render()));
     // HTML lowercases attribute names: the runner's kyt-watch-tabs-aiAs lands as -aias.

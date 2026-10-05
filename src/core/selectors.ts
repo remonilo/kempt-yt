@@ -1,10 +1,6 @@
-// Every YouTube selector lives here. Features import names, never raw selectors.
 // YouTube runs two markup generations (Polymer ytd-* and newer yt-*-view-model); list both when they differ.
 export const S = {
-  app: 'ytd-app',
   masthead: 'ytd-masthead',
-  mastheadEnd: 'ytd-masthead #end',
-  mastheadButtons: 'ytd-masthead #buttons',
   mastheadMenu: 'ytd-masthead #buttons > ytd-topbar-menu-button-renderer', // avatar (signed in)
   guide: 'ytd-guide-renderer #sections',
   guideDrawer: 'tp-yt-app-drawer#guide', // always present; its ytd-guide-renderer appears on first open (watch pages)
@@ -16,7 +12,6 @@ export const S = {
   watchMetadata: 'ytd-watch-metadata',
   watchActions: 'ytd-watch-metadata #actions',
   watchMore: 'ytd-watch-metadata ytd-menu-renderer > #button-shape', // the visible ⋯ button
-  secondary: 'ytd-watch-flexy #secondary-inner',
   comments: 'ytd-watch-flexy ytd-comments#comments',
   liveChat: 'ytd-live-chat-frame#chat',
   // YouTube moves these between #secondary-inner (two columns) and #below (one column). Always present.
@@ -26,7 +21,6 @@ export const S = {
   description: 'ytd-watch-metadata #description',
   askButton: 'ytd-watch-metadata [kyt-icon="SPARK"] button', // needs stamp(S.watchActions)
   watchSubscribe: 'ytd-watch-metadata ytd-subscribe-button-renderer', // its bell needs stampBell
-  subscribeBtn: 'ytd-subscribe-button-renderer, yt-subscribe-button-view-model',
   homeGrid: 'ytd-browse[page-subtype="home"] ytd-rich-grid-renderer',
   subsGrid: 'ytd-browse[page-subtype="subscriptions"] ytd-rich-grid-renderer > #contents',
   historyList: 'ytd-browse[page-subtype="history"] ytd-section-list-renderer > #contents', // one ytd-item-section-renderer per day

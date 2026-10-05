@@ -1,5 +1,4 @@
-/* [🔍 query ............ 🎤] in one outlined pill. The search button moves left, the grey segment goes,
-   the voice button (a sibling of yt-searchbox) is pulled into the pill's right end. Both are 32px circles
+/* The voice button is a sibling of yt-searchbox, pulled into the pill's right end. Both buttons are 32px circles
    inset 8px so their hover/press circle sits inside the outline and the icons land 15px from each end (Figma). */
 html[kyt-search-bar] yt-searchbox.ytSearchboxComponentHost {
   border: 1px solid var(--kyt-outline);

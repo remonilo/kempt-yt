@@ -15,7 +15,6 @@ const ready = new Promise<void>((resolve) => {
 
 type Result<M extends keyof Handlers> = Awaited<ReturnType<Handlers[M]>>;
 
-/** Calls a page-world handler (features/page.ts). Typed by the handler: args and result are checked. */
 export async function call<M extends keyof Handlers>(
   method: M,
   ...args: Parameters<Handlers[M]>

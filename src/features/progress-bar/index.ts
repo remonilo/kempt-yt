@@ -1,5 +1,5 @@
 import type { Feature } from '../../core/feature.ts';
-import { waitFor } from '../../core/dom.ts';
+import { el, observe, waitFor } from '../../core/dom.ts';
 import { S } from '../../core/selectors.ts';
 
 /** YouTube moves the played fill with an inline `transform: scaleX(p)`, which would stretch a masked wave.
@@ -27,8 +27,7 @@ export const progressBar: Feature = {
       for (const [i, list] of lists.entries()) {
         let wave = list.querySelector<HTMLElement>(':scope > .kyt-wave');
         if (!wave) {
-          wave = Object.assign(document.createElement('div'), { className: 'kyt-wave' });
-          wave.append(document.createElement('i'), document.createElement('i')); // buffered, played
+          wave = el('div', 'kyt-wave', el('i'), el('i')); // buffered, played
           list.append(wave);
         }
         wave.style.setProperty('--kyt-off', `${offs[i].toFixed(2)}px`);
@@ -46,13 +45,13 @@ export const progressBar: Feature = {
     bar.addEventListener('pointermove', sync, { signal });
     document.addEventListener('kyt:navigate', sync, { signal });
     // YouTube rebuilds the segment lists when chapters load or change, often while buffering (no media events).
-    const obs = new MutationObserver(sync);
+    observe(bar, { childList: true, subtree: true }, sync, signal);
     const ro = new ResizeObserver(sync);
     ro.observe(bar);
-    signal.addEventListener('abort', () => ro.disconnect(), { once: true });
-    obs.observe(bar, { childList: true, subtree: true });
-    signal.addEventListener('abort', () => obs.disconnect(), { once: true });
-    signal.addEventListener('abort', () => bar.querySelectorAll('.kyt-wave').forEach((w) => w.remove()), { once: true });
+    signal.addEventListener('abort', () => {
+      ro.disconnect();
+      bar.querySelectorAll('.kyt-wave').forEach((w) => w.remove());
+    }, { once: true });
     sync();
   },
 };
