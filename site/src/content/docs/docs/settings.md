@@ -22,6 +22,7 @@ Click the Kempt icon in the browser toolbar. Changes apply to open YouTube tabs 
 | | [Watch later button](/kempt-yt/docs/features/top-bar/#watch-later-button) | | On |
 | Watch page | [Tabs](/kempt-yt/docs/features/watch-tabs/) | Ask AI on or off; as an icon button or a tab | On |
 | | [Comment sort as buttons](/kempt-yt/docs/features/comment-sort/) | | On |
+| | [Wavy progress bar](/kempt-yt/docs/features/progress-bar/) | Animate wave | Off |
 | Feeds | [Hide Shorts](/kempt-yt/docs/features/shorts/) | | On |
 | | [Timeline](/kempt-yt/docs/features/timeline/) | | On |
 | | [Grid size](/kempt-yt/docs/features/grid/) | Videos per row (2 to 8), Shorts per row (3 to 10) | Off |

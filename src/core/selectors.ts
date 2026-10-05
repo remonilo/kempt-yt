@@ -33,5 +33,6 @@ export const S = {
   historyTitle: 'ytd-item-section-header-renderer #title', // "Today", "Thursday", "27 Sept"
   lockupDate: '.ytContentMetadataViewModelMetadataText', // last one in a lockup is the age ("7 hr ago"), aria-label has the long form
   lockupMeta: '.ytLockupViewModelMetadata', // title, channel and metadata rows of a lockup
+  progressBar: '.html5-video-player .ytp-progress-bar',
   liveBadge: '.ytBadgeShapeThumbnailLive', // the red LIVE thumbnail badge of a stream on now (any language)
 } as const;
