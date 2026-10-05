@@ -11,7 +11,7 @@ Kempt is a browser extension that restyles YouTube into one consistent design. I
 
 | Where                  | Change                                                                                                               |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Watch page             | Info, Comments, Videos, Live chat and Ask AI as tabs beside the player. Chips for comment sort and a Watch later button. |
+| Watch page             | Info, Comments, Videos, Live chat and Ask AI as tabs beside the player. Chips for comment sort, a Watch later button and an optional wavy progress bar. |
 | Subscriptions, History | A timeline with date headers. Subscriptions also gets type chips and search.                                         |
 | Sidebar                | Explore, Subscriptions and Playlists as dropdowns. Hide the entries you don't use.                                   |
 | Everywhere             | One accent color, tinted hover and selection, one icon set, an outlined search bar, Settings in the top bar.         |

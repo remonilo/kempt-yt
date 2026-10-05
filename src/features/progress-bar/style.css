@@ -1,0 +1,56 @@
+/* Track, buffered and played are the same 24x8 sine stroke in three colors, so the red line reads as swallowing
+   the dark one. Each layer's ::before drifts one wavelength per loop (transform only, so it stays on the
+   compositor) and its wrapper clips it: .kyt-wave is the full track, <i>:first-child the buffered part (--kyt-l),
+   <i>:last-child the played part (--kyt-p). All three start together, so they stay in phase. */
+html[kyt-progress-bar] .ytp-progress-list {
+  background: transparent !important;
+  overflow: visible; /* the wave is taller than the 6px list */
+}
+/* Kept in the DOM: their inline scaleX is where --kyt-p and --kyt-l come from. */
+html[kyt-progress-bar] .ytp-play-progress,
+html[kyt-progress-bar] .ytp-load-progress,
+html[kyt-progress-bar] .ytp-hover-progress {
+  opacity: 0 !important;
+}
+.kyt-wave {
+  --kyt-wave-len: 24px;
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 8px;
+  translate: 0 -50%;
+  overflow: hidden;
+  pointer-events: none;
+}
+.kyt-wave i {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  transition: clip-path 0.25s linear;
+}
+.kyt-wave i:first-child { clip-path: inset(0 calc((1 - var(--kyt-l, 0)) * 100%) 0 0); }
+.kyt-wave i:last-child { clip-path: inset(0 calc((1 - var(--kyt-p, 0)) * 100%) 0 0); }
+.kyt-wave::before,
+.kyt-wave i::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 calc(-1 * var(--kyt-off, 0px)); /* phase: see index.ts */
+  width: calc(100% + var(--kyt-wave-len) + var(--kyt-off, 0px));
+  background: rgba(40, 40, 40, 0.6);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 8'%3E%3Cpath d='M0 4Q6 0 12 4T24 4' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x 0 50% / var(--kyt-wave-len) 8px;
+}
+.kyt-wave i:first-child::before { background: rgba(255, 255, 255, 0.4); }
+.kyt-wave i:last-child::before { background: var(--kyt-accent, #f03); }
+/* Always attached so a pause freezes the phase instead of snapping it back; only runs while playing with the
+   controls showing. */
+html[kyt-progress-bar-drift] :is(.kyt-wave, .kyt-wave i)::before {
+  animation: kyt-wave-drift 0.9s linear infinite paused;
+}
+html[kyt-progress-bar-drift] .html5-video-player.playing-mode:not(.ytp-autohide) :is(.kyt-wave, .kyt-wave i)::before {
+  animation-play-state: running;
+}
+@keyframes kyt-wave-drift {
+  to { transform: translateX(calc(-1 * var(--kyt-wave-len))); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[kyt-progress-bar-drift] :is(.kyt-wave, .kyt-wave i)::before { animation: none; }
+}

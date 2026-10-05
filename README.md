@@ -69,6 +69,7 @@ One accent color and icon set, and less clutter. Every change is a switch you ca
   - Settings in the top bar
   - Watch later button
   - comment sort as chips
+  - optional wavy progress bar
 - A switch for every change in the popup <details> <summary><sup>click to see the popup</sup></summary><img src="site/public/screenshots/popup.png" alt="Kempt popup" width="260" /></details>
 - Labels in 11 languages that follow YouTube's UI language
 - No polling or page-wide observers and compositor-only animations, with reduced motion respected
