@@ -8,7 +8,11 @@ import { routeOf } from '../../core/router.ts';
 // CSS can't build a url() from parts and the extension origin differs per install and browser, so each icon is a
 // custom property on <html>: --kyt-i-<name>.
 const NAMES = ['menu', 'arrow-left', 'search', 'mic', 'close', 'add', 'notifs', 'notifs-selected', 'notifs-disabled', 'more', 'you',
-  'liked', 'liked-selected', 'dislike', 'dislike-selected', 'share', 'save', 'download', 'clip', 'ask', 'thanks'];
+  'liked', 'liked-selected', 'dislike', 'dislike-selected', 'share', 'save', 'download', 'clip', 'ask', 'thanks',
+  // popup menus: account menu and the watch page's ⋯ menu
+  'report', 'arrow-right', 'keyboard', 'settings', 'help', 'feedback', 'switch-account', 'sign-out', 'studio', 'your-data',
+  'appearance', 'language', 'restricted', 'globe',
+  'add-to-queue', 'watch-later', 'not-interested', 'exclude'];
 
 export const icons: Feature = {
   id: 'icons',
@@ -19,6 +23,9 @@ export const icons: Feature = {
     const html = document.documentElement;
     for (const n of NAMES) html.style.setProperty(`--kyt-i-${n}`, `url("${iconUrl(n)}")`);
     signal.addEventListener('abort', () => NAMES.forEach((n) => html.style.removeProperty(`--kyt-i-${n}`)), { once: true });
+
+    // Menu rows (account menu, ⋯ menu) are stamped with their icon type once the popup container exists.
+    waitFor(S.popups, { signal }).then((el) => el && call('stampMenus', S.popups));
 
     // Share, Save, Download and Clip are told apart by their stamped icon type (labels are localized).
     // The action row persists across watch pages, so one stamp per page load is enough.

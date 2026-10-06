@@ -18,6 +18,8 @@ PLAN.md
 scripts/diag.js
 scripts/dump-dom.js
 scripts/guide-dump.js
+UNCOMMITTED.md
+scripts/progress-diag.js
 .pi/
 .claude/
 

@@ -85,7 +85,16 @@ html[kyt-watch-tabs] .kyt-tab[aria-selected="true"] {
 }
 html[kyt-watch-tabs] .kyt-tab:focus-visible {
   outline: 2px solid var(--kyt-outline-focus);
-  outline-offset: -3px;
+  outline-offset: -2px; /* covers the strip's 1px outline instead of floating inside it */
+}
+/* The ring follows the strip's shape: square sides, rounded only on the outermost visible tabs. */
+html[kyt-watch-tabs] .kyt-tab:not([hidden]):not(.kyt-tab:not([hidden]) ~ *) {
+  border-radius: 999px 0 0 999px;
+}
+html[kyt-watch-tabs] .kyt-tab:not([hidden]):not(:has(~ .kyt-tab:not([hidden]))) {
+  border-radius: 0 999px 999px 0;
+}
+html[kyt-watch-tabs] .kyt-tab:not([hidden]):not(.kyt-tab:not([hidden]) ~ *):not(:has(~ .kyt-tab:not([hidden]))) {
   border-radius: 999px;
 }
 
