@@ -5,6 +5,9 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 
 const VERSION = '4.3.5';
+// Hugeicons glyphs span ~20px of the 24px box, Figma's ~16-18px, so at the same stroke they read bigger and bolder.
+// Shrink the glyph and raise stroke-width to keep the 1.5px line.
+const SCALE = 0.85;
 
 /** Our file name -> Hugeicons component name (without "Icon"). */
 const ICONS = {
@@ -18,6 +21,15 @@ const ICONS = {
   feedback: 'MessageSquareWarning',
   'your-videos': 'VideoReplay',
   text: 'TextFont', // popup: Font
+  // Account menu (masthead avatar)
+  'switch-account': 'UserSwitch',
+  'sign-out': 'Logout02',
+  studio: 'Youtube', // YouTube Studio
+  'your-data': 'ShieldUser',
+  appearance: 'Moon02',
+  language: 'Languages',
+  restricted: 'UserSettings01', // Restricted Mode
+  globe: 'Globe02', // Location (Figma's `location` is a filled globe, heavier than the rest)
 };
 
 const args = process.argv.slice(2);
@@ -32,11 +44,12 @@ async function svg(name) {
   const res = await fetch(`https://cdn.jsdelivr.net/npm/@hugeicons/core-free-icons@${VERSION}/dist/esm/${name}Icon.js`);
   if (!res.ok) throw new Error(`${res.status} ${name}: no such Hugeicons icon`);
   const els = [...(await res.text()).matchAll(/\["(\w+)",\s*\{([^}]*)\}\]/g)].map(([, tag, props]) => {
-    const attrs = [...props.matchAll(/(\w+):\s*"([^"]*)"/g)].filter(([, k]) => k !== 'key');
+    const attrs = [...props.matchAll(/(\w+):\s*"([^"]*)"/g)].filter(([, k]) => k !== 'key')
+      .map(([m, k, v]) => [m, k, k === 'strokeWidth' ? String(+(Number(v) / SCALE).toFixed(2)) : v]);
     return `<${tag}${attrs.map(([, k, v]) => ` ${kebab(k)}="${v}"`).join('')}/>`;
   });
   if (!els.length) throw new Error(`${name}: unexpected module format`);
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">${els.join('')}</svg>\n`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><g transform="translate(12 12) scale(${SCALE}) translate(-12 -12)">${els.join('')}</g></svg>\n`;
 }
 
 await mkdir(out, { recursive: true });

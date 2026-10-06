@@ -2,6 +2,7 @@
 export const S = {
   masthead: 'ytd-masthead',
   mastheadMenu: 'ytd-masthead #buttons > ytd-topbar-menu-button-renderer', // avatar (signed in)
+  popups: 'ytd-popup-container', // account menu, ⋯ menus; items are stamped by stampMenus
   guide: 'ytd-guide-renderer #sections',
   guideDrawer: 'tp-yt-app-drawer#guide', // always present; its ytd-guide-renderer appears on first open (watch pages)
   guideRenderer: 'ytd-guide-renderer',
@@ -27,6 +28,6 @@ export const S = {
   historyTitle: 'ytd-item-section-header-renderer #title', // "Today", "Thursday", "27 Sept"
   lockupDate: '.ytContentMetadataViewModelMetadataText', // last one in a lockup is the age ("7 hr ago"), aria-label has the long form
   lockupMeta: '.ytLockupViewModelMetadata', // title, channel and metadata rows of a lockup
-  progressBar: '.html5-video-player .ytp-progress-bar',
+  progressBar: '#movie_player .ytp-chrome-bottom .ytp-progress-bar', // #movie_player also holds a hidden 0x0 spare bar outside .ytp-chrome-bottom
   liveBadge: '.ytBadgeShapeThumbnailLive', // the red LIVE thumbnail badge of a stream on now (any language)
 } as const;

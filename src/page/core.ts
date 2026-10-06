@@ -16,6 +16,44 @@ function stampIcons(root: Element) {
   }
 }
 
+// Menu rows are re-used across menus (account menu, its submenus), so stale stamps are removed.
+const MENU_ITEMS = 'ytd-compact-link-renderer, ytd-menu-service-item-renderer, ytd-menu-navigation-item-renderer, ytd-menu-service-item-download-renderer, yt-list-item-view-model';
+
+// Video card menus (yt-list-item-view-model rows) keep no data on the rows. Their icon types sit in the card's data, so a
+// click on a card remembers title -> icon type and the rows are matched by title (the same localized string).
+const CARDS = 'yt-lockup-view-model, ytm-shorts-lockup-view-model, ytm-shorts-lockup-view-model-v2';
+let cardMenu: Map<string, string> | null = null;
+
+function menuItems(v: any, out = new Map<string, string>(), depth = 0) {
+  if (!v || typeof v !== 'object' || depth > 40) return out;
+  const it = v.listItemViewModel;
+  const n = it?.leadingImage?.sources?.[0]?.clientResource?.imageName;
+  if (it?.title?.content && n) out.set(it.title.content, n);
+  for (const x of Object.values(v)) menuItems(x, out, depth + 1);
+  return out;
+}
+
+function onClick(e: Event) {
+  const card = (e.target as Element).closest?.(CARDS) as any;
+  const raw = card?.rawProps?.data ?? card?.data;
+  const items = card && (e.target as Element).closest('button') ? menuItems(typeof raw === 'function' ? raw() : raw) : null;
+  cardMenu = items?.size ? items : null;
+}
+
+function listIcon(el: Element) {
+  if (!cardMenu || el.tagName !== 'YT-LIST-ITEM-VIEW-MODEL') return undefined;
+  // YouTube adds Download on the client, so it is the one card row missing from the card's data.
+  return cardMenu.get(el.querySelector('.ytListItemViewModelTitle')?.textContent?.trim() ?? '') ?? 'OFFLINE_DOWNLOAD';
+}
+
+function stampMenus(root: Element) {
+  const set = (el: Element, name: string, v?: string) => (v ? el.getAttribute(name) !== v && el.setAttribute(name, v) : el.removeAttribute(name));
+  for (const el of root.querySelectorAll<any>(MENU_ITEMS)) {
+    set(el, 'kyt-icon', iconName(el) ?? listIcon(el));
+    set(el, 'kyt-icon2', el.data?.secondaryIcon?.iconType); // CHEVRON_RIGHT, CHECK
+  }
+}
+
 // The DOM has only the localized title, so the slug comes from the tab data.
 function stampTabs(group: Element) {
   const tabs = (group.closest('ytd-browse') as any)?.data?.contents?.twoColumnBrowseResultsRenderer?.tabs ?? [];
@@ -65,6 +103,16 @@ export const core = {
     const root = document.querySelector(sel);
     if (root) keepStamped(root, 'icon', () => stampIcons(root));
     return !!root;
+  },
+
+  // Items appear when a menu opens, so this watches the popup container (small, only menus and dialogs live there).
+  stampMenus(sel: string) {
+    const root = document.querySelector(sel);
+    if (!root) return false;
+    // Re-used rows may only swap their text, hence characterData.
+    keepStamped(root, 'menus', () => stampMenus(root), { childList: true, subtree: true, characterData: true });
+    document.addEventListener('click', onClick, { capture: true }); // same listener twice is a no-op
+    return true;
   },
 
   // aria-label changes with the state, the cheap signal that data changed.
