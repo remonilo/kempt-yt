@@ -22,7 +22,7 @@ html[kyt-selected-bg] :is(ytd-guide-entry-renderer[active], ytd-mini-guide-entry
   background-color: var(--kyt-selected-hover-bg) !important;
 }
 /* YouTube's own hover layer (1px stroke + white fill) would sit on top of the tint. */
-html[kyt-selected-bg] :is(ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer) yt-interaction {
+html[kyt-selected-bg] :is(ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer, ytd-masthead yt-icon-button) yt-interaction {
   display: none !important;
 }
 html[kyt-selected-bg] :is(ytd-guide-entry-renderer[active], ytd-mini-guide-entry-renderer[is-active]) .guide-icon {
@@ -36,9 +36,6 @@ html[kyt-selected-bg] ytd-masthead yt-icon-button {
 }
 html[kyt-selected-bg] ytd-masthead yt-icon-button:hover {
   background-color: var(--kyt-hover-bg);
-}
-html[kyt-selected-bg] ytd-masthead yt-icon-button yt-interaction {
-  display: none !important;
 }
 /* The notification wrapper paints its own white 20% hover under the button; only our tint should show. */
 html[kyt-selected-bg] ytd-masthead #buttons > ytd-notification-topbar-button-renderer:hover {

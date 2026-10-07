@@ -15,6 +15,7 @@
 import puppeteer from 'puppeteer-core';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { setTimeout as sleep } from 'node:timers/promises';
 
 const [url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', shotPath] = process.argv.slice(2).filter((a) => !a.startsWith('--'));
 const has = (name) => process.argv.includes(`--${name}`);
@@ -22,7 +23,6 @@ const flag = (name) => process.argv.find((a) => a.startsWith(`--${name}=`))?.sli
 const cssOnly = has('css-only');
 const ext = !cssOnly && !has('off');
 const lang = flag('lang');
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const browser = await puppeteer.launch({
   browser: 'firefox', executablePath: '/Applications/Firefox.app/Contents/MacOS/firefox', headless: true,
