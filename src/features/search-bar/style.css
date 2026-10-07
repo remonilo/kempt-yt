@@ -44,7 +44,7 @@ html[kyt-search-bar] .ytSearchboxComponentSearchButton:hover,
 html[kyt-search-bar] ytd-masthead #voice-search-button button:hover {
   background: var(--kyt-hover-bg) !important;
 }
-html[kyt-search-bar] :is(.ytSearchboxComponentSearchButton, #voice-search-button) :is(.ytIconWrapperHost, .yt-icon-shape) {
+html[kyt-search-bar] :is(.ytSearchboxComponentSearchButton, #voice-search-button) :is(.ytIconWrapperHost, .yt-icon-shape, button .ytSpecButtonShapeNextIcon) {
   width: var(--kyt-icon) !important;
   height: var(--kyt-icon) !important;
 }
@@ -58,10 +58,6 @@ html[kyt-search-bar] ytd-masthead #voice-search-button {
 }
 html[kyt-search-bar] ytd-masthead #voice-search-button button .ytSpecButtonShapeNextIcon {
   margin: 0 !important;
-}
-html[kyt-search-bar] ytd-masthead #voice-search-button button .ytSpecButtonShapeNextIcon {
-  width: var(--kyt-icon) !important;
-  height: var(--kyt-icon) !important;
 }
 
 /* Suggestions: exactly the pill's width (left/width cover its 1px border; YouTube sets an inline min-width),

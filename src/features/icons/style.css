@@ -19,35 +19,19 @@ html[kyt-icons] :is(
   & > * { visibility: hidden; }
 }
 
-/* Create is the Tonal + IconLeading button; logged-out "Sign in" is Outline, so it's untouched. */
-html[kyt-icons] ytd-masthead #buttons > ytd-button-renderer button.ytSpecButtonShapeNextTonal.ytSpecButtonShapeNextIconLeading {
+/* Icon-only buttons: Create (Tonal + IconLeading; logged-out "Sign in" is Outline, so it's untouched) and Share/Save/Download.
+   Download moves between the row and the ⋯ menu with the row's width; in the row it keeps its label otherwise. */
+html[kyt-icons] :is(ytd-masthead #buttons > ytd-button-renderer button.ytSpecButtonShapeNextTonal.ytSpecButtonShapeNextIconLeading, ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"]) button) {
   width: 40px;
   padding: 0;
   justify-content: center;
+  & .ytSpecButtonShapeNextIcon { margin: 0 !important; } /* signed-in builds keep the 6px label gap otherwise */
+  & .ytSpecButtonShapeNextButtonTextContent { display: none; }
+}
+html[kyt-icons] ytd-masthead #buttons > ytd-button-renderer button.ytSpecButtonShapeNextTonal.ytSpecButtonShapeNextIconLeading {
   border-radius: 50%;
   background: transparent !important;
-}
-html[kyt-icons] ytd-masthead #buttons > ytd-button-renderer button.ytSpecButtonShapeNextTonal.ytSpecButtonShapeNextIconLeading:hover {
-  background: var(--kyt-hover-bg) !important;
-}
-html[kyt-icons] ytd-masthead #buttons > ytd-button-renderer button.ytSpecButtonShapeNextTonal.ytSpecButtonShapeNextIconLeading .ytSpecButtonShapeNextIcon {
-  margin: 0;
-}
-html[kyt-icons] ytd-masthead #buttons > ytd-button-renderer button.ytSpecButtonShapeNextTonal.ytSpecButtonShapeNextIconLeading .ytSpecButtonShapeNextButtonTextContent {
-  display: none;
-}
-
-/* Download moves between the row and the ⋯ menu with the row's width; in the row it keeps its label otherwise. */
-html[kyt-icons] ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"]) button {
-  width: 40px;
-  padding: 0;
-  justify-content: center;
-}
-html[kyt-icons] ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"]) .ytSpecButtonShapeNextIcon {
-  margin: 0 !important; /* signed-in builds keep the 6px label gap otherwise */
-}
-html[kyt-icons] ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"]) .ytSpecButtonShapeNextButtonTextContent {
-  display: none;
+  &:hover { background: var(--kyt-hover-bg) !important; }
 }
 
 html[kyt-icons] ytd-masthead #guide-button yt-icon { --kyt-i: var(--kyt-i-menu); }
@@ -82,41 +66,41 @@ html[kyt-icons] ytd-watch-metadata ytd-menu-renderer > #button-shape .ytSpecButt
 }
 
 /* Popup menus: the account menu (masthead avatar) and the ⋯ menus. stampMenus sets kyt-icon="<type>" on each row
-   (kyt-icon2 for its right-hand icon). Only mapped rows get --kyt-bg/--kyt-vis, so unmapped ones (Premium, ...) stay native. */
+   (kyt-icon2 for its right-hand icon). Mapped rows set --kyt-i/--kyt-ibg/--kyt-vis on the row (they inherit down to the icon box); unmapped ones (Premium, ...) stay native. */
 html[kyt-icons] ytd-popup-container [kyt-icon] :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost),
 html[kyt-icons] ytd-popup-container ytd-menu-service-item-download-renderer #primary-entry > yt-icon,
 html[kyt-icons] ytd-popup-container :is(ytd-compact-link-renderer[kyt-icon2="CHEVRON_RIGHT"] #right-icon, ytd-toggle-theme-compact-link-renderer :is(#primary-icon, #secondary-icon)) {
-  background-color: var(--kyt-bg, transparent);
+  background-color: var(--kyt-ibg, transparent);
   mask: var(--kyt-i, none) center / contain no-repeat;
   & > * { visibility: var(--kyt-vis, visible); }
 }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="OFFLINE_DOWNLOAD"], [kyt-icon="DOWNLOAD"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-download); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="PLAYLIST_ADD"], [kyt-icon="BOOKMARK_BORDER"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-save); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="MONEY_HEART"], [kyt-icon="MONETIZATION_ON"], [kyt-icon="PAID"], [kyt-icon="MONEY_HAND"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-thanks); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="FLAG"], [kyt-icon="FLAG_CAIRO"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-report); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="CONTENT_CUT"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-clip); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="ACCOUNT_BOX"], [kyt-icon="GOOGLE_ACCOUNT"], [kyt-icon="GOOGLE_G"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-you); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="SWITCH_ACCOUNTS"], [kyt-icon="ACCOUNT_SWITCHER"], [kyt-icon="SWITCH_ACCOUNT"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-switch-account); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="SIGN_OUT"], [kyt-icon="EXIT_TO_APP"], [kyt-icon="LOG_OUT"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-sign-out); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="YOUTUBE_STUDIO"], [kyt-icon="YT_STUDIO"], [kyt-icon="STUDIO"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-studio); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="SHIELD_WITH_AVATAR"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-your-data); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="TRANSLATE"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-language); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="ADMIN_PANEL_SETTINGS"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-restricted); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="LANGUAGE"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-globe); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="KEYBOARD"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-keyboard); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="SETTINGS_CAIRO"], [kyt-icon="SETTINGS"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-settings); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="HELP"], [kyt-icon="HELP_CAIRO"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-help); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="FEEDBACK"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-feedback); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="ADD_TO_QUEUE_TAIL"], [kyt-icon="ADD_TO_QUEUE"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-add-to-queue); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="WATCH_LATER"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-watch-later); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="SHARE"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-share); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="NOT_INTERESTED"], [kyt-icon="BLOCK"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-not-interested); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is([kyt-icon="REMOVE_CIRCLE"], [kyt-icon="REMOVE_CIRCLE_OUTLINE"], [kyt-icon="DO_NOT_DISTURB"], [kyt-icon="DO_NOT_DISTURB_ON"]) :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost) { --kyt-i: var(--kyt-i-exclude); --kyt-bg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container :is([kyt-icon="OFFLINE_DOWNLOAD"], [kyt-icon="DOWNLOAD"]) { --kyt-i: var(--kyt-i-download); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container :is([kyt-icon="PLAYLIST_ADD"], [kyt-icon="BOOKMARK_BORDER"]) { --kyt-i: var(--kyt-i-save); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container :is([kyt-icon="MONEY_HEART"], [kyt-icon="MONETIZATION_ON"], [kyt-icon="PAID"], [kyt-icon="MONEY_HAND"]) { --kyt-i: var(--kyt-i-thanks); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container :is([kyt-icon="FLAG"], [kyt-icon="FLAG_CAIRO"]) { --kyt-i: var(--kyt-i-report); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="CONTENT_CUT"] { --kyt-i: var(--kyt-i-clip); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container :is([kyt-icon="ACCOUNT_BOX"], [kyt-icon="GOOGLE_ACCOUNT"], [kyt-icon="GOOGLE_G"]) { --kyt-i: var(--kyt-i-you); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container :is([kyt-icon="SWITCH_ACCOUNTS"], [kyt-icon="ACCOUNT_SWITCHER"], [kyt-icon="SWITCH_ACCOUNT"]) { --kyt-i: var(--kyt-i-switch-account); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container :is([kyt-icon="SIGN_OUT"], [kyt-icon="EXIT_TO_APP"], [kyt-icon="LOG_OUT"]) { --kyt-i: var(--kyt-i-sign-out); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container :is([kyt-icon="YOUTUBE_STUDIO"], [kyt-icon="YT_STUDIO"], [kyt-icon="STUDIO"]) { --kyt-i: var(--kyt-i-studio); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="SHIELD_WITH_AVATAR"] { --kyt-i: var(--kyt-i-your-data); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="TRANSLATE"] { --kyt-i: var(--kyt-i-language); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="ADMIN_PANEL_SETTINGS"] { --kyt-i: var(--kyt-i-restricted); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="LANGUAGE"] { --kyt-i: var(--kyt-i-globe); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="KEYBOARD"] { --kyt-i: var(--kyt-i-keyboard); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container :is([kyt-icon="SETTINGS_CAIRO"], [kyt-icon="SETTINGS"]) { --kyt-i: var(--kyt-i-settings); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container :is([kyt-icon="HELP"], [kyt-icon="HELP_CAIRO"]) { --kyt-i: var(--kyt-i-help); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="FEEDBACK"] { --kyt-i: var(--kyt-i-feedback); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container :is([kyt-icon="ADD_TO_QUEUE_TAIL"], [kyt-icon="ADD_TO_QUEUE"]) { --kyt-i: var(--kyt-i-add-to-queue); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="WATCH_LATER"] { --kyt-i: var(--kyt-i-watch-later); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="SHARE"] { --kyt-i: var(--kyt-i-share); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container :is([kyt-icon="HIDE"], [kyt-icon="NOT_INTERESTED"], [kyt-icon="BLOCK"]) { --kyt-i: var(--kyt-i-not-interested); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container :is([kyt-icon="REMOVE"], [kyt-icon="REMOVE_CIRCLE"], [kyt-icon="REMOVE_CIRCLE_OUTLINE"], [kyt-icon="DO_NOT_DISTURB"], [kyt-icon="DO_NOT_DISTURB_ON"]) { --kyt-i: var(--kyt-i-exclude); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 /* Download rows carry no icon type. */
-html[kyt-icons] ytd-popup-container ytd-menu-service-item-download-renderer #primary-entry > yt-icon { --kyt-i: var(--kyt-i-download); --kyt-bg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container ytd-menu-service-item-download-renderer #primary-entry > yt-icon { --kyt-i: var(--kyt-i-download); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 /* Appearance has no stamp: its type depends on the chosen theme. Chevrons are Figma's arrow-right. */
-html[kyt-icons] ytd-popup-container ytd-toggle-theme-compact-link-renderer #primary-icon { --kyt-i: var(--kyt-i-appearance); --kyt-bg: currentColor; --kyt-vis: hidden; }
-html[kyt-icons] ytd-popup-container :is(ytd-compact-link-renderer[kyt-icon2="CHEVRON_RIGHT"] #right-icon, ytd-toggle-theme-compact-link-renderer #secondary-icon) { --kyt-i: var(--kyt-i-arrow-right); --kyt-bg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container ytd-toggle-theme-compact-link-renderer #primary-icon { --kyt-i: var(--kyt-i-appearance); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container :is(ytd-compact-link-renderer[kyt-icon2="CHEVRON_RIGHT"] #right-icon, ytd-toggle-theme-compact-link-renderer #secondary-icon) { --kyt-i: var(--kyt-i-arrow-right); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 
 /* Like / dislike pop when pressed, in place of YouTube's Lottie animation. Compositor-only. */
 html[kyt-icons] ytd-watch-metadata :is(like-button-view-model, dislike-button-view-model) [aria-pressed="true"] .ytSpecButtonShapeNextIcon {

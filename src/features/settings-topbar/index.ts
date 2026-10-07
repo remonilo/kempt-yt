@@ -1,5 +1,5 @@
 import type { Feature } from '../../core/feature.ts';
-import { keep, waitFor } from '../../core/dom.ts';
+import { el, keep, waitFor } from '../../core/dom.ts';
 import { icon } from '../../core/icon.ts';
 import { S } from '../../core/selectors.ts';
 import { local } from '../../core/i18n.ts';
@@ -18,11 +18,9 @@ export const settingsTopbar: Feature = {
     if (!(await call('signedIn'))) return console.info('kyt: signed out, settings-topbar off');
     const masthead = await waitFor(S.masthead, { signal });
     if (!masthead) return;
-    const a = document.createElement('a');
+    const a = el('a', 'kyt-settings', icon('settings'));
     a.href = '/account'; // ponytail: full page load; SPA navigation if it ever feels slow
-    a.className = 'kyt-settings';
     a.title = a.ariaLabel = local(WORDS);
-    a.append(icon('settings'));
     keep(a, masthead, () => {
       const avatar = masthead.querySelector(S.mastheadMenu);
       if (avatar && a.nextElementSibling !== avatar) avatar.before(a);
