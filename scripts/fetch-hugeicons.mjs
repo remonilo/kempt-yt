@@ -21,6 +21,7 @@ const ICONS = {
   feedback: 'MessageSquareWarning',
   'your-videos': 'VideoReplay',
   text: 'TextFont', // popup: Font
+  captions: 'ClosedCaption', // popup: Captions
   // Account menu (masthead avatar)
   'switch-account': 'UserSwitch',
   'sign-out': 'Logout02',

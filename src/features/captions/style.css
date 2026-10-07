@@ -1,0 +1,67 @@
+/* Apple-style captions (PLAN.md §10.34). YouTube writes its caption settings inline, so these win with
+   !important; its Options entry is hidden so it never looks broken. Sizes follow the player's height
+   (cqh of the full-player caption container). */
+html[kyt-captions] .ytp-caption-window-container {
+  container-type: size;
+  --kyt-cap: clamp(12px, 4.2cqh, 44px);
+}
+html[kyt-captions][kyt-captions-size="s"] .ytp-caption-window-container { --kyt-cap: clamp(11px, 3.4cqh, 36px); }
+html[kyt-captions][kyt-captions-size="l"] .ytp-caption-window-container { --kyt-cap: clamp(14px, 5.2cqh, 56px); }
+
+/* YouTube sizes and places the window for its own text (inline width, height, left, margin-left). Ours runs
+   wider, so the default windows are re-centred at their text's width (left/right 0 + fit-content + auto margins
+   centres whatever YouTube writes inline). Auto-captions (rollup) scroll lines out of the top, so they keep
+   their clip and only lose the fixed height. */
+html[kyt-captions] .caption-window:is(.ytp-caption-window-bottom, .ytp-caption-window-top) {
+  left: 0 !important;
+  right: 0 !important;
+  width: fit-content !important;
+  max-width: 90%;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+html[kyt-captions] .caption-window { height: auto !important; }
+html[kyt-captions] .caption-window:not(.ytp-rollup-mode) { overflow: visible !important; }
+
+/* YouTube's background and window colour, wherever its build paints them. Our box is drawn below. */
+html[kyt-captions] :is(.caption-window, .caption-window *) {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+html[kyt-captions] .caption-window .ytp-caption-segment {
+  padding: 0 !important;
+  color: #fff !important;
+  fill: #fff !important;
+  font: 600 var(--kyt-cap) / 1.25 var(--kyt-font, Roboto), Roboto, Arial, sans-serif !important;
+  letter-spacing: -0.01em;
+}
+
+/* Shadow (Apple's Transparent Background): soft shadow, no box. */
+html[kyt-captions][kyt-captions-style="shadow"] .caption-window .ytp-caption-segment {
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.7), 0 1px 6px rgba(0, 0, 0, 0.6) !important;
+}
+html[kyt-captions]:not([kyt-captions-style="shadow"]) .caption-window .ytp-caption-segment { text-shadow: none !important; }
+
+/* Box and Blur: one rounded plate behind the whole caption (the window, which fits the text). */
+html[kyt-captions]:is([kyt-captions-style="box"], [kyt-captions-style="blur"]) .caption-window {
+  padding: 0.3em 0.65em;
+  border-radius: 0.6em;
+  font-size: var(--kyt-cap); /* em above = the caption's size */
+}
+html[kyt-captions][kyt-captions-style="box"] .caption-window { background: rgba(0, 0, 0, 0.6) !important; }
+/* Blur is opt-in: a blur over live video re-renders with every frame (GPU work while captions show). */
+html[kyt-captions][kyt-captions-style="blur"] .caption-window {
+  background: rgba(20, 20, 20, 0.35) !important;
+  backdrop-filter: blur(16px) saturate(1.4);
+}
+
+/* YouTube already slides the window above the controls (250ms in, 100ms out); one even ease both ways. */
+html[kyt-captions] .caption-window.ytp-caption-window-bottom {
+  transition: margin-bottom 200ms cubic-bezier(0.2, 0, 0, 1) !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html[kyt-captions] .caption-window.ytp-caption-window-bottom { transition: none !important; }
+}
+
+/* Settings > Subtitles > Options would do nothing while ours wins. */
+html[kyt-captions] .ytp-panel-options { display: none !important; }

@@ -1,5 +1,6 @@
 import type { Feature } from '../core/feature.ts';
 import { accent } from './accent/index.ts';
+import { captions } from './captions/index.ts';
 import { commentSort } from './comment-sort/index.ts';
 import { font } from './font/index.ts';
 import { grid } from './grid/index.ts';
@@ -17,5 +18,5 @@ import { watchTabs } from './watch-tabs/index.ts';
 
 // A feature's style.css is picked up by build.mjs automatically.
 export const features: Feature[] = [accent, font, selectedBg, subscribeRed, searchBar, icons,
-  sidebar, settingsTopbar, watchLaterBtn, shorts, watchTabs, commentSort,
+  sidebar, settingsTopbar, watchLaterBtn, shorts, watchTabs, captions, commentSort,
   timeline, grid, progressBar];
