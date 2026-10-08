@@ -84,13 +84,24 @@ function fontFace(k: string) {
   return k === 'system' ? 'system-ui' : `"${familyOf(k)}"`;
 }
 
-function number(opt: Extract<Option, { type: 'number' }>, on: (v: number) => void) {
-  const i = el('input', 'kp-number');
-  i.type = 'number';
+function number(opt: Extract<Option, { type: 'number' }>, on: (v: number, live?: boolean) => void) {
+  const i = el('input', opt.slider ? 'kp-range' : 'kp-number');
+  i.type = opt.slider ? 'range' : 'number';
   if (opt.min != null) i.min = String(opt.min);
   if (opt.max != null) i.max = String(opt.max);
+  if (opt.step != null) i.step = String(opt.step);
   i.addEventListener('change', () => Number.isFinite(i.valueAsNumber) && on(i.valueAsNumber));
-  return { el: i, set: (v: unknown) => (i.value = String(v)) };
+  if (!opt.slider) return { el: i, set: (v: unknown) => (i.value = String(v)) };
+
+  // Dragging applies live (throttled by persist); the fill is the accent up to the thumb.
+  const out = el('output', 'kp-range-value');
+  const show = () => {
+    out.textContent = `${i.value}${opt.unit ?? ''}`;
+    i.style.setProperty('--p', String((i.valueAsNumber - Number(i.min)) / (Number(i.max) - Number(i.min))));
+  };
+  i.ariaLabel = opt.label;
+  i.addEventListener('input', () => (show(), on(i.valueAsNumber, true)));
+  return { el: el('div', 'kp-slider', i, out), set: (v: unknown) => ((i.value = String(v)), show()) };
 }
 
 function panel(item: HTMLElement, trigger: HTMLElement, content: HTMLElement) {

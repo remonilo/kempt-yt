@@ -6,7 +6,8 @@ import type { Settings } from './settings.ts';
 export type Option = { label: string; cssVar?: string; parent?: string } & (
   | { type: 'boolean'; default: boolean }
   | { type: 'color'; default: string }
-  | { type: 'number'; default: number; min?: number; max?: number }
+  /** `slider` draws a range input with the value and `unit` beside it instead of a number field. */
+  | { type: 'number'; default: number; min?: number; max?: number; step?: number; slider?: boolean; unit?: string }
   | { type: 'choice'; default: string; choices: Record<string, string> }
 );
 
