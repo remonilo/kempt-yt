@@ -4,8 +4,8 @@ import manifest from '../../../manifest.json';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const repo = 'https://github.com/remonilo/kempt-yt';
 const sponsor = 'https://github.com/sponsors/remonilo';
-// PLACEHOLDER: store listings, once published.
-const firefox = 'https://addons.mozilla.org/firefox/addon/PLACEHOLDER';
+// PLACEHOLDER: Chrome Web Store listing, once published.
+const firefox = 'https://addons.mozilla.org/firefox/addon/kempt-for-youtube/';
 const chrome = 'https://chromewebstore.google.com/detail/PLACEHOLDER';
 const shot = (name: string) => `${base}screenshots/${name}.png`;
 
@@ -15,6 +15,11 @@ const groups = [
     id: 'watch', date: 'Watch page', title: 'Comments one click away',
     text: 'Info, Comments, Videos, Live chat and Ask AI share one panel beside the player. Only the open tab scrolls, so the video stays in view. Comment sort becomes two chips, Watch later gets its own button, and the seek bar can ripple as a wave.',
     shot: 'tabs', docs: 'docs/features/watch-tabs/',
+  },
+  {
+    id: 'captions', date: 'Captions', title: 'Subtitles you can read',
+    text: 'Captions in your font, white and semibold, sized to the player. Pick a soft shadow, a dark box or a blurred plate, at any size from 50 to 200%. They slide up out of the way when the controls show.',
+    shot: 'captions', docs: 'docs/features/captions/',
   },
   {
     id: 'timeline', date: 'Subscriptions', title: 'Your feed, by day',
@@ -28,7 +33,7 @@ const groups = [
   },
   {
     id: 'look', date: 'Look', title: 'One accent, one icon set',
-    text: 'Chips, tabs, the progress bar and Subscribe share one color, and you pick it. A single icon set replaces YouTube\'s three, drawn over its own buttons so they keep working. The search bar becomes one outlined pill, and all text is set in Plus Jakarta Sans or a font you pick.',
+    text: 'Chips, tabs, the progress bar and Subscribe share one color, and you pick it. A single icon set replaces YouTube\'s three in buttons and menus, drawn over YouTube\'s own so they keep working. The search bar becomes one outlined pill, and all text is set in Plus Jakarta Sans or a font you pick.',
     shot: 'look', docs: 'docs/features/look/',
   },
   {

@@ -22,6 +22,7 @@ Click the Kempt icon in the browser toolbar. Changes apply to open YouTube tabs 
 | | [Watch later button](/kempt-yt/docs/features/top-bar/#watch-later-button) | | On |
 | Watch page | [Tabs](/kempt-yt/docs/features/watch-tabs/) | Ask AI on or off; as an icon button or a tab | On |
 | | [Comment sort as buttons](/kempt-yt/docs/features/comment-sort/) | | On |
+| | [Captions](/kempt-yt/docs/features/captions/) | Style Shadow, Box or Blur; Size 50% to 200% | On, Shadow, 100% |
 | | [Wavy progress bar](/kempt-yt/docs/features/progress-bar/) | Animate wave | Off |
 | Feeds | [Hide Shorts](/kempt-yt/docs/features/shorts/) | | On |
 | | [Timeline](/kempt-yt/docs/features/timeline/) | | On |
@@ -39,4 +40,4 @@ Kempt saves settings with `chrome.storage.sync`, so they follow your browser acc
 
 The popup has no list of its own. It reads the same feature list the extension runs (`src/features/index.ts`) and draws one row per feature from its `label`, `hint`, `icon`, `group` and `options`. A new feature appears in the popup with no popup changes.
 
-When a color option names a `cssVar`, Kempt writes it straight onto `<html>` as a CSS variable. Boolean options become attributes such as `kyt-sidebar-hide-you`, which the feature's CSS matches. Live color drags save at most every 400 ms, because `storage.sync` allows 120 writes a minute.
+When a color or number option names a `cssVar`, Kempt writes it straight onto `<html>` as a CSS variable. Number options with `slider: true` draw as a range input and apply while you drag. Boolean options become attributes such as `kyt-sidebar-hide-you`, which the feature's CSS matches. Live drags save at most every 400 ms, because `storage.sync` allows 120 writes a minute.
