@@ -1,37 +1,71 @@
 {
   "manifest_version": 3,
   "name": "Kempt for YouTube",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A consistent redesign of YouTube's UI.",
-  "permissions": ["storage"],
-  "host_permissions": ["https://www.youtube.com/*"],
-  "icons": { "16": "brand/16.png", "32": "brand/32.png", "48": "brand/48.png", "128": "brand/128.png" },
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://www.youtube.com/*"
+  ],
+  "icons": {
+    "16": "brand/16.png",
+    "32": "brand/32.png",
+    "48": "brand/48.png",
+    "128": "brand/128.png"
+  },
   "action": {
     "default_popup": "popup.html",
-    "default_icon": { "16": "brand/16.png", "32": "brand/32.png" }
+    "default_icon": {
+      "16": "brand/16.png",
+      "32": "brand/32.png"
+    }
   },
   "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/*"],
-      "js": ["content.js"],
-      "css": ["content.css"],
+      "matches": [
+        "https://www.youtube.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
       "run_at": "document_start"
     },
     {
-      "matches": ["https://www.youtube.com/*"],
-      "js": ["main-world.js"],
+      "matches": [
+        "https://www.youtube.com/*"
+      ],
+      "js": [
+        "main-world.js"
+      ],
       "run_at": "document_start",
       "world": "MAIN"
     }
   ],
   "web_accessible_resources": [
-    { "resources": ["icons/*.svg", "fonts/*.woff2"], "matches": ["https://www.youtube.com/*"] }
+    {
+      "resources": [
+        "icons/*.svg",
+        "fonts/*.woff2"
+      ],
+      "matches": [
+        "https://www.youtube.com/*"
+      ]
+    }
   ],
   "browser_specific_settings": {
     "gecko": {
       "id": "kempt-yt@hypnoglaze",
       "strict_min_version": "128.0",
-      "data_collection_permissions": { "required": ["none"] }
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
     }
   }
 }
