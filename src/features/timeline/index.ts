@@ -88,13 +88,11 @@ function toolbar(state: { type: Type; query: string }, onChange: () => void, sig
     onChange();
   }, { signal });
 
-  const search = document.createElement('label');
-  search.className = 'kyt-search';
-  const input = document.createElement('input');
+  const input = el('input');
   input.type = 'text';
   input.placeholder = words.search;
   input.addEventListener('input', () => ((state.query = input.value), onChange()), { signal });
-  search.append(icon('search'), input);
+  const search = el('label', 'kyt-search', icon('search'), input);
 
   bar.append(chips, search);
   return bar;

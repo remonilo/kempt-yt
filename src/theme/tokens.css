@@ -14,8 +14,6 @@ html {
   --kyt-hover-bg: var(--kyt-selected-bg); /* hover = selected tint, like YouTube does with grey */
   /* Selected items whose unselected siblings are already grey (chips): the light tint would vanish. */
   --kyt-selected-strong-bg: color-mix(in srgb, var(--kyt-tint) 55%, transparent);
-  --kyt-subscribe-bg: var(--kyt-accent);
-  --kyt-subscribe-fg: #fff;
   --kyt-outline: rgba(0, 0, 0, 0.1);
   --kyt-outline-focus: rgba(0, 0, 0, 0.4);
   --kyt-divider: rgba(0, 0, 0, 0.1);

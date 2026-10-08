@@ -98,22 +98,18 @@ html[kyt-watch-tabs] .kyt-tab:not([hidden]):not(.kyt-tab:not([hidden]) ~ *):not(
   border-radius: 999px;
 }
 
-/* Only the selected tab's content shows. [kyt-tab] is set by the script, so nothing hides before it runs. */
+/* Only the selected tab's content shows. [kyt-tab] is set by the script, so nothing hides before it runs.
+   The playlist panel (Watch later, any list) is part of Videos: it sits above #related in both layouts and
+   hides with it, so it never covers comments. Theater ("none") keeps it beside the title as YouTube does.
+   Likewise anything else YouTube puts in the right column (donation shelf, future shelves) belongs to Videos:
+   another tab keeps only the bar, its own box, #panels (Ask AI, transcript) and live chat, so no shelf stacks
+   under that tab's scroller. A whitelist, so new shelves are covered. In one column these sit under the player. */
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="videos"]) #related,
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="chat"]) #chat-container,
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="info"]) .kyt-tab-info,
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="comments"]) .kyt-tab-comments,
-html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="ai"]) [kyt-ai] {
-  display: none !important;
-}
-/* The playlist panel (Watch later, any list) is part of Videos: it sits above #related in both layouts and
-   hides with it, so it never covers comments. Theater ("none") keeps it beside the title as YouTube does. */
-html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="videos"], [kyt-tab="none"]) #playlist {
-  display: none !important;
-}
-/* Likewise anything else YouTube puts in the right column (donation shelf, future shelves) belongs to Videos:
-   another tab keeps only the bar, its own box, #panels (Ask AI, transcript) and live chat, so no shelf stacks
-   under that tab's scroller. A whitelist, so new shelves are covered. In one column these sit under the player. */
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="ai"]) [kyt-ai],
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="videos"], [kyt-tab="none"]) #playlist,
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="videos"], [kyt-tab="none"]) #secondary-inner > :not(.kyt-tabs, .kyt-tab-info, .kyt-tab-comments, #panels, #chat-container) {
   display: none !important;
 }
@@ -157,25 +153,15 @@ html[kyt-watch-tabs][kyt-watch-tabs-open]::-webkit-scrollbar {
   display: none;
 }
 /* Chat and Ask AI bring their own scrolling: stretch them to the tab instead of their fixed heights. */
-html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab="chat"][is-two-columns_] #chat-container {
+html[kyt-watch-tabs] ytd-watch-flexy[is-two-columns_] :is([kyt-tab="chat"] #chat-container, [kyt-tab="ai"] #panels) {
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
-html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab="chat"][is-two-columns_] #chat-container > #chat {
+html[kyt-watch-tabs] ytd-watch-flexy[is-two-columns_] :is([kyt-tab="chat"] #chat-container > #chat, [kyt-tab="ai"] #panels > [kyt-ai]) {
   flex: 1;
   height: auto !important;
   min-height: 0 !important;
-  max-height: none !important;
-}
-html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab="ai"][is-two-columns_] #panels {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab="ai"][is-two-columns_] #panels > [kyt-ai] {
-  flex: 1;
-  height: auto !important;
   max-height: none !important;
 }
 

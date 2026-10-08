@@ -33,22 +33,27 @@ html[kyt-sidebar-hide-courses] .kyt-nav-item[data-icon^='COURSE'] {
   display: flex;
   align-items: center;
 }
-.kyt-nav-link {
+:is(.kyt-nav-link, .kyt-nav-arrow, .kyt-mini-link) {
   display: flex;
-  flex: 1;
-  min-width: 0;
   align-items: center;
-  gap: 24px;
   height: 40px;
-  padding: 0 12px;
   border: 0;
   border-radius: var(--kyt-radius);
   background: none;
   color: var(--kyt-fg);
+  cursor: pointer;
+}
+:is(.kyt-nav-link, .kyt-nav-arrow, .kyt-mini-link):hover { background-color: var(--kyt-hover-bg); }
+:is(.kyt-nav-link, .kyt-mini-link)[aria-current='page'] { background-color: var(--kyt-selected-bg); }
+:is(.kyt-nav-link, .kyt-mini-link)[aria-current='page'] .kyt-icon { color: var(--kyt-accent); }
+.kyt-nav-link {
+  flex: 1;
+  min-width: 0;
+  gap: 24px;
+  padding: 0 12px;
   font: 400 14px / 20px Roboto, Arial, sans-serif;
   text-align: start;
   text-decoration: none;
-  cursor: pointer;
 }
 .kyt-nav-title {
   flex: 1;
@@ -73,26 +78,13 @@ html[kyt-sidebar-hide-courses] .kyt-nav-item[data-icon^='COURSE'] {
   background: var(--kyt-outline);
 }
 .kyt-nav-arrow {
-  display: flex;
   flex: none;
-  align-items: center;
   justify-content: center;
   width: 40px;
-  height: 40px;
   padding: 0;
-  border: 0;
-  border-radius: var(--kyt-radius);
-  background: none;
-  color: var(--kyt-fg);
-  cursor: pointer;
 }
-:is(.kyt-nav-link, .kyt-nav-arrow):hover { background-color: var(--kyt-hover-bg); }
-.kyt-nav-link[aria-current='page'] {
-  background-color: var(--kyt-selected-bg);
-  font-weight: 500;
-}
+.kyt-nav-link[aria-current='page'] { font-weight: 500; }
 .kyt-nav-link[aria-current='page']:hover { background-color: var(--kyt-selected-hover-bg); }
-.kyt-nav-link[aria-current='page'] .kyt-icon { color: var(--kyt-accent); }
 
 /* Dropdowns animate their height with grid rows 0fr -> 1fr (layout for 200ms per click, nothing while idle).
    Closed lists are visibility: hidden so their links leave the tab order once the close finishes. */
@@ -207,18 +199,7 @@ html[kyt-sidebar] .kyt-mini ~ #items { display: none; }
 .kyt-mini-group + .kyt-mini-group { border-top: 1px solid var(--kyt-divider); }
 .kyt-mini .kyt-nav-item { display: contents; }
 .kyt-mini-link {
-  display: flex;
-  align-items: center;
   justify-content: center;
   width: 48px;
-  height: 40px;
   padding: 0;
-  border: 0;
-  border-radius: var(--kyt-radius);
-  background: none;
-  color: var(--kyt-fg);
-  cursor: pointer;
 }
-.kyt-mini-link:hover { background-color: var(--kyt-hover-bg); }
-.kyt-mini-link[aria-current='page'] { background-color: var(--kyt-selected-bg); }
-.kyt-mini-link[aria-current='page'] .kyt-icon { color: var(--kyt-accent); }
