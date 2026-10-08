@@ -79,7 +79,6 @@ button { cursor: pointer; }
 .kp-item.open > .kp-row .kp-chevron .kp-icon { rotate: 180deg; }
 
 .kp-dot { flex: none; width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; background: var(--kp-accent); box-shadow: 0 0 0 2px var(--kp-bg), 0 0 0 3px rgba(255, 255, 255, 0.3); }
-.kp-options .kp-dot { background: var(--kp-color, var(--kp-accent)); }
 
 .kp-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 220ms var(--kp-ease); }
 .kp-item.open > .kp-panel { grid-template-rows: 1fr; }
@@ -123,9 +122,29 @@ button { cursor: pointer; }
 .kp-list button[aria-checked="true"] .kp-icon { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .kp-list button, .kp-list .kp-icon { transition: none; } }
 .kp-number { width: 64px; padding: 4px 8px; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; background: none; }
+.kp-slider { display: flex; align-items: center; gap: 8px; width: 200px; }
+.kp-range {
+  appearance: none;
+  flex: 1;
+  min-width: 0;
+  height: 4px;
+  margin: 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--kp-accent) calc(var(--p, 0) * 100%), rgba(255, 255, 255, 0.15) 0);
+  cursor: pointer;
+}
+.kp-range::-moz-range-thumb { width: 14px; height: 14px; border: 0; border-radius: 50%; background: #fff; transition: scale 150ms var(--kp-ease); }
+.kp-range::-webkit-slider-thumb { appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: scale 150ms var(--kp-ease); }
+.kp-range:active::-moz-range-thumb { scale: 1.2; }
+.kp-range:active::-webkit-slider-thumb { scale: 1.2; }
+.kp-range-value { width: 36px; color: var(--kp-muted); font-size: 12px; font-variant-numeric: tabular-nums; text-align: right; }
+/* Separate rules: a selector list with an unknown vendor pseudo drops the whole rule. */
+@media (prefers-reduced-motion: reduce) {
+  .kp-range::-moz-range-thumb { transition: none; }
+  .kp-range::-webkit-slider-thumb { transition: none; }
+}
 
 .kp { padding: 6px 12px 14px; }
-.kp-options .kp { padding: 0 0 8px; }
 .kp-swatches { display: flex; justify-content: space-between; margin-bottom: 14px; }
 .kp-swatch { width: 26px; height: 26px; padding: 0; border: 0; border-radius: 50%; transition: box-shadow 150ms; }
 .kp-swatch:hover { box-shadow: 0 0 0 2px var(--kp-bg), 0 0 0 4px rgba(255, 255, 255, 0.35); }

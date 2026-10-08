@@ -1,24 +1,22 @@
 /* Apple-style captions (PLAN.md §10.34). YouTube writes its caption settings inline, so these win with
    !important; its Options entry is hidden so it never looks broken. Sizes follow the player's height
-   (cqh of the full-player caption container). */
+   (cqh of the full-player caption container), times the popup's Size (--kyt-captions-scale, percent). */
 html[kyt-captions] .ytp-caption-window-container {
   container-type: size;
-  --kyt-cap: clamp(12px, 4.2cqh, 44px);
+  --kyt-cap-k: calc(var(--kyt-captions-scale, 100) / 100);
+  --kyt-cap: clamp(calc(13px * var(--kyt-cap-k)), calc(4.6cqh * var(--kyt-cap-k)), calc(48px * var(--kyt-cap-k)));
 }
-html[kyt-captions][kyt-captions-size="s"] .ytp-caption-window-container { --kyt-cap: clamp(11px, 3.4cqh, 36px); }
-html[kyt-captions][kyt-captions-size="l"] .ytp-caption-window-container { --kyt-cap: clamp(14px, 5.2cqh, 56px); }
 
-/* YouTube sizes and places the window for its own text (inline width, height, left, margin-left). Ours runs
-   wider, so the default windows are re-centred at their text's width (left/right 0 + fit-content + auto margins
-   centres whatever YouTube writes inline). Auto-captions (rollup) scroll lines out of the top, so they keep
-   their clip and only lose the fixed height. */
-html[kyt-captions] .caption-window:is(.ytp-caption-window-bottom, .ytp-caption-window-top) {
-  left: 0 !important;
-  right: 0 !important;
-  width: fit-content !important;
+/* YouTube sizes the window for its own text. A centre-anchored window is written as `left: <anchor>%;
+   width: Wpx; margin-left: -W/2px`: keep its left (so its placement and dragging still work), take the
+   text's width and centre on the anchor with translate. Windows anchored at an edge (no negative margin)
+   keep YouTube's left and width. Auto-captions (rollup) scroll lines out of the top, so they keep their
+   clip and only lose the fixed height. */
+html[kyt-captions] .caption-window[style*="margin-left: -"] {
+  width: max-content !important;
   max-width: 90%;
-  margin-left: auto !important;
-  margin-right: auto !important;
+  margin-left: 0 !important;
+  translate: -50% 0;
 }
 html[kyt-captions] .caption-window { height: auto !important; }
 html[kyt-captions] .caption-window:not(.ytp-rollup-mode) { overflow: visible !important; }
