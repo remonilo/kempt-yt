@@ -54,11 +54,12 @@ One accent color and icon set, and less clutter. Every change is a switch you ca
 ## Features
 
 - Watch page tabs for info, comments, videos, live chat and Ask AI, beside the player <details> <summary><sup>click to see the tabs</sup></summary><img src="site/public/screenshots/tabs.png" alt="Watch page tabs" /></details>
+- Apple-style captions in your font: Shadow, Box or Blur, sized 50 to 200% <details> <summary><sup>click to see the captions</sup></summary><img src="site/public/screenshots/captions.png" alt="Captions" /></details>
 - Subscriptions timeline with date headers, All / Videos / Live / Shorts chips and a search box
   - History gets the same date headers
 - Sidebar with dropdowns for Explore, Subscriptions and Playlists
   - hide the entries you never use
-- One accent color and one icon set across chips, tabs, the progress bar, Subscribe and every button
+- One accent color and one icon set across chips, tabs, the progress bar, Subscribe, every button and popup menu
 - Font choice, bundled in the extension
   - Plus Jakarta Sans by default
   - Inter, Geist, Figtree or your system font instead
@@ -147,7 +148,7 @@ Kempt is free and I maintain it alone. [Sponsor on GitHub](https://github.com/sp
 
 <!---------------------------------------------------------------------------->
 
-[firefox_link]: https://addons.mozilla.org/firefox/addon/PLACEHOLDER
+[firefox_link]: https://addons.mozilla.org/firefox/addon/kempt-for-youtube/
 [chrome_link]: https://chromewebstore.google.com/detail/PLACEHOLDER
 [install_link]: https://remonilo.github.io/kempt-yt/docs/installation/
 [settings_link]: https://remonilo.github.io/kempt-yt/docs/settings/

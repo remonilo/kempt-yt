@@ -38,6 +38,7 @@ export default defineConfig({
           items: [
             { label: 'Watch page tabs', slug: 'docs/features/watch-tabs' },
             { label: 'Timeline', slug: 'docs/features/timeline' },
+            { label: 'Captions', slug: 'docs/features/captions' },
             { label: 'Wavy progress bar', slug: 'docs/features/progress-bar' },
             { label: 'Grid size', slug: 'docs/features/grid' },
             { label: 'Sidebar', slug: 'docs/features/sidebar' },

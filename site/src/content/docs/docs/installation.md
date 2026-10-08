@@ -5,7 +5,7 @@ description: Install Kempt from a store or build it from source.
 
 ## From a store
 
-- For Firefox 128 or later, use [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/PLACEHOLDER).
+- For Firefox 128 or later, use [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/kempt-for-youtube/).
 - For Chrome, Edge, Brave and other Chromium browsers, use the [Chrome Web Store](https://chromewebstore.google.com/detail/PLACEHOLDER).
 
 Reload any YouTube tab that was open before you installed. Kempt starts with every feature on except Grid size.

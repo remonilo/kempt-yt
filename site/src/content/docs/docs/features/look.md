@@ -15,7 +15,7 @@ YouTube styles itself with CSS variables such as `--yt-spec-static-brand-red`. K
 
 ## Font
 
-One typeface for all of YouTube's text, Kempt's own labels included. The default is Plus Jakarta Sans. The popup also offers Inter, Geist, Figtree and System (your operating system's UI font). Captions keep the font you set in YouTube's caption settings.
+One typeface for all of YouTube's text, Kempt's own labels included. The default is Plus Jakarta Sans. The popup also offers Inter, Geist, Figtree and System (your operating system's UI font). With [Captions](/kempt-yt/docs/features/captions/) on, captions use it too; with Captions off they keep the font set in YouTube's caption settings.
 
 The fonts ship inside the extension as variable WOFF2 files, so nothing loads from a font service. The feature adds one `<style>` of `@font-face` rules, split by `unicode-range` (Latin, Latin Extended, Cyrillic, Greek, Vietnamese where the font has them). The browser downloads only the faces the page's text needs: about 50 KB for an English page. One CSS rule sets `font-family` on every element in the page, with YouTube's own `Roboto, Arial, sans-serif` behind it, so Japanese, Korean or Hindi text falls back to YouTube's fonts. Each font family name carries a `kyt` prefix, so a copy you installed yourself never stands in.
 
@@ -27,7 +27,7 @@ The tint is translucent, `color-mix(in srgb, accent 40%, #fff)` at 14% in dark m
 
 ## Subscribe button
 
-Subscribe is the accent with white text. Once you're subscribed, the button goes back to neutral.
+Subscribe is the accent. Its text is white on a dark accent and black on a light one: the CSS reads the accent's OKLCH lightness and switches at 0.68. Once you're subscribed, the button goes back to neutral.
 
 ## Search bar
 

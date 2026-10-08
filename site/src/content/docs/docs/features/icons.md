@@ -3,7 +3,7 @@ title: Icons
 description: One icon set across YouTube, drawn over YouTube's own buttons.
 ---
 
-YouTube mixes three icon styles. Kempt replaces them with one set of 1.5px rounded strokes across the top bar, the sidebar, the action row under the video (like, dislike, share, save, download, clip, more), the Create button and the subscribe bell.
+YouTube mixes three icon styles. Kempt replaces them with one set of 1.5px rounded strokes across the top bar, the sidebar, the action row under the video (like, dislike, share, save, download, clip, more), the Create button, the subscribe bell, and the rows of popup menus: the account menu, the ⋯ menu under the video and the ⋯ menu on video cards.
 
 Pressed like and dislike buttons use the filled version of their icon. The bell shows its three states: all notifications, personalized, none.
 
@@ -20,7 +20,7 @@ Kempt never replaces a YouTube button. It masks the icon inside it:
 
 YouTube's button keeps its own click handler and tooltip. Turning the feature off removes the mask, and the original icon shows again.
 
-Kempt finds the top bar and the like and dislike buttons by their position in the page. Share, Save, Download and Clip have localized labels, so the [page bridge](/kempt-yt/docs/internals/page-bridge/) stamps each with its icon type from YouTube's data (`kyt-icon="SHARE"`), which is the same in every language. The bell has one animated icon for all states, so the bridge stamps its state too (`kyt-bell="all"`).
+Kempt finds the top bar and the like and dislike buttons by their position in the page. Share, Save, Download and Clip have localized labels, so the [page bridge](/kempt-yt/docs/internals/page-bridge/) stamps each with its icon type from YouTube's data (`kyt-icon="SHARE"`), which is the same in every language. The bell has one animated icon for all states, so the bridge stamps its state too (`kyt-bell="all"`). Menu rows are stamped the same way when a menu opens. Video card menus carry no icon type, so their rows are matched by title from the card's data.
 
 ## Sources
 
