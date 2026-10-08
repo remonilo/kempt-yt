@@ -1,7 +1,8 @@
 /* Unsubscribed state only: YouTube renders it Filled; Subscribed is Tonal and stays neutral. */
 html[kyt-subscribe-red] :is(ytd-subscribe-button-renderer, yt-subscribe-button-view-model) button.ytSpecButtonShapeNextFilled {
-  background-color: var(--kyt-subscribe-bg) !important;
-  color: var(--kyt-subscribe-fg) !important;
+  background-color: var(--kyt-accent) !important;
+  /* Black text on light accents, white on dark: OKLCH lightness 0.68 is the switch point. */
+  color: oklch(from var(--kyt-accent) clamp(0, (0.68 - l) * 1000, 1) 0 0) !important;
 }
 html[kyt-subscribe-red] :is(ytd-subscribe-button-renderer, yt-subscribe-button-view-model) button.ytSpecButtonShapeNextFilled:hover {
   filter: brightness(1.12);
