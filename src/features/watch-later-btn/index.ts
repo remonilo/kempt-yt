@@ -1,5 +1,5 @@
 import type { Feature } from '../../core/feature.ts';
-import { keep, waitFor } from '../../core/dom.ts';
+import { el, keep, waitFor } from '../../core/dom.ts';
 import { icon, setIcon } from '../../core/icon.ts';
 import { S } from '../../core/selectors.ts';
 import { local } from '../../core/i18n.ts';
@@ -19,11 +19,9 @@ export const watchLaterBtn: Feature = {
     if (!(await call('signedIn'))) return console.info('kyt: signed out, watch-later-btn off');
 
     // Reuse YouTube's own button classes so it matches Share/Save exactly.
-    const btn = document.createElement('button');
-    btn.className = 'ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono ytSpecButtonShapeNextSizeM ytSpecButtonShapeNextIconButton kyt-wl';
-    btn.title = btn.ariaLabel = local(WORDS);
     const ico = icon('watch-later');
-    btn.append(ico);
+    const btn = el('button', 'ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono ytSpecButtonShapeNextSizeM ytSpecButtonShapeNextIconButton kyt-wl', ico);
+    btn.title = btn.ariaLabel = local(WORDS);
 
     let videoId = '';
     let saved = false;

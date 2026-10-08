@@ -1,4 +1,4 @@
-import { cfg, endpoints, sleep } from './youtube.ts';
+import { cfg, endpoints, sleep, walk } from './youtube.ts';
 
 // Icon types (SHARE, PLAYLIST_ADD) are the same in every UI language.
 function iconName(el: any): string | undefined {
@@ -24,12 +24,13 @@ const MENU_ITEMS = 'ytd-compact-link-renderer, ytd-menu-service-item-renderer, y
 const CARDS = 'yt-lockup-view-model, ytm-shorts-lockup-view-model, ytm-shorts-lockup-view-model-v2';
 let cardMenu: Map<string, string> | null = null;
 
-function menuItems(v: any, out = new Map<string, string>(), depth = 0) {
-  if (!v || typeof v !== 'object' || depth > 40) return out;
-  const it = v.listItemViewModel;
-  const n = it?.leadingImage?.sources?.[0]?.clientResource?.imageName;
-  if (it?.title?.content && n) out.set(it.title.content, n);
-  for (const x of Object.values(v)) menuItems(x, out, depth + 1);
+function menuItems(v: any) {
+  const out = new Map<string, string>();
+  for (const x of walk(v)) {
+    const it = x.listItemViewModel;
+    const n = it?.leadingImage?.sources?.[0]?.clientResource?.imageName;
+    if (it?.title?.content && n) out.set(it.title.content, n);
+  }
   return out;
 }
 
@@ -89,6 +90,12 @@ function keepStamped(root: Element, kind: string, fn: () => void, init: Mutation
   new MutationObserver(fn).observe(root, init);
 }
 
+function watchRoot(sel: string, kind: string, fn: (root: Element) => void, init?: MutationObserverInit) {
+  const root = document.querySelector(sel);
+  if (root) keepStamped(root, kind, () => fn(root), init);
+  return !!root;
+}
+
 export const core = {
 
   /** ytcfg's own login flag; cookies can be hidden from the page (Firefox privacy settings, containers). */
@@ -99,34 +106,19 @@ export const core = {
   },
 
   // Idempotent: several features can stamp the same root.
-  stamp(sel: string) {
-    const root = document.querySelector(sel);
-    if (root) keepStamped(root, 'icon', () => stampIcons(root));
-    return !!root;
-  },
+  stamp: (sel: string) => watchRoot(sel, 'icon', stampIcons),
 
   // Items appear when a menu opens, so this watches the popup container (small, only menus and dialogs live there).
+  // Re-used rows may only swap their text, hence characterData.
   stampMenus(sel: string) {
-    const root = document.querySelector(sel);
-    if (!root) return false;
-    // Re-used rows may only swap their text, hence characterData.
-    keepStamped(root, 'menus', () => stampMenus(root), { childList: true, subtree: true, characterData: true });
     document.addEventListener('click', onClick, { capture: true }); // same listener twice is a no-op
-    return true;
+    return watchRoot(sel, 'menus', stampMenus, { childList: true, subtree: true, characterData: true });
   },
 
   // aria-label changes with the state, the cheap signal that data changed.
-  stampBell(sel: string) {
-    const root = document.querySelector(sel);
-    if (root) keepStamped(root, 'bell', () => stampBell(root), { childList: true, subtree: true, attributeFilter: ['aria-label'] });
-    return !!root;
-  },
+  stampBell: (sel: string) => watchRoot(sel, 'bell', stampBell, { childList: true, subtree: true, attributeFilter: ['aria-label'] }),
 
-  stampTabs(sel: string) {
-    const root = document.querySelector(sel);
-    if (root) keepStamped(root, 'tabs', () => stampTabs(root), { childList: true, subtree: true, attributeFilter: ['tab-title'] });
-    return !!root;
-  },
+  stampTabs: (sel: string) => watchRoot(sel, 'tabs', stampTabs, { childList: true, subtree: true, attributeFilter: ['tab-title'] }),
 
   navigate(url: string) {
     const videoId = new URL(url, location.origin).searchParams.get('v');
