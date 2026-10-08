@@ -1,13 +1,15 @@
 // Bundles TS entries, concatenates CSS (tokens + every features/*/style.css), copies statics into dist/.
 import * as esbuild from 'esbuild';
-import { cp, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { watch } from 'node:fs';
 
 const dev = process.argv.includes('--watch');
 const out = 'dist';
 
 async function css() {
-  const dirs = (await readdir('src/features', { withFileTypes: true })).filter((d) => d.isDirectory());
+  // Sorted: readdir order is filesystem-dependent (Linux ext4 isn't alphabetical), and order is cascade order.
+  const dirs = (await readdir('src/features', { withFileTypes: true })).filter((d) => d.isDirectory()).sort((a, b) => (a.name < b.name ? -1 : 1));
   const files = ['src/theme/tokens.css', ...dirs.map((d) => `src/features/${d.name}/style.css`)];
   const parts = await Promise.all(files.map((f) => readFile(f, 'utf8').catch(() => '')));
   await writeFile(`${out}/content.css`, parts.join('\n'));
@@ -24,6 +26,8 @@ async function statics() {
   await css();
 }
 
+if (!dev) await rm(out, { recursive: true, force: true }); // no stale files from older builds in the package
+
 const ctx = await esbuild.context({
   entryPoints: { content: 'src/content.ts', 'main-world': 'src/main-world.ts', popup: 'src/popup/popup.ts' },
   bundle: true,
@@ -36,12 +40,19 @@ const ctx = await esbuild.context({
   plugins: [
     { name: 'statics', setup: (b) => b.onEnd(statics) },
     {
-      // `import BUILD from 'kyt:build'`: unique per build, so a stale main-world.js left in a tab by an
-      // extension reload (Firefox keeps them) can't answer the new content.js's bridge calls.
+      // `import BUILD from 'kyt:build'`: changes with the code, so a stale main-world.js left in a tab by an
+      // extension reload (Firefox keeps them) can't answer the new content.js's bridge calls. A hash of src/
+      // rather than a timestamp, so AMO reviewers rebuilding the source zip get the same bytes.
       name: 'build-id',
       setup(b) {
         let id = '';
-        b.onStart(() => { id = Date.now().toString(36); });
+        b.onStart(async () => {
+          const h = createHash('sha256');
+          for (const f of (await readdir('src', { recursive: true, withFileTypes: true })).filter((e) => e.isFile() && e.name !== '.DS_Store').map((e) => `${e.parentPath}/${e.name}`).sort()) {
+            h.update(f.replaceAll('\\', '/')).update(await readFile(f));
+          }
+          id = h.digest('hex').slice(0, 10);
+        });
         b.onResolve({ filter: /^kyt:build$/ }, () => ({ path: 'build', namespace: 'kyt' }));
         b.onLoad({ filter: /.*/, namespace: 'kyt' }, () => ({ contents: `export default ${JSON.stringify(id)}` }));
       },
