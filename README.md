@@ -20,7 +20,7 @@
 
 ### A kempt and consistent redesign of YouTube
 
-One accent color and icon set, and less clutter. Every change is a switch you can turn off.
+One accent color and icon set. Every change is a switch you can turn off.
 
 </div>
 
