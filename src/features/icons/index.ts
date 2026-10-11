@@ -16,7 +16,9 @@ const NAMES = ['menu', 'arrow-left', 'search', 'mic', 'close', 'add', 'notifs', 
   // player controls and its settings menu
   'play', 'pause', 'backward', 'next', 'volume', 'volume-muted', 'cc', 'cc-selected', 'theater', 'theater-selected',
   'fullscreen', 'fullscreen-selected', 'pip', 'cast', 'ambient-mode', 'annotations', 'sleep-timer', 'speed', 'quality-hd',
-  'stable-audio', 'audio-channel', 'comments'];
+  'stable-audio', 'audio-channel', 'comments',
+  // channel header, About dialog (...more), posts
+  'link', 'info', 'date', 'mail', 'phone', 'people', 'views', 'your-videos'];
 
 export const icons: Feature = {
   id: 'icons',

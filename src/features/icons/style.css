@@ -10,7 +10,12 @@ html[kyt-icons] :is(
   ytd-masthead ytd-notification-topbar-button-renderer .ytSpecIconBadgeShapeIcon,
   ytd-masthead ytd-topbar-menu-button-renderer yt-icon-button yt-icon,
   ytd-watch-metadata :is(like-button-view-model, dislike-button-view-model) .ytSpecButtonShapeNextIcon,
-  ytd-comment-engagement-bar :is(#like-button, #dislike-button) .ytSpecButtonShapeNextIcon,
+  :is(ytd-comment-engagement-bar, ytd-comment-action-buttons-renderer) :is(#like-button, #dislike-button) .ytSpecButtonShapeNextIcon,
+  ytd-comment-action-buttons-renderer :is(#share-button, #reply-button-end) .ytSpecButtonShapeNextIcon,
+  ytd-engagement-panel-title-header-renderer #visibility-button .ytSpecButtonShapeNextIcon,
+  ytd-about-channel-renderer :is(tr yt-icon:is([icon="mail"], [icon="phone"], [icon="info"], [icon="youtube"], [icon="privacy_public"], [icon="info_outline"], [icon="person_radar"], [icon="my_videos"], [icon="trending_up"]), #share-channel .ytSpecButtonShapeNextIcon),
+  yt-page-header-view-model :is(yt-attribution-view-model .ytAttributedStringImageElement, a[href$="/community"] .ytSpecButtonShapeNextIcon),
+  ytd-expandable-tab-renderer #icon-button yt-icon,
   ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"], [kyt-icon="CONTENT_CUT"], [kyt-icon="SPARK"], [kyt-icon="MONEY_HEART"]) .ytSpecButtonShapeNextIcon,
   ytd-watch-metadata ytd-menu-renderer > #button-shape .ytSpecButtonShapeNextIcon,
   ytd-watch-metadata ytd-subscription-notification-toggle-button-renderer-next .ytSpecButtonShapeNextIcon
@@ -50,15 +55,19 @@ html[kyt-icons] ytd-watch-metadata like-button-view-model .ytSpecButtonShapeNext
 html[kyt-icons] ytd-watch-metadata like-button-view-model [aria-pressed="true"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-liked-selected); }
 html[kyt-icons] ytd-watch-metadata dislike-button-view-model .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-dislike); }
 html[kyt-icons] ytd-watch-metadata dislike-button-view-model [aria-pressed="true"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-dislike-selected); }
-/* Comments (replies, engagement panel and fullscreen panel too): same icons in YouTube's 18px box. */
-html[kyt-icons] ytd-comment-engagement-bar #like-button .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-liked); }
-html[kyt-icons] ytd-comment-engagement-bar #like-button [aria-pressed="true"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-liked-selected); }
-html[kyt-icons] ytd-comment-engagement-bar #dislike-button .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-dislike); }
-html[kyt-icons] ytd-comment-engagement-bar #dislike-button [aria-pressed="true"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-dislike-selected); }
+/* Comments (replies, engagement panel and fullscreen panel too): same icons in YouTube's 18px box. Posts (channel
+   Posts tab, Community page, /post/) use the older ytd-comment-action-buttons-renderer with the same ids, plus Share
+   and a Comments link with its count. */
+html[kyt-icons] :is(ytd-comment-engagement-bar, ytd-comment-action-buttons-renderer) #like-button .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-liked); }
+html[kyt-icons] :is(ytd-comment-engagement-bar, ytd-comment-action-buttons-renderer) #like-button [aria-pressed="true"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-liked-selected); }
+html[kyt-icons] :is(ytd-comment-engagement-bar, ytd-comment-action-buttons-renderer) #dislike-button .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-dislike); }
+html[kyt-icons] :is(ytd-comment-engagement-bar, ytd-comment-action-buttons-renderer) #dislike-button [aria-pressed="true"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-dislike-selected); }
+html[kyt-icons] ytd-comment-action-buttons-renderer #share-button .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-share); }
+html[kyt-icons] ytd-comment-action-buttons-renderer #reply-button-end .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-comments); }
 /* Figma comment toolbar: like, count and dislike as one 32px pill split by a 1x28 divider, Reply in its own pill.
    Three sibling pieces share the background, so no wrapper is added. Hover tints the segment like the watch tabs
    (like + count, dislike, Reply) in place of YouTube's circle. */
-html[kyt-icons] ytd-comment-engagement-bar {
+html[kyt-icons] :is(ytd-comment-engagement-bar, ytd-comment-action-buttons-renderer) {
   margin-top: 8px !important; /* YouTube's 4px looks cramped under the text */
   & #toolbar { margin-left: 0; align-items: center; }
   & :is(#like-button, #vote-count-middle, #dislike-button) { background-color: var(--kyt-pill-bg); height: 32px; }
@@ -72,7 +81,7 @@ html[kyt-icons] ytd-comment-engagement-bar {
     background-size: 1px 28px;
     background-repeat: no-repeat;
   }
-  & :is(#like-button, #dislike-button, #reply-button-end) yt-touch-feedback-shape { display: none; }
+  & :is(#like-button, #dislike-button) yt-touch-feedback-shape { display: none; }
   & :is(#like-button, #dislike-button) button { background: transparent !important; }
   & #toolbar:has(#like-button:hover) :is(#like-button, #vote-count-middle) { background-color: var(--kyt-hover-bg); }
   & #dislike-button:hover { background-color: var(--kyt-hover-bg); }
@@ -80,11 +89,26 @@ html[kyt-icons] ytd-comment-engagement-bar {
   & #reply-dialog:has(> :not(template, dom-if, ps-dom-if)) { padding-top: 12px; }
   & #creator-heart { margin-left: 12px; }
   & #reply-button-end { margin-left: 20px; }
-  & #reply-button-end button {
+  & #reply-button-end :is(button, a) {
     height: 32px; padding: 0 16px; border-radius: 16px; background: var(--kyt-pill-bg);
     &:hover { background: var(--kyt-hover-bg); }
   }
 }
+/* Posts: Share and Comments as pills after like/dislike, 8px apart. YouTube pulls the toolbar 8px left and keeps
+   margins on the empty heart slot and both buttons. */
+html[kyt-icons] ytd-comment-action-buttons-renderer {
+  & #like-button { margin-left: 0 !important; }
+  & #creator-heart:not(:has(*)) { display: none; }
+  & :is(#share-button, #reply-button-end) { margin: 0 0 0 8px; & ytd-button-renderer { margin: 0 !important; } }
+  & #share-button button {
+    width: 32px; height: 32px; border-radius: 50%; background: var(--kyt-pill-bg);
+    &:hover { background: var(--kyt-hover-bg); }
+  }
+  & :is(#share-button, #reply-button-end) yt-touch-feedback-shape { display: none; }
+}
+/* Channel Home's Posts shelf: the fixed-height card ends at the 40px toolbar, so the 32px pills sat 4px from its
+   border. Padding on the card (content-box) grows it; padding on the toolbar pushed the toolbar out of tall cards. */
+html[kyt-icons] ytd-post-renderer:has(ytd-comment-action-buttons-renderer) { padding-bottom: 12px; }
 html[kyt-icons] ytd-watch-metadata [kyt-icon="SHARE"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-share); }
 html[kyt-icons] ytd-watch-metadata [kyt-icon="PLAYLIST_ADD"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-save); }
 html[kyt-icons] ytd-watch-metadata [kyt-icon="OFFLINE_DOWNLOAD"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-download); }
@@ -99,6 +123,26 @@ html[kyt-icons] ytd-watch-metadata ytd-subscription-notification-toggle-button-r
 html[kyt-icons] ytd-watch-metadata ytd-menu-renderer > #button-shape .ytSpecButtonShapeNextIcon {
   --kyt-i: var(--kyt-i-more);
   rotate: 90deg; /* Figma has only the vertical ⋮; the row's is horizontal */
+}
+
+/* Channel pages. Header: the first link's chain, the Community button (by its href) and the tab row's search. */
+html[kyt-icons] yt-page-header-view-model yt-attribution-view-model .ytAttributedStringImageElement { --kyt-i: var(--kyt-i-link); }
+html[kyt-icons] yt-page-header-view-model a[href$="/community"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-people); }
+html[kyt-icons] ytd-expandable-tab-renderer #icon-button yt-icon { --kyt-i: var(--kyt-i-search); }
+/* Close on engagement panels: the About dialog (...more), the watch page's description and comments panels. */
+html[kyt-icons] ytd-engagement-panel-title-header-renderer #visibility-button .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-close); }
+/* About dialog rows: yt-icon carries its type in the icon attribute. Unmapped types are left out of the mask list. */
+html[kyt-icons] ytd-about-channel-renderer {
+  & yt-icon[icon="mail"] { --kyt-i: var(--kyt-i-mail); }
+  & yt-icon[icon="phone"] { --kyt-i: var(--kyt-i-phone); }
+  & yt-icon[icon="info"] { --kyt-i: var(--kyt-i-info); }
+  & yt-icon[icon="youtube"] { --kyt-i: var(--kyt-i-link); } /* the channel URL */
+  & yt-icon[icon="privacy_public"] { --kyt-i: var(--kyt-i-globe); } /* country */
+  & yt-icon[icon="info_outline"] { --kyt-i: var(--kyt-i-date); } /* joined */
+  & yt-icon[icon="person_radar"] { --kyt-i: var(--kyt-i-people); }
+  & yt-icon[icon="my_videos"] { --kyt-i: var(--kyt-i-your-videos); }
+  & yt-icon[icon="trending_up"] { --kyt-i: var(--kyt-i-views); }
+  & #share-channel .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-share); }
 }
 
 /* Popup menus: the account menu (masthead avatar) and the ⋯ menus. stampMenus sets kyt-icon="<type>" on each row
@@ -139,14 +183,14 @@ html[kyt-icons] ytd-popup-container ytd-toggle-theme-compact-link-renderer #prim
 html[kyt-icons] ytd-popup-container :is(ytd-compact-link-renderer[kyt-icon2="CHEVRON_RIGHT"] #right-icon, ytd-toggle-theme-compact-link-renderer #secondary-icon) { --kyt-i: var(--kyt-i-arrow-right); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 
 /* Like / dislike pop when pressed, in place of YouTube's Lottie animation. Compositor-only; runs on the pressed one only. */
-html[kyt-icons] :is(ytd-watch-metadata :is(like-button-view-model, dislike-button-view-model), ytd-comment-engagement-bar :is(#like-button, #dislike-button)) [aria-pressed="true"] .ytSpecButtonShapeNextIcon {
+html[kyt-icons] :is(ytd-watch-metadata :is(like-button-view-model, dislike-button-view-model), :is(ytd-comment-engagement-bar, ytd-comment-action-buttons-renderer) :is(#like-button, #dislike-button)) [aria-pressed="true"] .ytSpecButtonShapeNextIcon {
   animation: kyt-icon-pop 300ms ease-out;
 }
 @keyframes kyt-icon-pop {
   40% { transform: scale(1.25); }
 }
 @media (prefers-reduced-motion: reduce) {
-  html[kyt-icons] :is(ytd-watch-metadata, ytd-comment-engagement-bar) .ytSpecButtonShapeNextIcon { animation: none; }
+  html[kyt-icons] :is(ytd-watch-metadata, ytd-comment-engagement-bar, ytd-comment-action-buttons-renderer) .ytSpecButtonShapeNextIcon { animation: none; }
 }
 
 /* Player controls (Delhi player, the 2025 one with pill backgrounds; the old player keeps YouTube's icons). The svg

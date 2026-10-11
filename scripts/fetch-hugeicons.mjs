@@ -31,6 +31,11 @@ const ICONS = {
   language: 'Languages',
   restricted: 'UserSettings01', // Restricted Mode
   globe: 'Globe02', // Location (Figma's `location` is a filled globe, heavier than the rest)
+  // Channel About dialog (...more) and header
+  mail: 'Mail01',
+  phone: 'Call',
+  people: 'UserMultiple', // subscriber count, Community button
+  views: 'ChartIncrease', // view count (YouTube's trending_up)
 };
 
 const args = process.argv.slice(2);

@@ -4,6 +4,7 @@
 //   --off loads neither, for a plain-YouTube comparison.
 //   --eval=file.js runs file.js (an async function body) in the page after load and prints its return value.
 //   --click=sel, --hover=sel act after --eval (so the snippet can create the target), before the screenshot.
+//   --eval-after=file.js runs like --eval, but after --click/--hover (e.g. to inspect the dialog a click opened).
 //   --clip=sel screenshots that element instead of the viewport.
 //   --width=N sets the viewport width (default 1400; under 1312 YouTube shows the collapsed mini guide).
 //   --scale=N sets the device pixel ratio. --light uses the light theme.
@@ -27,6 +28,7 @@ const lang = flag('lang');
 const browser = await puppeteer.launch({
   browser: 'firefox', executablePath: '/Applications/Firefox.app/Contents/MacOS/firefox', headless: true,
   extraPrefsFirefox: { 'ui.systemUsesDarkTheme': has('light') ? 0 : 1, 'xpinstall.signatures.required': false,
+    'media.volume_scale': '0.0', // always muted: videos autoplay with sound otherwise
     ...(has('scrollbars') && { 'ui.useOverlayScrollbars': 0 }),
     ...(lang && { 'intl.accept_languages': lang, 'intl.locale.requested': lang }) },
 });
@@ -82,6 +84,7 @@ try {
   if (flag('eval')) console.log(await page.evaluate(`(async () => { ${await readFile(flag('eval'), 'utf8')} })()`));
   if (flag('click')) await page.click(flag('click'));
   if (flag('hover')) await page.hover(flag('hover'));
+  if (flag('eval-after')) { await sleep(1500); console.log(await page.evaluate(`(async () => { ${await readFile(flag('eval-after'), 'utf8')} })()`)); }
   if (logs.length) console.log(logs.join('\n'));
   if (shotPath) {
     await sleep(500);
