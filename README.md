@@ -73,7 +73,7 @@ One accent color and icon set. Every change is a switch you can turn off.
   - optional wavy progress bar
 - A switch for every change in the popup <details> <summary><sup>click to see the popup</sup></summary><img src="site/public/screenshots/popup.png" alt="Kempt popup" width="260" /></details>
 - Labels in 11 languages that follow YouTube's UI language
-- No polling or page-wide observers and compositor-only animations, with reduced motion respected
+- CSS first, no background timers, observers that disconnect once done, and reduced motion respected
 
 ## Quick start
 

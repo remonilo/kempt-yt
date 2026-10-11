@@ -11,7 +11,7 @@ Five small switches make YouTube's surfaces agree with each other. All but Font 
 
 The accent is one color for every "selected" or "active" mark: chips, tabs, the progress bar, the selected sidebar icon. The default is `#cb274a`, the same red as the Subscribe button, so the page has one red. Pick any other color in the popup.
 
-YouTube styles itself with CSS variables such as `--yt-spec-static-brand-red`. Kempt points them at `--kyt-accent`, plus a few targeted rules for chips, tabs and the progress bar. The popup writes your color onto `<html>` as `--kyt-accent`, and everything follows.
+YouTube styles itself with CSS variables such as `--yt-spec-static-brand-red`. Kempt points them at `--kyt-accent`, plus a few targeted rules for chips, tabs and the progress bar. The popup saves your color; the content script writes it onto `<html>` as `--kyt-accent`, and everything follows.
 
 ## Font
 

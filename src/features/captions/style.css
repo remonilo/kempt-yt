@@ -1,4 +1,4 @@
-/* Apple-style captions (PLAN.md §10.34). YouTube writes its caption settings inline, so these win with
+/* Apple-style captions (docs/features/captions). YouTube writes its caption settings inline, so these win with
    !important; its Options entry is hidden so it never looks broken. Sizes follow the player's height
    (cqh of the full-player caption container), times the popup's Size (--kyt-captions-scale, percent). */
 html[kyt-captions] .ytp-caption-window-container {

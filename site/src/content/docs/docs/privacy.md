@@ -17,13 +17,13 @@ Kempt collects no data and has no server. It loads no remote code and runs no an
 Kempt sends requests only to `www.youtube.com`, from your page and with your session:
 
 - The Watch later button checks whether the video is in Watch later, and adds or removes it. YouTube's own Save menu sends the same requests.
-- The sidebar loads your sidebar entries and your playlist list when the page doesn't carry them yet. YouTube's own sidebar and Save menu send the same requests.
+- The sidebar loads your sidebar entries when the page doesn't carry them yet, and your playlist list the first time you open the Playlists dropdown. YouTube's own sidebar and Save menu send the same requests.
 
 The answers stay in the page. Kempt keeps nothing from them.
 
 ## Local storage
 
-Kempt mirrors which features are on into the page's `localStorage` under `kyt:flags`. It reads that before YouTube draws the page, so the styles apply without a flash. It holds feature names and nothing else.
+Kempt mirrors your settings (which features are on and their options, such as the accent color) into the page's `localStorage` under `kempt-yt`. It reads that before YouTube draws the page, so the styles apply without a flash. It holds settings and nothing else.
 
 ## Contact
 

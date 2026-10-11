@@ -14,11 +14,14 @@ Labels Kempt copies from YouTube, such as the comment sort chips and the sidebar
 `local(table)` in `src/core/i18n.ts` picks a feature's strings by `<html lang>`, which YouTube sets to its UI language. Each feature keeps its own table:
 
 ```ts
-const WORDS = local<Record<'info' | 'videos', string>>({
+const WORDS: Record<Lang, Record<'info' | 'videos', string>> = {
   en: { info: 'Info', videos: 'Videos' },
   de: { info: 'Info', videos: 'Videos' },
   // ...one entry per language
-});
+};
+
+// inside run(), after YouTube has set <html lang>:
+const words = local(WORDS);
 ```
 
 The table's type is `Record<Lang, T>`, so a missing language fails the type check.

@@ -10,7 +10,7 @@ The right column of the watch page becomes one panel with a tab bar:
 | Tab | Shows | When |
 | --- | --- | --- |
 | Info | The description | Always |
-| Comments | The comment section. The tab shows an icon and the total count. | Always |
+| Comments | The comment section. The tab shows the total count, or an icon while there is no count. | Always |
 | Videos | Related videos, and the playlist panel when you watch from a list | Always, open by default |
 | Live chat | The chat | Live streams and replays with chat |
 | Ask AI | YouTube's Ask panel | If your account has it and the option is on |
@@ -22,7 +22,7 @@ The title, channel row and action buttons stay under the player. Only the descri
 The switch is **Watch page → Tabs**, with two options:
 
 - **Ask AI** shows the Ask AI entry. It's on by default.
-- **Show as** puts Ask AI at the end of the bar as an icon button (the default), or makes it a full tab.
+- **Show as** keeps Ask AI as YouTube's button under the video, moved first in the action row (the default), or makes it a full tab.
 
 ## Behavior
 
@@ -35,9 +35,9 @@ The switch is **Watch page → Tabs**, with two options:
 
 Kempt adds a tab bar at the top of `#secondary-inner`, YouTube's right column. The tabs move YouTube's own elements and never copy them:
 
-- The description and `ytd-comments` move into boxes after `#panels`. When the feature turns off, they move back to where they came from.
+- The description and `ytd-comments` move into boxes after YouTube's own panels (`#panels`, the playlist, the chat and similar). When the feature turns off, they move back to where they came from.
 - Related videos and the chat stay where they are and only show or hide. The chat is an iframe: moving it would reload it.
-- Hidden tabs use `content-visibility: hidden`, which keeps their layout. YouTube's lazy loaders (more comments, more videos) still fire when the tab opens.
+- Hidden tabs use `display: none`. YouTube's lazy loaders (more comments, more videos) fire when the tab opens.
 - Every other tab shows a fixed list of children (the bar, its own box, `#panels`, `#chat-container`) and hides the rest. A shelf YouTube adds later lands in Videos instead of stacking under the comments.
 
 Only a click on a tab may press YouTube's cinema button. If a reset from navigation, or from closing Ask AI, pressed it, the player would get stuck half switched.

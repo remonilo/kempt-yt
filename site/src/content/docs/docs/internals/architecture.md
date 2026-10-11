@@ -10,7 +10,7 @@ Kempt is a Manifest V3 extension with no framework and no background worker. esb
 1. CSS before JS. A visual change is a stylesheet rule. JS runs only to add elements, move elements, read page data or change navigation.
 2. The core knows nothing about features. A feature is one folder plus one line in a list.
 3. Every feature can be turned off and fully reversed. When it's off, none of its CSS applies and none of its JS runs.
-4. No global observers and no polling. Route changes come from YouTube's `yt-navigate-finish` event. DOM waits watch one container and disconnect as soon as they resolve.
+4. No global observers and no polling. Route changes come from YouTube's `yt-navigate-finish` event. DOM waits disconnect as soon as they resolve or time out (10 s by default); pass the narrowest root you can.
 5. YouTube selectors have one home each. JS selectors live in `src/core/selectors.ts`; CSS selectors live in the feature's `style.css`.
 
 ## Two scripts, two worlds
@@ -62,10 +62,13 @@ test/*.test.ts
 export interface Feature {
   id: string;                        // also the CSS gate: html[kyt-<id>]
   label: string;                     // shown in the popup
+  hint?: string;                     // popup tooltip
+  group: Group;                      // popup section: look, navigation, watch, feeds
+  icon?: string;                     // file name in src/icons/ without .svg
   defaultOn: boolean;
   routes?: Route[];                  // omit = every page
   options?: Record<string, Option>;  // popup controls
-  run?(ctx: Ctx): void;              // omit for CSS-only features
+  run?(ctx: Ctx): void | Promise<void>; // omit for CSS-only features
 }
 
 export interface Ctx {
@@ -89,6 +92,10 @@ On startup, on every settings change and on every route change:
 for each feature:
   enabled   = settings[id] ?? defaultOn
   html.toggleAttribute(`kyt-${id}`, enabled)       // turns its CSS on or off
+  for each option:
+    boolean -> html[kyt-<id>-<key>] while true
+    choice  -> html[kyt-<id>-<key>="<value>"]
+    cssVar  -> html.style.setProperty(cssVar, value) while enabled
   shouldRun = enabled && run && (no routes || routes includes route)
   if running and not shouldRun: abort its controller
   if not running and shouldRun: new AbortController, run(ctx)
@@ -106,7 +113,7 @@ html[kyt-subscribe-red] ytd-subscribe-button-renderer button:not([subscribed]) {
 
 All feature CSS ships as one `content.css`, which the manifest injects before YouTube paints. Toggling a feature flips one attribute, so nothing gets injected at runtime and nothing flashes. `test/structure.test.ts` fails the build if a rule is missing its gate.
 
-`chrome.storage` answers asynchronously, too late for the first paint. So `settings.ts` mirrors the enabled set to `localStorage['kyt:flags']`, and `content.ts` reads it synchronously at `document_start`. Storage stays the source of truth.
+`chrome.storage` answers asynchronously, too late for the first paint. So `settings.ts` mirrors the whole settings object to `localStorage['kempt-yt']`, and `content.ts` reads it synchronously at `document_start`. Storage stays the source of truth.
 
 ## Router
 

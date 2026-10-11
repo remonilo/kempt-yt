@@ -8,35 +8,34 @@ A feature is a folder under `src/features/` and one line in `src/features/index.
 ## A CSS-only feature
 
 ```text
-src/features/progress-bar/index.ts
-src/features/progress-bar/style.css
+src/features/seek-height/index.ts
+src/features/seek-height/style.css
 ```
 
 ```ts
 // index.ts
 import type { Feature } from '../../core/feature.ts';
 
-export const progressBar: Feature = {
-  id: 'progress-bar',
-  label: 'Custom progress bar',
+export const seekHeight: Feature = {
+  id: 'seek-height',
+  label: 'Seek bar height',
   group: 'watch',
-  icon: 'play',
   defaultOn: false,
-  options: { height: { type: 'number', label: 'Height', default: 4, cssVar: '--kyt-progress-height' } },
+  options: { height: { type: 'number', label: 'Height', default: 4, cssVar: '--kyt-seek-height' } },
 };
 ```
 
 ```css
 /* style.css: every rule gated by the feature's attribute */
-html[kyt-progress-bar] .ytp-progress-bar {
-  height: calc(var(--kyt-progress-height) * 1px);
+html[kyt-seek-height] .ytp-progress-bar {
+  height: calc(var(--kyt-seek-height) * 1px);
 }
 ```
 
 ```ts
 // src/features/index.ts
-import { progressBar } from './progress-bar/index.ts';
-export const features: Feature[] = [/* ... */, progressBar];
+import { seekHeight } from './seek-height/index.ts';
+export const features: Feature[] = [/* ... */, seekHeight];
 ```
 
 `build.mjs` picks up `style.css` on its own.
@@ -49,11 +48,13 @@ Add `routes` and `run`:
 export const example: Feature = {
   id: 'example',
   label: 'Example',
+  group: 'watch',
   defaultOn: true,
   routes: ['watch'],
   run(ctx) {
     const box = document.createElement('div');
-    waitFor(S.secondary, { signal: ctx.signal }).then((col) => col.prepend(box));
+    const update = () => { box.textContent = location.search; };
+    waitFor(S.watchMetadata, { signal: ctx.signal }).then((el) => el?.prepend(box));
     document.addEventListener('kyt:navigate', update, { signal: ctx.signal });
     ctx.signal.addEventListener('abort', () => box.remove());
   },
