@@ -12,7 +12,11 @@ const NAMES = ['menu', 'arrow-left', 'search', 'mic', 'close', 'add', 'notifs', 
   // popup menus: account menu and the watch page's ⋯ menu
   'report', 'arrow-right', 'keyboard', 'settings', 'help', 'feedback', 'switch-account', 'sign-out', 'studio', 'your-data',
   'appearance', 'language', 'restricted', 'globe',
-  'add-to-queue', 'watch-later', 'not-interested', 'exclude'];
+  'add-to-queue', 'watch-later', 'not-interested', 'exclude',
+  // player controls and its settings menu
+  'play', 'pause', 'backward', 'next', 'volume', 'volume-muted', 'cc', 'cc-selected', 'theater', 'theater-selected',
+  'fullscreen', 'fullscreen-selected', 'pip', 'cast', 'ambient-mode', 'annotations', 'sleep-timer', 'speed', 'quality-hd',
+  'stable-audio', 'audio-channel', 'comments'];
 
 export const icons: Feature = {
   id: 'icons',
@@ -34,6 +38,8 @@ export const icons: Feature = {
       if (route !== 'watch') return;
       // The Subscribe button's bell state; idempotent per root, so every watch page is fine.
       waitFor(S.watchSubscribe, { signal }).then((el) => el && call('stampBell', S.watchSubscribe));
+      // Fullscreen quick actions live in the player, which persists; stamp is idempotent per root.
+      waitFor(S.fsActions, { signal }).then((el) => el && call('stamp', S.fsActions));
       if (stamped) return;
       stamped = true;
       if (await waitFor(S.watchActions, { signal })) await call('stamp', S.watchActions);

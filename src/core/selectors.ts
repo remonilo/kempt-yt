@@ -29,6 +29,7 @@ export const S = {
   historyTitle: 'ytd-item-section-header-renderer #title', // "Today", "Thursday", "27 Sept"
   lockupDate: '.ytContentMetadataViewModelMetadataText', // last one in a lockup is the age ("7 hr ago"), aria-label has the long form
   lockupMeta: '.ytLockupViewModelMetadata', // title, channel and metadata rows of a lockup
+  fsActions: '#movie_player .ytp-fullscreen-quick-actions', // fullscreen like/dislike/comments/share/⋯ row; needs stamp
   progressBar: '#movie_player .ytp-chrome-bottom .ytp-progress-bar', // #movie_player also holds a hidden 0x0 spare bar outside .ytp-chrome-bottom
   liveBadge: '.ytBadgeShapeThumbnailLive', // the red LIVE thumbnail badge of a stream on now (any language)
 } as const;

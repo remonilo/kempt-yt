@@ -1,5 +1,5 @@
 // Adds Hugeicons (free, MIT) to src/icons/ for the glyphs the Figma set lacks. Juxtopposed's Figma icons are
-// Hugeicons-style 1.5px strokes, so Stroke Rounded matches. Runs after fetch-icons.mjs (which empties the folder).
+// Hugeicons-style 1.5px strokes, so Stroke Rounded matches. Runs after fetch-icons.mjs.
 // Run: node scripts/fetch-hugeicons.mjs
 // Try candidates: node scripts/fetch-hugeicons.mjs --out=/tmp/hi PlayList Sparkles   (names from hugeicons.com, no "Icon")
 import { mkdir, readFile, writeFile } from 'node:fs/promises';

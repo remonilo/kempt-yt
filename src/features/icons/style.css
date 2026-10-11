@@ -148,3 +148,93 @@ html[kyt-icons] :is(ytd-watch-metadata :is(like-button-view-model, dislike-butto
 @media (prefers-reduced-motion: reduce) {
   html[kyt-icons] :is(ytd-watch-metadata, ytd-comment-engagement-bar) .ytSpecButtonShapeNextIcon { animation: none; }
 }
+
+/* Player controls (Delhi player, the 2025 one with pill backgrounds; the old player keeps YouTube's icons). The svg
+   carries the mask; its 8px padding frames the 24px glyph, so the mask sits in the content box. The svg's drop
+   shadow moves to the button, since a mask clips its own element's filter. States come from player classes and
+   aria-pressed, never labels. */
+html[kyt-icons] .ytp-delhi-modern-icons {
+  & :is(.ytp-play-button, .ytp-prev-button, .ytp-next-button, .ytp-volume-icon, .ytp-subtitles-button, .ytp-settings-button,
+      .ytp-size-button, .ytp-remote-button, .ytp-fullscreen-button, .ytp-pip-button) {
+    filter: drop-shadow(0 0 1px rgb(0 0 0 / .8));
+    & > svg, & > .ytp-subtitles-button-icon > svg { /* Chromium builds wrap the cc svg in a div */
+      filter: none;
+      background-color: #fff;
+      mask: var(--kyt-i) center / contain no-repeat content-box;
+      & > * { visibility: hidden; }
+    }
+  }
+  & .ytp-play-button > svg { --kyt-i: var(--kyt-i-play); animation: kyt-player-pop-a 200ms ease-out; }
+  &.playing-mode:not(.unstarted-mode) .ytp-play-button > svg { --kyt-i: var(--kyt-i-pause); animation-name: kyt-player-pop-b; }
+  &.ended-mode .ytp-play-button > svg { --kyt-i: var(--kyt-i-backward); }
+  & :is(.ytp-prev-button, .ytp-next-button) > svg { --kyt-i: var(--kyt-i-next); }
+  & .ytp-prev-button > svg { scale: -1 1; }
+  & .ytp-volume-icon > svg { --kyt-i: var(--kyt-i-volume); }
+  /* Muted (or volume 0) draws one unclassed path in place of the speaker and ripples. */
+  & .ytp-volume-icon > svg:not(:has(.ytp-svg-volume-animation-speaker)) { --kyt-i: var(--kyt-i-volume-muted); }
+  & .ytp-subtitles-button svg { --kyt-i: var(--kyt-i-cc); }
+  & .ytp-subtitles-button[aria-pressed="true"] svg { --kyt-i: var(--kyt-i-cc-selected); animation: kyt-player-pop-a 200ms ease-out; }
+  & .ytp-settings-button > svg { --kyt-i: var(--kyt-i-settings); } /* YouTube rotates it 30deg while the menu is open */
+  & .ytp-size-button > svg { --kyt-i: var(--kyt-i-theater); }
+  & .ytp-remote-button > svg { --kyt-i: var(--kyt-i-cast); }
+  & .ytp-fullscreen-button > svg { --kyt-i: var(--kyt-i-fullscreen); }
+  &.ytp-fullscreen .ytp-fullscreen-button > svg { --kyt-i: var(--kyt-i-fullscreen-selected); }
+  & .ytp-pip-button > svg { --kyt-i: var(--kyt-i-pip); }
+  & .ytp-chapter-title svg {
+    background-color: #fff;
+    mask: var(--kyt-i-arrow-right) center / contain no-repeat;
+    & > * { visibility: hidden; }
+  }
+
+  /* Settings menu rows carry no type, so they are told apart by their svg path's start (language-independent).
+     An unmatched row keeps YouTube's icon. */
+  & .ytp-menuitem-icon > svg:has(path:is([d^="M12 .5C"], [d^="M9.65 6.00L"], [d^="M21.20 3.01L"], [d^="M12.33 1.00C"], [d^="M12 1c1.44"], [d^="M9 3C8.11"], [d^="M12 .99C5.92"], [d^="M11.48 2.14 3.91"], [d^="M19.4 .2C"])) {
+    background-color: #fff;
+    mask: var(--kyt-i) center / contain no-repeat;
+    & > * { visibility: hidden; }
+  }
+  & .ytp-menuitem-icon > svg:has(path[d^="M12 .5C"]) { --kyt-i: var(--kyt-i-ambient-mode); }
+  & .ytp-menuitem-icon > svg:has(path[d^="M9.65 6.00L"]) { --kyt-i: var(--kyt-i-annotations); }
+  & .ytp-menuitem-icon > svg:has(path[d^="M21.20 3.01L"]) { --kyt-i: var(--kyt-i-cc); }
+  & .ytp-menuitem-icon > svg:has(path[d^="M12.33 1.00C"]) { --kyt-i: var(--kyt-i-sleep-timer); }
+  & .ytp-menuitem-icon > svg:has(path[d^="M12 1c1.44"]) { --kyt-i: var(--kyt-i-speed); }
+  & .ytp-menuitem-icon > svg:has(path[d^="M9 3C8.11"]) { --kyt-i: var(--kyt-i-quality-hd); }
+  & .ytp-menuitem-icon > svg:has(path[d^="M12 .99C5.92"]) { --kyt-i: var(--kyt-i-stable-audio); }
+  & .ytp-menuitem-icon > svg:has(path[d^="M11.48 2.14 3.91"]) { --kyt-i: var(--kyt-i-volume); } /* Voice boost */
+  & .ytp-menuitem-icon > svg:has(path[d^="M19.4 .2C"]) { --kyt-i: var(--kyt-i-audio-channel); } /* Audio track */
+}
+/* Fullscreen quick actions (like, dislike, comments, share, Ask, ⋯ above the controls). Like/dislike by tag, the rest
+   by their stamped icon type (stamp(S.fsActions)). */
+html[kyt-icons] .ytp-fullscreen-quick-actions {
+  & :is(like-button-view-model, dislike-button-view-model, [kyt-icon="COMMENT"], [kyt-icon="SHARE"], [kyt-icon="SPARK"], [kyt-icon="MORE_HORIZ"]) .ytSpecButtonShapeNextIcon {
+    background-color: currentColor;
+    mask: var(--kyt-i) center / contain no-repeat;
+    & > * { visibility: hidden; }
+  }
+  & like-button-view-model .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-liked); }
+  & like-button-view-model [aria-pressed="true"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-liked-selected); }
+  & dislike-button-view-model .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-dislike); }
+  & dislike-button-view-model [aria-pressed="true"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-dislike-selected); }
+  & [kyt-icon="COMMENT"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-comments); }
+  & [kyt-icon="SHARE"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-share); }
+  & [kyt-icon="SPARK"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-ask); }
+  & [kyt-icon="MORE_HORIZ"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-more); rotate: 90deg; }
+  & :is(like-button-view-model, dislike-button-view-model) [aria-pressed="true"] .ytSpecButtonShapeNextIcon { animation: kyt-icon-pop 300ms ease-out; }
+}
+/* Theater lives on the watch page, outside the player. */
+html[kyt-icons] ytd-watch-flexy[theater] .ytp-delhi-modern-icons .ytp-size-button > svg { --kyt-i: var(--kyt-i-theater-selected); }
+/* Divider between the toggles (Ambient mode, Annotations, Stable volume) and the submenus (Subtitles, Speed, ...).
+   Rows are table rows: a border or a cell shadow broke the row's chevron in Firefox, so the row paints the line as a
+   background image (no layout change, so YouTube's measured menu height still fits). */
+html[kyt-icons] .ytp-settings-menu .ytp-panel-menu > .ytp-menuitem[role="menuitemcheckbox"] + .ytp-menuitem[role="menuitem"] {
+  background-image: linear-gradient(rgb(255 255 255 / .15) 0 0);
+  background-size: 100% 1px;
+  background-repeat: no-repeat;
+}
+/* Two names for the same pop, so swapping state restarts it. */
+@keyframes kyt-player-pop-a { from { transform: scale(.8); } }
+@keyframes kyt-player-pop-b { from { transform: scale(.8); } }
+@media (prefers-reduced-motion: reduce) {
+  html[kyt-icons] .ytp-delhi-modern-icons :is(.ytp-play-button, .ytp-subtitles-button) svg,
+  html[kyt-icons] .ytp-fullscreen-quick-actions .ytSpecButtonShapeNextIcon { animation: none; }
+}

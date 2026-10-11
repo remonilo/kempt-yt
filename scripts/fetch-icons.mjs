@@ -55,7 +55,7 @@ if (dupes.length) throw new Error(`duplicate names: ${dupes.map((d) => d.name).j
 
 const { images } = await api(`images/${FILE}?ids=${icons.map((i) => i.id).join(',')}&format=svg&svg_outline_text=true`);
 
-await rm(OUT, { recursive: true, force: true });
+// No wipe first: hand-made icons (wave.svg) live here too, and prune() drops what nothing names.
 await mkdir(OUT, { recursive: true });
 // Saved as exported: icons are CSS masks (core/icon.ts), so only alpha matters, not the white fill.
 await Promise.all(icons.map(async ({ id, name }) => {
@@ -63,4 +63,10 @@ await Promise.all(icons.map(async ({ id, name }) => {
   return writeFile(`${OUT}/${name}.svg`, await res.text());
 }));
 console.log(`exported ${icons.length} icons to ${OUT}/`);
+
+// Figma has no muted speaker: volume.svg's speaker (the middle of its three subpaths) plus a stroked x.
+const vol = (await readFile(`${OUT}/volume.svg`, 'utf8')).match(/ d="([^"]+)"/)?.[1].split(/(?<=Z)/);
+if (vol?.length !== 3) throw new Error('volume.svg changed shape; update the volume-muted derivation');
+await writeFile(`${OUT}/volume-muted.svg`, '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">'
+  + `<path d="${vol[1]}" fill="white"/><path d="M14.5 9.5l5 5m0-5l-5 5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>\n`);
 await prune();
