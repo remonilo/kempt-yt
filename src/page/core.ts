@@ -4,10 +4,11 @@ import { cfg, endpoints, sleep, walk } from './youtube.ts';
 function iconName(el: any): string | undefined {
   const raw = el.rawProps?.data; // yt-*-view-model components
   const d = typeof raw === 'function' ? raw() : el.data; // Polymer ytd-* elements
-  return d?.iconName ?? d?.icon?.iconType ?? d?.buttonViewModel?.iconName;
+  return d?.iconName ?? d?.icon?.iconType ?? d?.buttonViewModel?.iconName ?? d?.defaultButtonViewModel?.buttonViewModel?.iconName;
 }
 
-const BUTTONS = 'yt-button-view-model, ytd-button-renderer, ytd-toggle-button-renderer, ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer';
+// button-view-model / toggle-button-view-model: the fullscreen quick actions (Share, ⋯, Comments).
+const BUTTONS = 'yt-button-view-model, button-view-model, toggle-button-view-model, ytd-button-renderer, ytd-toggle-button-renderer, ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer';
 
 function stampIcons(root: Element) {
   for (const el of root.querySelectorAll(BUTTONS)) {
