@@ -17,6 +17,7 @@ html {
   --kyt-outline: rgba(0, 0, 0, 0.1);
   --kyt-outline-focus: rgba(0, 0, 0, 0.4);
   --kyt-divider: rgba(0, 0, 0, 0.1);
+  --kyt-pill-bg: rgba(0, 0, 0, 0.05); /* Figma comment action pills (white 5% in dark) */
   --kyt-glass: rgba(255, 255, 255, 0.8); /* YouTube's frosted masthead, with blur(48px) */
   --kyt-radius: 10px;
   --kyt-icon: 20px; /* Figma uses 24px with thinner strokes; raise to 24px when the Figma icon set lands */
@@ -31,6 +32,7 @@ html[dark] {
   --kyt-outline: rgba(255, 255, 255, 0.1); /* Figma #2a2a2a on #111 */
   --kyt-outline-focus: rgba(255, 255, 255, 0.35);
   --kyt-divider: rgba(255, 255, 255, 0.15); /* Figma sidebar lines */
+  --kyt-pill-bg: rgba(255, 255, 255, 0.05);
   --kyt-glass: rgba(15, 15, 15, 0.8);
 }
 
