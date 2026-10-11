@@ -1,5 +1,6 @@
 import type { Feature } from '../../core/feature.ts';
 import { el, keep, waitFor } from '../../core/dom.ts';
+import type { Route } from '../../core/router.ts';
 
 const ITEMS = '#sort-menu tp-yt-paper-listbox > a';
 
@@ -9,34 +10,52 @@ export const commentSort: Feature = {
   id: 'comment-sort',
   label: 'Comment sort as buttons', group: 'watch', icon: 'sort',
   defaultOn: true,
-  routes: ['watch'],
-  async run({ signal }) {
-    // Comments render lazily (when scrolled to, or when their tab opens), so no timeout.
-    const first = await waitFor(`ytd-watch-flexy ytd-comments-header-renderer ${ITEMS}`, { signal, timeout: Infinity });
-    const header = first?.closest('ytd-comments-header-renderer');
-    if (!header || signal.aborted) return;
-
-    const row = el('div', 'kyt-sort');
-    row.role = 'group';
-    row.addEventListener('click', (e) => {
-      const b = (e.target as Element).closest('button');
-      if (b) header.querySelectorAll<HTMLElement>(ITEMS)[[...row.children].indexOf(b)]?.click();
-    }, { signal });
-
-    const mount = () => {
-      const menu = header.querySelector('#sort-menu');
-      const items = header.querySelectorAll(ITEMS);
-      if (!menu || !items.length) return;
-      if (menu.nextElementSibling !== row) menu.after(row);
-      items.forEach((a, i) => {
-        const b = row.children[i] ?? row.appendChild(el('button', 'kyt-chip'));
-        const label = a.querySelector('.item')?.textContent?.trim() ?? '';
-        if (b.textContent !== label) b.textContent = label;
-        const on = a.getAttribute('aria-selected') ?? 'false';
-        if (b.ariaPressed !== on) b.ariaPressed = on;
-      });
-      while (row.children.length > items.length) row.lastElementChild?.remove();
+  routes: ['watch', 'post'],
+  run({ signal }) {
+    // The watch page keeps its comments header across videos. A post page may not, and post -> post keeps the
+    // feature running (same route), so restart per post.
+    let page: AbortController | undefined;
+    const start = () => {
+      page?.abort();
+      page = new AbortController();
+      mount(AbortSignal.any([signal, page.signal]));
     };
-    keep(row, header, mount, signal, { childList: true, subtree: true, attributeFilter: ['aria-selected'] });
+    start();
+    document.addEventListener('kyt:navigate', (e) => {
+      if ((e as CustomEvent<{ route: Route }>).detail.route === 'post') start();
+    }, { signal });
   },
 };
+
+async function mount(signal: AbortSignal) {
+  // Comments render lazily (when scrolled to, or when their tab opens), so no timeout.
+  const first = await waitFor(`:is(ytd-watch-flexy, ytd-browse:not([hidden])) ytd-comments-header-renderer ${ITEMS}`, { signal, timeout: Infinity });
+  // YouTube swaps the header renderer (post pages re-render it on every visit) but keeps its #header container,
+  // so the row follows whichever header is current.
+  const root = first?.closest('ytd-comments-header-renderer')?.parentElement;
+  if (!root || signal.aborted) return;
+  const header = () => root.querySelector('ytd-comments-header-renderer');
+
+  const row = el('div', 'kyt-sort');
+  row.role = 'group';
+  row.addEventListener('click', (e) => {
+    const b = (e.target as Element).closest('button');
+    if (b) header()?.querySelectorAll<HTMLElement>(ITEMS)[[...row.children].indexOf(b)]?.click();
+  }, { signal });
+
+  const sync = () => {
+    const menu = header()?.querySelector('#sort-menu');
+    const items = header()?.querySelectorAll(ITEMS) ?? [];
+    if (!menu || !items.length) return;
+    if (menu.nextElementSibling !== row) menu.after(row);
+    items.forEach((a, i) => {
+      const b = row.children[i] ?? row.appendChild(el('button', 'kyt-chip'));
+      const label = a.querySelector('.item')?.textContent?.trim() ?? '';
+      if (b.textContent !== label) b.textContent = label;
+      const on = a.getAttribute('aria-selected') ?? 'false';
+      if (b.ariaPressed !== on) b.ariaPressed = on;
+    });
+    while (row.children.length > items.length) row.lastElementChild?.remove();
+  };
+  keep(row, root, sync, signal, { childList: true, subtree: true, attributeFilter: ['aria-selected'] });
+}
