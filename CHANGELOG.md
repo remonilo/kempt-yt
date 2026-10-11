@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.3.0](https://github.com/remonilo/kempt-yt/compare/v0.2.1...v0.3.0) (2026-10-11)
+
+
+### Features
+
+* **icons:** use the icon set and pills for comment like, dislike and reply ([d27a386](https://github.com/remonilo/kempt-yt/commit/d27a3867dd91aab3c669ececaadf97a2539d7e31))
+* **icons:** use the icon set for player controls ([15a88e2](https://github.com/remonilo/kempt-yt/commit/15a88e29a60268f71d10a9cdfac0b061acfff180))
+
+
+### Bug Fixes
+
+* **icons:** add player icons and quick-action stamping missed in 15a88e2 ([8275310](https://github.com/remonilo/kempt-yt/commit/8275310c448528be7efd32a48f77650161626351))
+
+
+### Performance Improvements
+
+* **site:** optimize screenshots through Astro's image pipeline ([92f2f9d](https://github.com/remonilo/kempt-yt/commit/92f2f9d6b8b85089e8afc7a5fc2cfab3dfe9857d))
+
 ## [0.2.1](https://github.com/remonilo/kempt-yt/compare/v0.2.0...v0.2.1) (2026-10-11)
 
 
