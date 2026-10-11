@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/remonilo/kempt-yt/compare/v0.2.0...v0.2.1) (2026-10-11)
+
+
+### Bug Fixes
+
+* **watch-tabs:** live chat in fullscreen and replays ([2f50c2f](https://github.com/remonilo/kempt-yt/commit/2f50c2f35867593031fff0c155e9f5a228cadba6))
+
 ## [0.2.0](https://github.com/remonilo/kempt-yt/compare/v0.1.0...v0.2.0) (2026-10-08)
 
 
