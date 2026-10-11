@@ -3,7 +3,7 @@ title: Look
 description: Accent color, font, tinted hover and selection, Subscribe button and search bar.
 ---
 
-<img class="shot" src="/kempt-yt/screenshots/look.png" alt="Accent color and search bar" />
+![Accent color and search bar](../../../../assets/screenshots/look.png)
 
 Five small switches make YouTube's surfaces agree with each other. All but Font are CSS only.
 

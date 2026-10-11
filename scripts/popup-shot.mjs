@@ -5,7 +5,7 @@ import puppeteer from 'puppeteer-core';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-const out = process.argv.slice(2).find((a) => !a.startsWith('--')) ?? 'site/public/screenshots/popup.png';
+const out = process.argv.slice(2).find((a) => !a.startsWith('--')) ?? 'site/src/assets/screenshots/popup.png';
 const flag = (name) => process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
 const light = process.argv.includes('--light');
 let manifest;

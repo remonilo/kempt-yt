@@ -3,7 +3,7 @@ title: Timeline
 description: Subscriptions and History grouped under date headers, with type chips and search.
 ---
 
-<img class="shot" src="/kempt-yt/screenshots/timeline.png" alt="Subscriptions timeline" />
+![Subscriptions timeline](../../../../assets/screenshots/timeline.png)
 
 Subscriptions and History become a timeline, with a line down the left and a dot and date before each group of videos. The dot of the group you're reading fills with the accent.
 

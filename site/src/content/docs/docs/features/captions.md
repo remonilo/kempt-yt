@@ -3,7 +3,7 @@ title: Captions
 description: Apple-style subtitles in your chosen font, with three styles and a size slider.
 ---
 
-<img class="shot" src="/kempt-yt/screenshots/captions.png" alt="Captions on a YouTube video" />
+![Captions on a YouTube video](../../../../assets/screenshots/captions.png)
 
 Captions are white semibold text in the font you picked under [Font](/kempt-yt/docs/features/look/#font). They are sized to the player, so they grow in theater mode and fullscreen. When the controls show, captions slide up out of their way in 200 ms both ways (no animation with reduced motion).
 

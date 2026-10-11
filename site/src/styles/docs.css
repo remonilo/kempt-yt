@@ -122,13 +122,6 @@ header.header {
   border-width: 0 0 0 3px;
 }
 
-/* Screenshots carry their own window border and drop shadow: no frame here. */
-.shot {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
 .site-title {
   color: var(--k-fg);
   font-weight: 600;
@@ -136,4 +129,9 @@ header.header {
 }
 .site-title img {
   height: 1.6rem;
+}
+
+/* The popup shot is a tall phone-width image: keep it popup-sized. */
+.sl-markdown-content img[alt="Kempt popup"] {
+  max-width: 360px;
 }

@@ -5,7 +5,7 @@ description: What each switch and option in the popup does.
 
 Click the Kempt icon in the browser toolbar. Changes apply to open YouTube tabs at once.
 
-<img class="shot" src="/kempt-yt/screenshots/popup.png" alt="Kempt popup" style="max-width: 360px" />
+![Kempt popup](../../../assets/screenshots/popup.png)
 
 ## Switches
 

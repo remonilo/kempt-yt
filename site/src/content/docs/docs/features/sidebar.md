@@ -3,7 +3,7 @@ title: Sidebar
 description: Explore, Subscriptions and Playlists as dropdowns, and fewer entries.
 ---
 
-<img class="shot" src="/kempt-yt/screenshots/sidebar.png" alt="Redesigned sidebar" />
+![Redesigned sidebar](../../../../assets/screenshots/sidebar.png)
 
 The sidebar becomes three short groups:
 

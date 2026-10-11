@@ -28,15 +28,15 @@ One accent color and icon set. Every change is a switch you can turn off.
   <table>
     <tr>
       <td colspan="2">
-        <img src="site/public/screenshots/demo.png" alt="Watch page with Kempt" />
+        <img src="site/src/assets/screenshots/demo.png" alt="Watch page with Kempt" />
       </td>
     </tr>
     <tr>
       <td width="50%">
-        <img src="site/public/screenshots/timeline.png" alt="Subscriptions timeline" />
+        <img src="site/src/assets/screenshots/timeline.png" alt="Subscriptions timeline" />
       </td>
       <td width="50%">
-        <img src="site/public/screenshots/sidebar.png" alt="Redesigned sidebar" />
+        <img src="site/src/assets/screenshots/sidebar.png" alt="Redesigned sidebar" />
       </td>
     </tr>
   </table>
@@ -53,8 +53,8 @@ One accent color and icon set. Every change is a switch you can turn off.
 
 ## Features
 
-- Watch page tabs for info, comments, videos, live chat and Ask AI, beside the player <details> <summary><sup>click to see the tabs</sup></summary><img src="site/public/screenshots/tabs.png" alt="Watch page tabs" /></details>
-- Apple-style captions in your font: Shadow, Box or Blur, sized 50 to 200% <details> <summary><sup>click to see the captions</sup></summary><img src="site/public/screenshots/captions.png" alt="Captions" /></details>
+- Watch page tabs for info, comments, videos, live chat and Ask AI, beside the player <details> <summary><sup>click to see the tabs</sup></summary><img src="site/src/assets/screenshots/tabs.png" alt="Watch page tabs" /></details>
+- Apple-style captions in your font: Shadow, Box or Blur, sized 50 to 200% <details> <summary><sup>click to see the captions</sup></summary><img src="site/src/assets/screenshots/captions.png" alt="Captions" /></details>
 - Subscriptions timeline with date headers, All / Videos / Live / Shorts chips and a search box
   - History gets the same date headers
 - Sidebar with dropdowns for Explore, Subscriptions and Playlists
@@ -71,7 +71,7 @@ One accent color and icon set. Every change is a switch you can turn off.
   - Watch later button
   - comment sort as chips
   - optional wavy progress bar
-- A switch for every change in the popup <details> <summary><sup>click to see the popup</sup></summary><img src="site/public/screenshots/popup.png" alt="Kempt popup" width="260" /></details>
+- A switch for every change in the popup <details> <summary><sup>click to see the popup</sup></summary><img src="site/src/assets/screenshots/popup.png" alt="Kempt popup" width="260" /></details>
 - Labels in 11 languages that follow YouTube's UI language
 - CSS first, no background timers, observers that disconnect once done, and reduced motion respected
 
@@ -144,7 +144,7 @@ Kempt is free and I maintain it alone. [Sponsor on GitHub](https://github.com/sp
 
 ## License
 
-Code: [MIT](LICENSE). Bundled icons and fonts keep their own licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Code: [MIT](LICENSE). Bundled icons and fonts keep their own licenses, see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 <!---------------------------------------------------------------------------->
 

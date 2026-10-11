@@ -3,7 +3,7 @@ title: Watch page tabs
 description: Info, Comments, Videos, Live chat and Ask AI in one panel beside the player.
 ---
 
-<img class="shot" src="/kempt-yt/screenshots/tabs.png" alt="Watch page tabs" />
+![Watch page tabs](../../../../assets/screenshots/tabs.png)
 
 The right column of the watch page becomes one panel with a tab bar:
 

@@ -5,7 +5,7 @@ description: What Kempt changes on YouTube, and how these docs are organized.
 
 Kempt is a browser extension that restyles YouTube into one consistent design. It runs on Firefox 128+ and on Chromium browsers.
 
-<img class="shot" src="/kempt-yt/screenshots/demo.png" alt="Kempt on a YouTube watch page" />
+![Kempt on a YouTube watch page](../../../assets/screenshots/demo.png)
 
 ## What changes
 

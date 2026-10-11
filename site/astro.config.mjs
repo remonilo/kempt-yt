@@ -9,6 +9,8 @@ const sponsor = 'https://github.com/sponsors/remonilo';
 export default defineConfig({
   site: 'https://remonilo.github.io',
   base: '/kempt-yt',
+  // Markdown screenshots get a srcset instead of one full-size (3210px) file.
+  image: { layout: 'constrained' },
   compressHTML: false, // readable dist/*.html; Pages gzips anyway
   integrations: [
     starlight({

@@ -1,4 +1,6 @@
 ---
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import manifest from '../../../manifest.json';
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
@@ -7,7 +9,9 @@ const sponsor = 'https://github.com/sponsors/remonilo';
 // PLACEHOLDER: Chrome Web Store listing, once published.
 const firefox = 'https://addons.mozilla.org/firefox/addon/kempt-for-youtube/';
 const chrome = 'https://chromewebstore.google.com/detail/PLACEHOLDER';
-const shot = (name: string) => `${base}screenshots/${name}.png`;
+const shots = import.meta.glob<{ default: ImageMetadata }>('../assets/screenshots/*.png', { eager: true });
+const shot = (name: string) => shots[`../assets/screenshots/${name}.png`].default;
+const formats = ['avif', 'webp'] as const;
 
 /** One timeline group per area of YouTube, in the order you meet them. */
 const groups = [
@@ -98,7 +102,8 @@ const facts = [
 
     <div class="cross wrap" aria-hidden="true"></div>
     <figure class="shot hero-shot wrap">
-      <img src={shot('demo')} alt="Kempt on a YouTube watch page" />
+      <Picture src={shot('demo')} formats={formats} fallbackFormat="webp" widths={[640, 1280, 2200]} sizes="(max-width: 1148px) calc(100vw - 48px), 1100px"
+        alt="Kempt on a YouTube watch page" loading="eager" fetchpriority="high" />
     </figure>
 
     <section id="what" class="wrap">
@@ -114,7 +119,8 @@ const facts = [
                 <a class="more" href={`${base}${g.docs}`}>How it works</a>
               </div>
               <figure class="shot">
-                <img src={shot(g.shot)} alt={g.title} loading="lazy" />
+                <Picture src={shot(g.shot)} formats={formats} fallbackFormat="webp" widths={[640, 1220]} sizes="(max-width: 860px) 100vw, 610px"
+                  alt={g.title} loading="lazy" decoding="async" />
               </figure>
             </div>
           </li>
