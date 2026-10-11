@@ -106,9 +106,16 @@ html[kyt-icons] ytd-comment-action-buttons-renderer {
   }
   & :is(#share-button, #reply-button-end) yt-touch-feedback-shape { display: none; }
 }
-/* Channel Home's Posts shelf: the fixed-height card ends at the 40px toolbar, so the 32px pills sat 4px from its
-   border. Padding on the card (content-box) grows it; padding on the toolbar pushed the toolbar out of tall cards. */
-html[kyt-icons] ytd-post-renderer:has(ytd-comment-action-buttons-renderer) { padding-bottom: 12px; }
+/* Channel Home's Posts shelf: a fixed 196px card ending at the 40px toolbar, so the 32px pills sat 4px from its
+   border and 6px under a poll's Vote button. The card grows by the added space (padding and margin inside a fixed
+   height pushed the toolbar into the post body). The pills drop the comment row's 8px top margin so they centre on
+   the toolbar like the signed-in ⋮ button next to them. */
+html[kyt-icons] ytd-post-renderer[uses-compact-lockup]:has(ytd-comment-action-buttons-renderer) {
+  height: 220px; /* YouTube's 196px + 12px gap above the toolbar + 12px below */
+  padding-bottom: 12px;
+  & #toolbar { margin-top: 12px; }
+  & ytd-comment-action-buttons-renderer { margin-top: 0 !important; }
+}
 html[kyt-icons] ytd-watch-metadata [kyt-icon="SHARE"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-share); }
 html[kyt-icons] ytd-watch-metadata [kyt-icon="PLAYLIST_ADD"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-save); }
 html[kyt-icons] ytd-watch-metadata [kyt-icon="OFFLINE_DOWNLOAD"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-download); }
