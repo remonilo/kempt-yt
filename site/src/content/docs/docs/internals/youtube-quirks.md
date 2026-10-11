@@ -47,6 +47,7 @@ Short comments in the source point here. Each entry is a constraint YouTube impo
 ## Watch tabs
 
 - YouTube's `updatePanelsLocation` (theater, fullscreen, column changes) expects `#panels`, `#chat-container`, `#playlist` and `#inline-panels` (plus `#shopping-timely-shelf` and `#persistent-panel-container` in `#below`) to be the first children of their parent, in order. Anything inserted inside that run makes it re-insert every panel on each call, which re-renders comments and reloads the chat. Kempt's nodes go after that run (`YT_PANELS`), and `style.css` restores the visual order with flex `order`.
+- Fullscreen with live chat expanded moves that panel run out of `#secondary-inner` into `#panels-full-bleed-container` beside the player. Anything anchored after the run (the watch tabs) moves with it, so `watch-tabs` hides its bar and boxes under `ytd-watch-flexy[fullscreen]` and lets the chat show whatever tab is selected.
 - `#panels` moves between `#secondary-inner` and `#below` with the layout, so every anchor goes through `#panels`. That makes the one-column layout work the same.
 - Videos (`#related`) and Live chat (`#chat-container`) are only shown or hidden, so the chat iframe never reloads. The description and comments move into boxes that go back on abort.
 - Hidden tabs are `display: none`. Comments and related videos load lazily when their tab is first shown. YouTube's continuation loaders use an `IntersectionObserver` with a null root, so infinite scroll still works inside Kempt's scroll boxes; add `overscroll-behavior: contain`.
@@ -79,6 +80,8 @@ The hidden `#sort-menu` items still work when clicked. Find them by index, becau
 ## Grid
 
 Home's Shorts shelf draws only `elementsPerRow` of its items (one row, no Show more). YouTube resets that count on every width change and reflects it to the `elements-per-row` attribute, so Kempt sets it again on each change and on shelves the grid adds later.
+
+Resizing a long rich grid is slow on plain YouTube too: each width change rewrites `items-per-row`, `is-in-first-column` and `is-link-card-full-width` on every loaded item, which caused frames of up to 2 s with about 900 Subscriptions items (`scripts/resize-diag.js`). Layout itself is cheap (a forced relayout of 450 items took 1 to 3 ms), so the cost is in YouTube's own scripts, and CSS cannot reduce it. Rule out YouTube with the extension disabled before blaming a feature.
 
 ## Popup
 
