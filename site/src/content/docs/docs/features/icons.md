@@ -24,6 +24,6 @@ Kempt finds the top bar and the like and dislike buttons by their position in th
 
 ## Sources
 
-The set comes from Juxtopposed's _YouTube Redesign (Community)_ [Figma](https://www.figma.com/community/file/1450380484645543336/youtube-redesign) file. Glyphs it lacks (Ask, Thanks, Movies, Podcasts and a few more) come from [Hugeicons](https://hugeicons.com) Stroke Rounded, which has the same stroke. Anything still unmapped keeps YouTube's icon. Player controls keep YouTube's icons on purpose.
+The set comes from Juxtopposed's [YouTube Redesign (Community)](https://www.figma.com/community/file/1450380484645543336/youtube-redesign) Figma file, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Kempt exports, renames and resizes the icons and draws them as CSS masks. Glyphs it lacks (Ask, Thanks, Movies, Podcasts and a few more) come from [Hugeicons](https://hugeicons.com) Stroke Rounded (MIT), which has the same stroke. Anything still unmapped keeps YouTube's icon. Player controls keep YouTube's icons on purpose.
 
 `npm run icons` re-exports the set into `src/icons/`.

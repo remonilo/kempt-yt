@@ -23,6 +23,7 @@ async function statics() {
   await cp('src/icons', `${out}/icons`, { recursive: true }); // loaded by name, see core/icon.ts
   await cp('src/brand', `${out}/brand`, { recursive: true });
   await cp('src/fonts', `${out}/fonts`, { recursive: true }); // features/font, see scripts/fetch-fonts.mjs
+  await cp('THIRD_PARTY_NOTICES.md', `${out}/THIRD_PARTY_NOTICES.md`); // icon and font licenses ship with the assets
   await css();
 }
 

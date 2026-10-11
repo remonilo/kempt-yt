@@ -136,7 +136,7 @@ YouTube's UI is built from many teams' parts. It mixes three icon styles, and it
 
 ## Credits
 
-Icons come from Juxtopposed's _YouTube Redesign (Community)_ [Figma](https://www.figma.com/community/file/1450380484645543336/youtube-redesign) with gaps filled from [Hugeicons](https://hugeicons.com) (MIT). Kempt is not affiliated with or endorsed by YouTube or Google.
+Icons from [YouTube Redesign (Community)](https://www.figma.com/community/file/1450380484645543336/youtube-redesign) by Juxtopposed, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), exported and modified. Remaining icons from [Hugeicons](https://hugeicons.com) (MIT). Fonts (Inter, Plus Jakarta Sans, Geist, Figtree) are under the SIL Open Font License 1.1. Kempt is not affiliated with or endorsed by YouTube or Google.
 
 ## Support
 
@@ -144,7 +144,7 @@ Kempt is free and I maintain it alone. [Sponsor on GitHub](https://github.com/sp
 
 ## License
 
-[MIT](LICENSE)
+Code: [MIT](LICENSE). Bundled icons and fonts keep their own licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 <!---------------------------------------------------------------------------->
 
