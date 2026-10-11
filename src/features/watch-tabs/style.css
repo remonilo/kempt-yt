@@ -105,7 +105,7 @@ html[kyt-watch-tabs] .kyt-tab:not([hidden]):not(.kyt-tab:not([hidden]) ~ *):not(
    another tab keeps only the bar, its own box, #panels (Ask AI, transcript) and live chat, so no shelf stacks
    under that tab's scroller. A whitelist, so new shelves are covered. In one column these sit under the player. */
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="videos"]) #related,
-html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="chat"]) #chat-container,
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="chat"], [fullscreen]) #chat-container,
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="info"]) .kyt-tab-info,
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="comments"]) .kyt-tab-comments,
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="ai"]) [kyt-ai],
@@ -119,6 +119,11 @@ html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="videos"], [kyt-tab="
    (rule above), the strip goes, and the Live chat tab leaves theater (index.ts). */
 html[kyt-watch-tabs] ytd-watch-flexy[fixed-panels] #columns { padding-right: 0 !important; }
 html[kyt-watch-tabs] ytd-watch-flexy[fixed-panels] #panels-full-bleed-container { display: none !important; }
+/* Fullscreen with live chat open: YouTube moves the panel run (chat included) beside the player, and mount()
+   follows it with the tabs. Fullscreen shows plain YouTube there: the chat alone, whichever tab is selected. */
+html[kyt-watch-tabs] ytd-watch-flexy[fullscreen] :is(.kyt-tabs, .kyt-tab-info, .kyt-tab-comments) {
+  display: none !important;
+}
 /* Two columns: the right column is one viewport tall and only the open tab scrolls, so the page (and the
    video) stays put. overscroll-behavior stops the scroll from passing on to the page at either end.
    #secondary is as tall as the left column, so sticky keeps the tabs in view if that column is longer.
@@ -187,9 +192,9 @@ html[kyt-watch-tabs] :is(.kyt-tab-info, .kyt-tab-comments) {
   contain: inline-size;
 }
 /* Teasers under the actions that open what the tabs already hold: the comment preview, and the
-   "Live chat · Open panel" card that streams show even while chat is open. */
+   "Live chat · Open panel" card (live and replay, chat open or collapsed; the Live chat tab opens it). */
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab] ytd-watch-metadata #comment-teaser,
-html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab][live-chat-present-and-expanded] ytd-watch-metadata #teaser-carousel {
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab] ytd-watch-metadata #teaser-carousel {
   display: none !important;
 }
 

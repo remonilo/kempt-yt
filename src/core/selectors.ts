@@ -15,6 +15,7 @@ export const S = {
   watchMore: 'ytd-watch-metadata ytd-menu-renderer > #button-shape', // the visible ⋯ button
   comments: 'ytd-watch-flexy ytd-comments#comments',
   liveChat: 'ytd-live-chat-frame#chat',
+  chatToggle: '#show-hide-button button', // inside liveChat: hides or shows chat; absent when a replay has no chat
   // YouTube moves these between #secondary-inner (two columns) and #below (one column). Always present.
   panels: 'ytd-watch-flexy #panels', // engagement panels: transcript, Ask, ...
   commentsPanel: 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-comments-section"]',

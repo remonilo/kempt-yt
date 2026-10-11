@@ -73,7 +73,12 @@ export const watchTabs: Feature = {
     let askedAt: Set<Element> | null = null; // expanded panels just before we clicked Ask
 
     const panelsEl = () => flexy.querySelector(S.panels);
-    const available = (t: Tab) => t === 'chat' ? !!flexy.querySelector(`${S.chatContainer} > ${S.liveChat}:not([hidden])`)
+    // A replay's chat can start collapsed (YouTube's "Open panel" card, hidden in style.css): the tab expands it.
+    // Collapsed with no toggle means the replay has no chat.
+    const chatFrame = () => flexy.querySelector<HTMLElement>(`${S.chatContainer} > ${S.liveChat}:not([hidden])`);
+    const chatToggle = () => chatFrame()?.querySelector<HTMLElement>(S.chatToggle);
+    let chatOpened = false; // we expanded it, so leaving the tab collapses it again
+    const available = (t: Tab) => t === 'chat' ? !!chatFrame() && (!chatFrame()!.hasAttribute('collapsed') || !!chatToggle())
       : t === 'ai' ? html.getAttribute('kyt-watch-tabs-aiAs') === 'tab' && !!flexy.querySelector(S.askButton)
       : true;
 
@@ -101,6 +106,14 @@ export const watchTabs: Feature = {
         flexy.querySelector<HTMLElement>(S.askButton)?.click();
       }
       if (t === 'ai' && tab !== 'ai') back = tab;
+      const collapsed = !!chatFrame()?.hasAttribute('collapsed');
+      if (t === 'chat' && collapsed) {
+        chatToggle()?.click();
+        chatOpened = true;
+      } else if (t !== 'chat' && chatOpened) {
+        if (!collapsed) chatToggle()?.click();
+        chatOpened = false;
+      }
       tab = t;
       render();
       if (t === 'info') call('relayout', '.kyt-tab-info');
@@ -176,7 +189,7 @@ export const watchTabs: Feature = {
     count();
 
     const watch = (target: Node | null, init: MutationObserverInit, fn: () => void) => observe(target, init, fn, signal);
-    watch(flexy.querySelector(S.chatContainer), { childList: true, subtree: true, attributeFilter: ['hidden'] }, render);
+    watch(flexy.querySelector(S.chatContainer), { childList: true, subtree: true, attributeFilter: ['hidden', 'collapsed'] }, render);
     watch(flexy.querySelector(S.watchActions), { subtree: true, attributeFilter: ['kyt-icon'] }, () => (checkAi(), render()));
     // HTML lowercases attribute names: the runner's kyt-watch-tabs-aiAs lands as -aias.
     watch(html, { attributeFilter: ['kyt-watch-tabs-ai', 'kyt-watch-tabs-aias'] }, () => (ai(), render()));
@@ -200,7 +213,8 @@ export const watchTabs: Feature = {
     watch(panelsEl(), { subtree: true, attributeFilter: ['visibility'] }, onPanels);
     watch(panelsEl(), { subtree: true, childList: true, characterData: true }, count);
 
-    document.addEventListener('kyt:navigate', () => select('videos'), { signal });
+    // The frame is reused for the next video: forget our expand so select() doesn't collapse the new chat.
+    document.addEventListener('kyt:navigate', () => (chatOpened = false, select('videos')), { signal });
     document.addEventListener('yt-page-data-updated', () => (ai(), render()), { signal });
 
     signal.addEventListener('abort', () => {
