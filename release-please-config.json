@@ -4,6 +4,7 @@
     ".": {
       "release-type": "simple",
       "include-component-in-tag": false,
+      "exclude-paths": ["site"],
       "bump-minor-pre-major": true,
       "bump-patch-for-minor-pre-major": false,
       "extra-files": [{ "type": "json", "path": "manifest.json", "jsonpath": "$.version" }]
