@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.5.0](https://github.com/remonilo/kempt-yt/compare/v0.4.0...v0.5.0) (2026-10-12)
+
+
+### Features
+
+* add comment search and Figma comment layout ([2865739](https://github.com/remonilo/kempt-yt/commit/28657391fce67f75e076dbca94365cd0492bee4d))
+* restyle History header with sticky chips row and external chips ([a159ed7](https://github.com/remonilo/kempt-yt/commit/a159ed774685b5522a8e82817f906eca8f31f877))
+
+
+### Bug Fixes
+
+* **ci:** run tests with a glob so Node 22 finds them ([925e8eb](https://github.com/remonilo/kempt-yt/commit/925e8eb1da29580d127ef0ab136fda83af2ecb05))
+
 ## [0.4.0](https://github.com/remonilo/kempt-yt/compare/v0.3.0...v0.4.0) (2026-10-12)
 
 
