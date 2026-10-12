@@ -3,7 +3,7 @@ title: Comment sort
 description: Top and Newest as chips instead of a dropdown.
 ---
 
-The Sort by dropdown above comments becomes a row of chips beside the comment count: Top and Newest. The selected chip uses the accent.
+The Sort by dropdown above comments becomes a row of chips beside the comment count: Top and Newest. The selected chip uses the accent. It works under videos and on channel post pages.
 
 ## Settings
 

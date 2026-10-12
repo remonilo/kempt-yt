@@ -37,7 +37,7 @@ YouTube's sidebar data only flags that a channel has new content, with no count.
 
 ## Is there a Safari version?
 
-No. Kempt supports Firefox 128+ and Chromium browsers.
+No. Kempt supports Firefox 128+ and Chromium 120+ browsers.
 
 ## Why is the popup only in English?
 

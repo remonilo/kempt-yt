@@ -3,7 +3,9 @@ title: Icons
 description: One icon set across YouTube, drawn over YouTube's own buttons.
 ---
 
-YouTube mixes three icon styles. Kempt replaces them with one set of 1.5px rounded strokes across the top bar, the sidebar, the action row under the video (like, dislike, share, save, download, clip, more), the Create button, the subscribe bell, and the rows of popup menus: the account menu, the ⋯ menu under the video and the ⋯ menu on video cards.
+YouTube mixes three icon styles. Kempt replaces them with one set of 1.5px rounded strokes across the top bar, the sidebar, the player controls, the action row under the video (like, dislike, share, save, download, clip, more), the Create button, the subscribe bell, and the rows of popup menus: the account menu, the ⋯ menu under the video and the ⋯ menu on video cards.
+
+Comments get the set too: like and dislike share one pill with the count between them, and Reply sits in its own pill. Channel pages follow: the header links, the About dialog rows, and the like, share and comment buttons on posts (Posts tab, channel Home and post pages).
 
 Pressed like and dislike buttons use the filled version of their icon. The bell shows its three states: all notifications, personalized, none.
 
@@ -24,6 +26,6 @@ Kempt finds the top bar and the like and dislike buttons by their position in th
 
 ## Sources
 
-The set comes from Juxtopposed's [YouTube Redesign (Community)](https://www.figma.com/community/file/1450380484645543336/youtube-redesign) Figma file, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Kempt exports, renames and resizes the icons and draws them as CSS masks. Glyphs it lacks (Ask, Thanks, Movies, Podcasts and a few more) come from [Hugeicons](https://hugeicons.com) Stroke Rounded (MIT), which has the same stroke. Anything still unmapped keeps YouTube's icon. Player controls keep YouTube's icons on purpose.
+The set comes from Juxtopposed's [YouTube Redesign (Community)](https://www.figma.com/community/file/1450380484645543336/youtube-redesign) Figma file, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Kempt exports, renames and resizes the icons and draws them as CSS masks. Glyphs it lacks (Ask, Thanks, Movies, Podcasts and a few more) come from [Hugeicons](https://hugeicons.com) Stroke Rounded (MIT), which has the same stroke. Anything still unmapped keeps YouTube's icon. Player control icons apply to YouTube's current player only; older player builds keep YouTube's icons.
 
 `npm run icons` re-exports the set into `src/icons/`.

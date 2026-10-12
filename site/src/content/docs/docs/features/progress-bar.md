@@ -18,6 +18,6 @@ With Animate wave off, the wave stays still. Reduced motion in your system setti
 ## How it works
 
 - YouTube moves the played fill with an inline `transform: scaleX(p)`, which would stretch a masked wave. Kempt draws the track, buffered part and played part as three unscaled wave layers per chapter segment, and clips the last two to the buffered and played fractions it copies from YouTube's own fills.
-- The fractions update on media events (`timeupdate`, `progress`, `seeked`, `durationchange`, `loadedmetadata`) and while you move the pointer over the bar. There are no timers and no per-frame observer. A small `MutationObserver` on the bar alone catches YouTube rebuilding its chapter segments.
+- The fractions update on media events (`timeupdate`, `progress`, `seeked`, `durationchange`, `loadedmetadata`) and while you drag on the bar. There are no timers and no per-frame observer. A small `MutationObserver` on the bar alone catches YouTube rebuilding its chapter segments.
 - The drift is a `transform` animation, so it runs on the compositor and repaints nothing. It runs only while the video plays and the controls are showing. Pausing freezes the wave where it is, and hiding the controls pauses it.
 - On a chaptered video with 30 segments, one update took about 0.2 ms on `timeupdate` and 0.3 ms on `pointermove` in a headless Firefox run. GPU and power use are unmeasured.

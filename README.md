@@ -90,7 +90,7 @@ Firefox 128 or later: [Firefox Add-ons][firefox_link].
 
 ### Chromium browsers
 
-Chrome, Edge, Brave or any other Chromium browser: [Chrome Web Store][chrome_link].
+Chrome 120 or later, Edge, Brave or any other Chromium browser: [Chrome Web Store][chrome_link].
 
 ### From source
 
