@@ -37,6 +37,7 @@ Short comments in the source point here. Each entry is a constraint YouTube impo
 - Entries behind YouTube's "Show more" (Memberships, for example) have no drawn icon. `ytIcon` waits up to about 5 s for the hidden `yt-icon` to render.
 - Masking flattens multicolour brand icons (Premium, Music, Kids). Kempt detects a fill other than `currentColor` and draws those as `<img>`.
 - `grid-template-rows: 0fr` to `1fr` on an empty list animates to the wrong height. Fill the list before opening it.
+- The Shorts entry has a `serviceEndpoint` (seedless `reelWatchEndpoint`, url `/shorts/`), not a `navigationEndpoint`. Sent through `yt-navigate` it opens `/shorts/` with no sequence: nothing plays and scrolling does nothing. YouTube's guide entry `onTap` starts it (the URL becomes `/shorts/<id>`), so `navigate` borrows that handler from a detached `ytd-guide-entry-renderer`.
 
 ## Icons
 

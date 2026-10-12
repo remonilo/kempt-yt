@@ -2,7 +2,7 @@ import type { Feature } from '../../core/feature.ts';
 import { el, keep, waitFor } from '../../core/dom.ts';
 import { icon, setIcon, setIconUrl } from '../../core/icon.ts';
 import { S } from '../../core/selectors.ts';
-import { buildNav, EXPLORE, type Entry, type Nav, type Row } from './nav.ts';
+import { buildNav, EXPLORE, isHere, type Entry, type Nav, type Row } from './nav.ts';
 
 // Keys drop YouTube's _CAIRO suffix. Unlisted types use YouTube's own SVG.
 const FIGMA: Record<string, string> = {
@@ -17,16 +17,6 @@ const FIGMA: Record<string, string> = {
 };
 /** No filled variant: Figma's download, report, clip and every Hugeicon. */
 const NO_SELECTED = new Set(['download', 'report', 'clip', 'movies', 'memberships', 'your-videos', 'podcasts', 'shopping', 'help', 'feedback']);
-
-// A sub-page of a channel counts as the channel.
-function isHere(url: string): boolean {
-  if (!url.startsWith('/')) return false;
-  const [path, query] = url.split('?');
-  const here = location.pathname;
-  if (path !== here && (path === '/' || !here.startsWith(`${path}/`))) return false;
-  const params = new URLSearchParams(location.search);
-  return [...new URLSearchParams(query)].every(([k, v]) => params.get(k) === v);
-}
 
 export const sidebar: Feature = {
   id: 'sidebar',
@@ -71,7 +61,7 @@ export const sidebar: Feature = {
       return i;
     }
 
-    /** Page links are <a> (middle-click works); entries without a URL (Shorts) are buttons. */
+    /** Page links are <a> (middle-click works); entries without a URL are buttons. */
     function link(e: Entry, cls = 'kyt-nav-link', ico = entryIcon(e)) {
       const a = el(e.url.startsWith('kyt:') ? 'button' : 'a', cls, ...(ico ? [ico] : []), el('span', 'kyt-nav-title', e.title));
       if (e.isNew) a.append(el('span', 'kyt-nav-new'));
@@ -87,7 +77,9 @@ export const sidebar: Feature = {
       const cls = 'kyt-nav-link kyt-nav-child';
       if (children === 'playlists') {
         playlists ??= call('playlists').catch((err) => (console.warn('kyt: playlists failed', err), []));
-        box.replaceChildren(...(await playlists).map((c) => link(c, cls, icon('library'))));
+        const list = await playlists;
+        if (!list.length) playlists = undefined; // failed or empty: ask again on the next open
+        box.replaceChildren(...list.map((c) => link(c, cls, icon('library'))));
       } else box.replaceChildren(...children.map((c) => link(c, cls)));
       setActive();
     }
@@ -183,7 +175,7 @@ export const sidebar: Feature = {
 
     function setActive() {
       for (const a of [...nav.querySelectorAll<HTMLElement>('[data-url]'), ...mini.querySelectorAll<HTMLElement>('[data-url]')]) {
-        const on = isHere(a.dataset.url!);
+        const on = isHere(a.dataset.url!, location);
         if (on === (a.ariaCurrent === 'page')) continue;
         a.ariaCurrent = on ? 'page' : null;
         const ico = a.querySelector<HTMLElement>('.kyt-icon[data-name]');

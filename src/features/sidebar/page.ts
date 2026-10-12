@@ -3,11 +3,12 @@ import type { Entry, Section } from './nav.ts';
 
 let guideFetch: Promise<any> | undefined;
 
-// Entries without a URL (Shorts) get a `kyt:<icon>` key; navigate resolves both.
+// Shorts carries its endpoint as serviceEndpoint (url /shorts/). Entries with neither get a `kyt:<icon>` key.
 function guideEntry(r: any, header?: boolean): Entry {
   const icon: string | undefined = r.icon?.iconType;
-  const url: string = r.navigationEndpoint?.commandMetadata?.webCommandMetadata?.url ?? `kyt:${icon}`;
-  if (r.navigationEndpoint) endpoints.set(url, r.navigationEndpoint);
+  const endpoint = r.navigationEndpoint ?? r.serviceEndpoint;
+  const url: string = endpoint?.commandMetadata?.webCommandMetadata?.url ?? `kyt:${icon}`;
+  if (endpoint) endpoints.set(url, endpoint);
   // NEW_CONTENT is YouTube's blue dot on a channel with uploads the user hasn't seen. The data has no count.
   const isNew = r.presentationStyle === 'GUIDE_ENTRY_PRESENTATION_STYLE_NEW_CONTENT' || undefined;
   return { title: r.formattedTitle?.simpleText ?? text(r.title), url, icon, thumb: r.thumbnail?.thumbnails?.[0]?.url as string | undefined, header, isNew };
@@ -27,8 +28,10 @@ function guideEntries(items: any[] = []): Entry[] {
 
 export const sidebar = {
   async guide() {
-    let data;
-    for (let i = 0; i < 20 && !(data = (document.querySelector('ytd-guide-renderer') as any)?.data?.items); i++) await sleep(100);
+    const rendered = () => (document.querySelector('ytd-guide-renderer') as any)?.data?.items;
+    let data = rendered();
+    // Once the fetch has run, the guide is known to be missing here: no need to wait for it again.
+    for (let i = 0; i < 20 && !data && !guideFetch; i++) (await sleep(100), (data = rendered()));
     // No expanded guide yet (collapsed sidebar, or an overlay guide never opened): fetch what it would show, once.
     data ??= (await (guideFetch ??= innertube('guide', {}).catch(() => null)))?.items;
     return (data?.map((s: any) => {

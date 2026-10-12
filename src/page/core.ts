@@ -122,13 +122,19 @@ export const core = {
   stampTabs: (sel: string) => watchRoot(sel, 'tabs', stampTabs, { childList: true, subtree: true, attributeFilter: ['tab-title'] }),
 
   navigate(url: string) {
+    if (url.startsWith('kyt:')) return; // a guide entry with no URL and no endpoint: nothing to open
     const videoId = new URL(url, location.origin).searchParams.get('v');
     const endpoint = endpoints.get(url) ?? (videoId && {
       commandMetadata: { webCommandMetadata: { url, webPageType: 'WEB_PAGE_TYPE_WATCH', rootVe: 3832 } },
       watchEndpoint: { videoId },
     });
     if (!endpoint) return location.assign(url);
-    document.querySelector('ytd-app')?.dispatchEvent(new CustomEvent('yt-navigate', { bubbles: true, composed: true, detail: { endpoint } }));
+    const app = document.querySelector<any>('ytd-app');
+    // The guide's Shorts entry is a seedless reel: yt-navigate opens /shorts/ with no sequence, so nothing plays.
+    // YouTube's guide entry tap handler starts it; a detached entry lends it, hosted on ytd-app.
+    const onTap = (endpoint as any).reelWatchEndpoint && (document.createElement('ytd-guide-entry-renderer') as any).polymerController?.onTap;
+    if (onTap) onTap.call({ data: { serviceEndpoint: endpoint }, hostElement: app, componentBehavior: { resolveCommand: (c: unknown) => app.resolveCommand(c) } }, { preventDefault() {} });
+    else app?.dispatchEvent(new CustomEvent('yt-navigate', { bubbles: true, composed: true, detail: { endpoint } }));
     const drawer = document.querySelector<any>('tp-yt-app-drawer#guide'); // the overlay guide (watch pages) closes, as for YouTube's own links
     if (drawer?.opened && !drawer.persistent) drawer.close();
   },

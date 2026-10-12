@@ -3,7 +3,7 @@
 
 export interface Entry {
   title: string;
-  /** Path or absolute URL; `kyt:<icon>` for entries without one (Shorts). */
+  /** Path or absolute URL; `kyt:<icon>` for entries without one. */
   url: string;
   icon?: string;
   thumb?: string;
@@ -30,6 +30,15 @@ export interface Nav {
 }
 
 export const EXPLORE = 'kyt:EXPLORE';
+
+/** A sub-page of a channel counts as the channel. */
+export function isHere(url: string, { pathname: here, search }: { pathname: string; search: string }): boolean {
+  if (!url.startsWith('/')) return false;
+  const [path, query] = url.split('?');
+  if (path !== here && (path === '/' || !here.startsWith(path.endsWith('/') ? path : `${path}/`))) return false; // Shorts: /shorts/
+  const params = new URLSearchParams(search);
+  return [...new URLSearchParams(query)].every(([k, v]) => params.get(k) === v);
+}
 
 const is = (e: Entry | undefined, type: string) => !!e?.icon?.startsWith(type);
 
