@@ -50,7 +50,7 @@ html[dark] {
 }
 
 /* Features set size and font. */
-button.kyt-chip {
+:is(button, a).kyt-chip {
   all: unset;
   box-sizing: border-box;
   border-radius: 8px;
@@ -59,13 +59,13 @@ button.kyt-chip {
   cursor: pointer;
   transition: background-color 150ms;
 }
-button.kyt-chip:hover {
+:is(button, a).kyt-chip:hover {
   background: var(--kyt-hover-bg);
 }
-button.kyt-chip[aria-pressed="true"] {
+:is(button, a).kyt-chip[aria-pressed="true"] {
   background: var(--kyt-selected-strong-bg);
   cursor: default;
 }
-button.kyt-chip:focus-visible {
+:is(button, a).kyt-chip:focus-visible {
   outline: 2px solid var(--kyt-outline-focus);
 }

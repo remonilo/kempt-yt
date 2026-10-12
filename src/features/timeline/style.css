@@ -171,3 +171,168 @@ html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:is([kyt-qu
     transition: none;
   }
 }
+
+/* History header (Figma 100:9034): 20px title over a full-width divider; chips row and search pill share one 36px
+   line; Clear all (labelled), Pause and Manage (icon-only) sit under the search. Comments/Posts/Live chat move into
+   the chips row as external chips (JS), plus Older history. */
+html[kyt-timeline] ytd-browse[page-subtype="history"] {
+  & #page-header-container {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--kyt-outline);
+    margin-bottom: 40px;
+  }
+  & #page-header .ytPageHeaderViewModelTitle h1 {
+    font: 500 20px / 28px Roboto, Arial, sans-serif;
+  }
+  & ytd-section-list-renderer > #header-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin-bottom: 12px;
+    font: 500 14px / 36px Roboto, Arial, sans-serif;
+  }
+  & ytd-section-list-renderer > #header-container .ytChipShapeChip {
+    height: 36px;
+  }
+  & .kyt-hist-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    --kyt-icon-size: 16px;
+  }
+  & .kyt-hist-links > .kyt-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 12px;
+  }
+  & .kyt-hist-links .kyt-icon:first-child {
+    --kyt-icon-size: 20px;
+  }
+  & #secondary {
+    padding-top: 0;
+  }
+  & ytd-browse-feed-actions-renderer {
+    margin-top: 0;
+  }
+  & ytd-browse-feed-actions-renderer > #contents {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px 8px;
+    width: 314px;
+    padding: 0;
+    margin: 0;
+  }
+  /* My Activity links now live in the chips row. */
+  & ytd-browse-feed-actions-renderer ytd-compact-link-renderer {
+    display: none;
+  }
+  & ytd-browse-feed-actions-renderer ytd-search-box-renderer {
+    flex: 0 0 100%;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    height: 36px;
+    margin: 0;
+    padding: 0 8px 0 4px;
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--kyt-fg) 5%, transparent);
+    border: 1px solid transparent;
+    &:focus-within { border-color: var(--kyt-outline-focus); }
+    & #form { flex: 1; min-width: 0; height: 34px; }
+    /* paper-input is 56px tall with its 40px field 8px down; pull the field's middle onto the pill's. */
+    & tp-yt-paper-input { position: relative; top: -11px; margin: 0; }
+    & .underline, & .floated-label-placeholder { display: none; }
+    & #search-button { top: 1px; left: 0; }
+    & #search-button :is(ytd-button-renderer, button) { width: 32px; height: 32px; padding: 0; justify-content: center; }
+    & #search-button .ytSpecButtonShapeNextIcon { width: 20px; height: 20px; margin: 0 !important; }
+  }
+  & ytd-browse-feed-actions-renderer > #contents > ytd-button-renderer {
+    margin: 0;
+  }
+  & ytd-browse-feed-actions-renderer > #contents > ytd-button-renderer :is(button, a) {
+    height: 36px;
+    border-radius: 18px;
+  }
+  /* Clear all keeps its label: it's the destructive one. Danger red on hover only (the accent may be red too). */
+  & ytd-browse-feed-actions-renderer > #contents > [kyt-icon="DELETE"] {
+    margin-right: auto;
+  }
+  & ytd-browse-feed-actions-renderer > #contents > [kyt-icon="DELETE"] :is(button, a) {
+    background: color-mix(in srgb, var(--kyt-fg) 5%, transparent);
+    transition: background-color 150ms, color 150ms;
+    &:hover { color: #e5484d; background: color-mix(in srgb, #e5484d 15%, transparent); }
+  }
+  & ytd-browse-feed-actions-renderer > #contents > :is([kyt-icon="PAUSE_OUTLINED"], [kyt-icon="PLAY_OUTLINED"], [kyt-icon="SETTINGS"]) :is(button, a) {
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+    & .ytSpecButtonShapeNextIcon { margin: 0 !important; }
+    & .ytSpecButtonShapeNextButtonTextContent { display: none; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[kyt-timeline] ytd-browse[page-subtype="history"] ytd-browse-feed-actions-renderer [kyt-icon="DELETE"] :is(button, a) {
+    transition: none;
+  }
+}
+
+/* Signed in (search box present): no right column. The grid takes the full width and the chips row sticks under the
+   masthead. The search pill and Clear all / Pause / Manage stick with it as a 314px block on its right: #secondary
+   becomes a full-height, click-through overlay so that block can stick inside it. */
+html[kyt-timeline] ytd-browse[page-subtype="history"]:has(ytd-search-box-renderer) {
+  overflow: clip; /* YouTube's overflow: hidden makes ytd-browse the sticky scroller, so nothing would stick */
+  & ytd-two-column-browse-results-renderer {
+    position: relative;
+  }
+  & ytd-two-column-browse-results-renderer > #primary {
+    padding-right: 0 !important; /* YouTube reserves the column's width here */
+  }
+  & ytd-two-column-browse-results-renderer > #secondary {
+    position: absolute;
+    inset: 0 0 0 auto;
+    z-index: 3; /* over the sticky chips row */
+    width: 314px;
+    height: auto;
+    overflow: visible; /* YouTube scrolls the fixed column itself; a scroller here would hold the block in place */
+    pointer-events: none;
+  }
+  & ytd-browse-feed-actions-renderer {
+    display: block;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  & ytd-browse-feed-actions-renderer > #contents {
+    position: sticky;
+    top: var(--ytd-masthead-height, 56px);
+    padding-top: 8px; /* the chips row's top padding */
+    gap: 8px;
+    & > * { pointer-events: auto; }
+  }
+  /* A long localized label shrinks Clear all, never the icons. */
+  & ytd-browse-feed-actions-renderer > #contents > [kyt-icon="DELETE"] {
+    min-width: 0;
+    flex: 0 1 auto;
+    & :is(button, a), & .ytSpecButtonShapeNextButtonTextContent { min-width: 0; max-width: 100%; }
+    & .ytSpecButtonShapeNextButtonTextContent span { overflow: hidden; text-overflow: ellipsis; }
+  }
+  & ytd-section-list-renderer > #header-container {
+    position: sticky;
+    top: var(--ytd-masthead-height, 56px);
+    z-index: 2;
+    margin: 0 0 4px;
+    padding: 8px 330px 8px 0; /* room for the search block */
+    min-height: 96px; /* two 36px lines + 8px gaps, so the actions line never hangs below the frosted row */
+    box-sizing: border-box;
+    align-content: flex-start;
+    /* Frosted like the masthead it sits under. */
+    background: color-mix(in srgb, var(--kyt-bg) 80%, transparent);
+    backdrop-filter: blur(48px);
+  }
+}

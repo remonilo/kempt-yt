@@ -18,7 +18,8 @@ html[kyt-icons] :is(
   ytd-expandable-tab-renderer #icon-button yt-icon,
   ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"], [kyt-icon="CONTENT_CUT"], [kyt-icon="SPARK"], [kyt-icon="MONEY_HEART"]) .ytSpecButtonShapeNextIcon,
   ytd-watch-metadata ytd-menu-renderer > #button-shape .ytSpecButtonShapeNextIcon,
-  ytd-watch-metadata ytd-subscription-notification-toggle-button-renderer-next .ytSpecButtonShapeNextIcon
+  ytd-watch-metadata ytd-subscription-notification-toggle-button-renderer-next .ytSpecButtonShapeNextIcon,
+  ytd-browse-feed-actions-renderer :is([kyt-icon="SEARCH"], [kyt-icon="CLOSE"], [kyt-icon="DELETE"], [kyt-icon="PAUSE_OUTLINED"], [kyt-icon="PLAY_OUTLINED"], [kyt-icon="SETTINGS"]) .ytSpecButtonShapeNextIcon
 ) {
   background-color: currentColor;
   mask: var(--kyt-i) center / contain no-repeat;
@@ -50,6 +51,17 @@ html[kyt-icons] ytd-masthead #buttons > ytd-button-renderer .ytSpecButtonShapeNe
 html[kyt-icons] ytd-masthead #buttons > ytd-button-renderer .ytSpecButtonShapeNextOutline .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-you); }
 html[kyt-icons] ytd-masthead ytd-notification-topbar-button-renderer .ytSpecIconBadgeShapeIcon { --kyt-i: var(--kyt-i-notifs); }
 html[kyt-icons] ytd-masthead ytd-topbar-menu-button-renderer yt-icon-button yt-icon { --kyt-i: var(--kyt-i-more); } /* signed out ⋮ */
+
+/* History's right column (signed in; logged out shows only Clear all and Pause). Turn on (PLAY_OUTLINED) replaces
+   Pause while history is paused. */
+html[kyt-icons] ytd-browse-feed-actions-renderer {
+  & [kyt-icon="SEARCH"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-search); }
+  & [kyt-icon="CLOSE"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-close); }
+  & [kyt-icon="DELETE"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-delete); }
+  & [kyt-icon="PAUSE_OUTLINED"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-pause); }
+  & [kyt-icon="PLAY_OUTLINED"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-play); }
+  & [kyt-icon="SETTINGS"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-settings); }
+}
 
 html[kyt-icons] ytd-watch-metadata like-button-view-model .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-liked); }
 html[kyt-icons] ytd-watch-metadata like-button-view-model [aria-pressed="true"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-liked-selected); }

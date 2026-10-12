@@ -18,7 +18,9 @@ const NAMES = ['menu', 'arrow-left', 'search', 'mic', 'close', 'add', 'notifs', 
   'fullscreen', 'fullscreen-selected', 'pip', 'cast', 'ambient-mode', 'annotations', 'sleep-timer', 'speed', 'quality-hd',
   'stable-audio', 'audio-channel', 'comments',
   // channel header, About dialog (...more), posts
-  'link', 'info', 'date', 'mail', 'phone', 'people', 'views', 'your-videos'];
+  'link', 'info', 'date', 'mail', 'phone', 'people', 'views', 'your-videos',
+  // History's right column
+  'delete'];
 
 export const icons: Feature = {
   id: 'icons',
@@ -37,6 +39,8 @@ export const icons: Feature = {
     // The action row persists across watch pages, so one stamp per page load is enough.
     let stamped = false;
     const onRoute = async (route: Route) => {
+      // History's right column (Search, Clear all, Pause, Manage); stamp is idempotent per root.
+      if (route === 'history') waitFor(S.historyActions, { signal }).then((el) => el && call('stamp', S.historyActions));
       if (route !== 'watch') return;
       // The Subscribe button's bell state; idempotent per root, so every watch page is fine.
       waitFor(S.watchSubscribe, { signal }).then((el) => el && call('stampBell', S.watchSubscribe));

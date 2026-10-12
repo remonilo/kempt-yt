@@ -28,6 +28,8 @@ const ICONS = {
   studio: 'Youtube', // YouTube Studio
   'your-data': 'ShieldUser',
   appearance: 'Moon02',
+  'open-external': 'ArrowUpRight01', // History's My Activity chips
+  posts: 'Note01', // History's Posts chip
   language: 'Languages',
   restricted: 'UserSettings01', // Restricted Mode
   globe: 'Globe02', // Location (Figma's `location` is a filled globe, heavier than the rest)

@@ -27,6 +27,9 @@ export const S = {
   subsGrid: 'ytd-browse[page-subtype="subscriptions"] ytd-rich-grid-renderer > #contents',
   historyList: 'ytd-browse[page-subtype="history"] ytd-section-list-renderer > #contents', // one ytd-item-section-renderer per day
   historyTitle: 'ytd-item-section-header-renderer #title', // "Today", "Thursday", "27 Sept"
+  historyChips: 'ytd-browse[page-subtype="history"] ytd-section-list-renderer > #header-container', // All/Videos/Shorts chip bar row
+  historyActions: 'ytd-browse[page-subtype="history"] ytd-browse-feed-actions-renderer', // right column; buttons need stamp
+  historyLinks: 'ytd-browse[page-subtype="history"] ytd-browse-feed-actions-renderer ytd-compact-link-renderer', // Comments/Posts/Live chat (My Activity)
   lockupDate: '.ytContentMetadataViewModelMetadataText', // last one in a lockup is the age ("7 hr ago"), aria-label has the long form
   lockupMeta: '.ytLockupViewModelMetadata', // title, channel and metadata rows of a lockup
   fsActions: '#movie_player .ytp-fullscreen-quick-actions', // fullscreen like/dislike/comments/share/⋯ row; needs stamp

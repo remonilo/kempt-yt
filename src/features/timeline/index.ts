@@ -234,12 +234,70 @@ function history(list: Element, signal: AbortSignal): void {
   signal.addEventListener('abort', () => heads.forEach((h) => h.remove()), { once: true });
 }
 
+/** My Activity has only an "older than" date filter, so the chip promises older history, not date search. */
+const OLDER = {
+  en: ['Older history', 'Open My Activity to jump to an earlier date'],
+  es: ['Historial anterior', 'Abre Mi actividad para ir a una fecha anterior'],
+  pt: ['Histórico anterior', 'Abra Minha atividade para ir a uma data anterior'],
+  de: ['Älterer Verlauf', 'Öffne „Meine Aktivitäten“, um zu einem früheren Datum zu springen'],
+  fr: ['Historique plus ancien', 'Ouvrir Mon activité pour accéder à une date antérieure'],
+  ru: ['Более ранняя история', 'Откройте «Мои действия», чтобы перейти к более ранней дате'],
+  ja: ['以前の履歴', 'マイ アクティビティで以前の日付に移動'],
+  ko: ['이전 기록', '내 활동에서 이전 날짜로 이동'],
+  hi: ['पुराना इतिहास', 'पहले की तारीख पर जाने के लिए मेरी गतिविधि खोलें'],
+  id: ['Histori lama', 'Buka Aktivitas Saya untuk melompat ke tanggal sebelumnya'],
+  tr: ['Eski geçmiş', 'Daha eski bir tarihe gitmek için Etkinliğim’i açın'],
+} satisfies Record<string, [string, string]>;
+const MY_ACTIVITY = 'https://myactivity.google.com/product/youtube';
+
+/** Leading icon by My Activity product (the label is localized, the URL is not). */
+const linkIcon = (href: string) =>
+  /comments/.test(href) ? 'comments' : /chat/.test(href) ? 'chat' : /posts|community/.test(href) ? 'posts' : 'date';
+
+function link(href: string, label: string, tip = label): HTMLAnchorElement {
+  const a = el('a', 'kyt-chip', icon(linkIcon(href)), label, icon('open-external'));
+  a.href = href;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.title = tip;
+  return a;
+}
+
+// History's My Activity links (Comments, Posts, Live chat) move from the right column into the chips row as external
+// chips, plus Older history. Pause and Manage go icon-only, so their label becomes the tooltip.
+async function historyHeader(signal: AbortSignal) {
+  const row = await waitFor(S.historyChips, { signal, timeout: Infinity });
+  if (!row || signal.aborted) return;
+  await waitFor(S.historyLinks, { signal }); // signed in only; logged out there are none
+  if (signal.aborted) return;
+  const links = el('div', 'kyt-hist-links');
+  for (const c of document.querySelectorAll(S.historyLinks)) {
+    const a = c.querySelector<HTMLAnchorElement>('a[href]');
+    const label = c.querySelector('#label')?.textContent?.trim();
+    if (a && label) links.append(link(a.href, label));
+  }
+  const [older, tip] = local(OLDER);
+  links.append(link(MY_ACTIVITY, older, tip));
+  row.append(links);
+  // Set on hover: YouTube re-stamps these buttons, so titles set once at load can be lost.
+  const titled = new Set<Element>();
+  const actions = document.querySelector(S.historyActions);
+  actions?.addEventListener('mouseover', (e) => {
+    const b = (e.target as Element).closest('ytd-button-renderer :is(button, a)');
+    const label = b?.getAttribute('aria-label');
+    if (!b || !label || b.getAttribute('title') === label) return;
+    b.setAttribute('title', label);
+    titled.add(b);
+  }, { signal });
+  signal.addEventListener('abort', () => (links.remove(), titled.forEach((b) => b.removeAttribute('title'))), { once: true });
+}
+
 export const timeline: Feature = {
   id: 'timeline',
   label: 'Timeline', hint: 'Subscriptions and History', group: 'feeds', icon: 'history',
   defaultOn: true,
   routes: ['subscriptions', 'history'],
-  run({ signal }) {
+  run({ signal, call }) {
     // Subscriptions -> History keeps the feature running (both are its routes), so restart per page.
     let page: AbortController | undefined;
     const start = async () => {
@@ -251,6 +309,9 @@ export const timeline: Feature = {
         const grid = await waitFor(S.subsGrid, { signal: sig, timeout: Infinity });
         if (grid && !sig.aborted) subscriptions(grid, sig);
       } else if (route === 'history') {
+        historyHeader(sig);
+        // Clear all / Pause / Manage are told apart by icon type (labels are localized); icons may be off.
+        waitFor(S.historyActions, { signal: sig }).then((el) => el && call('stamp', S.historyActions));
         const list = await waitFor(S.historyList, { signal: sig, timeout: Infinity });
         if (list && !sig.aborted) history(list, sig);
       }
