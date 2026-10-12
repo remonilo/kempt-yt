@@ -6,7 +6,7 @@
     "build": "node build.mjs",
     "dev": "node build.mjs --watch",
     "check": "tsc --noEmit",
-    "test": "node --test test/",
+    "test": "node --test \"test/*.test.ts\"",
     "icons": "node scripts/fetch-icons.mjs && node scripts/fetch-hugeicons.mjs"
   },
   "devDependencies": {

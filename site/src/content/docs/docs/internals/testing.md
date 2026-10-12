@@ -7,7 +7,7 @@ description: Unit tests, and the headless scripts that load Kempt into a real Yo
 
 ```sh
 npm run check    # tsc --noEmit
-npm test         # node --test test/
+npm test         # node --test "test/*.test.ts"
 npm run build    # into dist/
 npm run dev      # watch build
 ```
@@ -59,3 +59,4 @@ release-please opens a release PR from the Conventional Commits on `main`. Mergi
 
 - Never edit the release PR's body by hand. release-please builds the release from that body when the PR merges; a hand-edited body fails to parse, so no tag or release is made and the next run treats the whole history as unreleased. Edit `CHANGELOG.md` on the PR branch, or the release notes after.
 - Its JSON updater reformats `manifest.json` (one-line arrays get expanded). That's harmless.
+- The release job runs `npm run check && npm test` on Node 22 after the release already exists, so a failure leaves a release with no zips. Node 22's `node --test` takes no directory argument, which is why the script passes a glob. If the job fails, fix `main`, then build the tag and upload by hand (`gh release upload <tag> kempt-*.zip`).
