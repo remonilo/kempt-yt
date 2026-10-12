@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.4.0](https://github.com/remonilo/kempt-yt/compare/v0.3.0...v0.4.0) (2026-10-12)
+
+
+### Features
+
+* **comment-sort:** show sort chips on post pages ([ff92da9](https://github.com/remonilo/kempt-yt/commit/ff92da90a3fccebee55ca101b650b9ba883921e7))
+* **icons:** use the icon set on channel pages, the About dialog and posts ([ef39e0b](https://github.com/remonilo/kempt-yt/commit/ef39e0be834ebf1fe5eb8ad7748c9942ebe56361))
+
+
+### Bug Fixes
+
+* audit fixes ([89f9ffd](https://github.com/remonilo/kempt-yt/commit/89f9ffdf9e25431b4459582b2082bdabcb7389cd))
+* **icons:** space and centre the posts shelf toolbar ([1682f3a](https://github.com/remonilo/kempt-yt/commit/1682f3a24dfc78af65c2023fd2fbe0a8777dbefa))
+* **sidebar:** open Shorts from the sidebar ([7c49bef](https://github.com/remonilo/kempt-yt/commit/7c49bef43e541bef16e7ad391e5ec3ee52c092e3))
+
 ## [0.3.0](https://github.com/remonilo/kempt-yt/compare/v0.2.1...v0.3.0) (2026-10-11)
 
 
