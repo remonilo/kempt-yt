@@ -69,3 +69,31 @@ html[dark] {
 :is(button, a).kyt-chip:focus-visible {
   outline: 2px solid var(--kyt-outline-focus);
 }
+
+/* Shared search pill (Subscriptions toolbar, comment search). Features set width; 36px tall unless overridden. */
+label.kyt-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 18px;
+  border: 1px solid transparent;
+  color: var(--kyt-fg);
+  background: color-mix(in srgb, var(--kyt-fg) 5%, transparent);
+  --kyt-icon-size: 20px;
+}
+label.kyt-search:focus-within {
+  border-color: var(--kyt-outline-focus);
+}
+label.kyt-search input {
+  all: unset;
+  flex: 1;
+  width: 0; /* no intrinsic width: the label sets it */
+  color: var(--kyt-fg);
+  font: 400 14px / 20px Roboto, Arial, sans-serif;
+}
+label.kyt-search input::placeholder {
+  color: var(--kyt-fg-muted);
+}

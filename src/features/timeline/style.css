@@ -128,32 +128,8 @@ html[kyt-timeline][kyt-shorts] kyt-bar [data-type="shorts"] {
   display: none;
 }
 html[kyt-timeline] kyt-bar .kyt-search {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-sizing: border-box;
   width: 314px;
   max-width: 50%;
-  height: 36px;
-  padding: 0 16px;
-  border-radius: 18px;
-  border: 1px solid transparent;
-  color: var(--kyt-fg);
-  background: color-mix(in srgb, var(--kyt-fg) 5%, transparent);
-  --kyt-icon-size: 20px;
-}
-html[kyt-timeline] kyt-bar .kyt-search:focus-within {
-  border-color: var(--kyt-outline-focus);
-}
-html[kyt-timeline] kyt-bar .kyt-search input {
-  all: unset;
-  flex: 1;
-  min-width: 0;
-  color: var(--kyt-fg);
-  font: 400 14px / 20px Roboto, Arial, sans-serif;
-}
-html[kyt-timeline] kyt-bar .kyt-search input::placeholder {
-  color: var(--kyt-fg-muted);
 }
 
 /* Shelves: Shorts shows for All and Shorts, never while searching. */

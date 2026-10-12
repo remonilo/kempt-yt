@@ -1,0 +1,151 @@
+/* Comments header: [count] [sort chips | dropdown] [search icon]. Open: the field takes the chips' place. */
+.kyt-cs {
+  display: flex;
+  flex: none;
+  align-items: center;
+  margin-left: 8px;
+}
+.kyt-cs[kyt-open] {
+  flex: 1 1 0;
+  max-width: 314px; /* one-column layout: same width as the Subscriptions search */
+  margin-left: auto;
+}
+.kyt-cs > .kyt-cs-open {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  --kyt-icon-size: 20px;
+}
+.kyt-cs > .kyt-search {
+  display: none;
+  flex: 1;
+  min-width: 160px; /* the count gives way first */
+  height: 32px;
+  padding: 0 4px 0 12px;
+}
+.kyt-cs[kyt-open] > .kyt-cs-open {
+  display: none;
+}
+.kyt-cs[kyt-open] > .kyt-search {
+  display: flex;
+  transition: opacity 150ms, transform 200ms cubic-bezier(0.2, 0, 0, 1);
+  @starting-style {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+.kyt-cs-clear {
+  all: unset;
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  color: var(--kyt-fg-muted);
+  cursor: pointer;
+  --kyt-icon-size: 16px;
+}
+.kyt-cs-clear:hover {
+  background: var(--kyt-hover-bg);
+  color: var(--kyt-fg);
+}
+.kyt-cs-clear:focus-visible {
+  outline: 2px solid var(--kyt-outline-focus);
+}
+.kyt-cs-none {
+  margin: 12px 0 16px;
+  color: var(--kyt-fg-muted);
+  font: 400 14px / 20px Roboto, Arial, sans-serif;
+}
+.kyt-cs-none[hidden] {
+  display: none;
+}
+
+/* Narrow Comments tab: the count gives way (ellipsis) before the chips or the field. Open, the field takes what the
+   count leaves. */
+html[kyt-comment-search] ytd-comments-header-renderer:has(.kyt-cs) {
+  & #leading-section, & #count {
+    min-width: 0;
+  }
+  & #count {
+    margin-right: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  /* Inline, so #count draws the ellipsis (Firefox draws none inside the flow-root string). */
+  & #count yt-formatted-string {
+    display: inline;
+    white-space: inherit;
+  }
+  & #additional-section:has(> .kyt-cs[kyt-open]) {
+    flex: 1 1 0;
+  }
+}
+/* Without comment-layout the chips share the count's row, so the open field takes their place. */
+html[kyt-comment-search]:not([kyt-comment-layout]) #additional-section:has(> .kyt-cs[kyt-open]) > :is(#sort-menu, .kyt-sort) {
+  display: none !important;
+}
+/* Chips come back with a fade after the field closes. */
+html[kyt-comment-search]:not([kyt-comment-layout]) #additional-section:has(> .kyt-cs) > :is(#sort-menu, .kyt-sort) {
+  transition: opacity 150ms;
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+/* Comments panel: in the sort row after the chips, or (comment sort off) in the title bar before the sort and close
+   buttons, where the open field takes the title's place. */
+html[kyt-comment-search] ytd-engagement-panel-title-header-renderer {
+  & #subheader > .kyt-cs {
+    margin-left: auto;
+  }
+  & #header > .kyt-cs {
+    margin: 0 8px 0 auto;
+  }
+  & #header > .kyt-cs > .kyt-cs-open {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background: none;
+    --kyt-icon-size: 24px;
+  }
+  & #header > .kyt-cs > .kyt-cs-open:hover {
+    background: var(--kyt-hover-bg);
+  }
+  & #header > .kyt-cs[kyt-open] {
+    max-width: none;
+    margin-left: 0;
+  }
+  & #header:has(> .kyt-cs[kyt-open]) > #title-container {
+    display: none;
+  }
+  & #subheader > .kyt-cs-none {
+    flex-basis: 100%;
+    margin: 12px 16px 0;
+  }
+  & #subheader:has(> .kyt-sort) > .kyt-cs-none {
+    margin: 12px 0 0;
+  }
+}
+
+html[kyt-comment-search] :is(ytd-comment-thread-renderer, ytd-comment-view-model)[kyt-off] {
+  display: none !important;
+}
+/* While searching, the loading row shows only while more matches are wanted, so a search loads a few pages at most. */
+html[kyt-comment-search] [kyt-query]:not([kyt-more]) > ytd-continuation-item-renderer {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[kyt-comment-search] .kyt-cs[kyt-open] > .kyt-search,
+  html[kyt-comment-search] #additional-section > :is(#sort-menu, .kyt-sort) {
+    transition: none;
+  }
+}

@@ -5,7 +5,8 @@ import { S } from '../../core/selectors.ts';
 import { icon } from '../../core/icon.ts';
 import { local, uiLang as lang } from '../../core/i18n.ts';
 import { dayKey, dayLabel, historyDate, parseAge, plan } from './dates.ts';
-import { inType, kindOf, matches, type Type } from './filter.ts';
+import { inType, kindOf, type Type } from './filter.ts';
+import { matcher } from '../../core/text.ts';
 
 
 function head(label: string, el: HTMLElement = document.createElement('div')): HTMLElement {
@@ -121,6 +122,7 @@ function subscriptions(grid: Element, signal: AbortSignal): void {
     const locale = lang();
     const ages = new Map(state.type === 'all' ? [] : [...grid.children].filter(isItem).map((c) => [c, parseAge(ageOf(c), locale)]));
     const readable = [...ages.values()].some(Boolean);
+    const hit = matcher(state.query);
     const kindOfItem = (c: Element) => kindOf({
       short: c.querySelector('a[href^="/shorts/"]') !== null,
       badge: c.querySelector(S.liveBadge) !== null,
@@ -130,7 +132,7 @@ function subscriptions(grid: Element, signal: AbortSignal): void {
     for (const c of grid.children) {
       if (!isItem(c)) continue;
       const off = (state.type !== 'all' && !inType(kindOfItem(c), state.type)) ||
-        (state.query !== '' && !matches(textOf(c), state.query));
+        (state.query !== '' && !hit(textOf(c)));
       c.toggleAttribute('kyt-off', off);
       total++;
       if (!off) {

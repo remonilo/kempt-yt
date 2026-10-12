@@ -17,10 +17,3 @@ export function kindOf(o: { short: boolean; badge: boolean; age: Age | null; rea
 }
 
 export const inType = (kind: Kind, type: Type) => type === 'all' || `${kind}s`.replace('lives', 'live') === type;
-
-/** Ignores case and accents. Empty query matches. */
-export function matches(text: string, query: string): boolean {
-  const fold = (s: string) => s.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
-  const hay = fold(text);
-  return fold(query).split(/\s+/).filter(Boolean).every((w) => hay.includes(w));
-}

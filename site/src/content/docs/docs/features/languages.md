@@ -3,7 +3,7 @@ title: Languages
 description: The labels Kempt draws follow YouTube's UI language.
 ---
 
-Kempt draws a few labels of its own: the watch page tabs, the timeline chips, the timeline search box and a few tooltips. They follow YouTube's UI language, which you set in YouTube's account menu. Kempt ignores your browser's language.
+Kempt draws a few labels of its own: the watch page tabs, the timeline chips, the timeline and comment search boxes and a few tooltips. They follow YouTube's UI language, which you set in YouTube's account menu. Kempt ignores your browser's language.
 
 Kempt supports English, Spanish, Portuguese, German, French, Russian, Japanese, Korean, Hindi, Indonesian and Turkish. Any other language falls back to English.
 

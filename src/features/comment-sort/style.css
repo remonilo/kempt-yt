@@ -12,3 +12,10 @@ html[kyt-comment-sort] .kyt-sort > button {
   padding: 0 12px;
   font: 500 14px/32px Roboto, Arial, sans-serif;
 }
+/* Comments panel: the row replaces the title bar's sort icon. */
+html[kyt-comment-sort] ytd-engagement-panel-title-header-renderer:has(.kyt-sort) #menu {
+  display: none !important;
+}
+html[kyt-comment-sort]:not([kyt-comment-layout]) ytd-engagement-panel-title-header-renderer #subheader > .kyt-sort {
+  padding: 0 16px 12px;
+}

@@ -1,0 +1,104 @@
+/* Figma Comments section (54:9667): 43px avatars, the "Add a comment" field boxed (56px, 8px corners) 20px from its
+   avatar. Replies keep YouTube's 24px avatars. */
+html[kyt-comment-layout] {
+  --kyt-comment-avatar: 43px;
+}
+
+/* Page header: the count on the first row, [sort ... search] under it, then a divider over the comment field.
+   #additional-section's children (sort, search, panel button) join #title's rows. */
+html[kyt-comment-layout] ytd-comments-header-renderer {
+  & #title {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 8px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--kyt-outline);
+  }
+  & #leading-section {
+    flex: 1 0 100%;
+    min-width: 0;
+  }
+  & #additional-section {
+    display: contents;
+  }
+  & #additional-section > * {
+    order: 1;
+  }
+  & #additional-section > .kyt-cs {
+    margin-left: auto;
+  }
+}
+
+/* Comments panel (fullscreen, narrow windows): the sort row sits under the title, over a divider. */
+html[kyt-comment-layout] ytd-engagement-panel-title-header-renderer #subheader:has(> .kyt-sort) {
+  border-top: 0; /* YouTube's title divider: the one under the row replaces it */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 8px;
+  padding: 0 16px 12px;
+  border-bottom: 1px solid var(--kyt-outline);
+}
+
+/* Avatars. The thread line under a top-level avatar starts 4px below it and the reply connectors centre on it. */
+html[kyt-comment-layout] ytd-comment-view-model:not([is-reply], [is-creator-reply]) #author-thumbnail yt-img-shadow,
+html[kyt-comment-layout] ytd-comment-simplebox-renderer #author-thumbnail,
+html[kyt-comment-layout] ytd-commentbox:not([is-reply]) #author-thumbnail {
+  width: var(--kyt-comment-avatar) !important;
+  height: var(--kyt-comment-avatar) !important;
+}
+/* The image keeps YouTube's 40px (or 24px) attributes; fill the larger circle instead of being clipped by it. */
+html[kyt-comment-layout] :is(ytd-comment-simplebox-renderer, ytd-commentbox:not([is-reply])) #author-thumbnail img,
+html[kyt-comment-layout] ytd-comment-view-model:not([is-reply], [is-creator-reply]) #author-thumbnail img {
+  width: 100% !important;
+  height: 100% !important;
+}
+html[kyt-comment-layout] ytd-comment-view-model:not([is-reply], [is-creator-reply]) .threadline {
+  height: calc(100% - var(--kyt-comment-avatar) - 4px) !important; /* the panel's small-avatar rule is more specific */
+}
+/* Reply connectors under a top-level comment. The panel's threads lack the TopLevel class. */
+html[kyt-comment-layout] ytd-comment-thread-renderer .ytSubThreadTopLevelThread > .ytSubThreadThreadline,
+html[kyt-comment-layout] ytd-comment-thread-renderer:not([is-sub-thread]) > #replies > ytd-comment-replies-renderer > * > yt-sub-thread > .ytSubThreadThreadline {
+  width: var(--kyt-comment-avatar);
+}
+html[kyt-comment-layout] ytd-comment-view-model[use-small-avatars][engagement-panel] #author-thumbnail {
+  margin-right: 16px;
+}
+
+/* "Add a comment": the placeholder in a bordered box, centred on the avatar. Clicking it opens YouTube's editor. */
+html[kyt-comment-layout] ytd-comment-simplebox-renderer {
+  align-items: center;
+  margin-right: 0;
+  & #author-thumbnail {
+    margin-right: 20px !important;
+  }
+  & #placeholder-area {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-height: 56px;
+    padding: 0 16px;
+    border: 1px solid var(--kyt-outline);
+    border-radius: 8px;
+    cursor: text;
+    transition: border-color 150ms;
+  }
+  & #placeholder-area:hover {
+    border-color: var(--kyt-outline-focus);
+  }
+  & #simplebox-placeholder {
+    font-size: 16px;
+    line-height: 24px;
+  }
+  & #attachments {
+    margin-left: calc(var(--kyt-comment-avatar) + 20px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[kyt-comment-layout] ytd-comment-simplebox-renderer #placeholder-area {
+    transition: none;
+  }
+}

@@ -48,6 +48,7 @@ export default defineConfig({
             { label: 'Icons', slug: 'docs/features/icons' },
             { label: 'Top bar & Watch later', slug: 'docs/features/top-bar' },
             { label: 'Comment sort', slug: 'docs/features/comment-sort' },
+            { label: 'Comment search', slug: 'docs/features/comment-search' },
             { label: 'Shorts', slug: 'docs/features/shorts' },
             { label: 'Languages', slug: 'docs/features/languages' },
           ],

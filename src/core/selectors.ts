@@ -14,11 +14,16 @@ export const S = {
   watchActions: 'ytd-watch-metadata #actions',
   watchMore: 'ytd-watch-metadata ytd-menu-renderer > #button-shape', // the visible ⋯ button
   comments: 'ytd-watch-flexy ytd-comments#comments',
+  commentList: 'ytd-item-section-renderer > #contents', // inside comments: threads + continuation row
+  commentThread: 'ytd-comment-thread-renderer',
+  commentText: ':is(#author-text, #content-text)', // inside a ytd-comment-view-model; not its buttons or counts
   liveChat: 'ytd-live-chat-frame#chat',
   chatToggle: '#show-hide-button button', // inside liveChat: hides or shows chat; absent when a replay has no chat
   // YouTube moves these between #secondary-inner (two columns) and #below (one column). Always present.
   panels: 'ytd-watch-flexy #panels', // engagement panels: transcript, Ask, ...
   commentsPanel: 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-comments-section"]',
+  panelTitle: 'ytd-engagement-panel-title-header-renderer', // inside a panel: title, icon menus, close
+  panelSortItems: '#menu yt-dropdown-menu tp-yt-paper-listbox > a', // inside panelTitle: the comments sort icon menu
   chatContainer: 'ytd-watch-flexy #chat-container',
   description: 'ytd-watch-metadata #description',
   askButton: 'ytd-watch-metadata [kyt-icon="SPARK"] button', // needs stamp(S.watchActions)

@@ -22,6 +22,8 @@ Click the Kempt icon in the browser toolbar. Changes apply to open YouTube tabs 
 | | [Watch later button](/kempt-yt/docs/features/top-bar/#watch-later-button) | | On |
 | Watch page | [Tabs](/kempt-yt/docs/features/watch-tabs/) | Ask AI on or off; as an icon button or a tab | On |
 | | [Comment sort as buttons](/kempt-yt/docs/features/comment-sort/) | | On |
+| | [Comment search](/kempt-yt/docs/features/comment-search/) | | On |
+| | Comment layout | | On |
 | | [Captions](/kempt-yt/docs/features/captions/) | Style Shadow, Box or Blur; Size 50% to 200% | On, Shadow, 100% |
 | | [Wavy progress bar](/kempt-yt/docs/features/progress-bar/) | Animate wave | Off |
 | Feeds | [Hide Shorts](/kempt-yt/docs/features/shorts/) | | On |

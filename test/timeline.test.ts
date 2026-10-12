@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { inType, kindOf, matches } from '../src/features/timeline/filter.ts';
+import { inType, kindOf } from '../src/features/timeline/filter.ts';
 import { dayLabel, groupOf, historyDate, parseAge, plan } from '../src/features/timeline/dates.ts';
 
 const now = new Date(2024, 11, 15, 9, 0); // Sun 15 Dec 2024, 09:00 local
@@ -100,8 +100,3 @@ test('inType: chips', () => {
   assert.ok(inType('short', 'shorts') && !inType('video', 'shorts'));
 });
 
-test('matches: all words, any case, accents folded', () => {
-  assert.ok(matches('Amélie Poulain | Jesse James West', 'amelie west'));
-  assert.ok(matches('Anything', ''));
-  assert.ok(!matches('penguinz0 | 7 hr ago', 'penguinz0 fern'));
-});
