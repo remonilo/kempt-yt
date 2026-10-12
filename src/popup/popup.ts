@@ -10,14 +10,17 @@ const settings = loadSettings();
 const app = document.getElementById('app')!;
 app.inert = true;
 
-// `live` (dragging) writes at most every 400ms: storage.sync allows 120 writes a minute.
+// `live` (dragging) writes at most every 500ms, so the page follows the drag: storage.sync allows 120 writes a minute.
 let timer: ReturnType<typeof setTimeout> | undefined;
+let lastWrite = 0;
 function persist(change: (s: Settings) => void, live = false) {
   settings.then((s) => {
     change(s);
     clearTimeout(timer);
-    if (live) timer = setTimeout(() => saveSettings(s), 400);
-    else saveSettings(s);
+    const write = () => ((lastWrite = Date.now()), saveSettings(s));
+    const wait = live ? 500 - (Date.now() - lastWrite) : 0;
+    if (wait > 0) timer = setTimeout(write, wait);
+    else write();
   });
 }
 

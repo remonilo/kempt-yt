@@ -1,6 +1,7 @@
 import type { Feature } from '../../core/feature.ts';
 import { el, keep, waitFor } from '../../core/dom.ts';
-import type { Route } from '../../core/router.ts';
+import { routeOf, type Route } from '../../core/router.ts';
+import { S } from '../../core/selectors.ts';
 
 const ITEMS = '#sort-menu tp-yt-paper-listbox > a';
 
@@ -28,8 +29,11 @@ export const commentSort: Feature = {
 };
 
 async function mount(signal: AbortSignal) {
-  // Comments render lazily (when scrolled to, or when their tab opens), so no timeout.
-  const first = await waitFor(`:is(ytd-watch-flexy, ytd-browse:not([hidden])) ytd-comments-header-renderer ${ITEMS}`, { signal, timeout: Infinity });
+  // Comments render lazily (when scrolled to, or when their tab opens), so no timeout. On the watch page only the
+  // comments element is observed, not every player tick.
+  const scope = routeOf(location.pathname) === 'watch' ? await waitFor(S.comments, { signal }) : document;
+  if (!scope) return;
+  const first = await waitFor(`:is(ytd-watch-flexy, ytd-browse:not([hidden])) ytd-comments-header-renderer ${ITEMS}`, { root: scope, signal, timeout: Infinity });
   // YouTube swaps the header renderer (post pages re-render it on every visit) but keeps its #header container,
   // so the row follows whichever header is current.
   const root = first?.closest('ytd-comments-header-renderer')?.parentElement;

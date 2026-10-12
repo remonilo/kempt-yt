@@ -34,6 +34,8 @@ export const watchLaterBtn: Feature = {
       const id = (videoId = new URLSearchParams(location.search).get('v') ?? '');
       saved = false;
       render();
+      btn.style.display = id ? '' : 'none'; // /@name/live before YouTube adds ?v=
+      if (!id) return;
       const state = await call('inWatchLater', id).catch((e) => (console.warn('kyt: watch later status failed', e), false));
       if (id === videoId) {
         saved = state;

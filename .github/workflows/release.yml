@@ -35,6 +35,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm run check && npm test
       - run: npm run build
       - name: Package
         run: |

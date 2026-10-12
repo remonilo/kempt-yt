@@ -37,11 +37,11 @@ export const progressBar: Feature = {
       }
     };
 
-    // Media events don't bubble: capture them on the player. pointermove covers scrubbing, where the bar moves
-    // before the video does.
+    // Media events don't bubble: capture them on the player. pointermove with a button held covers scrubbing,
+    // where the bar moves before the video does; plain hovering changes nothing.
     for (const type of ['timeupdate', 'progress', 'seeked', 'durationchange', 'loadedmetadata'])
       player.addEventListener(type, sync, { capture: true, signal });
-    bar.addEventListener('pointermove', sync, { signal });
+    bar.addEventListener('pointermove', (e) => e.buttons && sync(), { signal });
     // YouTube rebuilds the segment lists when chapters load or change, often while buffering (no media events).
     observe(bar, { childList: true, subtree: true }, sync, signal);
     const ro = new ResizeObserver(sync);

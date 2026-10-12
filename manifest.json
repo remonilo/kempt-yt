@@ -3,6 +3,7 @@
   "name": "Kempt for YouTube",
   "version": "0.3.0",
   "description": "A consistent redesign of YouTube's UI.",
+  "minimum_chrome_version": "120",
   "permissions": [
     "storage"
   ],

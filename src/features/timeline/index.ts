@@ -4,7 +4,7 @@ import { routeOf } from '../../core/router.ts';
 import { S } from '../../core/selectors.ts';
 import { icon } from '../../core/icon.ts';
 import { local, uiLang as lang } from '../../core/i18n.ts';
-import { dayLabel, historyDate, parseAge, plan } from './dates.ts';
+import { dayKey, dayLabel, historyDate, parseAge, plan } from './dates.ts';
 import { inType, kindOf, matches, type Type } from './filter.ts';
 
 
@@ -205,8 +205,11 @@ function history(list: Element, signal: AbortSignal): void {
   const heads = new Set<HTMLElement>();
   const dots = spy(signal);
   const watched = new WeakSet<Element>();
+  const dates = new Map<string, Date | null>(); // by header title; valid for one day and language
+  let datesFor = '';
   const sync = () => {
     const now = new Date();
+    if (datesFor !== dayKey(now) + lang()) (dates.clear(), (datesFor = dayKey(now) + lang()));
     for (const sec of list.querySelectorAll(':scope > ytd-item-section-renderer')) {
       const yt = sec.querySelector('ytd-item-section-header-renderer');
       const title = yt?.querySelector(S.historyTitle)?.textContent?.trim();
@@ -215,7 +218,8 @@ function history(list: Element, signal: AbortSignal): void {
         obs.observe(yt, { childList: true, subtree: true, characterData: true });
       }
       if (!yt || !title) continue;
-      const d = historyDate(title, now, lang());
+      let d = dates.get(title);
+      if (d === undefined) dates.set(title, (d = historyDate(title, now, lang())));
       const prev = yt.previousElementSibling;
       const h = head(d ? dayLabel(d, now, lang()) : title,
         prev?.classList.contains('kyt-tl-head') ? (prev as HTMLElement) : undefined);
