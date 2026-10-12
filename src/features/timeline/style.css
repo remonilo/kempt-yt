@@ -307,8 +307,18 @@ html[kyt-timeline] ytd-browse[page-subtype="history"]:has(ytd-search-box-rendere
     min-height: 96px; /* two 36px lines + 8px gaps, so the actions line never hangs below the frosted row */
     box-sizing: border-box;
     align-content: flex-start;
-    /* Frosted like the masthead it sits under. */
+  }
+  /* Frosted like the masthead it sits under, edge to edge: ytd-browse's overflow clip trims it to the page area. */
+  & ytd-section-list-renderer > #header-container::before {
+    content: '';
+    position: absolute;
+    inset: 0 -100vmax;
+    z-index: -1;
     background: color-mix(in srgb, var(--kyt-bg) 80%, transparent);
     backdrop-filter: blur(48px);
+  }
+  /* Own stacking context, so z-indexed content (the Shorts shelf's arrows) stays under the sticky chips row. */
+  & ytd-section-list-renderer > #contents {
+    isolation: isolate;
   }
 }
