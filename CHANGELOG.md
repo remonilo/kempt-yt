@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.6.0](https://github.com/remonilo/kempt-yt/compare/v0.5.0...v0.6.0) (2026-10-13)
+
+
+### Features
+
+* **icons:** Figma icons in the Shorts player ([38d1cc2](https://github.com/remonilo/kempt-yt/commit/38d1cc2a5db295b89631123be0a4859e8bfd0ed3))
+
+
+### Bug Fixes
+
+* **comment-layout:** cover Shorts comments panel ([079060b](https://github.com/remonilo/kempt-yt/commit/079060b677e4aa0319f2aa053743df9ea337cb76))
+* **timeline:** widen History sticky chips row and keep Shorts arrows under it ([5c141e2](https://github.com/remonilo/kempt-yt/commit/5c141e230fb0836f91e6bae034afad427a0c692a))
+
 ## [0.5.0](https://github.com/remonilo/kempt-yt/compare/v0.4.0...v0.5.0) (2026-10-12)
 
 
