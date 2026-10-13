@@ -284,6 +284,44 @@ html[kyt-icons] .ytp-fullscreen-quick-actions {
   & [kyt-icon="MORE_HORIZ"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-more); rotate: 90deg; }
   & :is(like-button-view-model, dislike-button-view-model) [aria-pressed="true"] .ytSpecButtonShapeNextIcon { animation: kyt-icon-pop 300ms ease-out; }
 }
+/* Shorts player (/shorts/, shown with `shorts` off): the side action bar and the controls over the video. Like and
+   dislike go by tag. Comments, Share and ⋮ in the bar carry no class or stamp, so they are told apart by their svg
+   path's start (as in the settings menu; an unmatched one keeps YouTube's icon). Remix has no Figma icon and stays.
+   States: the player's playing-mode class, the volume slider at 0 (muted), aria-pressed and :fullscreen. */
+html[kyt-icons] ytd-shorts {
+  & :is(
+    reel-action-bar-view-model :is(like-button-view-model, dislike-button-view-model, button-view-model:has(path:is([d^="M1 6a4 4 0 0"], [d^="M10 3.158V7."], [d^="M12 4a2 2 0 "]))),
+    ytd-shorts-player-controls :is(#play-pause-button-shape, volume-controls, ytm-closed-captioning-button, #menu-button, #fullscreen-button-shape)
+  ) .ytSpecIconShapeHost {
+    background-color: currentColor;
+    mask: var(--kyt-i) center / contain no-repeat;
+    & > * { visibility: hidden; }
+  }
+  & reel-action-bar-view-model {
+    & like-button-view-model { --kyt-i: var(--kyt-i-liked); } /* logged out it is sometimes a heart; Figma uses the thumb */
+    & like-button-view-model [aria-pressed="true"] { --kyt-i: var(--kyt-i-liked-selected); }
+    & dislike-button-view-model { --kyt-i: var(--kyt-i-dislike); }
+    & dislike-button-view-model [aria-pressed="true"] { --kyt-i: var(--kyt-i-dislike-selected); }
+    & button-view-model:has(path[d^="M1 6a4 4 0 0"]) { --kyt-i: var(--kyt-i-comments); }
+    & button-view-model:has(path[d^="M10 3.158V7."]) { --kyt-i: var(--kyt-i-share); }
+    & button-view-model:has(path[d^="M12 4a2 2 0 "]) { --kyt-i: var(--kyt-i-more); }
+    & :is(like-button-view-model, dislike-button-view-model) [aria-pressed="true"] .ytSpecIconShapeHost { animation: kyt-icon-pop 300ms ease-out; }
+  }
+  & ytd-shorts-player-controls {
+    & #play-pause-button-shape { --kyt-i: var(--kyt-i-play); }
+    & volume-controls { --kyt-i: var(--kyt-i-volume); }
+    & volume-controls:has(#volume-input[aria-valuenow="0"]) { --kyt-i: var(--kyt-i-volume-muted); }
+    & ytm-closed-captioning-button { --kyt-i: var(--kyt-i-cc); }
+    & ytm-closed-captioning-button [aria-pressed="true"] { --kyt-i: var(--kyt-i-cc-selected); }
+    & #menu-button { --kyt-i: var(--kyt-i-more); }
+    & #fullscreen-button-shape { --kyt-i: var(--kyt-i-fullscreen); }
+  }
+  & ytd-reel-video-renderer:has(#shorts-player.playing-mode) #play-pause-button-shape { --kyt-i: var(--kyt-i-pause); }
+  &:fullscreen #fullscreen-button-shape, :fullscreen & #fullscreen-button-shape { --kyt-i: var(--kyt-i-fullscreen-selected); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[kyt-icons] ytd-shorts reel-action-bar-view-model .ytSpecIconShapeHost { animation: none; }
+}
 /* Theater lives on the watch page, outside the player. */
 html[kyt-icons] ytd-watch-flexy[theater] .ytp-delhi-modern-icons .ytp-size-button > svg { --kyt-i: var(--kyt-i-theater-selected); }
 /* Divider between the toggles (Ambient mode, Annotations, Stable volume) and the submenus (Subtitles, Speed, ...).
