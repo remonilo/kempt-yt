@@ -22,6 +22,7 @@ Unit tests cover the pure logic: route parsing, date grouping and age parsing in
 
 - `--width=N` sets the window width. Under 1312px YouTube shows the narrow sidebar.
 - `--lang=de` sets the browser language. Signed out, YouTube ignores `?hl=` and follows the browser.
+- `--set=<id>=0` turns a feature off before YouTube loads (`=1` turns it on), e.g. `--set=shorts=0` to reach the Shorts player. Repeatable. It loads a copy of `dist/` whose background script writes the switches on install.
 - `--with=<dir or .xpi>` loads a second extension beside Kempt, for compatibility checks.
 - `--eval=file.js` runs a snippet in the page and prints its result: rects, computed styles.
 - `--clip=<selector>` screenshots one element instead of the window.

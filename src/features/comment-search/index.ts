@@ -4,6 +4,7 @@ import { el, keep, observe, waitFor } from '../../core/dom.ts';
 import { icon } from '../../core/icon.ts';
 import { local } from '../../core/i18n.ts';
 import { S } from '../../core/selectors.ts';
+import { eachRoute } from '../../core/router.ts';
 import { matcher } from '../../core/text.ts';
 
 const WORDS = {
@@ -30,10 +31,12 @@ export const commentSearch: Feature = {
   id: 'comment-search',
   label: 'Comment search', hint: 'Filters loaded comments', group: 'watch', icon: 'search',
   defaultOn: true,
-  routes: ['watch'],
+  routes: ['watch', 'shorts'],
   run({ signal }) {
-    mountPage(signal);
-    onCommentsPanel(signal, mountPanel);
+    eachRoute(signal, (route, s) => {
+      if (route === 'watch') mountPage(s);
+      onCommentsPanel(s, mountPanel);
+    });
   },
 };
 

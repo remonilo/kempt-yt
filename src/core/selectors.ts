@@ -21,6 +21,7 @@ export const S = {
   chatToggle: '#show-hide-button button', // inside liveChat: hides or shows chat; absent when a replay has no chat
   // YouTube moves these between #secondary-inner (two columns) and #below (one column). Always present.
   panels: 'ytd-watch-flexy #panels', // engagement panels: transcript, Ask, ...
+  shortsPanels: 'ytd-shorts #anchored-panel', // the Shorts player's engagement panels: comments, description, audio
   commentsPanel: 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-comments-section"]',
   panelTitle: 'ytd-engagement-panel-title-header-renderer', // inside a panel: title, icon menus, close
   panelSortItems: '#menu yt-dropdown-menu tp-yt-paper-listbox > a', // inside panelTitle: the comments sort icon menu

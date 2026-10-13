@@ -13,9 +13,11 @@
 //   --fake-login makes ytcfg report LOGGED_IN so signed-in-only features mount (their API calls still fail).
 //   --with=<dir or .xpi> also installs another extension, e.g. Return YouTube Dislike (repeatable).
 //   --lang=de sets the browser language; logged out, YouTube follows it (its ?hl= is ignored).
+//   --set=id=0 turns a feature off (=1 on) in the extension's storage before loading, e.g. --set=shorts=0 (repeatable).
 import puppeteer from 'puppeteer-core';
-import { readFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { cp, mkdtemp, readFile, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
 import { setTimeout as sleep } from 'node:timers/promises';
 
 const [url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', shotPath] = process.argv.slice(2).filter((a) => !a.startsWith('--'));
@@ -24,6 +26,21 @@ const flag = (name) => process.argv.find((a) => a.startsWith(`--${name}=`))?.sli
 const cssOnly = has('css-only');
 const ext = !cssOnly && !has('off');
 const lang = flag('lang');
+const sets = process.argv.filter((a) => a.startsWith('--set=')).map((a) => a.slice(6).split('='));
+
+// BiDi cannot open moz-extension:// pages, so --set loads a copy of dist/ whose background script writes the
+// feature switches to storage on install, before YouTube loads.
+async function withSettings() {
+  const dir = await mkdtemp(join(tmpdir(), 'kyt-ext-'));
+  await cp(resolve('dist'), dir, { recursive: true });
+  const manifest = JSON.parse(await readFile(join(dir, 'manifest.json'), 'utf8'));
+  manifest.background = { scripts: ['kyt-set.js'] };
+  await writeFile(join(dir, 'manifest.json'), JSON.stringify(manifest));
+  const features = Object.fromEntries(sets.map(([id, v]) => [id, v !== '0']));
+  await writeFile(join(dir, 'kyt-set.js'),
+    `chrome.storage.sync.set({ 'kempt-yt': { features: ${JSON.stringify(features)}, options: {} } });`);
+  return dir;
+}
 
 const browser = await puppeteer.launch({
   browser: 'firefox', executablePath: '/Applications/Firefox.app/Contents/MacOS/firefox', headless: true,
@@ -34,7 +51,7 @@ const browser = await puppeteer.launch({
 });
 try {
   if (ext) {
-    await browser.installExtension(resolve('dist'));
+    await browser.installExtension(sets.length ? await withSettings() : resolve('dist'));
     for (const a of process.argv.filter((a) => a.startsWith('--with='))) await browser.installExtension(resolve(a.slice(7)));
   }
   const page = await browser.newPage();

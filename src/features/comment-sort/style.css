@@ -19,3 +19,8 @@ html[kyt-comment-sort] ytd-engagement-panel-title-header-renderer:has(.kyt-sort)
 html[kyt-comment-sort]:not([kyt-comment-layout]) ytd-engagement-panel-title-header-renderer #subheader > .kyt-sort {
   padding: 0 16px 12px;
 }
+/* Shorts: the panel grows by the row's height past its bordered box, pushing the comment field out. Fill the box so
+   the comments list shrinks instead. */
+html[kyt-comment-sort] ytd-shorts #anchored-panel > ytd-engagement-panel-section-list-renderer:has(.kyt-sort) {
+  height: 100%;
+}

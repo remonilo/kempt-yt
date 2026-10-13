@@ -40,6 +40,15 @@ html[kyt-comment-layout] ytd-engagement-panel-title-header-renderer #subheader:h
   padding: 0 16px 12px;
   border-bottom: 1px solid var(--kyt-outline);
 }
+/* The Shorts panel draws its title divider on #header instead. */
+html[kyt-comment-layout] ytd-engagement-panel-title-header-renderer:has(#subheader > .kyt-sort) > #header {
+  border-bottom: 0;
+}
+/* Shorts: the title bar is transparent but the sort row and comments are raised gray; one background for the whole
+   panel. Narrow windows still get gray from #anchored-panel, where the panel covers the video. */
+html[kyt-comment-layout] ytd-shorts ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-comments-section"] :is(#subheader, #content) {
+  background: transparent;
+}
 
 /* Avatars. The thread line under a top-level avatar starts 4px below it and the reply connectors centre on it. */
 html[kyt-comment-layout] ytd-comment-view-model:not([is-reply], [is-creator-reply]) #author-thumbnail yt-img-shadow,

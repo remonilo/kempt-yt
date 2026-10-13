@@ -1,13 +1,17 @@
 import { observe, waitFor } from './dom.ts';
+import { routeOf } from './router.ts';
 import { S } from './selectors.ts';
 
 /**
- * Runs `mount` on the comments panel's title bar (fullscreen, narrow windows) once its sort menu exists. YouTube
- * replaces the panel element when a new video loads, so `mount` runs again for the new one and the last run's signal
- * aborts. Observes #panels' children, then the panel only until its sort menu shows up.
+ * Runs `mount` on the comments panel's title bar (watch page: fullscreen, narrow windows; Shorts player) once its
+ * sort menu exists. YouTube replaces the panel element when a new video loads, so `mount` runs again for the new one
+ * and the last run's signal aborts. Observes the panels container's children, then the panel only until its sort
+ * menu shows up. Call it per route (`eachRoute`): it binds the current route's container.
  */
 export async function onCommentsPanel(signal: AbortSignal, mount: (title: Element, panel: Element, signal: AbortSignal) => void) {
-  const panels = await waitFor(S.panels, { signal });
+  const route = routeOf(location.pathname);
+  if (route !== 'watch' && route !== 'shorts') return;
+  const panels = await waitFor(route === 'watch' ? S.panels : S.shortsPanels, { signal });
   if (!panels) return;
   let current: Element | null = null;
   let run: AbortController | undefined;

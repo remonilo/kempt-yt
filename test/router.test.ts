@@ -6,7 +6,7 @@ test('routeOf', () => {
   const cases: [string, string][] = [
     ['/', 'home'],
     ['/watch', 'watch'],
-    ['/shorts/abc123', 'other'],
+    ['/shorts/abc123', 'shorts'],
     ['/feed/subscriptions', 'subscriptions'],
     ['/@mkbhd', 'channel'],
     ['/channel/UC123', 'channel'],

@@ -1,7 +1,7 @@
 import type { Feature } from '../../core/feature.ts';
 import { onCommentsPanel } from '../../core/comments-panel.ts';
 import { el, keep, waitFor } from '../../core/dom.ts';
-import { routeOf, type Route } from '../../core/router.ts';
+import { eachRoute, routeOf } from '../../core/router.ts';
 import { S } from '../../core/selectors.ts';
 
 const ITEMS = 'tp-yt-paper-listbox > a';
@@ -13,24 +13,22 @@ export const commentSort: Feature = {
   id: 'comment-sort',
   label: 'Comment sort as buttons', group: 'watch', icon: 'sort',
   defaultOn: true,
-  routes: ['watch', 'post'],
+  routes: ['watch', 'shorts', 'post'],
   run({ signal }) {
-    // The watch page keeps its comments header across videos. A post page may not, and post -> post keeps the
-    // feature running (same route), so restart per post.
-    let page: AbortController | undefined;
-    const post = () => {
-      page?.abort();
-      page = new AbortController();
-      mount(AbortSignal.any([signal, page.signal]));
-    };
-    if (routeOf(location.pathname) === 'post') post();
-    else {
-      mount(signal);
-      onCommentsPanel(signal, mountPanel);
-    }
-    document.addEventListener('kyt:navigate', (e) => {
-      if ((e as CustomEvent<{ route: Route }>).detail.route === 'post') post();
-    }, { signal });
+    eachRoute(signal, (route, s) => {
+      if (route === 'watch') mount(s);
+      if (route !== 'post') return onCommentsPanel(s, mountPanel);
+      // The watch page keeps its comments header across videos. A post page may not, and post -> post keeps the
+      // route, so restart per post.
+      let page: AbortController | undefined;
+      const post = () => {
+        page?.abort();
+        page = new AbortController();
+        mount(AbortSignal.any([s, page.signal]));
+      };
+      post();
+      document.addEventListener('kyt:navigate', post, { signal: s });
+    });
   },
 };
 
