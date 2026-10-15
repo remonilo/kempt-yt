@@ -1,0 +1,332 @@
+/* Header (Figma Subs 96:3679): 20px tabs, muted count, divider between tabs, accent underline under the selected
+   one, a full-width divider under the row. The layout toggle sits at the right end. */
+/* Same box as YouTube's #contents, so the header lines up with the feed and its toolbar. */
+.kyt-subs-head,
+.kyt-subs-channels {
+  box-sizing: border-box;
+  width: calc(100% - var(--ytd-rich-grid-gutter-margin, 16px) * 2);
+  max-width: calc(var(--ytd-rich-grid-content-max-width, 100%) + var(--ytd-rich-grid-item-margin, 16px));
+  margin-inline: var(--ytd-rich-grid-gutter-margin, 16px);
+}
+.kyt-subs-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+  border-bottom: 1px solid var(--kyt-outline);
+}
+.kyt-subs-tabs {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.kyt-subs-sep {
+  width: 1px;
+  height: 20px;
+  margin-bottom: 14px;
+  background: var(--kyt-outline);
+}
+.kyt-subs-tab {
+  all: unset;
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 4px 0 14px;
+  font: 500 20px / 28px Roboto, Arial, sans-serif;
+  color: var(--kyt-fg-muted);
+  cursor: pointer;
+  transition: color 200ms;
+}
+.kyt-subs-tab:hover,
+.kyt-subs-tab[aria-selected="true"] {
+  color: var(--kyt-fg);
+}
+.kyt-subs-tab:focus-visible {
+  outline: 2px solid var(--kyt-outline-focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.kyt-subs-tab::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: var(--kyt-accent);
+  transform: scaleX(0);
+  opacity: 0;
+  transition: transform 250ms cubic-bezier(0.2, 0, 0, 1), opacity 150ms;
+}
+.kyt-subs-tab[aria-selected="true"]::after {
+  transform: none;
+  opacity: 1;
+}
+.kyt-subs-count {
+  font: 400 16px / 20px Roboto, Arial, sans-serif;
+  color: var(--kyt-fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+/* Channels tab: the feed hides, the channels view shows. */
+html[kyt-subs-tabs] ytd-rich-grid-renderer[kyt-subs-tab="channels"] > :not(.kyt-subs-head, .kyt-subs-channels) {
+  display: none !important;
+}
+.kyt-subs-channels {
+  padding-top: 24px;
+}
+.kyt-subs-channels[hidden] {
+  display: none;
+}
+.kyt-subs-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  & > .kyt-search {
+    flex: 0 1 314px;
+    min-width: 200px;
+    margin-left: auto;
+  }
+}
+.kyt-subs-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font: 500 14px / 36px Roboto, Arial, sans-serif; /* same chips as the Videos toolbar (Figma 96:3679) */
+  & > .kyt-chips {
+    display: flex;
+    gap: 8px;
+  }
+  & button.kyt-chip:not(.kyt-layout > *) {
+    height: 36px;
+    padding: 0 16px;
+  }
+  & > .kyt-bar-sep {
+    flex: none;
+    width: 1px;
+    height: 24px;
+    background: var(--kyt-outline);
+  }
+}
+/* New uploads: only channels with YouTube's guide dot. */
+.kyt-subs-ch[kyt-new-only] > .kyt-subs-chan:not(:has(.kyt-subs-new)) {
+  display: none;
+}
+/* A card: our link (stretched over the whole card) plus the subscribe button above it. */
+.kyt-subs-chan {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  transition: background-color 150ms;
+  &:hover {
+    background: var(--kyt-hover-bg);
+  }
+  &:has(> .kyt-subs-link:focus-visible) {
+    outline: 2px solid var(--kyt-outline-focus);
+  }
+  &[hidden] {
+    display: none;
+  }
+}
+.kyt-subs-link {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  color: var(--kyt-fg);
+  text-decoration: none;
+  outline: none;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+  }
+  & > img {
+    width: 48px;
+    height: 48px;
+    flex: none;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--kyt-outline);
+  }
+}
+.kyt-subs-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.kyt-subs-name,
+.kyt-subs-meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.kyt-subs-name {
+  font: 500 16px / 22px Roboto, Arial, sans-serif;
+}
+.kyt-subs-meta {
+  font: 400 12px / 18px Roboto, Arial, sans-serif;
+  color: var(--kyt-fg-muted);
+}
+/* YouTube's guide dot: new uploads not yet seen. */
+.kyt-subs-new {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--kyt-accent);
+}
+
+/* Subscribe button: neutral when subscribed (bell + arrow, opens the menu), accent when not, like subscribe-red. */
+.kyt-dd.kyt-subs-sub {
+  z-index: 1; /* above the stretched link; an open menu above the next cards */
+  &[open] {
+    z-index: 20;
+  }
+}
+.kyt-subs-chan button.kyt-subs-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 10px 0 12px;
+  border-radius: 18px;
+  font: 500 14px / 20px Roboto, Arial, sans-serif;
+  --kyt-icon-size: 20px;
+  & > .kyt-dd-arrow {
+    transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  &[data-on="false"] {
+    padding: 0 16px;
+    background: var(--kyt-accent);
+    color: oklch(from var(--kyt-accent) clamp(0, (0.68 - l) * 1000, 1) 0 0);
+    &:hover {
+      filter: brightness(1.12);
+    }
+    & > .kyt-icon {
+      display: none;
+    }
+  }
+}
+.kyt-subs-sub[open] .kyt-dd-arrow {
+  transform: rotate(180deg);
+}
+.kyt-subs-menu {
+  left: auto;
+  right: 0;
+  transform-origin: top right;
+  min-width: 200px;
+  .kyt-dd[kyt-up] > &.kyt-dd-menu {
+    transform-origin: bottom right;
+  }
+  & > .kyt-dd-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    --kyt-icon-size: 20px;
+  }
+  & > .kyt-dd-item[aria-checked="true"] {
+    background: var(--kyt-selected-bg);
+  }
+}
+.kyt-subs-menu-sep {
+  height: 1px;
+  margin: 8px 0;
+  background: var(--kyt-outline);
+}
+.kyt-subs-confirm {
+  box-sizing: border-box;
+  width: min(400px, 90vw);
+  padding: 24px;
+  border: none;
+  border-radius: 12px;
+  color: var(--kyt-fg);
+  background: var(--kyt-bg);
+  box-shadow: 0 0 0 1px var(--kyt-outline), 0 4px 32px rgba(0, 0, 0, 0.25);
+  font: 400 16px / 22px Roboto, Arial, sans-serif;
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+  }
+  &[open] {
+    animation: kyt-subs-pop 200ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  & > p {
+    margin: 0 0 24px;
+  }
+}
+@keyframes kyt-subs-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+.kyt-subs-confirm-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  & > button.kyt-chip {
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 18px;
+    font: 500 14px / 36px Roboto, Arial, sans-serif;
+  }
+}
+.kyt-subs-ch {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+html[kyt-subs-tabs]:not([kyt-subs-tabs-channels="list"]) .kyt-subs-ch {
+  display: grid;
+  grid-template-columns: repeat(var(--kyt-subs-channels, 5), minmax(0, 1fr));
+  gap: 16px;
+  & > .kyt-subs-chan {
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 12px 16px;
+  }
+  & .kyt-subs-link {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    text-align: center;
+  }
+  & .kyt-subs-link > img {
+    width: min(120px, 70%);
+    height: auto;
+    aspect-ratio: 1;
+  }
+  & .kyt-subs-text {
+    max-width: 100%;
+  }
+  & .kyt-subs-name {
+    font-size: 14px;
+    line-height: 20px;
+  }
+  & .kyt-subs-new {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kyt-subs-tab,
+  .kyt-subs-tab::after,
+  .kyt-subs-chan,
+  .kyt-subs-btn > .kyt-dd-arrow {
+    transition: none;
+  }
+  .kyt-subs-confirm[open] {
+    animation: none;
+  }
+}

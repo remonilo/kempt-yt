@@ -45,18 +45,22 @@ html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents > .kyt-tl-
 }
 /* YouTube zeroes the left margin of the first item in each row by index; headers break rows, so use one
    margin for all: item width is 100%/n minus one item margin. */
-html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:has(> .kyt-tl-head) > ytd-rich-item-renderer {
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:has(> :is(.kyt-tl-head, .kyt-ch-head)) > ytd-rich-item-renderer {
   margin-left: 0 !important;
   margin-right: var(--ytd-rich-grid-item-margin) !important;
 }
 /* "Latest" and "Most relevant" shelves: Latest is the timeline's first row anyway, Most relevant repeats
    feed items out of order. The Shorts shelf (when the shorts feature is off) moves to the top, off the line. */
-html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:has(> .kyt-tl-head) > ytd-rich-section-renderer:not(:has(ytd-rich-shelf-renderer[is-shorts])) {
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:has(> :is(.kyt-tl-head, .kyt-ch-head)) > ytd-rich-section-renderer:not(:has(ytd-rich-shelf-renderer[is-shorts])) {
   display: none !important;
 }
-html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:has(> .kyt-tl-head) > ytd-rich-section-renderer {
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:has(> :is(.kyt-tl-head, .kyt-ch-head)) > ytd-rich-section-renderer {
   order: -1;
   box-shadow: -30px 0 0 var(--kyt-bg);
+}
+/* The line column's cover is for the timeline only. */
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:not(:has(> .kyt-tl-head)) > ytd-rich-section-renderer {
+  box-shadow: none;
 }
 
 /* History: one ytd-item-section-renderer per day. Our header replaces YouTube's, the list becomes a grid. */
@@ -107,39 +111,77 @@ html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:has(> kyt-
 }
 html[kyt-timeline] kyt-bar {
   order: -2;
-  flex: 0 0 calc(100% + 30px); /* back over the 30px the line column takes, to line up with the dots */
-  margin: 0 0 47px -30px;
+  flex: 0 0 100%;
+  margin: 0 0 24px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
   font: 500 14px / 36px Roboto, Arial, sans-serif;
+}
+/* Timeline view: back over the 30px the line column takes, to line up with the dots. */
+html[kyt-timeline] #contents:has(> .kyt-tl-head) > kyt-bar {
+  flex-basis: calc(100% + 30px);
+  margin: 0 0 47px -30px;
 }
 html[kyt-timeline] kyt-bar .kyt-chips {
   display: flex;
   gap: 8px;
 }
+/* Figma: thin dividers between View as, the type chips and the layout chips. */
+html[kyt-timeline] kyt-bar .kyt-bar-sep {
+  flex: none;
+  width: 1px;
+  height: 24px;
+  background: var(--kyt-outline);
+}
+html[kyt-timeline] kyt-bar .kyt-search {
+  margin-left: auto;
+}
+html[kyt-timeline] kyt-bar .kyt-dd-btn > .kyt-icon:not(.kyt-dd-arrow) {
+  margin: 0 4px 0 -4px; /* calendar before the label (Figma), the arrow keeps its own spacing */
+}
 html[kyt-timeline] kyt-bar .kyt-chips > button {
   height: 36px;
   padding: 0 16px;
 }
+/* Videos in a list: one card per row, thumbnail left. Day headers already span a row, so both views work. */
+html[kyt-timeline][kyt-timeline-layout="list"] ytd-browse[page-subtype="subscriptions"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer {
+  width: 100% !important;
+  flex: 0 0 100%;
+  margin: 0 0 16px !important;
+  & .ytLockupViewModelHost {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  & .ytLockupViewModelContentImage {
+    flex: none;
+    width: min(360px, 40%) !important;
+    margin: 0 16px 0 0 !important;
+  }
+  & .ytLockupViewModelMetadata {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
 /* With the Shorts feature on there is no Shorts shelf to show. */
 html[kyt-timeline][kyt-shorts] kyt-bar [data-type="shorts"] {
   display: none;
 }
 html[kyt-timeline] kyt-bar .kyt-search {
-  width: 314px;
-  max-width: 50%;
+  flex: 1 1 180px; /* wrap decides on the basis: the pill gives way first, the row wraps under 180px */
+  max-width: 314px;
 }
 
-/* Shelves: Shorts shows for All and Shorts, never while searching. */
+/* Shelves: Shorts shows for All and Shorts, never while searching or with a date range (shelves have no ages). */
 html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents > [kyt-off] {
   display: none !important;
 }
-html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:is([kyt-query], [kyt-filter="videos"], [kyt-filter="live"]) > ytd-rich-section-renderer {
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:is([kyt-query], [kyt-range], [kyt-filter="videos"], [kyt-filter="live"]) > ytd-rich-section-renderer {
   display: none !important;
 }
-html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:is([kyt-query], [kyt-filter]):not([kyt-more]) > ytd-continuation-item-renderer {
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:is([kyt-query], [kyt-filter], [kyt-range]):not([kyt-more]) > ytd-continuation-item-renderer {
   display: none !important;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -320,5 +362,98 @@ html[kyt-timeline] ytd-browse[page-subtype="history"]:has(ytd-search-box-rendere
   /* Own stacking context, so z-indexed content (the Shorts shelf's arrows) stays under the sticky chips row. */
   & ytd-section-list-renderer > #contents {
     isolation: isolate;
+  }
+}
+
+/* View as Channels (Figma Subs 97:4644): a header row per channel, a divider between channels, one row of cards
+   until the arrow opens the rest. */
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents > .kyt-ch-head {
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-sizing: border-box;
+  margin: 8px 0 16px;
+  padding-top: 32px;
+  border-top: 1px solid var(--kyt-outline);
+  color: var(--kyt-fg); /* #contents sets none; the arrow icon draws in currentColor */
+  &:first-of-type {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+  & > img {
+    width: 46px;
+    height: 46px;
+    flex: none;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--kyt-outline);
+  }
+}
+html[kyt-timeline] .kyt-ch-name {
+  min-width: 0;
+  font: 500 18px / 24px Roboto, Arial, sans-serif;
+  color: var(--kyt-fg);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+html[kyt-timeline] .kyt-ch-count {
+  font: 400 14px / 20px Roboto, Arial, sans-serif;
+  color: var(--kyt-fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+html[kyt-timeline] .kyt-ch-more {
+  all: unset;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-left: auto;
+  flex: none;
+  border-radius: 50%;
+  cursor: pointer;
+  --kyt-icon-size: 20px;
+  transition: background-color 150ms;
+  &:hover {
+    background: var(--kyt-hover-bg);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--kyt-outline-focus);
+  }
+  & > .kyt-icon {
+    transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
+  }
+}
+html[kyt-timeline] .kyt-ch-head[open] > .kyt-ch-more > .kyt-icon {
+  transform: rotate(180deg);
+}
+/* Nothing more to show: keep the slot so counts line up, hide the arrow. */
+html[kyt-timeline] .kyt-ch-head[kyt-few]:not([open]) > .kyt-ch-more {
+  visibility: hidden;
+}
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents > [kyt-ch-extra] {
+  display: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html[kyt-timeline] .kyt-ch-more,
+  html[kyt-timeline] .kyt-ch-more > .kyt-icon {
+    transition: none;
+  }
+}
+
+/* Load more: the filter used up its batch (MAX_LOADED) and later pages may still match. */
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] button.kyt-load-more {
+  display: block;
+  height: 36px;
+  margin: 24px auto;
+  padding: 0 16px;
+  &[hidden] {
+    display: none;
   }
 }

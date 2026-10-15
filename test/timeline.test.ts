@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { inType, kindOf } from '../src/features/timeline/filter.ts';
+import { inRange, inType, pastRange, sliceOf, kindOf } from '../src/features/timeline/filter.ts';
 import { dayLabel, groupOf, historyDate, parseAge, plan } from '../src/features/timeline/dates.ts';
 
 const now = new Date(2024, 11, 15, 9, 0); // Sun 15 Dec 2024, 09:00 local
@@ -100,3 +100,23 @@ test('inType: chips', () => {
   assert.ok(inType('short', 'shorts') && !inType('video', 'shorts'));
 });
 
+
+test('inRange: separate age slices, unreadable stays in', () => {
+  const a = (n: number, unit: string) => ({ n, unit, extra: false }) as Parameters<typeof inRange>[0] & object;
+  assert.equal(inRange(a(23, 'hour'), 'today'), true);
+  assert.equal(inRange(a(1, 'day'), 'today'), false);
+  assert.equal(inRange(a(6, 'day'), 'week'), true);
+  assert.equal(inRange(a(5, 'hour'), 'week'), false); // slices do not overlap
+  assert.equal(inRange(a(1, 'week'), 'week'), false);
+  assert.equal(inRange(a(4, 'week'), 'month'), true);
+  assert.equal(inRange(a(3, 'day'), 'month'), false);
+  assert.equal(inRange(a(1, 'month'), 'month'), false);
+  assert.equal(inRange(a(1, 'month'), 'older'), true);
+  assert.equal(inRange(a(2, 'week'), 'older'), false);
+  assert.equal(inRange(a(3, 'year'), 'any'), true);
+  assert.equal(inRange(null, 'today'), true);
+  assert.equal(sliceOf(a(7, 'day')), 'month');
+  assert.equal(pastRange(a(2, 'week'), 'week'), true);
+  assert.equal(pastRange(a(2, 'day'), 'month'), false);
+  assert.equal(pastRange(a(5, 'year'), 'older'), false);
+});

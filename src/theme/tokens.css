@@ -97,3 +97,99 @@ label.kyt-search input {
 label.kyt-search input::placeholder {
   color: var(--kyt-fg-muted);
 }
+
+/* Shared dropdown chip (core/dropdown.ts): "View as: Timeline ▾". The menu scales in from the chip, the arrow turns. */
+.kyt-dd {
+  position: relative;
+  z-index: 10;
+  flex: none;
+}
+.kyt-dd > button.kyt-dd-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 36px;
+  padding: 0 10px 0 16px;
+  font: 500 14px / 20px Roboto, Arial, sans-serif;
+  --kyt-icon-size: 20px;
+  & > .kyt-dd-arrow {
+    transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
+  }
+}
+.kyt-dd-prefix {
+  color: var(--kyt-fg-muted);
+}
+.kyt-dd[open] > .kyt-dd-btn > .kyt-dd-arrow {
+  transform: rotate(180deg);
+}
+.kyt-dd-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  border-radius: 12px;
+  background: var(--kyt-bg);
+  box-shadow: 0 0 0 1px var(--kyt-outline), 0 4px 32px rgba(0, 0, 0, 0.25);
+  transform-origin: top left;
+  transform: scale(0.95) translateY(-4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 150ms cubic-bezier(0.2, 0, 0, 1), opacity 150ms, visibility 0s 150ms;
+}
+/* placeMenu: no room below. */
+.kyt-dd[kyt-up] > .kyt-dd-menu {
+  top: auto;
+  bottom: calc(100% + 4px);
+  transform-origin: bottom left;
+  transform: scale(0.95) translateY(4px);
+}
+.kyt-dd[open] > .kyt-dd-menu {
+  transform: none;
+  opacity: 1;
+  visibility: visible;
+  transition: transform 200ms cubic-bezier(0.2, 0, 0, 1), opacity 150ms;
+}
+.kyt-dd-item {
+  all: unset;
+  box-sizing: border-box;
+  padding: 0 16px;
+  font: 400 14px / 36px Roboto, Arial, sans-serif;
+  color: var(--kyt-fg);
+  white-space: nowrap;
+  cursor: pointer;
+  &:hover {
+    background: var(--kyt-hover-bg);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--kyt-outline-focus);
+    outline-offset: -2px;
+  }
+  &[aria-selected="true"] {
+    background: var(--kyt-selected-bg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kyt-dd > .kyt-dd-btn > .kyt-dd-arrow,
+  .kyt-dd-menu,
+  .kyt-dd[open] > .kyt-dd-menu {
+    transition: none;
+  }
+}
+
+/* Grid/list chips (timeline toolbar, Channels tab): square icon chips, Figma Subs 96:3679. */
+.kyt-chips.kyt-layout {
+  display: flex;
+  gap: 8px;
+  & > button.kyt-chip {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 36px;
+    padding: 0;
+    --kyt-icon-size: 20px;
+  }
+}

@@ -35,3 +35,10 @@ export function readCache(): Settings {
 export function writeCache(s: Settings): void {
   localStorage.setItem(KEY, JSON.stringify(s));
 }
+
+/** For in-page controls that mirror a popup option (the popup and the page stay in sync through storage). */
+export async function saveOption(featureId: string, key: string, value: unknown): Promise<void> {
+  const s = await loadSettings();
+  s.options[`${featureId}.${key}`] = value;
+  await saveSettings(s);
+}
