@@ -149,7 +149,7 @@ Code: [MIT](LICENSE). Bundled icons and fonts keep their own licenses, see [THIR
 <!---------------------------------------------------------------------------->
 
 [firefox_link]: https://addons.mozilla.org/firefox/addon/kempt-for-youtube/
-[chrome_link]: https://chromewebstore.google.com/detail/PLACEHOLDER
+[chrome_link]: https://chromewebstore.google.com/detail/kempt-for-youtube/dpiheahglgggkdjcgdkiogpmhbmppfmg
 [install_link]: https://remonilo.github.io/kempt-yt/docs/installation/
 [settings_link]: https://remonilo.github.io/kempt-yt/docs/settings/
 [faq_link]: https://remonilo.github.io/kempt-yt/docs/faq/

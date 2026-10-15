@@ -6,9 +6,8 @@ import manifest from '../../../manifest.json';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const repo = 'https://github.com/remonilo/kempt-yt';
 const sponsor = 'https://github.com/sponsors/remonilo';
-// PLACEHOLDER: Chrome Web Store listing, once published.
 const firefox = 'https://addons.mozilla.org/firefox/addon/kempt-for-youtube/';
-const chrome = 'https://chromewebstore.google.com/detail/PLACEHOLDER';
+const chrome = 'https://chromewebstore.google.com/detail/kempt-for-youtube/dpiheahglgggkdjcgdkiogpmhbmppfmg';
 const shots = import.meta.glob<{ default: ImageMetadata }>('../assets/screenshots/*.png', { eager: true });
 const shot = (name: string) => shots[`../assets/screenshots/${name}.png`].default;
 const formats = ['avif', 'webp'] as const;

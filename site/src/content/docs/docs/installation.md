@@ -6,7 +6,7 @@ description: Install Kempt from a store or build it from source.
 ## From a store
 
 - For Firefox 128 or later, use [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/kempt-for-youtube/).
-- For Chrome 120 or later, Edge, Brave and other Chromium browsers, use the [Chrome Web Store](https://chromewebstore.google.com/detail/PLACEHOLDER).
+- For Chrome 120 or later, Edge, Brave and other Chromium browsers, use the [Chrome Web Store](https://chromewebstore.google.com/detail/kempt-for-youtube/dpiheahglgggkdjcgdkiogpmhbmppfmg).
 
 Reload any YouTube tab that was open before you installed. Kempt starts with every feature on except Grid size and Wavy progress bar.
 
