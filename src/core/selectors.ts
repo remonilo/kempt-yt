@@ -29,8 +29,10 @@ export const S = {
   description: 'ytd-watch-metadata #description',
   askButton: 'ytd-watch-metadata [kyt-icon="SPARK"] button', // needs stamp(S.watchActions)
   watchSubscribe: 'ytd-watch-metadata ytd-subscribe-button-renderer', // its bell needs stampBell
+  channelHeader: 'ytd-browse:not([hidden]) yt-page-header-view-model', // channel header; its Subscribe bell needs stampBell
   homeGrid: 'ytd-browse[page-subtype="home"] ytd-rich-grid-renderer',
   subsGrid: 'ytd-browse[page-subtype="subscriptions"] ytd-rich-grid-renderer > #contents',
+  subsRichGrid: 'ytd-browse[page-subtype="subscriptions"] ytd-rich-grid-renderer', // holds #header ... #contents; our tabs go first
   historyList: 'ytd-browse[page-subtype="history"] ytd-section-list-renderer > #contents', // one ytd-item-section-renderer per day
   historyTitle: 'ytd-item-section-header-renderer #title', // "Today", "Thursday", "27 Sept"
   historyChips: 'ytd-browse[page-subtype="history"] ytd-section-list-renderer > #header-container', // All/Videos/Shorts chip bar row
@@ -38,6 +40,8 @@ export const S = {
   historyLinks: 'ytd-browse[page-subtype="history"] ytd-browse-feed-actions-renderer ytd-compact-link-renderer', // Comments/Posts/Live chat (My Activity)
   lockupDate: '.ytContentMetadataViewModelMetadataText', // last one in a lockup is the age ("7 hr ago"), aria-label has the long form
   lockupMeta: '.ytLockupViewModelMetadata', // title, channel and metadata rows of a lockup
+  lockupChannel: '.ytLockupMetadataViewModelMetadata a[href^="/"]', // first is the channel ("/@handle"); collabs may have none
+  lockupAvatar: '.ytLockupMetadataViewModelAvatar img',
   fsActions: '#movie_player .ytp-fullscreen-quick-actions', // fullscreen like/dislike/comments/share/⋯ row; needs stamp
   progressBar: '#movie_player .ytp-chrome-bottom .ytp-progress-bar', // #movie_player also holds a hidden 0x0 spare bar outside .ytp-chrome-bottom
   liveBadge: '.ytBadgeShapeThumbnailLive', // the red LIVE thumbnail badge of a stream on now (any language)

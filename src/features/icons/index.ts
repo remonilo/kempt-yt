@@ -41,6 +41,8 @@ export const icons: Feature = {
     const onRoute = async (route: Route) => {
       // History's right column (Search, Clear all, Pause, Manage); stamp is idempotent per root.
       if (route === 'history') waitFor(S.historyActions, { signal }).then((el) => el && call('stamp', S.historyActions));
+      // Channel header Subscribe bell; a new header per channel, stampBell is idempotent per root.
+      if (route === 'channel') waitFor(S.channelHeader, { signal }).then((el) => el && call('stampBell', S.channelHeader));
       if (route !== 'watch') return;
       // The Subscribe button's bell state; idempotent per root, so every watch page is fine.
       waitFor(S.watchSubscribe, { signal }).then((el) => el && call('stampBell', S.watchSubscribe));

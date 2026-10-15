@@ -78,6 +78,16 @@ function stampBell(root: Element) {
     if (v) el.setAttribute('kyt-bell', v);
     else el.removeAttribute('kyt-bell');
   }
+  // Channel pages: the view model's bell sheet marks the current item, and YouTube updates it on change.
+  for (const el of root.querySelectorAll<any>('yt-subscribe-button-view-model')) {
+    const items: any[] = el.data?.onShowSubscriptionOptions?.innertubeCommand?.showSheetCommand?.panelLoadingStrategy
+      ?.inlineContent?.sheetViewModel?.content?.listViewModel?.listItems ?? [];
+    const type: string | undefined = items.find((i) => i.listItemViewModel?.isSelected)
+      ?.listItemViewModel.leadingImage?.sources?.[0]?.clientResource?.imageName;
+    const v = type === 'NOTIFICATIONS_ACTIVE' ? 'all' : type === 'NOTIFICATIONS_OFF' ? 'none' : null;
+    if (v) el.setAttribute('kyt-bell', v);
+    else el.removeAttribute('kyt-bell');
+  }
 }
 
 const watched = new WeakMap<Element, Set<string>>();

@@ -19,6 +19,7 @@ html[kyt-icons] :is(
   ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"], [kyt-icon="CONTENT_CUT"], [kyt-icon="SPARK"], [kyt-icon="MONEY_HEART"]) .ytSpecButtonShapeNextIcon,
   ytd-watch-metadata ytd-menu-renderer > #button-shape .ytSpecButtonShapeNextIcon,
   ytd-watch-metadata ytd-subscription-notification-toggle-button-renderer-next .ytSpecButtonShapeNextIcon,
+  yt-page-header-view-model yt-subscribe-button-view-model button.ytSpecButtonShapeNextIconLeadingTrailing > .ytSpecButtonShapeNextIcon,
   ytd-browse-feed-actions-renderer :is([kyt-icon="SEARCH"], [kyt-icon="CLOSE"], [kyt-icon="DELETE"], [kyt-icon="PAUSE_OUTLINED"], [kyt-icon="PLAY_OUTLINED"], [kyt-icon="SETTINGS"]) .ytSpecButtonShapeNextIcon
 ) {
   background-color: currentColor;
@@ -126,7 +127,8 @@ html[kyt-icons] ytd-post-renderer[uses-compact-lockup]:has(ytd-comment-action-bu
   height: 220px; /* YouTube's 196px + 12px gap above the toolbar + 12px below */
   padding-bottom: 12px;
   & #toolbar { margin-top: 12px; }
-  & ytd-comment-action-buttons-renderer { margin-top: 0 !important; }
+  /* The pill row has its own #toolbar: without this it got the 12px too and sat 6px under the ⋮. */
+  & ytd-comment-action-buttons-renderer, & ytd-comment-action-buttons-renderer #toolbar { margin-top: 0 !important; }
 }
 html[kyt-icons] ytd-watch-metadata [kyt-icon="SHARE"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-share); }
 html[kyt-icons] ytd-watch-metadata [kyt-icon="PLAYLIST_ADD"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-save); }
@@ -139,6 +141,10 @@ html[kyt-icons] ytd-watch-metadata [kyt-icon="MONEY_HEART"] .ytSpecButtonShapeNe
 html[kyt-icons] ytd-watch-metadata ytd-subscription-notification-toggle-button-renderer-next .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-notifs); }
 html[kyt-icons] ytd-watch-metadata ytd-subscription-notification-toggle-button-renderer-next[kyt-bell="all"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-notifs-selected); }
 html[kyt-icons] ytd-watch-metadata ytd-subscription-notification-toggle-button-renderer-next[kyt-bell="none"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-notifs-disabled); }
+/* Channel header: same states, stamped from the view model's bell sheet. Only the subscribed (dropdown) shape. */
+html[kyt-icons] yt-page-header-view-model yt-subscribe-button-view-model button.ytSpecButtonShapeNextIconLeadingTrailing > .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-notifs); }
+html[kyt-icons] yt-page-header-view-model yt-subscribe-button-view-model[kyt-bell="all"] button.ytSpecButtonShapeNextIconLeadingTrailing > .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-notifs-selected); }
+html[kyt-icons] yt-page-header-view-model yt-subscribe-button-view-model[kyt-bell="none"] button.ytSpecButtonShapeNextIconLeadingTrailing > .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-notifs-disabled); }
 html[kyt-icons] ytd-watch-metadata ytd-menu-renderer > #button-shape .ytSpecButtonShapeNextIcon {
   --kyt-i: var(--kyt-i-more);
   rotate: 90deg; /* Figma has only the vertical ⋮; the row's is horizontal */
