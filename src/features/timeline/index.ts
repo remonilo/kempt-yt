@@ -246,7 +246,7 @@ function subscriptions(grid: Element, signal: AbortSignal, call: Ctx['call']): v
     // With most items hidden YouTube's loading row stays on screen; style.css hides it unless more matches are wanted.
     grid.toggleAttribute('kyt-range', state.range !== 'any');
     // Once the feed passes the slice no later page can match. Until then a range keeps loading (bounded by
-    // MAX_LOADED), so Oldest can later sort a complete set and Older shows what that many items reach.
+    // MAX_LOADED), so Older shows what that many items reach.
     const want = state.range !== 'any' ? !past : state.type !== 'shorts' && shown < WANT_VISIBLE;
     loaded = total;
     grid.toggleAttribute('kyt-more', total < budget && want);
