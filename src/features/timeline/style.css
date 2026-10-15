@@ -447,13 +447,32 @@ html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents > [kyt-ch-
   }
 }
 
-/* Load more: the filter used up its batch (MAX_LOADED) and later pages may still match. */
-html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] button.kyt-load-more {
-  display: block;
-  height: 36px;
-  margin: 24px auto;
-  padding: 0 16px;
+/* Load more: the filter used up its batch (MAX_LOADED) and later pages may still match. YouTube's shelf
+   Show more look: a divider with the chip in its middle. */
+html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] .kyt-load-more {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  align-self: stretch; /* the grid renderer centres its children */
+  margin: 8px 16px 24px; /* #contents' side margins, so the line spans the feed like the toolbar */
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--kyt-outline);
+  }
   &[hidden] {
     display: none;
+  }
+  & > button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 12px 0 16px;
+    border-radius: 18px;
+    font: 500 14px / 20px Roboto, Arial, sans-serif;
+    --kyt-icon-size: 20px;
   }
 }

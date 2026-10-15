@@ -186,10 +186,11 @@ function subscriptions(grid: Element, signal: AbortSignal, call: Ctx['call']): v
   const dots = spy(signal);
   const state = { type: 'all' as Type, range: 'any' as Range, query: '' };
   let budget = MAX_LOADED, loaded = 0;
-  const more = el('button', 'kyt-chip kyt-load-more', local(WORDS).loadMore);
+  const moreBtn = el('button', 'kyt-chip', el('span', '', local(WORDS).loadMore), icon('arrow-down'));
+  const more = el('div', 'kyt-load-more', moreBtn);
   more.hidden = true;
   grid.after(more); // never inside #contents (YouTube re-matches its children by index)
-  more.addEventListener('click', () => ((budget = loaded + MAX_LOADED), apply()), { signal });
+  moreBtn.addEventListener('click', () => ((budget = loaded + MAX_LOADED), apply()), { signal });
   const apply = () => {
     const seen = new Set<HTMLElement>();
     let shown = 0, total = 0, past = false; // past: the last readable item is older than the range
