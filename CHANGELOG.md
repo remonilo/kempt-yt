@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.7.0](https://github.com/remonilo/kempt-yt/compare/v0.6.0...v0.7.0) (2026-10-15)
+
+
+### Features
+
+* **channel-tabs:** restyle channel page tabs ([b936739](https://github.com/remonilo/kempt-yt/commit/b936739742a8f718a00db26c531604074c205c7b))
+* **icons:** channel page bell icons, align Posts shelf menu ([01e85f7](https://github.com/remonilo/kempt-yt/commit/01e85f7442acaad408e4db51970834f3204c7cd8))
+* **icons:** use our icons in Subscribe bell menus ([0fedef4](https://github.com/remonilo/kempt-yt/commit/0fedef4e5dc4aa4c132c63152db47119e20c469f))
+* **subs-tabs:** Videos and Channels tabs on Subscriptions ([001466c](https://github.com/remonilo/kempt-yt/commit/001466c25cf90d91b6edc3957dc2166b14b5cd8e))
+
+
+### Bug Fixes
+
+* **comment-search:** search comments on post pages ([a77b284](https://github.com/remonilo/kempt-yt/commit/a77b284e6888172441c80b7bd8d5574fdcbc4858))
+
 ## [0.6.0](https://github.com/remonilo/kempt-yt/compare/v0.5.0...v0.6.0) (2026-10-13)
 
 
