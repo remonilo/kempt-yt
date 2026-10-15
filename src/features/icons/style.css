@@ -172,7 +172,7 @@ html[kyt-icons] ytd-about-channel-renderer {
 
 /* Popup menus: the account menu (masthead avatar) and the ⋯ menus. stampMenus sets kyt-icon="<type>" on each row
    (kyt-icon2 for its right-hand icon). Mapped rows set --kyt-i/--kyt-ibg/--kyt-vis on the row (they inherit down to the icon box); unmapped ones (Premium, ...) stay native. */
-html[kyt-icons] ytd-popup-container [kyt-icon] :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer > .ytIconWrapperHost),
+html[kyt-icons] ytd-popup-container [kyt-icon] :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer:not(.ytListItemViewModelTrailing) > .ytIconWrapperHost),
 html[kyt-icons] ytd-popup-container ytd-menu-service-item-download-renderer #primary-entry > yt-icon,
 html[kyt-icons] ytd-popup-container :is(ytd-compact-link-renderer[kyt-icon2="CHEVRON_RIGHT"] #right-icon, ytd-toggle-theme-compact-link-renderer :is(#primary-icon, #secondary-icon)) {
   background-color: var(--kyt-ibg, transparent);
@@ -183,6 +183,11 @@ html[kyt-icons] ytd-popup-container :is([kyt-icon="OFFLINE_DOWNLOAD"], [kyt-icon
 html[kyt-icons] ytd-popup-container :is([kyt-icon="PLAYLIST_ADD"], [kyt-icon="BOOKMARK_BORDER"]) { --kyt-i: var(--kyt-i-save); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container :is([kyt-icon="MONEY_HEART"], [kyt-icon="MONETIZATION_ON"], [kyt-icon="PAID"], [kyt-icon="MONEY_HAND"]) { --kyt-i: var(--kyt-i-thanks); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container :is([kyt-icon="FLAG"], [kyt-icon="FLAG_CAIRO"]) { --kyt-i: var(--kyt-i-report); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+/* Subscribe bell menus (channel page sheet, watch page). */
+html[kyt-icons] ytd-popup-container [kyt-icon="NOTIFICATIONS_ACTIVE"] { --kyt-i: var(--kyt-i-notifs-selected); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="NOTIFICATIONS_NONE"] { --kyt-i: var(--kyt-i-notifs); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="NOTIFICATIONS_OFF"] { --kyt-i: var(--kyt-i-notifs-disabled); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="PERSON_MINUS"] { --kyt-i: var(--kyt-i-exclude); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container [kyt-icon="CONTENT_CUT"] { --kyt-i: var(--kyt-i-clip); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container :is([kyt-icon="ACCOUNT_BOX"], [kyt-icon="GOOGLE_ACCOUNT"], [kyt-icon="GOOGLE_G"]) { --kyt-i: var(--kyt-i-you); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container :is([kyt-icon="SWITCH_ACCOUNTS"], [kyt-icon="ACCOUNT_SWITCHER"], [kyt-icon="SWITCH_ACCOUNT"]) { --kyt-i: var(--kyt-i-switch-account); --kyt-ibg: currentColor; --kyt-vis: hidden; }

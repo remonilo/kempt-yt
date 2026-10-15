@@ -20,7 +20,7 @@ function stampIcons(root: Element) {
 // Menu rows are re-used across menus (account menu, its submenus), so stale stamps are removed.
 const MENU_ITEMS = 'ytd-compact-link-renderer, ytd-menu-service-item-renderer, ytd-menu-navigation-item-renderer, ytd-menu-service-item-download-renderer, yt-list-item-view-model';
 
-// Video card menus (yt-list-item-view-model rows) keep no data on the rows. Their icon types sit in the card's data, so a
+// Video card menus and the channel-page bell sheet (yt-list-item-view-model rows) keep no data on the rows. Their icon types sit in the card's data, so a
 // click on a card remembers title -> icon type and the rows are matched by title (the same localized string).
 const CARDS = 'yt-lockup-view-model, ytm-shorts-lockup-view-model, ytm-shorts-lockup-view-model-v2';
 let cardMenu: Map<string, string> | null = null;
@@ -36,7 +36,8 @@ function menuItems(v: any) {
 }
 
 function onClick(e: Event) {
-  const card = (e.target as Element).closest?.(CARDS) as any;
+  // Channel-page Subscribe chip: its bell sheet (All / Personalized / None / Unsubscribe) is in its data the same way.
+  const card = (e.target as Element).closest?.(`${CARDS}, yt-subscribe-button-view-model`) as any;
   const raw = card?.rawProps?.data ?? card?.data;
   const items = card && (e.target as Element).closest('button') ? menuItems(typeof raw === 'function' ? raw() : raw) : null;
   cardMenu = items?.size ? items : null;
