@@ -1,0 +1,85 @@
+/* Channel tab row (Figma Channel 110:11316): labels 55px apart (16px tab padding + 23px gap in Figma), the search tab
+   alone at the right end, an accent indicator. Only the channel row has an expandable search tab, hence the :has().
+   YouTube's sliding bar keeps the offsets it measured before our flag landed, so it hides; each tab's own bar draws
+   the indicator instead, scaling in like the Subscriptions tabs. */
+html[kyt-channel-tabs] #tabsContent:has(ytd-expandable-tab-renderer) {
+  width: 100%;
+  & yt-tab-group-shape,
+  & .tabGroupShapeTabs {
+    width: 100%;
+  }
+  & yt-tab-shape:not(.ytTabShapeLastTab) {
+    margin-right: 55px;
+  }
+  & yt-tab-shape.ytTabShapeLastTab {
+    margin-left: auto;
+  }
+  & .tabGroupShapeSlider {
+    display: none;
+  }
+  & .ytTabShapeTabBar {
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+    background: var(--kyt-accent);
+    transform: scaleX(0);
+    opacity: 0;
+    transition: transform 250ms cubic-bezier(0.2, 0, 0, 1), opacity 150ms;
+  }
+  /* Navigating tabs may re-render the bars, which skips a transition; a keyframe pop-in runs either way. */
+  & .ytTabShapeTabBarSelected {
+    transform: none;
+    opacity: 1;
+    animation: kyt-tab-pop 250ms cubic-bezier(0.2, 0, 0, 1);
+  }
+}
+@keyframes kyt-tab-pop {
+  from { transform: scaleX(0); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[kyt-channel-tabs] .ytTabShapeTabBar {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Open search: our shared search pill (label.kyt-search in tokens.css), icon inside on the left. */
+html[kyt-channel-tabs] ytd-expandable-tab-renderer[show-input] {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 36px;
+  padding-right: 16px;
+  border-radius: 18px;
+  border: 1px solid transparent;
+  background: color-mix(in srgb, var(--kyt-fg) 5%, transparent);
+  &:focus-within {
+    border-color: var(--kyt-outline-focus);
+  }
+  & #icon-button {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+  }
+  & #icon-button yt-interaction {
+    display: none;
+  }
+  & #icon-button button {
+    width: 34px;
+    height: 34px;
+    padding: 5px 0 5px 10px;
+  }
+  & #icon-button yt-icon {
+    width: 20px;
+    height: 20px;
+  }
+  & tp-yt-paper-input-container {
+    padding: 0;
+  }
+  & tp-yt-paper-input-container .underline {
+    display: none;
+  }
+  & input {
+    color: var(--kyt-fg);
+    font: 400 14px / 20px Roboto, Arial, sans-serif;
+  }
+}
