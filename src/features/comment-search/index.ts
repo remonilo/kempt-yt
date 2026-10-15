@@ -4,7 +4,7 @@ import { el, keep, observe, waitFor } from '../../core/dom.ts';
 import { icon } from '../../core/icon.ts';
 import { local } from '../../core/i18n.ts';
 import { S } from '../../core/selectors.ts';
-import { eachRoute } from '../../core/router.ts';
+import { eachRoute, routeOf } from '../../core/router.ts';
 import { matcher } from '../../core/text.ts';
 
 const WORDS = {
@@ -31,24 +31,37 @@ export const commentSearch: Feature = {
   id: 'comment-search',
   label: 'Comment search', hint: 'Filters loaded comments', group: 'watch', icon: 'search',
   defaultOn: true,
-  routes: ['watch', 'shorts'],
+  routes: ['watch', 'shorts', 'post'],
   run({ signal }) {
     eachRoute(signal, (route, s) => {
       if (route === 'watch') mountPage(s);
-      onCommentsPanel(s, mountPanel);
+      if (route !== 'post') return onCommentsPanel(s, mountPanel);
+      // Post pages re-render their comments header, and post -> post keeps the route: restart per post.
+      let page: AbortController | undefined;
+      const post = () => {
+        page?.abort();
+        page = new AbortController();
+        mountPage(AbortSignal.any([s, page.signal]));
+      };
+      post();
+      document.addEventListener('kyt:navigate', post, { signal: s });
     });
   },
 };
 
 async function mountPage(signal: AbortSignal) {
   // Comments render lazily (when scrolled to, or when their tab opens), so no timeout.
-  const scope = await waitFor(S.comments, { signal });
-  const first = scope && await waitFor('ytd-comments-header-renderer #sort-menu', { root: scope, signal, timeout: Infinity });
-  // The watch page keeps the comments element and its header container across videos.
+  // On the watch page only the comments element is observed, not every player tick.
+  const watch = routeOf(location.pathname) === 'watch';
+  const host = watch ? await waitFor(S.comments, { signal }) : document;
+  const first = host && await waitFor(':is(ytd-watch-flexy, ytd-browse:not([hidden])) ytd-comments ytd-comments-header-renderer #sort-menu',
+    { root: host, signal, timeout: Infinity });
+  // `ytd-comments`: post pages also hold a hidden header with its own #sort-menu in ytd-backstage-items.
+  // Both pages keep the header container while swapping the header renderer inside it.
   const root = first?.closest('ytd-comments-header-renderer')?.parentElement;
-  if (!scope || !root || signal.aborted) return;
+  if (!root || signal.aborted) return;
   mount({
-    scope: () => scope,
+    scope: () => root.closest('ytd-comments'),
     root,
     place(box, none) {
       const header = root.querySelector('ytd-comments-header-renderer');
