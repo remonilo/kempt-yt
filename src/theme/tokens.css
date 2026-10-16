@@ -22,7 +22,9 @@ html {
   --kyt-radius: 10px;
   --kyt-icon: 20px; /* Figma uses 24px with thinner strokes; raise to 24px when the Figma icon set lands */
 }
-html[dark] {
+/* YouTube darkens the masthead in theater even in the light theme ([dark] on ytd-masthead). */
+html[dark],
+ytd-masthead[dark] {
   --kyt-bg: #0f0f0f;
   --kyt-fg: #f1f1f1;
   --kyt-fg-muted: #aaa;
