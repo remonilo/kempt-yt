@@ -14,10 +14,14 @@
 //   --with=<dir or .xpi> also installs another extension, e.g. Return YouTube Dislike (repeatable).
 //   --lang=de sets the browser language; logged out, YouTube follows it (its ?hl= is ignored).
 //   --set=id=0 turns a feature off (=1 on) in the extension's storage before loading, e.g. --set=shorts=0 (repeatable).
+//   --profile=dir runs in that Firefox profile instead of a fresh one, e.g. --profile=~/.kempt-ff (signed in to YouTube).
+//     Close any Firefox using it first. Puppeteer restores the profile's prefs afterwards.
+//   --dump=scripts/x-dump.js runs a console dump script unchanged, last (after --click/--hover/--eval-after). What it
+//     copy()s or downloads is saved to samples/ (x-dump.json/.txt, or the download's name); console output is printed.
 import puppeteer from 'puppeteer-core';
 import { cp, mkdtemp, readFile, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { homedir, tmpdir } from 'node:os';
+import { basename, join, resolve } from 'node:path';
 import { setTimeout as sleep } from 'node:timers/promises';
 
 const [url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', shotPath] = process.argv.slice(2).filter((a) => !a.startsWith('--'));
@@ -27,6 +31,7 @@ const cssOnly = has('css-only');
 const ext = !cssOnly && !has('off');
 const lang = flag('lang');
 const sets = process.argv.filter((a) => a.startsWith('--set=')).map((a) => a.slice(6).split('='));
+const profile = flag('profile')?.replace(/^~(?=\/)/, homedir());
 
 // BiDi cannot open moz-extension:// pages, so --set loads a copy of dist/ whose background script writes the
 // feature switches to storage on install, before YouTube loads.
@@ -44,6 +49,7 @@ async function withSettings() {
 
 const browser = await puppeteer.launch({
   browser: 'firefox', executablePath: '/Applications/Firefox.app/Contents/MacOS/firefox', headless: true,
+  ...(profile && { userDataDir: profile }),
   extraPrefsFirefox: { 'ui.systemUsesDarkTheme': has('light') ? 0 : 1, 'xpinstall.signatures.required': false,
     'media.volume_scale': '0.0', // always muted: videos autoplay with sound otherwise
     ...(has('scrollbars') && { 'ui.useOverlayScrollbars': 0 }),
@@ -70,7 +76,8 @@ try {
       });
     });
   const logs = [];
-  page.on('console', (m) => m.text().includes('kyt') && logs.push(m.text()));
+  let dumping = false;
+  page.on('console', (m) => (dumping || m.text().includes('kyt')) && logs.push(m.text()));
   await page.goto(url, { waitUntil: 'load', timeout: 60_000 });
   await page.bringToFront(); // an extension's welcome tab would leave YouTube in the background (no rAF, skeleton only)
   await sleep(ext ? 8000 : 4000);
@@ -102,6 +109,38 @@ try {
   if (flag('click')) await page.click(flag('click'));
   if (flag('hover')) await page.hover(flag('hover'));
   if (flag('eval-after')) { await sleep(1500); console.log(await page.evaluate(`(async () => { ${await readFile(flag('eval-after'), 'utf8')} })()`)); }
+  if (flag('dump')) {
+    // The dump scripts are written for the DevTools console: they hand results to copy() or download a blob.
+    await page.evaluate(() => {
+      window.kytDump = { copied: [], blobs: [] };
+      window.copy = (v) => kytDump.copied.push(typeof v === 'string' ? v : JSON.stringify(v, null, 1));
+      const create = URL.createObjectURL;
+      URL.createObjectURL = (b) => { const url = create(b); kytDump.blobs.push({ url, b }); return url; };
+      const click = HTMLAnchorElement.prototype.click;
+      HTMLAnchorElement.prototype.click = function () {
+        const blob = this.download && kytDump.blobs.find((x) => x.url === this.href);
+        if (blob) blob.name = this.download;
+        else click.call(this);
+      };
+    });
+    dumping = true;
+    const result = await page.evaluate(await readFile(flag('dump'), 'utf8'));
+    await sleep(500);
+    dumping = false;
+    const out = await page.evaluate(async () => [
+      ...kytDump.copied.map((text) => ({ text })),
+      ...(await Promise.all(kytDump.blobs.filter((x) => x.name).map(async (x) => ({ name: x.name, text: await x.b.text() })))),
+    ]);
+    const stem = basename(flag('dump'), '.js');
+    for (const [i, { name, text }] of out.entries()) {
+      let ext = 'txt';
+      try { JSON.parse(text); ext = 'json'; } catch {}
+      const path = `samples/${name ?? `${stem}${i ? `-${i + 1}` : ''}.${ext}`}`;
+      await writeFile(path, text);
+      console.log(`saved ${path} (${text.length} chars)`);
+    }
+    if (!out.length && result !== undefined) console.log(JSON.stringify(result)?.slice(0, 4000));
+  }
   if (logs.length) console.log(logs.join('\n'));
   if (shotPath) {
     await sleep(500);

@@ -31,6 +31,8 @@ Unit tests cover the pure logic: route parsing, date grouping and age parsing in
 - `--type` types into the search box so the suggestions popup opens.
 - `--scrollbars` forces classic scrollbars, like macOS "Always show scroll bars".
 - `--fake-login` makes YouTube report signed in, so signed-in features mount. Their API calls still fail.
+- `--profile=<dir>` runs in that Firefox profile instead of a fresh one. Point it at a profile signed in to YouTube (see below) to check signed-in UI headless. Close any Firefox using the profile first.
+- `--dump=scripts/<x>.js` runs a console dump script unchanged, after `--click` and `--hover`. What it copies or downloads lands in `samples/`; its console output is printed.
 - `--off` loads plain YouTube without Kempt, for comparison.
 - `--css-only` injects `dist/content.css` with every feature on instead of loading the extension. It's faster for CSS checks.
 
@@ -43,9 +45,20 @@ Unit tests cover the pure logic: route parsing, date grouping and age parsing in
 - Logged out, Subscriptions has no feed, so inject items into the grid. YouTube upgrades a created `ytd-rich-grid-renderer` or `ytd-rich-item-renderer` and wipes children added before, so add the metadata after about a second. Inject in one `page.evaluate`, wait outside the page, then interact in a second one.
 - Launch and `waitFor` timeouts happen. Retry before calling it a regression.
 
+## Signed-in profile
+
+Create a Firefox profile once and sign in to YouTube by hand (Google may refuse sign-in under automation). Use a throwaway account: its subscriptions and history end up in screenshots and `samples/`.
+
+```sh
+mkdir -p ~/.kempt-ff
+/Applications/Firefox.app/Contents/MacOS/firefox -profile ~/.kempt-ff -no-remote
+```
+
+Then pass `--profile=~/.kempt-ff`. If a run comes back signed out, sign in again the same way.
+
 ## What headless can't check
 
-- Signed-in data: Watch later state, Subscriptions and Playlists data, Ask AI. `--fake-login` mounts these features, but their requests fail.
+- Signed-in data, without `--profile`: Watch later state, Subscriptions and Playlists data, Ask AI. `--fake-login` mounts these features, but their requests fail.
 - `backdrop-filter`, which headless Firefox doesn't draw.
 - Live video, which headless Firefox can't play. Test chat on a stream that is live now, such as `/@LofiGirl/live`; consent screens can hide the chat.
 - The toolbar popup: headless Firefox can't open `moz-extension://` pages.
