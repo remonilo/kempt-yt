@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.8.0](https://github.com/remonilo/kempt-yt/compare/v0.7.0...v0.8.0) (2026-10-18)
+
+
+### Features
+
+* **channel-tabs:** Playlists tab sort as chips ([a87c770](https://github.com/remonilo/kempt-yt/commit/a87c77024491fbdc5bed59a31895d1fb9f20b723))
+* **search-filters:** search filter chips, custom date range and grid results ([244914a](https://github.com/remonilo/kempt-yt/commit/244914a683001fccf0aa27748ce4cf47ae316dd6))
+
+
+### Bug Fixes
+
+* light Kempt top bar icons in the dark theater masthead ([2c4972a](https://github.com/remonilo/kempt-yt/commit/2c4972a540946538fe0ec117c916e2abc289d4b8))
+* **search-filters:** grid the videos in vertical shelves ([176bce7](https://github.com/remonilo/kempt-yt/commit/176bce7bd131c1291ded506c8ff0731d0331b29b))
+
 ## [0.7.0](https://github.com/remonilo/kempt-yt/compare/v0.6.0...v0.7.0) (2026-10-15)
 
 
