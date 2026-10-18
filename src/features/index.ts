@@ -10,6 +10,7 @@ import { grid } from './grid/index.ts';
 import { icons } from './icons/index.ts';
 import { progressBar } from './progress-bar/index.ts';
 import { searchBar } from './search-bar/index.ts';
+import { searchFilters } from './search-filters/index.ts';
 import { selectedBg } from './selected-bg/index.ts';
 import { settingsTopbar } from './settings-topbar/index.ts';
 import { shorts } from './shorts/index.ts';
@@ -23,4 +24,4 @@ import { watchTabs } from './watch-tabs/index.ts';
 // A feature's style.css is picked up by build.mjs automatically.
 export const features: Feature[] = [accent, font, selectedBg, subscribeRed, searchBar, icons,
   sidebar, settingsTopbar, watchLaterBtn, shorts, watchTabs, captions, commentSort, commentSearch, commentLayout,
-  timeline, subsTabs, channelTabs, grid, progressBar];
+  timeline, subsTabs, channelTabs, searchFilters, grid, progressBar];

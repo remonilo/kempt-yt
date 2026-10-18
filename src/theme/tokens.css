@@ -2,6 +2,8 @@
    The accent feature's color option overrides --kyt-accent inline on <html>.
    Source: Juxtopposed Figma (file 67JrsVl1sPE1qzZZL0iuNG, frame "Home" 4:11081). */
 html {
+  /* Chips, dropdown chips, grid/list chips and the toolbar search pill: YouTube's own chip height. */
+  --kyt-chip-h: 32px;
   --kyt-accent: #cb274a;
   /* Figma's selected sidebar row is #ffaabb @ 14% over #111 = #322629. We derive the pink from the accent
      (default ≈ #eaa9b7) so a custom accent re-tints everything; translucent, so it works on any background. */
@@ -72,15 +74,15 @@ ytd-masthead[dark] {
   outline: 2px solid var(--kyt-outline-focus);
 }
 
-/* Shared search pill (Subscriptions toolbar, comment search). Features set width; 36px tall unless overridden. */
+/* Shared search pill (Subscriptions toolbar, comment search). Features set width; chip height unless overridden. */
 label.kyt-search {
   display: flex;
   align-items: center;
   gap: 8px;
   box-sizing: border-box;
-  height: 36px;
+  height: var(--kyt-chip-h);
   padding: 0 16px;
-  border-radius: 18px;
+  border-radius: calc(var(--kyt-chip-h) / 2);
   border: 1px solid transparent;
   color: var(--kyt-fg);
   background: color-mix(in srgb, var(--kyt-fg) 5%, transparent);
@@ -110,7 +112,7 @@ label.kyt-search input::placeholder {
   display: flex;
   align-items: center;
   gap: 4px;
-  height: 36px;
+  height: var(--kyt-chip-h);
   padding: 0 10px 0 16px;
   font: 500 14px / 20px Roboto, Arial, sans-serif;
   --kyt-icon-size: 20px;
@@ -132,7 +134,8 @@ label.kyt-search input::placeholder {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  padding: 8px 0;
+  padding: 0; /* the first and last rows' hover and selected fills reach the rounded edge */
+  overflow: clip;
   border-radius: 12px;
   background: var(--kyt-bg);
   box-shadow: 0 0 0 1px var(--kyt-outline), 0 4px 32px rgba(0, 0, 0, 0.25);
@@ -189,8 +192,8 @@ label.kyt-search input::placeholder {
   & > button.kyt-chip {
     display: grid;
     place-items: center;
-    width: 44px;
-    height: 36px;
+    width: 40px;
+    height: var(--kyt-chip-h);
     padding: 0;
     --kyt-icon-size: 20px;
   }

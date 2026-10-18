@@ -1,0 +1,253 @@
+/* Search filters (Figma Search 117:7228). The Filters button goes: the chips hold every option of its dialog.
+   One line when it fits: our filter chips, YouTube's chips (All, Unwatched, ...; they scroll inside), grid/list.
+   When it doesn't (index.ts sets [kyt-stacked]), grid/list follows the last filter chip and YouTube's chips get
+   a line of their own. Our row is display: contents so its chips are the header's flex items. */
+html[kyt-search-filters] ytd-search-header-renderer:has(> .kyt-search-filters) {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  height: auto; /* YouTube fixes 56px for one row */
+  padding-block: 8px;
+  position: relative; /* menus above the results: their channel names sit at z-index 300 */
+  z-index: 400;
+  & > #filter-button {
+    display: none !important;
+  }
+  & > #chip-bar {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  & .kyt-search-filters > .kyt-layout {
+    order: 1;
+  }
+  &[kyt-stacked] > #chip-bar {
+    order: 2;
+    flex-basis: 100%;
+  }
+}
+html[kyt-search-filters] .kyt-search-filters {
+  display: contents;
+  /* An active filter (not a group's default) shows as a filled chip. */
+  & .kyt-dd-btn[aria-pressed="true"] {
+    background: var(--kyt-selected-strong-bg);
+  }
+  & .kyt-dd-item:disabled {
+    color: var(--kyt-fg-muted);
+    cursor: default;
+    background: none;
+  }
+}
+
+/* Upload date's custom range row: below the presets, set apart by a divider, an accent icon and a hint line, since
+   few people know YouTube can search by dates. It opens the form under it; the arrow turns. */
+html[kyt-search-filters] .kyt-range-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px 12px 10px 16px;
+  border: 0;
+  border-top: 1px solid var(--kyt-divider);
+  background: none;
+  color: var(--kyt-fg);
+  text-align: start;
+  cursor: pointer;
+  --kyt-icon-size: 20px;
+  &:hover {
+    background: var(--kyt-hover-bg);
+  }
+  & > .kyt-icon:first-child {
+    background-color: var(--kyt-accent);
+  }
+  & > .kyt-icon:last-child {
+    margin-inline-start: auto;
+    transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  &[aria-expanded="true"] > .kyt-icon:last-child {
+    transform: rotate(180deg);
+  }
+}
+html[kyt-search-filters] .kyt-range-label {
+  display: flex;
+  flex-direction: column;
+  font: 500 14px / 20px Roboto, Arial, sans-serif;
+  white-space: nowrap;
+}
+html[kyt-search-filters] .kyt-range-hint {
+  font: 400 12px / 16px Roboto, Arial, sans-serif;
+  color: var(--kyt-fg-muted);
+}
+html[kyt-search-filters] .kyt-range[hidden] {
+  display: none;
+}
+html[kyt-search-filters] .kyt-range:not([hidden]) {
+  animation: kyt-range-in 200ms cubic-bezier(0.2, 0, 0, 1);
+}
+@keyframes kyt-range-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[kyt-search-filters] .kyt-range:not([hidden]) {
+    animation: none;
+  }
+}
+
+/* Custom range form: two native date inputs, year chips and Clear / Apply. */
+html[kyt-search-filters] .kyt-range {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 16px;
+  font: 400 14px / 20px Roboto, Arial, sans-serif;
+  color: var(--kyt-fg);
+  & label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  & input {
+    box-sizing: border-box;
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid var(--kyt-outline);
+    border-radius: 8px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    color-scheme: light dark;
+    &:focus-visible {
+      outline: none;
+      border-color: var(--kyt-outline-focus);
+    }
+    &[aria-invalid="true"] {
+      border-color: var(--kyt-accent);
+    }
+  }
+}
+/* Whole-year shortcuts: one click picks a year, a second extends to it. From is the accent, To its tint, years
+   between the light selected tint; the date inputs carry the same two colours. */
+html[kyt-search-filters] .kyt-range-years {
+  display: flex;
+  gap: 6px;
+  margin: 0 -16px;
+  padding: 0 16px 6px;
+  overflow: auto hidden;
+  overscroll-behavior: contain;
+  contain: inline-size; /* the row takes the menu's width instead of widening it */
+  mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  scrollbar-width: thin;
+  & > .kyt-chip {
+    flex: none;
+    height: 28px;
+    padding: 0 10px;
+    font: 500 13px / 28px Roboto, Arial, sans-serif;
+    &[aria-pressed="true"] {
+      background: var(--kyt-selected-strong-bg);
+    }
+    &[data-edge="from"] {
+      background: var(--kyt-accent);
+      color: #fff;
+    }
+    &[data-edge="to"] {
+      background: var(--kyt-tint);
+      color: #0f0f0f;
+    }
+  }
+}
+html[kyt-search-filters] .kyt-range input[data-edge="from"] {
+  border-color: var(--kyt-accent);
+}
+html[kyt-search-filters] .kyt-range input[data-edge="to"] {
+  border-color: var(--kyt-tint);
+}
+html[kyt-search-filters] .kyt-range-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  & > .kyt-chip {
+    height: 32px;
+    padding: 0 14px;
+    font: 500 14px / 32px Roboto, Arial, sans-serif;
+  }
+  & > .kyt-range-apply {
+    background: var(--kyt-fg);
+    color: var(--kyt-bg);
+  }
+}
+
+/* Grid layout, like Home: video and playlist cards side by side. Every results section (each continuation adds one)
+   flattens into one grid on the section list, so a partial last row never leaves a gap before the next page of
+   results. Everything else (channels, shelves, ads, the spinner) spans the full row and goes below the cards
+   placed before it. */
+html[kyt-search-filters][kyt-search-filters-layout="grid"] ytd-search ytd-section-list-renderer > #contents {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  grid-auto-flow: row dense; /* cards fill the holes a full-row item leaves; cards keep their order */
+  gap: 0 16px;
+  align-items: start;
+  & > ytd-item-section-renderer,
+  & > ytd-item-section-renderer > #contents {
+    display: contents;
+  }
+  & > :not(ytd-item-section-renderer),
+  & > ytd-item-section-renderer > :not(#contents),
+  & > ytd-item-section-renderer > #contents > :not(ytd-video-renderer, yt-lockup-view-model) {
+    grid-column: 1 / -1;
+  }
+  /* Cards: thumbnail on top, then title, channel, views and age; no description snippet or chapters. */
+  & > ytd-item-section-renderer > #contents > ytd-video-renderer {
+    min-width: 0;
+    margin: 0 0 32px;
+    & #dismissible {
+      flex-direction: column;
+    }
+    & ytd-thumbnail {
+      width: 100%;
+      max-width: none;
+      min-width: 0;
+      flex: none;
+      margin: 0 0 12px;
+    }
+    & .text-wrapper {
+      width: 100%;
+      max-width: none;
+    }
+    & #meta {
+      display: contents;
+    }
+    & #channel-info {
+      order: 1;
+      padding: 4px 0 0;
+    }
+    & ytd-video-meta-block {
+      order: 2;
+    }
+    & .metadata-snippet-container,
+    & .metadata-snippet-container-one-line,
+    & #expandable-metadata,
+    & #buttons {
+      display: none;
+    }
+  }
+  & > ytd-item-section-renderer > #contents > yt-lockup-view-model {
+    min-width: 0;
+    margin: 0 0 32px;
+    & .ytLockupViewModelHorizontal {
+      flex-direction: column;
+    }
+    & .ytLockupViewModelContentImage {
+      width: 100% !important; /* YouTube writes an inline width: 50% */
+      max-width: none;
+      margin: 0 0 12px;
+      padding: 0;
+    }
+    & .ytLockupViewModelMetadata {
+      width: 100%;
+    }
+  }
+}

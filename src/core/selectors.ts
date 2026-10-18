@@ -32,6 +32,7 @@ export const S = {
   askButton: 'ytd-watch-metadata [kyt-icon="SPARK"] button', // needs stamp(S.watchActions)
   watchSubscribe: 'ytd-watch-metadata ytd-subscribe-button-renderer', // its bell needs stampBell
   channelHeader: 'ytd-browse:not([hidden]) yt-page-header-view-model', // channel header; its Subscribe bell needs stampBell
+  searchHeader: 'ytd-search:not([hidden]) ytd-search-header-renderer', // chip bar + Filters button; filter groups in its data
   homeGrid: 'ytd-browse[page-subtype="home"] ytd-rich-grid-renderer',
   subsGrid: 'ytd-browse[page-subtype="subscriptions"] ytd-rich-grid-renderer > #contents',
   subsRichGrid: 'ytd-browse[page-subtype="subscriptions"] ytd-rich-grid-renderer', // holds #header ... #contents; our tabs go first

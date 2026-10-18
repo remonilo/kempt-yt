@@ -96,13 +96,13 @@ html[kyt-subs-tabs] ytd-rich-grid-renderer[kyt-subs-tab="channels"] > :not(.kyt-
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
-  font: 500 14px / 36px Roboto, Arial, sans-serif; /* same chips as the Videos toolbar (Figma 96:3679) */
+  font: 500 14px / var(--kyt-chip-h) Roboto, Arial, sans-serif; /* same chips as the Videos toolbar (Figma 96:3679) */
   & > .kyt-chips {
     display: flex;
     gap: 8px;
   }
   & button.kyt-chip:not(.kyt-layout > *) {
-    height: 36px;
+    height: var(--kyt-chip-h);
     padding: 0 16px;
   }
   & > .kyt-bar-sep {
