@@ -1,14 +1,12 @@
 import type { Feature } from '../../core/feature.ts';
 import { onCommentsPanel } from '../../core/comments-panel.ts';
-import { el, keep, waitFor } from '../../core/dom.ts';
+import { waitFor } from '../../core/dom.ts';
 import { eachRoute, routeOf } from '../../core/router.ts';
 import { S } from '../../core/selectors.ts';
+import { sortChips } from '../../core/sort-chips.ts';
 
-const ITEMS = 'tp-yt-paper-listbox > a';
-const HEADER_ITEMS = `#sort-menu ${ITEMS}`;
+const HEADER_ITEMS = S.sortItems;
 
-// Each chip clicks the matching item in the hidden dropdown, so YouTube still does the reload.
-// Labels come from the dropdown items, so they follow the UI language.
 export const commentSort: Feature = {
   id: 'comment-sort',
   label: 'Comment sort as buttons', group: 'watch', icon: 'sort',
@@ -32,30 +30,6 @@ export const commentSort: Feature = {
   },
 };
 
-/** A chip per dropdown item; `items()` lists the current items, `place(row)` puts the row in the page. */
-function chips(items: () => NodeListOf<HTMLElement> | [], place: (row: HTMLElement) => void, root: Node,
-  signal: AbortSignal, init?: MutationObserverInit) {
-  const row = el('div', 'kyt-sort');
-  row.role = 'group';
-  row.addEventListener('click', (e) => {
-    const b = (e.target as Element).closest('button');
-    if (b) items()[[...row.children].indexOf(b)]?.click();
-  }, { signal });
-  keep(row, root, () => {
-    const list = items();
-    if (!list.length) return;
-    place(row);
-    list.forEach((a, i) => {
-      const b = row.children[i] ?? row.appendChild(el('button', 'kyt-chip'));
-      const label = a.querySelector('.item')?.textContent?.trim() ?? '';
-      if (b.textContent !== label) b.textContent = label;
-      const on = a.getAttribute('aria-selected') ?? 'false';
-      if (b.ariaPressed !== on) b.ariaPressed = on;
-    });
-    while (row.children.length > list.length) row.lastElementChild?.remove();
-  }, signal, init);
-}
-
 async function mount(signal: AbortSignal) {
   // Comments render lazily (when scrolled to, or when their tab opens), so no timeout. On the watch page only the
   // comments element is observed, not every player tick.
@@ -67,7 +41,7 @@ async function mount(signal: AbortSignal) {
   const root = first?.closest('ytd-comments-header-renderer')?.parentElement;
   if (!root || signal.aborted) return;
   const header = () => root.querySelector('ytd-comments-header-renderer');
-  chips(() => header()?.querySelectorAll<HTMLElement>(HEADER_ITEMS) ?? [], (row) => {
+  sortChips(() => header()?.querySelectorAll<HTMLElement>(HEADER_ITEMS) ?? [], (row) => {
     const menu = header()?.querySelector('#sort-menu');
     if (menu && menu.nextElementSibling !== row) menu.after(row);
   }, root, signal, { childList: true, subtree: true, attributeFilter: ['aria-selected'] });
@@ -75,7 +49,7 @@ async function mount(signal: AbortSignal) {
 
 // The comments panel (fullscreen, narrow windows) sorts from its title bar's icon menu. The row goes under the title.
 function mountPanel(title: Element, _panel: Element, signal: AbortSignal) {
-  chips(() => title.querySelectorAll<HTMLElement>(S.panelSortItems), (row) => {
+  sortChips(() => title.querySelectorAll<HTMLElement>(S.panelSortItems), (row) => {
     const sub = title.querySelector('#subheader');
     if (sub && row.parentElement !== sub) sub.prepend(row);
   }, title, signal, { childList: true, subtree: true, attributeFilter: ['aria-selected'] });
