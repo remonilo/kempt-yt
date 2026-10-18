@@ -183,7 +183,7 @@ html[kyt-search-filters] .kyt-range-actions {
 /* Grid layout, like Home: video and playlist cards side by side. Every results section (each continuation adds one)
    flattens into one grid on the section list, so a partial last row never leaves a gap before the next page of
    results. Everything else (channels, shelves, ads, the spinner) spans the full row and goes below the cards
-   placed before it. */
+   placed before it. A vertical shelf (Latest from <channel>) lays its videos out as the same grid inside its row. */
 html[kyt-search-filters][kyt-search-filters-layout="grid"] ytd-search ytd-section-list-renderer > #contents {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
@@ -199,8 +199,14 @@ html[kyt-search-filters][kyt-search-filters-layout="grid"] ytd-search ytd-sectio
   & > ytd-item-section-renderer > #contents > :not(ytd-video-renderer, yt-lockup-view-model) {
     grid-column: 1 / -1;
   }
+  & ytd-shelf-renderer ytd-vertical-list-renderer > #items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+    gap: 0 16px;
+    align-items: start;
+  }
   /* Cards: thumbnail on top, then title, channel, views and age; no description snippet or chapters. */
-  & > ytd-item-section-renderer > #contents > ytd-video-renderer {
+  & :is(ytd-item-section-renderer > #contents, ytd-vertical-list-renderer > #items) > ytd-video-renderer {
     min-width: 0;
     margin: 0 0 32px;
     & #dismissible {
