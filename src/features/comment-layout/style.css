@@ -71,6 +71,21 @@ html[kyt-comment-layout] ytd-comment-thread-renderer .ytSubThreadTopLevelThread 
 html[kyt-comment-layout] ytd-comment-thread-renderer:not([is-sub-thread]) > #replies > ytd-comment-replies-renderer > * > yt-sub-thread > .ytSubThreadThreadline {
   width: var(--kyt-comment-avatar);
 }
+/* "N replies" when the creator replied: YouTube draws avatar, a "·" text dot and the button, so the hover pill started
+   at the dot. The button reaches back under the avatar instead: one pill, YouTube's own hover, avatar clickable. */
+html[kyt-comment-layout] ytd-comment-replies-renderer :is(.show-replies-button, div.more-button):has(> #creator-thumbnail) {
+  align-items: center;
+  & > .dot { display: none; }
+  & > #creator-thumbnail {
+    position: relative;
+    z-index: 1;
+    height: 24px;
+    margin: 0 0 0 8px;
+    pointer-events: none;
+  }
+  & > ytd-button-renderer { margin-left: -32px; }
+  & > ytd-button-renderer button { padding-left: 40px; } /* 8px + 24px avatar + 8px */
+}
 html[kyt-comment-layout] ytd-comment-view-model[use-small-avatars][engagement-panel] #author-thumbnail {
   margin-right: 16px;
 }
