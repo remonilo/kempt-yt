@@ -28,7 +28,7 @@ html[kyt-notif-actions] .kyt-na {
   html[kyt-notif-actions] .kyt-na .kyt-na-btn { transition: none; }
 }
 /* Darker panel in dark theme, as in the reference (YouTube's #282828 read too light). */
-html[kyt-notif-actions][dark] ytd-multi-page-menu-renderer:has(a[href="/account_notifications"]) {
+html[kyt-notif-actions][dark] ytd-multi-page-menu-renderer[menu-style="multi-page-menu-style-type-notifications"] { /* set before the items load */
   background: #1e1e1e;
   & ytd-simple-menu-header-renderer { background: transparent; } /* YouTube paints the header #282828 too */
 }
