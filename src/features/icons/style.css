@@ -20,6 +20,7 @@ html[kyt-icons] :is(
   ytd-watch-metadata ytd-menu-renderer > #button-shape .ytSpecButtonShapeNextIcon,
   ytd-watch-metadata ytd-subscription-notification-toggle-button-renderer-next .ytSpecButtonShapeNextIcon,
   yt-page-header-view-model yt-subscribe-button-view-model button.ytSpecButtonShapeNextIconLeadingTrailing > .ytSpecButtonShapeNextIcon,
+  ytd-simple-menu-header-renderer a[href="/account_notifications"] .ytSpecButtonShapeNextIcon,
   ytd-browse-feed-actions-renderer :is([kyt-icon="SEARCH"], [kyt-icon="CLOSE"], [kyt-icon="DELETE"], [kyt-icon="PAUSE_OUTLINED"], [kyt-icon="PLAY_OUTLINED"], [kyt-icon="SETTINGS"]) .ytSpecButtonShapeNextIcon
 ) {
   background-color: currentColor;
@@ -51,6 +52,7 @@ html[kyt-icons] ytd-masthead #voice-search-button .ytSpecButtonShapeNextIcon { -
 html[kyt-icons] ytd-masthead #buttons > ytd-button-renderer .ytSpecButtonShapeNextTonal .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-add); }
 html[kyt-icons] ytd-masthead #buttons > ytd-button-renderer .ytSpecButtonShapeNextOutline .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-you); }
 html[kyt-icons] ytd-masthead ytd-notification-topbar-button-renderer .ytSpecIconBadgeShapeIcon { --kyt-i: var(--kyt-i-notifs); }
+html[kyt-icons] ytd-simple-menu-header-renderer a[href="/account_notifications"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-settings); } /* bell panel gear */
 html[kyt-icons] ytd-masthead ytd-topbar-menu-button-renderer yt-icon-button yt-icon { --kyt-i: var(--kyt-i-more); } /* signed out ⋮ */
 
 /* History's right column (signed in; logged out shows only Clear all and Pause). Turn on (PLAY_OUTLINED) replaces
@@ -205,6 +207,7 @@ html[kyt-icons] ytd-popup-container :is([kyt-icon="ADD_TO_QUEUE_TAIL"], [kyt-ico
 html[kyt-icons] ytd-popup-container [kyt-icon="WATCH_LATER"] { --kyt-i: var(--kyt-i-watch-later); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container [kyt-icon="SHARE"] { --kyt-i: var(--kyt-i-share); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container :is([kyt-icon="HIDE"], [kyt-icon="NOT_INTERESTED"], [kyt-icon="BLOCK"]) { --kyt-i: var(--kyt-i-not-interested); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="VISIBILITY_OFF"] { --kyt-i: var(--kyt-i-hide); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container :is([kyt-icon="REMOVE"], [kyt-icon="REMOVE_CIRCLE"], [kyt-icon="REMOVE_CIRCLE_OUTLINE"], [kyt-icon="DO_NOT_DISTURB"], [kyt-icon="DO_NOT_DISTURB_ON"]) { --kyt-i: var(--kyt-i-exclude); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 /* Download rows carry no icon type. */
 html[kyt-icons] ytd-popup-container ytd-menu-service-item-download-renderer #primary-entry > yt-icon { --kyt-i: var(--kyt-i-download); --kyt-ibg: currentColor; --kyt-vis: hidden; }

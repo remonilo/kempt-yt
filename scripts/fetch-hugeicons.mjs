@@ -38,6 +38,7 @@ const ICONS = {
   phone: 'Call',
   people: 'UserMultiple', // subscriber count, Community button
   views: 'ChartIncrease', // view count (YouTube's trending_up)
+  hide: 'ViewOffSlash', // bell panel item ⋮: Hide this notification (YouTube's VISIBILITY_OFF)
 };
 
 const args = process.argv.slice(2);

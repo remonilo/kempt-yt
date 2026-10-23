@@ -12,7 +12,7 @@ const NAMES = ['menu', 'arrow-left', 'search', 'mic', 'close', 'add', 'notifs', 
   // popup menus: account menu and the watch page's ⋯ menu
   'report', 'arrow-right', 'keyboard', 'settings', 'help', 'feedback', 'switch-account', 'sign-out', 'studio', 'your-data',
   'appearance', 'language', 'restricted', 'globe',
-  'add-to-queue', 'watch-later', 'not-interested', 'exclude',
+  'add-to-queue', 'watch-later', 'not-interested', 'exclude', 'hide',
   // player controls and its settings menu
   'play', 'pause', 'backward', 'next', 'volume', 'volume-muted', 'cc', 'cc-selected', 'theater', 'theater-selected',
   'fullscreen', 'fullscreen-selected', 'pip', 'cast', 'ambient-mode', 'annotations', 'sleep-timer', 'speed', 'quality-hd',
