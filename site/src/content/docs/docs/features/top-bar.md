@@ -1,9 +1,9 @@
 ---
 title: Top bar & Watch later
-description: A Settings button beside your avatar, and a Watch later button under the video.
+description: A Settings button beside your avatar, a Watch later button under the video, and Watch later and Share in the notifications panel.
 ---
 
-Both need a signed-in account, so they appear only when you're signed in.
+All three need a signed-in account, so they appear only when you're signed in.
 
 ## Settings in top bar
 
@@ -26,6 +26,14 @@ The button asks the [page bridge](/kempt-yt/docs/internals/page-bridge/) for two
 
 Both run in YouTube's page with your session and sign their requests the way YouTube signs its own.
 
+## Notification actions
+
+Each video in the notifications panel (the bell) gets two pills under its title: Watch later and Share. Watch later adds the video and fills in; click again to remove it. Share opens YouTube's own share dialog over the panel. Neither opens the video or closes the panel.
+
+The switch is **Navigation → Notification actions**, with no options.
+
+The Watch later pill starts unfilled even when the video is already saved: checking every notification would send one request per item each time the panel opens. It uses the same `setWatchLater` request as the Watch later button.
+
 ## Limits
 
-- If YouTube changes how it signs these requests, the button stops working until Kempt is updated. The Save menu keeps working either way.
+- If YouTube changes how it signs these requests, the buttons stop working until Kempt is updated. The Save menu keeps working either way.

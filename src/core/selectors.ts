@@ -3,6 +3,8 @@ export const S = {
   masthead: 'ytd-masthead',
   mastheadMenu: 'ytd-masthead #buttons > ytd-topbar-menu-button-renderer', // avatar (signed in)
   popups: 'ytd-popup-container', // account menu, ⋯ menus; items are stamped by stampMenus
+  notifItem: 'ytd-notification-renderer', // bell panel item (under popups): a link + #menu
+  notifText: ':scope > a > .text', // title + time column inside a notifItem
   guide: 'ytd-guide-renderer #sections',
   guideDrawer: 'tp-yt-app-drawer#guide', // always present; its ytd-guide-renderer appears on first open (watch pages)
   guideRenderer: 'ytd-guide-renderer',

@@ -16,7 +16,7 @@ Kempt collects no data and has no server. It loads no remote code and runs no an
 
 Kempt sends requests only to `www.youtube.com`, from your page and with your session:
 
-- The Watch later button checks whether the video is in Watch later, and adds or removes it. YouTube's own Save menu sends the same requests.
+- The Watch later button and the notification panel's Watch later pill add or remove the video; the button also checks whether it is already saved. YouTube's own Save menu sends the same requests.
 - The sidebar loads your sidebar entries when the page doesn't carry them yet, and your playlist list the first time you open the Playlists dropdown. YouTube's own sidebar and Save menu send the same requests.
 
 The answers stay in the page. Kempt keeps nothing from them.

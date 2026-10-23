@@ -20,6 +20,7 @@ Click the Kempt icon in the browser toolbar. Changes apply to open YouTube tabs 
 | Navigation | [Redesigned sidebar](/kempt-yt/docs/features/sidebar/) | Hide "You", "Your channel", "Your videos", "Courses" | On, all hidden |
 | | [Settings in top bar](/kempt-yt/docs/features/top-bar/) | | On |
 | | [Watch later button](/kempt-yt/docs/features/top-bar/#watch-later-button) | | On |
+| | [Notification actions](/kempt-yt/docs/features/top-bar/#notification-actions) | | On |
 | Watch page | [Tabs](/kempt-yt/docs/features/watch-tabs/) | Ask AI on or off; as an icon button or a tab | On |
 | | [Comment sort as buttons](/kempt-yt/docs/features/comment-sort/) | | On |
 | | [Comment search](/kempt-yt/docs/features/comment-search/) | | On |

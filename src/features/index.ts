@@ -8,6 +8,7 @@ import { commentSort } from './comment-sort/index.ts';
 import { font } from './font/index.ts';
 import { grid } from './grid/index.ts';
 import { icons } from './icons/index.ts';
+import { notifActions } from './notif-actions/index.ts';
 import { progressBar } from './progress-bar/index.ts';
 import { searchBar } from './search-bar/index.ts';
 import { searchFilters } from './search-filters/index.ts';
@@ -23,5 +24,5 @@ import { watchTabs } from './watch-tabs/index.ts';
 
 // A feature's style.css is picked up by build.mjs automatically.
 export const features: Feature[] = [accent, font, selectedBg, subscribeRed, searchBar, icons,
-  sidebar, settingsTopbar, watchLaterBtn, shorts, watchTabs, captions, commentSort, commentSearch, commentLayout,
+  sidebar, settingsTopbar, watchLaterBtn, notifActions, shorts, watchTabs, captions, commentSort, commentSearch, commentLayout,
   timeline, subsTabs, channelTabs, searchFilters, grid, progressBar];

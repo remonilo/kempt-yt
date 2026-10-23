@@ -1,0 +1,39 @@
+/* Watch later and Share pills under the title + time, comment-toolbar pill style. */
+html[kyt-notif-actions] ytd-notification-renderer .text:has(> .kyt-na) { height: auto; }
+html[kyt-notif-actions] .kyt-na {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  & .kyt-na-btn {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 16px 0 12px;
+    border-radius: 16px;
+    background: var(--kyt-pill-bg);
+    color: var(--kyt-fg);
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 150ms;
+    --kyt-icon-size: 20px;
+    &:hover { background: var(--kyt-hover-bg); }
+    &:focus-visible { outline: 2px solid var(--kyt-outline-focus); }
+    &[aria-pressed="true"] .kyt-icon { color: var(--kyt-accent); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[kyt-notif-actions] .kyt-na .kyt-na-btn { transition: none; }
+}
+/* Darker panel in dark theme, as in the reference (YouTube's #282828 read too light). */
+html[kyt-notif-actions][dark] ytd-multi-page-menu-renderer:has(a[href="/account_notifications"]) {
+  background: #1e1e1e;
+  & ytd-simple-menu-header-renderer { background: transparent; } /* YouTube paints the header #282828 too */
+}
+/* The header gear's tooltip is centred on it and ran 4px past the panel, which clips it: right-align it instead. */
+html[kyt-notif-actions] ytd-simple-menu-header-renderer #buttons > ytd-button-renderer:has(a[href="/account_notifications"]) {
+  position: relative;
+  & > tp-yt-paper-tooltip { left: auto !important; right: 0 !important; top: calc(100% + 8px) !important; }
+}

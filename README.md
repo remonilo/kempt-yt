@@ -69,6 +69,7 @@ One accent color and icon set. Every change is a switch you can turn off.
   - outlined search bar
   - Settings in the top bar
   - Watch later button
+  - Watch later and Share in the notifications panel
   - comment sort as chips
   - optional wavy progress bar
 - A switch for every change in the popup <details> <summary><sup>click to see the popup</sup></summary><img src="site/src/assets/screenshots/popup.png" alt="Kempt popup" width="260" /></details>
