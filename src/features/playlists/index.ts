@@ -232,6 +232,14 @@ function bulk(list: Element, contents: Element, words: PlaylistWords, signal: Ab
     for (const r of rows()) if (!r.querySelector(':scope > .kyt-pl-check')) r.prepend(check());
     if (input.value) search();
     sync();
+    // Opening another playlist reuses this list while words still describe the previous one ("Remove from X").
+    call('playlistWords', S.playlistList).then((w) => {
+      if (!w || signal.aborted || w.listId === words.listId) return;
+      Object.assign(words, w);
+      remove.hidden = !words.editable || !words.remove;
+      wl.hidden = words.listId === 'WL';
+      remove.lastChild!.textContent = remove.title = words.remove;
+    }).catch(() => {});
   }, signal, { childList: true });
   signal.addEventListener('abort', () => {
     for (const r of rows()) {
