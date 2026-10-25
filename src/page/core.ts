@@ -18,7 +18,7 @@ function stampIcons(root: Element) {
 }
 
 // Menu rows are re-used across menus (account menu, its submenus), so stale stamps are removed.
-const MENU_ITEMS = 'ytd-compact-link-renderer, ytd-menu-service-item-renderer, ytd-menu-navigation-item-renderer, ytd-menu-service-item-download-renderer, yt-list-item-view-model';
+const MENU_ITEMS = 'ytd-compact-link-renderer, ytd-menu-service-item-renderer, ytd-toggle-menu-service-item-renderer, ytd-menu-navigation-item-renderer, ytd-menu-service-item-download-renderer, yt-list-item-view-model';
 
 // Video card menus and the channel-page bell sheet (yt-list-item-view-model rows) keep no data on the rows. Their icon types sit in the card's data, so a
 // click on a card remembers title -> icon type and the rows are matched by title (the same localized string).
@@ -54,7 +54,8 @@ function listIcon(el: Element) {
 function stampMenus(root: Element) {
   const set = (el: Element, name: string, v?: string) => (v ? el.getAttribute(name) !== v && el.setAttribute(name, v) : el.removeAttribute(name));
   for (const el of root.querySelectorAll<any>(MENU_ITEMS)) {
-    set(el, 'kyt-icon', iconName(el) ?? listIcon(el));
+    // A toggle row (the playlist panel's Save to library) shows the icon of its current state, flipped in place on a tap.
+    set(el, 'kyt-icon', iconName(el) ?? (el.data?.isToggled ? el.data.toggledIcon : el.data?.defaultIcon)?.iconType ?? listIcon(el));
     set(el, 'kyt-icon2', el.data?.secondaryIcon?.iconType); // CHEVRON_RIGHT, CHECK
   }
 }

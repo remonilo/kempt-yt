@@ -211,6 +211,9 @@ html[kyt-icons] ytd-popup-container :is([kyt-icon="HIDE"], [kyt-icon="NOT_INTERE
 html[kyt-icons] ytd-popup-container [kyt-icon="VISIBILITY"] { --kyt-i: var(--kyt-i-eye); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container :is([kyt-icon="DELETE"], [kyt-icon="DELETE_CAIRO"]) { --kyt-i: var(--kyt-i-delete); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container [kyt-icon="LIBRARY_REMOVE"] { --kyt-i: var(--kyt-i-delete); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+/* Save to library toggle in the playlist panel menu (and the miniplayer's): save icon, accent once saved. */
+html[kyt-icons] ytd-popup-container ytd-toggle-menu-service-item-renderer:is([kyt-icon="LIBRARY_ADD"], [kyt-icon="LIBRARY_REMOVE"]) { --kyt-i: var(--kyt-i-save); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container ytd-toggle-menu-service-item-renderer[kyt-icon="LIBRARY_REMOVE"] { --kyt-ibg: var(--kyt-accent, currentColor); }
 html[kyt-icons] ytd-popup-container [kyt-icon="IMAGE"] { --kyt-i: var(--kyt-i-image); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container [kyt-icon="EDIT"] { --kyt-i: var(--kyt-i-edit); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container [kyt-icon="SHUFFLE"] { --kyt-i: var(--kyt-i-shuffle); --kyt-ibg: currentColor; --kyt-vis: hidden; }
