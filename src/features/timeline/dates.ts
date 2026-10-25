@@ -41,7 +41,18 @@ function agoRe(locale: string) {
   return r;
 }
 
+// Every sync re-reads every card, and most cards share a handful of texts ("2 hours ago").
+const parsed = new Map<string, Age | null>();
 export function parseAge(text: string, locale = 'en'): Age | null {
+  const k = `${locale}\n${text}`;
+  if (!parsed.has(k)) {
+    if (parsed.size > 2000) parsed.clear(); // bounded: distinct texts are a few hundred per locale
+    parsed.set(k, parseAgeUncached(text, locale));
+  }
+  return parsed.get(k)!;
+}
+
+function parseAgeUncached(text: string, locale: string): Age | null {
   const t = space(text);
   const age = (m: RegExpMatchArray, n: string, unit: Unit): Age =>
     ({ n: Number(n), unit, extra: /\p{L}/u.test(t.replace(m[0], '')) });

@@ -12,8 +12,9 @@ export function waitFor<T extends Element = Element>(
   sel: string,
   { root = document, signal, timeout = 10_000 }: WaitOpts = {},
 ): Promise<T | null> {
+  if (signal?.aborted) return Promise.resolve(null);
   const hit = root.querySelector<T>(sel);
-  if (hit || signal?.aborted) return Promise.resolve(hit);
+  if (hit) return Promise.resolve(hit);
   return new Promise((resolve) => {
     const done = (el: T | null) => {
       obs.disconnect();
@@ -46,6 +47,7 @@ export function keep(
   signal: AbortSignal,
   init: MutationObserverInit = { childList: true, subtree: true },
 ): void {
+  if (signal.aborted) return;
   const obs = new MutationObserver(mount);
   mount();
   for (const r of [root].flat()) obs.observe(r, init);
@@ -64,7 +66,7 @@ export function el<K extends keyof HTMLElementTagNameMap>(tag: K, cls = '', ...k
 
 export function observe(target: Node | null, init: MutationObserverInit, fn: () => void, signal: AbortSignal): MutationObserver {
   const obs = new MutationObserver(fn);
-  if (target) obs.observe(target, init);
+  if (target && !signal.aborted) obs.observe(target, init);
   signal.addEventListener('abort', () => obs.disconnect(), { once: true });
   return obs;
 }

@@ -1,5 +1,6 @@
 import { endpoints, innertube, sleep, text, walk } from '../../page/youtube.ts';
 import type { Entry, Section } from './nav.ts';
+import { waitFor } from '../../core/dom.ts';
 
 let guideFetch: Promise<any> | undefined;
 
@@ -31,9 +32,13 @@ export const sidebar = {
     const rendered = () => (document.querySelector('ytd-guide-renderer') as any)?.data?.items;
     let data = rendered();
     // Once the fetch has run, the guide is known to be missing here: no need to wait for it again.
-    for (let i = 0; i < 20 && !data && !guideFetch; i++) (await sleep(100), (data = rendered()));
+    for (let i = 0; i < 20 && !data && !guideFetch; i++) {
+      await sleep(100);
+      data = rendered();
+    }
     // No expanded guide yet (collapsed sidebar, or an overlay guide never opened): fetch what it would show, once.
-    data ??= (await (guideFetch ??= innertube('guide', {}).catch(() => null)))?.items;
+    // A failed fetch is forgotten so the next run retries.
+    data ??= (await (guideFetch ??= innertube('guide', {}).catch(() => (guideFetch = undefined, null))))?.items;
     return (data?.map((s: any) => {
       const [type, r] = Object.entries(s)[0] as [string, any];
       return { type, title: text(r.formattedTitle), entries: guideEntries(r.items) };
@@ -48,12 +53,8 @@ export const sidebar = {
     const icon: any = host.appendChild(document.createElement('yt-icon'));
     icon.icon = type;
     try {
-      for (let i = 0; i < 50; i++) {
-        const svg = icon.querySelector('svg');
-        if (svg) return new XMLSerializer().serializeToString(svg) as string; // keeps xmlns, needed as a standalone image
-        await sleep(100);
-      }
-      return null;
+      const svg = await waitFor('svg', { root: icon, timeout: 5000 });
+      return svg && new XMLSerializer().serializeToString(svg); // keeps xmlns, needed as a standalone image
     } finally {
       host.remove();
     }

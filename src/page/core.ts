@@ -91,20 +91,30 @@ function stampBell(root: Element) {
   }
 }
 
-const watched = new WeakMap<Element, Set<string>>();
+// root -> kind -> observer and the features using it. `unstamp(owner)` disconnects what no feature uses any more.
+const watched = new Map<Element, Map<string, { obs: MutationObserver; owners: Set<string> }>>();
 
-// Synchronous (before paint): a rAF delay paints re-rendered elements unstamped for one frame (flicker).
-function keepStamped(root: Element, kind: string, fn: () => void, init: MutationObserverInit = { childList: true, subtree: true }) {
-  fn();
-  const kinds = watched.get(root) ?? new Set();
-  if (kinds.has(kind)) return;
-  watched.set(root, kinds.add(kind));
-  new MutationObserver(fn).observe(root, init);
+function drop(keep: (root: Element, kind: string, owners: Set<string>) => boolean) {
+  for (const [root, kinds] of watched) {
+    for (const [kind, w] of kinds) if (!keep(root, kind, w.owners)) (w.obs.disconnect(), kinds.delete(kind));
+    if (!kinds.size) watched.delete(root);
+  }
 }
 
-function watchRoot(sel: string, kind: string, fn: (root: Element) => void, init?: MutationObserverInit) {
+// Synchronous (before paint): a rAF delay paints re-rendered elements unstamped for one frame (flicker).
+function keepStamped(root: Element, kind: string, owner: string, fn: () => void, init: MutationObserverInit = { childList: true, subtree: true }) {
+  fn();
+  const w = watched.get(root)?.get(kind);
+  if (w) return void w.owners.add(owner);
+  drop((r) => r.isConnected); // roots YouTube replaced
+  const obs = new MutationObserver(fn);
+  obs.observe(root, init);
+  watched.set(root, (watched.get(root) ?? new Map()).set(kind, { obs, owners: new Set([owner]) }));
+}
+
+function watchRoot(sel: string, kind: string, owner: string, fn: (root: Element) => void, init?: MutationObserverInit) {
   const root = document.querySelector(sel);
-  if (root) keepStamped(root, kind, () => fn(root), init);
+  if (root) keepStamped(root, kind, owner, () => fn(root), init);
   return !!root;
 }
 
@@ -117,24 +127,32 @@ export const core = {
     return cfg('LOGGED_IN') === true;
   },
 
-  // Idempotent: several features can stamp the same root.
-  stamp: (sel: string) => watchRoot(sel, 'icon', stampIcons),
+  // Idempotent: several features can stamp the same root. `owner` is the calling feature's id, for `unstamp`.
+  stamp: (sel: string, owner: string) => watchRoot(sel, 'icon', owner, stampIcons),
+
+  /** Stops the stamp observers only `owner` used. Stamps already written stay (their CSS is gated). */
+  unstamp(owner: string) {
+    drop((_, __, owners) => (owners.delete(owner), owners.size > 0));
+    if (![...watched.values()].some((k) => k.has('menus'))) document.removeEventListener('click', onClick, { capture: true });
+  },
 
   // Items appear when a menu opens, so this watches the popup container (small, only menus and dialogs live there).
   // Re-used rows may only swap their text, hence characterData.
-  stampMenus(sel: string) {
+  stampMenus(sel: string, owner: string) {
     document.addEventListener('click', onClick, { capture: true }); // same listener twice is a no-op
-    return watchRoot(sel, 'menus', stampMenus, { childList: true, subtree: true, characterData: true });
+    return watchRoot(sel, 'menus', owner, stampMenus, { childList: true, subtree: true, characterData: true });
   },
 
   // aria-label changes with the state, the cheap signal that data changed.
-  stampBell: (sel: string) => watchRoot(sel, 'bell', stampBell, { childList: true, subtree: true, attributeFilter: ['aria-label'] }),
+  stampBell: (sel: string, owner: string) => watchRoot(sel, 'bell', owner, stampBell, { childList: true, subtree: true, attributeFilter: ['aria-label'] }),
 
-  stampTabs: (sel: string) => watchRoot(sel, 'tabs', stampTabs, { childList: true, subtree: true, attributeFilter: ['tab-title'] }),
+  stampTabs: (sel: string, owner: string) => watchRoot(sel, 'tabs', owner, stampTabs, { childList: true, subtree: true, attributeFilter: ['tab-title'] }),
 
   navigate(url: string) {
     if (url.startsWith('kyt:')) return; // a guide entry with no URL and no endpoint: nothing to open
-    const videoId = new URL(url, location.origin).searchParams.get('v');
+    const u = new URL(url, location.origin);
+    if (!/^https?:$/.test(u.protocol)) return; // page scripts can call this too: no javascript: (guide links to YouTube Music stay)
+    const videoId = u.searchParams.get('v');
     const endpoint = endpoints.get(url) ?? (videoId && {
       commandMetadata: { webCommandMetadata: { url, webPageType: 'WEB_PAGE_TYPE_WATCH', rootVe: 3832 } },
       watchEndpoint: { videoId },

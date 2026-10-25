@@ -14,13 +14,14 @@ export const gridPage = {
   shortsPerRow(sel: string, n: number) {
     perRow = n;
     const root = document.querySelector(sel);
-    if (!root) return false;
     if (!n) {
-      observers.get(root)?.disconnect();
-      observers.delete(root);
-      for (const s of root.querySelectorAll(SHELF)) inst(s).refreshGridLayoutNew?.();
-      return true;
+      // Every root, not just the current one: off may come from another page, and Home roots get replaced.
+      observers.forEach((o) => o.disconnect());
+      observers.clear();
+      root?.querySelectorAll(SHELF).forEach((s) => inst(s).refreshGridLayoutNew?.());
+      return !!root;
     }
+    if (!root) return false;
     root.querySelectorAll(SHELF).forEach(apply);
     if (!observers.has(root)) {
       const o = new MutationObserver((recs) => {

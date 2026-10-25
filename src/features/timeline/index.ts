@@ -472,7 +472,7 @@ export const timeline: Feature = {
       } else if (route === 'history') {
         historyHeader(sig);
         // Clear all / Pause / Manage are told apart by icon type (labels are localized); icons may be off.
-        waitFor(S.historyActions, { signal: sig }).then((el) => el && call('stamp', S.historyActions));
+        waitFor(S.historyActions, { signal: sig }).then((el) => el && call('stamp', S.historyActions, 'timeline'));
         const list = await waitFor(S.historyList, { signal: sig, timeout: Infinity });
         if (list && !sig.aborted) history(list, sig);
       }

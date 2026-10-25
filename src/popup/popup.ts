@@ -1,6 +1,6 @@
 import { el } from '../core/dom.ts';
 import { GROUPS, isOn, optionValue, type Feature, type Group, type Option } from '../core/feature.ts';
-import { loadSettings, saveSettings, type Settings } from '../core/settings.ts';
+import { loadSettings, saveSettings, updateSettings, type Settings } from '../core/settings.ts';
 import { features } from '../features/index.ts';
 import { faceCss, familyOf } from '../features/font/index.ts';
 import { colorPicker } from './color.ts';
@@ -13,15 +13,21 @@ app.inert = true;
 // `live` (dragging) writes at most every 500ms, so the page follows the drag: storage.sync allows 120 writes a minute.
 let timer: ReturnType<typeof setTimeout> | undefined;
 let lastWrite = 0;
+// Changes apply to a fresh read at write time, so the popup never writes back a stale snapshot over a change the
+// page made (in-page Grid/List toggles) while it was open.
+let changes: ((s: Settings) => void)[] = [];
 function persist(change: (s: Settings) => void, live = false) {
-  settings.then((s) => {
-    change(s);
-    clearTimeout(timer);
-    const write = () => ((lastWrite = Date.now()), saveSettings(s));
-    const wait = live ? 500 - (Date.now() - lastWrite) : 0;
-    if (wait > 0) timer = setTimeout(write, wait);
-    else write();
-  });
+  changes.push(change);
+  clearTimeout(timer);
+  const write = () => {
+    lastWrite = Date.now();
+    const cs = changes;
+    changes = [];
+    updateSettings((s) => cs.forEach((c) => c(s)));
+  };
+  const wait = live ? 500 - (Date.now() - lastWrite) : 0;
+  if (wait > 0) timer = setTimeout(write, wait);
+  else write();
 }
 
 const tint = (hex: string) => document.documentElement.style.setProperty('--kp-accent', hex);
@@ -93,7 +99,8 @@ function number(opt: Extract<Option, { type: 'number' }>, on: (v: number, live?:
   if (opt.min != null) i.min = String(opt.min);
   if (opt.max != null) i.max = String(opt.max);
   if (opt.step != null) i.step = String(opt.step);
-  i.addEventListener('change', () => Number.isFinite(i.valueAsNumber) && on(i.valueAsNumber));
+  // Typed values skip min/max/step; checkValidity also rejects an empty field.
+  i.addEventListener('change', () => i.checkValidity() && Number.isFinite(i.valueAsNumber) && on(i.valueAsNumber));
   if (!opt.slider) return { el: i, set: (v: unknown) => (i.value = String(v)) };
 
   // Dragging applies live (throttled by persist); the fill is the accent up to the thumb.

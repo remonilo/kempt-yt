@@ -78,6 +78,8 @@ export function createRunner(features: Feature[], bridge: typeof call) {
       if (ctl && !should) {
         ctl.abort();
         running.delete(f.id);
+        // Page-world stamp observers are not tied to the signal (it can't cross worlds).
+        Promise.resolve().then(() => bridge('unstamp', f.id)).catch(() => {});
       } else if (!ctl && should) {
         const c = new AbortController();
         running.set(f.id, c);

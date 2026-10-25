@@ -181,7 +181,7 @@ export const watchTabs: Feature = {
       if (!html.hasAttribute('kyt-watch-tabs-ai') || (flex && ask !== ask.parentElement!.firstElementChild)) ai();
     };
 
-    call('stamp', S.watchActions);
+    call('stamp', S.watchActions, 'watch-tabs');
     ai();
     const below = flexy.querySelector('#below')!;
     keep(bar, [flexy.querySelector('#secondary-inner')!, below, descHome, commentsHome], mount, signal, { childList: true });

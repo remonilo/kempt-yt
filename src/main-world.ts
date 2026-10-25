@@ -9,6 +9,7 @@ document.addEventListener(`kyt:req:${BUILD}`, async (e) => {
     return; // not ours
   }
   const { id, method, args } = req;
+  if (!Object.hasOwn(handlers, method)) return; // page scripts can fire kyt:req too: only our handlers, no `constructor`
   let res;
   try {
     res = { id, result: await (handlers as Record<string, (...a: unknown[]) => unknown>)[method](...args) };

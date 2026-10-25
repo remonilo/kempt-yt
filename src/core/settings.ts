@@ -33,12 +33,22 @@ export function readCache(): Settings {
 }
 
 export function writeCache(s: Settings): void {
-  localStorage.setItem(KEY, JSON.stringify(s));
+  try {
+    localStorage.setItem(KEY, JSON.stringify(s));
+  } catch {} // blocked site data must not stop apply()
+}
+
+// Read-modify-write, one at a time: two writes in the same tick would both read the old object and the second
+// would erase the first. storage.sync has no merge. (Separate pages still race; their writes are seconds apart.)
+let queue = Promise.resolve();
+export function updateSettings(change: (s: Settings) => void): Promise<void> {
+  return (queue = queue.then(async () => {
+    const s = await loadSettings();
+    change(s);
+    await saveSettings(s);
+  }).catch((e) => console.error('kyt: settings write failed', e)));
 }
 
 /** For in-page controls that mirror a popup option (the popup and the page stay in sync through storage). */
-export async function saveOption(featureId: string, key: string, value: unknown): Promise<void> {
-  const s = await loadSettings();
-  s.options[`${featureId}.${key}`] = value;
-  await saveSettings(s);
-}
+export const saveOption = (featureId: string, key: string, value: unknown) =>
+  updateSettings((s) => void (s.options[`${featureId}.${key}`] = value));

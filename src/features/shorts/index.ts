@@ -30,12 +30,12 @@ export const shorts: Feature = {
       const url = watchUrl(location.pathname);
       if (url) return location.replace(url);
       if (routeOf(location.pathname) === 'channel')
-        waitFor(S.channelTabs, { signal }).then((el) => el && call('stampTabs', S.channelTabs));
+        waitFor(S.channelTabs, { signal }).then((el) => el && call('stampTabs', S.channelTabs, 'shorts'));
     };
     onPage();
     document.addEventListener('kyt:navigate', onPage, { signal });
 
     for (const sel of [S.guide, S.miniGuide])
-      waitFor(sel, { signal }).then((el) => el && call('stamp', sel));
+      waitFor(sel, { signal }).then((el) => el && call('stamp', sel, 'shorts'));
   },
 };

@@ -11,7 +11,8 @@ async function css() {
   // Sorted: readdir order is filesystem-dependent (Linux ext4 isn't alphabetical), and order is cascade order.
   const dirs = (await readdir('src/features', { withFileTypes: true })).filter((d) => d.isDirectory()).sort((a, b) => (a.name < b.name ? -1 : 1));
   const files = ['src/theme/tokens.css', ...dirs.map((d) => `src/features/${d.name}/style.css`)];
-  const parts = await Promise.all(files.map((f) => readFile(f, 'utf8').catch(() => '')));
+  // A feature may have no style.css; any other read error (or a missing tokens.css) fails the build.
+  const parts = await Promise.all(files.map((f, i) => readFile(f, 'utf8').catch((e) => (i && e.code === 'ENOENT' ? '' : Promise.reject(e)))));
   await writeFile(`${out}/content.css`, parts.join('\n'));
 }
 
