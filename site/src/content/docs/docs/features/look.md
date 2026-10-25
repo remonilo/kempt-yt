@@ -1,6 +1,8 @@
 ---
 title: Look
 description: Accent color, font, tinted hover and selection, Subscribe button and search bar.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 ![Accent color and search bar](../../../../assets/screenshots/look.png)

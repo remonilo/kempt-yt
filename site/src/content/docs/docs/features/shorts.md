@@ -1,6 +1,8 @@
 ---
 title: Shorts
 description: Hide Shorts, and open Shorts links as normal videos.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 Shorts shelves disappear from Home, Subscriptions, search, channels and the sidebar. A Shorts link, from anywhere, opens in the normal player, with its seek bar and volume control.

@@ -24,6 +24,9 @@ One accent color and icon set. Every change is a switch you can turn off.
 
 </div>
 
+> [!WARNING]
+> This README and the [docs](https://remonilo.github.io/kempt-yt/docs/) are outdated and will be updated once v1.0 is released.
+
 <div align="center">
   <table>
     <tr>

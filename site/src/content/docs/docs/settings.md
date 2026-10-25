@@ -1,6 +1,8 @@
 ---
 title: Settings
 description: What each switch and option in the popup does.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 Click the Kempt icon in the browser toolbar. Changes apply to open YouTube tabs at once.

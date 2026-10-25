@@ -1,6 +1,8 @@
 ---
 title: Grid size
 description: Choose how many videos and Shorts fill each row.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 YouTube picks how many videos fit in a row from your window width. Grid size lets you set the count yourself, on Home, Subscriptions and channel tabs (Videos, Live, Shorts). Search and History are lists, so they stay as they are.

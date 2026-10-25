@@ -1,6 +1,8 @@
 ---
 title: Architecture
 description: The core model, the runner, the router and how CSS switches on and off.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 Kempt is a Manifest V3 extension with no framework and no background worker. esbuild bundles the TypeScript, and tests run on `node:test`.
@@ -117,7 +119,7 @@ All feature CSS ships as one `content.css`, which the manifest injects before Yo
 
 ## Router
 
-`routeOf(url)` is a pure, unit-tested function: `/watch` is `watch`, `/feed/subscriptions` is `subscriptions`, and so on. The router listens to `yt-navigate-finish`, which YouTube fires on every in-page navigation, and to `popstate`. It then dispatches `kyt:navigate` with `{ route }`. Shorts, search and playlists are `other`; shorts code uses `shortsId()`.
+`routeOf(url)` is a pure, unit-tested function: `/watch` is `watch`, `/feed/subscriptions` is `subscriptions`, and so on. The router listens to `yt-navigate-finish`, which YouTube fires on every in-page navigation, Back and Forward included. It ignores `popstate`, which fires before YouTube swaps the page. It then dispatches `kyt:navigate` with `{ route }`. Shorts, search and playlists are `other`; shorts code uses `shortsId()`.
 
 ## DOM helpers
 

@@ -1,6 +1,8 @@
 ---
 title: YouTube quirks
 description: Behaviour of YouTube's page that shaped how Kempt's features are built.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 Short comments in the source point here. Each entry is a constraint YouTube imposes, found by breaking something. Read this before you "fix" something that looks odd, and add an entry when a bug takes a real debugging round.

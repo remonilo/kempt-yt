@@ -1,6 +1,8 @@
 ---
 title: Privacy
 description: What Kempt stores and sends. In short, nothing leaves your browser.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 Kempt collects no data and has no server. It loads no remote code and runs no analytics.

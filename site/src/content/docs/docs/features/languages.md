@@ -1,6 +1,8 @@
 ---
 title: Languages
 description: The labels Kempt draws follow YouTube's UI language.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 Kempt draws a few labels of its own: the watch page tabs, the timeline chips, the timeline and comment search boxes and a few tooltips. They follow YouTube's UI language, which you set in YouTube's account menu. Kempt ignores your browser's language.

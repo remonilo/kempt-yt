@@ -1,6 +1,8 @@
 ---
 title: Performance
 description: The budget Kempt holds itself to, and how.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 Kempt should cost nothing you can measure.

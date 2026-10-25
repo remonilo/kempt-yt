@@ -1,6 +1,8 @@
 ---
 title: Watch page tabs
 description: Info, Comments, Videos, Live chat and Ask AI in one panel beside the player.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 ![Watch page tabs](../../../../assets/screenshots/tabs.png)

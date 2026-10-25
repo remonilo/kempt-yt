@@ -1,6 +1,8 @@
 ---
 title: Captions
 description: Apple-style subtitles in your chosen font, with three styles and a size slider.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 ![Captions on a YouTube video](../../../../assets/screenshots/captions.png)

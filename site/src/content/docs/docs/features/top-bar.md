@@ -1,6 +1,8 @@
 ---
 title: Top bar & Watch later
 description: A Settings button beside your avatar, a Watch later button under the video, and Watch later and Share in the notifications panel.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 All three need a signed-in account, so they appear only when you're signed in.

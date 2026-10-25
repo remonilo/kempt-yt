@@ -1,6 +1,8 @@
 ---
 title: Installation
 description: Install Kempt from a store or build it from source.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 ## From a store

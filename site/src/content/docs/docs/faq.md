@@ -1,6 +1,8 @@
 ---
 title: FAQ
 description: Common questions about Kempt.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 ## The Settings and Watch later buttons don't show up

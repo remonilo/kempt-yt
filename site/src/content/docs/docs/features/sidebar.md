@@ -1,6 +1,8 @@
 ---
 title: Sidebar
 description: Explore, Subscriptions and Playlists as dropdowns, and fewer entries.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 ![Redesigned sidebar](../../../../assets/screenshots/sidebar.png)

@@ -1,6 +1,8 @@
 ---
 title: Kempt
 description: What Kempt changes on YouTube, and how these docs are organized.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 Kempt is a browser extension that restyles YouTube into one consistent design. It runs on Firefox 128+ and on Chromium 120+ browsers.

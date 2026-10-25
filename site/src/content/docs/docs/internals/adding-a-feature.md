@@ -1,6 +1,8 @@
 ---
 title: Adding a feature
 description: A new feature is one folder and one line, with no core changes.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 A feature is a folder under `src/features/` and one line in `src/features/index.ts`. It shows up in the popup and shuts off cleanly, and the core needs no change.

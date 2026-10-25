@@ -1,6 +1,8 @@
 ---
 title: Icons
 description: One icon set across YouTube, drawn over YouTube's own buttons.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 YouTube mixes three icon styles. Kempt replaces them with one set of 1.5px rounded strokes across the top bar, the sidebar, the player controls, the action row under the video (like, dislike, share, save, download, clip, more), the Create button, the subscribe bell, and the rows of popup menus: the account menu, the ⋯ menu under the video and the ⋯ menu on video cards.

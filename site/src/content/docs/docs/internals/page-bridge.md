@@ -1,6 +1,8 @@
 ---
 title: Page bridge
 description: How Kempt reads YouTube's own data from the page world.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 A content script can't see YouTube's JavaScript objects: `ytcfg`, or the data YouTube's elements carry. Some features need them:

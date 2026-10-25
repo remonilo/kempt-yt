@@ -1,6 +1,8 @@
 ---
 title: Timeline
 description: Subscriptions and History grouped under date headers, with type chips and search.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 ![Subscriptions timeline](../../../../assets/screenshots/timeline.png)

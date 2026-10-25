@@ -1,6 +1,8 @@
 ---
 title: Wavy progress bar
 description: The played part of the seek bar becomes a sine wave that drifts while the video plays.
+banner:
+  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 The seek bar draws as a thin sine wave. The played part is the accent color, the buffered part is light, and the rest of the track is dark, so the accent line looks like it swallows the dark one as the video plays. On chaptered videos the wave stays continuous across the gaps between chapters.
