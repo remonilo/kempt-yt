@@ -1,4 +1,4 @@
-import { savePlaylists, text, walk } from '../../page/youtube.ts';
+import { find, savePlaylists, text, walk } from '../../page/youtube.ts';
 
 // Bulk actions reuse each row's own menu commands, sent through YouTube's handler (`yt-service-request`), so YouTube
 // does the request, the toast and the list update. Picked rows carry [kyt-picked], set by the content script.
@@ -16,7 +16,9 @@ function serviceRequest(from: Element | null, endpoint: unknown) {
 
 /** The view-model header's ⋮ menu rows, raw. */
 function headerItems(sel: string): any[] {
-  for (const x of walk(document.querySelector<any>(sel)?.data)) {
+  // The ⋮ is the last action: other buttons (Save, Share) carry their own sheets with lists too.
+  const more = find(document.querySelector<any>(sel)?.data, (x) => x.flexibleActionsViewModel)?.flexibleActionsViewModel.actionsRows?.at(-1)?.actions?.at(-1);
+  for (const x of walk(more)) {
     const l = x.listItems;
     if (Array.isArray(l) && l.some((i) => i.downloadListItemViewModel || i.listItemViewModel?.leadingImage)) return l;
   }

@@ -585,7 +585,8 @@ html[kyt-playlists][kyt-pl-proxy] ytd-popup-container tp-yt-iron-dropdown {
 /* YouTube's own header buttons (stamped with their icon type) in our icons: Add videos, Edit, Share, and Shuffle and
    Download on the older header Watch later and Liked videos use. */
 html[kyt-playlists] ytd-browse[page-subtype="playlist"] > :is(yt-page-header-renderer, ytd-playlist-header-renderer) {
-  & :is([kyt-icon="ADD"], [kyt-icon="EDIT"], [kyt-icon="SHARE"], [kyt-icon="SHUFFLE"], [kyt-icon="OFFLINE_DOWNLOAD"]) .ytSpecButtonShapeNextIcon {
+  & :is([kyt-icon="ADD"], [kyt-icon="EDIT"], [kyt-icon="SHARE"], [kyt-icon="SHUFFLE"], [kyt-icon="OFFLINE_DOWNLOAD"]) .ytSpecButtonShapeNextIcon,
+  & toggle-button-view-model button .ytSpecButtonShapeNextIcon {
     background-color: currentColor;
     mask: var(--kyt-i) center / contain no-repeat;
     & > * { visibility: hidden; }
@@ -593,6 +594,10 @@ html[kyt-playlists] ytd-browse[page-subtype="playlist"] > :is(yt-page-header-ren
   & [kyt-icon="ADD"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-add); }
   & [kyt-icon="EDIT"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-edit); }
   & [kyt-icon="SHARE"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-share); }
+  /* Save is a toggle whose icon type lags when it flips, so key on aria-pressed, not the stamp. */
+  & toggle-button-view-model button .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-save); }
+  /* Saved: same icon in the accent, like the other pressed toggles. */
+  & toggle-button-view-model button[aria-pressed="true"] .ytSpecButtonShapeNextIcon { color: var(--kyt-accent, currentColor); }
   & [kyt-icon="SHUFFLE"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-shuffle); }
   & [kyt-icon="OFFLINE_DOWNLOAD"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-download); }
 }

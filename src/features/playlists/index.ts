@@ -34,7 +34,7 @@ const MENU_ICONS: Record<string, string> = {
 };
 
 // Icons the stylesheet masks in (stat and row pills): --kyt-pl-<key>.
-const ICONS = { shuffle: 'shuffle', download: 'download', add: 'add', edit: 'edit', share: 'share', views: 'eye', date: 'date', videos: 'play', duration: 'timelapse', check: 'check' };
+const ICONS = { shuffle: 'shuffle', download: 'download', add: 'add', edit: 'edit', share: 'share', save: 'save', views: 'eye', date: 'date', videos: 'play', duration: 'timelapse', check: 'check' };
 
 const clock = (s: number) => {
   const h = Math.floor(s / 3600);
@@ -117,10 +117,14 @@ async function stampHeaders(signal: AbortSignal, call: Call) {
 }
 
 async function playlist(signal: AbortSignal, call: Call) {
-  const [stats, list] = await Promise.all([waitFor(S.playlistByline, { signal }), waitFor(S.playlistList, { signal })]);
+  const stats = await waitFor(S.playlistByline, { signal });
+  if (!stats || signal.aborted) return;
+  // The header works without the old list: other people's playlists render rows as lockups (no list renderer).
+  if (stats.matches('yt-content-metadata-view-model')) headerMenu(stats.closest('ytd-browse'), signal, call);
+
+  const list = await waitFor(S.playlistList, { signal });
   const contents = list?.querySelector(':scope > #contents');
-  const modern = !!stats?.matches('yt-content-metadata-view-model');
-  if (!list || !stats || !contents || signal.aborted) return;
+  if (!list || !contents || signal.aborted) return;
 
   // Total duration: only once every row has loaded.
   const duration = el('span', 'kyt-pl-duration');
@@ -134,9 +138,6 @@ async function playlist(signal: AbortSignal, call: Call) {
   };
   observe(contents, { childList: true }, update, signal);
   update();
-
-  const browse = stats.closest('ytd-browse');
-  if (modern) headerMenu(browse, signal, call);
 
   const words = await call('playlistWords', S.playlistList).catch(() => null);
   if (words && !signal.aborted) bulk(list, contents, words, signal, call);
