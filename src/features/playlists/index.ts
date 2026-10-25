@@ -29,7 +29,7 @@ type Call = Parameters<NonNullable<Feature['run']>>[0]['call'];
 // Header menu rows (YouTube's imageName) -> our icon. A menu with none of these (saved playlists) keeps YouTube's own ⋮;
 // an unknown extra row (some playlists have one) gets the generic `more` icon.
 const MENU_ICONS: Record<string, string> = {
-  SHUFFLE: 'shuffle', OFFLINE_DOWNLOAD: 'download', VISIBILITY: 'eye', PLAYLIST_ADD: 'add-to-playlist',
+  SHUFFLE: 'shuffle', OFFLINE_DOWNLOAD: 'download', VISIBILITY: 'eye', VISIBILITY_OFF: 'hide', PLAYLIST_ADD: 'add-to-playlist',
   SETTINGS: 'settings', DELETE: 'delete', FLAG: 'report', PEOPLE: 'people',
 };
 
@@ -304,8 +304,8 @@ function bulk(list: Element, contents: Element, words: PlaylistWords, signal: Ab
   bar.addEventListener('keydown', (e) => e.key === 'Escape' && saveDd.hasAttribute('open') && (close(), save.focus()), { signal });
 }
 
-/** The view-model header's ⋮ menu rows as buttons in its action row. Each button opens YouTube's own menu (hidden
- *  while it happens) and taps the same row, so Add all to..., Settings and Delete keep YouTube's sheets and dialogs. */
+/** The view-model header's ⋮ menu rows as buttons in its action row. A button runs its row's command directly when it
+ *  can; otherwise (Download, Add all to...'s sheet) it opens YouTube's own menu hidden and taps the same row. */
 function headerMenu(browse: Element | null, signal: AbortSignal, call: Call) {
   if (!browse) return;
   const html = document.documentElement;
@@ -349,12 +349,13 @@ function headerMenu(browse: Element | null, signal: AbortSignal, call: Call) {
     const i = Number((e.target as Element).closest<HTMLElement>('[data-i]')?.dataset.i);
     const more = [...(row()?.querySelectorAll<HTMLElement>('button-view-model button') ?? [])].filter((b) => !host.contains(b)).at(-1);
     if (Number.isNaN(i) || !more) return;
-    // The menu flashes for one frame at most: hidden until its row is tapped.
+    if (await call('playlistRun', S.playlistBrowse, i).catch(() => false)) return;
+    // Hidden until its row is tapped; the tap closes the menu in the same frame.
     html.setAttribute('kyt-pl-proxy', '');
     try {
       more.click();
-      const first = await waitFor(S.popupListItem, { signal, timeout: 3000 });
-      const rows = first && [...document.querySelectorAll<HTMLElement>(S.popupListItem)];
+      const menu = await waitFor(S.openPopupMenu, { signal, timeout: 3000, attributes: ['focused', 'aria-hidden'] });
+      const rows = menu && [...menu.querySelectorAll<HTMLElement>('yt-list-item-view-model')];
       (rows?.[i]?.querySelector<HTMLElement>('.ytListItemViewModelContainer') ?? rows?.[i])?.click();
     } finally {
       requestAnimationFrame(() => html.removeAttribute('kyt-pl-proxy'));

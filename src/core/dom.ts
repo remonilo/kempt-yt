@@ -2,6 +2,7 @@ interface WaitOpts {
   root?: ParentNode & Node;
   signal?: AbortSignal;
   timeout?: number;
+  attributes?: string[]; // also re-check when these change under `root`
 }
 
 /**
@@ -10,7 +11,7 @@ interface WaitOpts {
  */
 export function waitFor<T extends Element = Element>(
   sel: string,
-  { root = document, signal, timeout = 10_000 }: WaitOpts = {},
+  { root = document, signal, timeout = 10_000, attributes }: WaitOpts = {},
 ): Promise<T | null> {
   if (signal?.aborted) return Promise.resolve(null);
   const hit = root.querySelector<T>(sel);
@@ -31,7 +32,7 @@ export function waitFor<T extends Element = Element>(
       console.warn(`kyt: "${sel}" not found after ${timeout}ms`);
       done(null);
     }, timeout);
-    obs.observe(root, { childList: true, subtree: true });
+    obs.observe(root, { childList: true, subtree: true, ...(attributes && { attributeFilter: attributes }) });
     signal?.addEventListener('abort', onAbort, { once: true });
   });
 }

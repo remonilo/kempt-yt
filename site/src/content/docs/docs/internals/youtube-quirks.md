@@ -24,6 +24,8 @@ Short comments in the source point here. Each entry is a constraint YouTube impo
 - `keep` and `stamp` run synchronously in the observer callback, before paint. A `requestAnimationFrame` delay paints the re-rendered element unstamped for one frame.
 - Stamp channel tabs by URL slug, never by title. The mini guide's root exists early, but its entries render later.
 
+- A view-model ⋯ menu (`tp-yt-iron-dropdown` in `ytd-popup-container`) keeps its previous rows after it closes, only `aria-hidden` and `display: none`. Waiting for `yt-list-item-view-model` matches those stale rows at once, so a click lands on a closed menu or on the last menu's row. Wait for the dropdown with `[focused]:not([aria-hidden="true"])`: YouTube sets `focused` a few ms after the new rows render.
+
 ## Masthead and search
 
 - YouTube stacks its own hover layers: 10% white on the guide's `#endpoint`, a 1px rim on active rows, 20% white on the notifications button. Clear each on its own element. A broad `#buttons > *:hover` rule also kills Kempt's own Settings hover.

@@ -14,6 +14,15 @@ function serviceRequest(from: Element | null, endpoint: unknown) {
   }));
 }
 
+/** The view-model header's ⋮ menu rows, raw. */
+function headerItems(sel: string): any[] {
+  for (const x of walk(document.querySelector<any>(sel)?.data)) {
+    const l = x.listItems;
+    if (Array.isArray(l) && l.some((i) => i.downloadListItemViewModel || i.listItemViewModel?.leadingImage)) return l;
+  }
+  return [];
+}
+
 const editEndpoint = (playlistId: string, actions: unknown[], extra: Record<string, unknown> = {}) => ({
   commandMetadata: { webCommandMetadata: { sendPost: true, apiUrl: '/youtubei/v1/browse/edit_playlist' } },
   playlistEditEndpoint: { playlistId, actions, ...extra },
@@ -54,14 +63,21 @@ export const playlistsPage = {
 
   /** The header ⋮ menu in YouTube's row order (Download is its own view model, titled by the client). */
   playlistMenu(sel: string): MenuItem[] {
-    for (const x of walk(document.querySelector<any>(sel)?.data)) {
-      const l = x.listItems;
-      if (!Array.isArray(l) || !l.some((i) => i.downloadListItemViewModel || i.listItemViewModel?.leadingImage)) continue;
-      return l.map((i) => i.downloadListItemViewModel
-        ? { title: '', icon: 'OFFLINE_DOWNLOAD' }
-        : { title: i.listItemViewModel?.title?.content ?? '', icon: i.listItemViewModel?.leadingImage?.sources?.[0]?.clientResource?.imageName ?? '' });
-    }
-    return [];
+    return headerItems(sel).map((i) => i.downloadListItemViewModel
+      ? { title: '', icon: 'OFFLINE_DOWNLOAD' }
+      : { title: i.listItemViewModel?.title?.content ?? '', icon: i.listItemViewModel?.leadingImage?.sources?.[0]?.clientResource?.imageName ?? '' });
+  },
+
+  /** Runs row `i`'s own command as a tap would. False when it needs the real menu row (Download, sheets). */
+  playlistRun(sel: string, i: number): boolean {
+    const cmd = headerItems(sel)[i]?.listItemViewModel?.rendererContext?.commandContext?.onTap?.innertubeCommand;
+    const from = document.querySelector(sel);
+    if (!cmd || !from) return false;
+    if (cmd.commandMetadata?.webCommandMetadata?.url) {
+      from.dispatchEvent(new CustomEvent('yt-navigate', { bubbles: true, composed: true, detail: { endpoint: cmd } }));
+    } else if (cmd.commandMetadata?.webCommandMetadata?.sendPost) serviceRequest(from, cmd);
+    else return false;
+    return true;
   },
 
   playlistQueue(sel: string) {

@@ -58,7 +58,8 @@ export const S = {
   lockupMeta: '.ytLockupViewModelMetadata', // title, channel and metadata rows of a lockup
   lockupChannel: '.ytLockupMetadataViewModelMetadata a[href^="/"]', // first is the channel ("/@handle"); collabs may have none
   lockupAvatar: '.ytLockupMetadataViewModelAvatar img',
-  popupListItem: 'ytd-popup-container yt-list-item-view-model', // rows of a view-model ⋯ menu
+  // A view-model ⋯ menu once open: closed menus stay in the DOM (aria-hidden), and rows render before `focused` is set.
+  openPopupMenu: 'ytd-popup-container tp-yt-iron-dropdown[focused]:not([aria-hidden="true"]):has(yt-list-item-view-model)',
   fsActions: '#movie_player .ytp-fullscreen-quick-actions', // fullscreen like/dislike/comments/share/⋯ row; needs stamp
   progressBar: '#movie_player .ytp-chrome-bottom .ytp-progress-bar', // #movie_player also holds a hidden 0x0 spare bar outside .ytp-chrome-bottom
   lockupTitle: '.ytLockupMetadataViewModelTitle', // title link of a view-model lockup
