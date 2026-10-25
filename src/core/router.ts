@@ -1,4 +1,4 @@
-export type Route = 'home' | 'watch' | 'shorts' | 'subscriptions' | 'history' | 'channel' | 'post' | 'other';
+export type Route = 'home' | 'watch' | 'shorts' | 'subscriptions' | 'history' | 'playlist' | 'playlists' | 'channel' | 'post' | 'other';
 
 export function routeOf(path: string): Route {
   if (path === '/') return 'home';
@@ -7,6 +7,8 @@ export function routeOf(path: string): Route {
   if (path.startsWith('/shorts/')) return 'shorts'; // the Shorts player (only reachable with `shorts` off)
   if (path === '/feed/subscriptions') return 'subscriptions';
   if (path === '/feed/history') return 'history';
+  if (path === '/playlist') return 'playlist';
+  if (path === '/feed/playlists') return 'playlists';
   if (path.startsWith('/post/')) return 'post'; // a channel post with its comments
   if (/^\/(@|channel\/|c\/|user\/)/.test(path)) return 'channel';
   return 'other';
@@ -42,6 +44,7 @@ export function onRoute(cb: (route: Route) => void): void {
     cb(route);
     document.dispatchEvent(new CustomEvent('kyt:navigate', { detail: { route } }));
   };
+  // Back/Forward fire yt-navigate-finish too. No popstate: it fires before YouTube swaps the page, so features would
+  // run against the old one and the real finish would be dropped as a repeat.
   document.addEventListener('yt-navigate-finish', fire);
-  window.addEventListener('popstate', fire);
 }

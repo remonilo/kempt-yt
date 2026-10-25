@@ -41,6 +41,15 @@ export const S = {
   historyList: 'ytd-browse[page-subtype="history"] ytd-section-list-renderer > #contents', // one ytd-item-section-renderer per day
   historyTitle: 'ytd-item-section-header-renderer #title', // "Today", "Thursday", "27 Sept"
   historyChips: 'ytd-browse[page-subtype="history"] ytd-section-list-renderer > #header-container', // All/Videos/Shorts chip bar row
+  // Header card stats: the old header's byline, or the view-model header that owned playlists get (2026-10).
+  // A hidden copy of the new header sits in yt-page-header-portal, hence the child combinator.
+  playlistByline: 'ytd-browse[page-subtype="playlist"]:not([hidden]) ytd-playlist-header-renderer:not([hidden]) ytd-playlist-byline-renderer .metadata-stats, ' +
+    'ytd-browse[page-subtype="playlist"]:not([hidden]) > yt-page-header-renderer yt-content-metadata-view-model',
+  playlistsGrid: 'ytd-browse:not([hidden]):not([page-subtype]) ytd-rich-grid-renderer', // Library > Playlists (/feed/playlists has no page-subtype)
+  playlistBrowse: 'ytd-browse[page-subtype="playlist"]:not([hidden])',
+  playlistHeader: 'ytd-browse[page-subtype="playlist"]:not([hidden]) > yt-page-header-renderer', // its action buttons need stamp
+  playlistHeaderOld: 'ytd-browse[page-subtype="playlist"]:not([hidden]) > ytd-playlist-header-renderer', // Watch later, Liked videos; same stamp
+  playlistList: 'ytd-browse[page-subtype="playlist"]:not([hidden]) ytd-playlist-video-list-renderer', // rows in #contents, data.contents
   historyActions: 'ytd-browse[page-subtype="history"] ytd-browse-feed-actions-renderer', // right column; buttons need stamp
   historyLinks: 'ytd-browse[page-subtype="history"] ytd-browse-feed-actions-renderer ytd-compact-link-renderer', // Comments/Posts/Live chat (My Activity)
   lockupDate: '.ytContentMetadataViewModelMetadataText', // last one in a lockup is the age ("7 hr ago"), aria-label has the long form

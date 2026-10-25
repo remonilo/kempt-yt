@@ -1,0 +1,608 @@
+/* Playlist page (Figma Playlist 125:13891): the left column header becomes a bordered card above the list. */
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] {
+  & > :is(ytd-playlist-header-renderer, yt-page-header-renderer) {
+    position: static !important;
+    /* Both headers shrink to their content in ytd-browse's flex row; span the rows' width instead. */
+    width: calc(100% - 48px) !important;
+    height: auto !important;
+    margin: 0 24px 16px !important;
+  }
+  & > ytd-two-column-browse-results-renderer {
+    padding: 0 24px !important;
+    & > #primary {
+      flex: 1;
+    }
+  }
+  & > #alerts {
+    padding: 0 24px !important;
+    & > ytd-alert-with-button-renderer {
+      border-radius: 20px; /* matches the header card */
+    }
+  }
+  & > #alert-banner {
+    padding: 0 !important;
+  }
+  & ytd-playlist-video-list-renderer {
+    margin: 0 !important;
+  }
+}
+
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] > ytd-playlist-header-renderer {
+  & .immersive-header-container {
+    margin: 0;
+    padding: 16px;
+    border: 1px solid var(--kyt-outline);
+    border-radius: 20px;
+    background: none;
+  }
+  & .immersive-header-background-wrapper,
+  & .thumbnail-and-metadata-wrapper > ytd-button-renderer.play-button,
+  & .play-menu.small-screen-form {
+    display: none !important;
+  }
+  & .immersive-header-content {
+    position: relative;
+    flex: 1;
+  }
+  & .thumbnail-and-metadata-wrapper {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  & .thumbnail-wrapper {
+    flex: none;
+    align-self: stretch;
+    width: 250px;
+    margin: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    & :is(ytd-hero-playlist-thumbnail-renderer, .horizontally-centered-container, .image-wrapper, yt-img-shadow, img) {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+      max-width: none !important;
+      margin: 0 !important;
+      object-fit: cover;
+    }
+  }
+  /* One wrapping row: title, owner + stats, then every action pill side by side; ⋮ in the card's corner. */
+  & .metadata-wrapper {
+    flex: 1;
+    min-width: 0;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    padding-right: 48px;
+    & > *,
+    & .metadata-text-wrapper {
+      flex: 1 0 100%;
+      margin: 0 !important;
+    }
+    & > :is(.metadata-action-bar, .play-menu.wide-screen-form),
+    & .metadata-buttons-wrapper {
+      display: contents !important;
+    }
+    & > .description:empty,
+    & > .description:not(:has(#plain-snippet-text:not(:empty))) {
+      display: none;
+    }
+  }
+  & #title-display {
+    order: 1;
+    & #text {
+      font: 500 20px / 28px Roboto, Arial, sans-serif !important;
+    }
+  }
+  & .metadata-text-wrapper {
+    order: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  & .play-menu .play-button { order: 3; }
+  & .play-menu .shuffle-button { order: 4; }
+  & .metadata-buttons-wrapper > :not(ytd-menu-renderer) { order: 5; }
+  & .metadata-wrapper > .description { order: 6; }
+  & .metadata-buttons-wrapper > ytd-menu-renderer {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  & :is(.play-menu, .metadata-buttons-wrapper) ytd-button-renderer {
+    flex: none;
+    margin: 0 !important;
+  }
+}
+
+/* The view-model header owned playlists get: same card, thumbnail left, title, metadata and actions right. */
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] > yt-page-header-renderer {
+  --kyt-pl-cover-h: 200px; /* title, info rows and the actions row stack to about this; the cover is 16:9 at the same height */
+  /* .ytPageHeaderViewModelDisplayAsSidebar fixes it at 360px wide. */
+  padding: 0 !important; /* YouTube's 24px below the sidebar header; keep the same gap as the old header */
+  & yt-page-header-view-model {
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 16px;
+    border: 1px solid var(--kyt-outline);
+    border-radius: 20px;
+    background: none;
+  }
+  & .ytPageHeaderViewModelBackground {
+    display: none;
+  }
+  & .ytPageHeaderViewModelScrollContainer {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    overflow: visible;
+  }
+  /* Thumbnail pinned left, every info block beside it (the image's parent differs between YouTube builds). */
+  & .ytPageHeaderViewModelContent {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+    width: auto;
+    height: auto;
+    min-height: var(--kyt-pl-cover-h); /* the cover's height: info fits beside it, so the outline gap is 16px all round */
+    padding: 0 0 0 calc(var(--kyt-pl-cover-h) * 16 / 9 + 16px);
+  }
+  & .ytPageHeaderViewModelHeadline {
+    display: block;
+  }
+  & .ytPageHeaderViewModelHeadlineImageHeroContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(var(--kyt-pl-cover-h) * 16 / 9);
+    margin: 0;
+  }
+  & .ytPageHeaderViewModelHeadlineImage {
+    width: 100% !important;
+    height: auto !important;
+    margin: 0;
+    aspect-ratio: 16 / 9;
+    & img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  & .ytPageHeaderViewModelHeadlineInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    height: auto;
+    margin: 0;
+    padding: 0;
+  }
+  & :is(.ytPageHeaderViewModelHeadlineInfo, yt-description-preview-view-model):empty {
+    display: none;
+  }
+  & .ytPageHeaderViewModelTitle {
+    margin: 0;
+  }
+  & .ytPageHeaderViewModelTitle h1 {
+    margin: 0;
+    font: 500 20px / 28px Roboto, Arial, sans-serif;
+  }
+  /* Owner row on top, then the stats row's parts as items beside our duration: views, videos, duration, then the
+     rest (Playlist, Private) as plain text. Views is YouTube's last part, videos the part before it. */
+  & yt-content-metadata-view-model {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+    /* Playlist / Private under the title, then the owner, then the stats. */
+    & > .ytContentMetadataViewModelMetadataRow {
+      flex: 1 0 100%;
+      order: 1;
+      margin: 0;
+    }
+    & > .ytContentMetadataViewModelMetadataRow:has(> .ytContentMetadataViewModelMetadataTextLastPart) {
+      display: contents;
+      & > .ytContentMetadataViewModelDelimiter {
+        display: none;
+      }
+      & > .ytContentMetadataViewModelMetadataText {
+        order: 0;
+        margin-right: -8px; /* 12px gap beside the next label, like the dots they replace */
+        font: 400 14px / 20px Roboto, Arial, sans-serif;
+        color: var(--kyt-fg-muted);
+      }
+      & > .ytContentMetadataViewModelMetadataTextLastPart {
+        --kyt-pl-i: var(--kyt-pl-views);
+        order: 2;
+      }
+      & > .ytContentMetadataViewModelMetadataText:has(+ .ytContentMetadataViewModelDelimiter + .ytContentMetadataViewModelMetadataTextLastPart) {
+        --kyt-pl-i: var(--kyt-pl-videos);
+        order: 3;
+      }
+    }
+  }
+  & yt-flexible-actions-view-model {
+    margin: 0;
+  }
+}
+
+/* Stats as icon + text (Figma 128:14713): views, videos, duration, then updated; 16px icons beside 14px text. */
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] ytd-playlist-byline-renderer .metadata-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] :is(ytd-playlist-byline-renderer .byline-item, .kyt-pl-duration) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 !important;
+  font: 400 14px / 20px Roboto, Arial, sans-serif;
+  color: var(--kyt-fg);
+  &::before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    background-color: var(--kyt-fg-muted);
+    mask: var(--kyt-pl-i) center / contain no-repeat;
+  }
+}
+
+/* Rows (Figma: 200px thumbnail, title, views and age pills, channel under them). */
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] ytd-playlist-video-renderer {
+  border-radius: 12px;
+  & ytd-thumbnail {
+    margin-right: 16px !important;
+  }
+  & ytd-video-meta-block #byline-container {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 8px;
+    max-height: none;
+    & > #separator {
+      display: none;
+    }
+  }
+  & #video-info {
+    display: flex;
+    gap: 8px;
+    & > span:nth-child(2) {
+      display: none;
+    }
+    & > span:is(:nth-child(1), :nth-child(3)) {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 14px;
+      background: var(--kyt-pill-bg);
+      color: var(--kyt-fg);
+      font: 400 13px / 18px Roboto, Arial, sans-serif;
+      &::before {
+        content: "";
+        width: 16px;
+        height: 16px;
+        background-color: var(--kyt-fg-muted);
+        mask: var(--kyt-pl-i) center / contain no-repeat;
+      }
+    }
+    & > span:nth-child(1) { --kyt-pl-i: var(--kyt-pl-views); }
+    & > span:nth-child(3) { --kyt-pl-i: var(--kyt-pl-date); }
+  }
+}
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] ytd-playlist-byline-renderer .byline-item {
+  &:nth-child(1 of .byline-item) { --kyt-pl-i: var(--kyt-pl-videos); order: 2; }
+  &:nth-child(2 of .byline-item) { --kyt-pl-i: var(--kyt-pl-views); order: 1; }
+  &:nth-child(3 of .byline-item) { --kyt-pl-i: var(--kyt-pl-date); order: 4; }
+}
+.kyt-pl-duration {
+  --kyt-pl-i: var(--kyt-pl-duration);
+  order: 3;
+}
+
+/* Bulk select: a round checkbox before each row's drag handle, and a bar above the rows. */
+.kyt-pl-check {
+  all: unset;
+  flex: none;
+  align-self: center;
+  box-sizing: border-box;
+  width: 22px;
+  height: 22px;
+  margin: 0 4px 0 8px;
+  border: 2px solid var(--kyt-fg-muted);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 150ms, border-color 150ms;
+  &::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    mask: var(--kyt-pl-check) center / 16px no-repeat;
+    transform: scale(0);
+    transition: transform 150ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  &[aria-checked="true"],
+  &[aria-checked="mixed"] {
+    border-color: var(--kyt-accent);
+    background: var(--kyt-accent);
+  }
+  &[aria-checked="true"]::after {
+    transform: none;
+  }
+  /* Some rows picked: a bar instead of the tick. */
+  &[aria-checked="mixed"]::after {
+    mask: none;
+    width: 10px;
+    height: 2px;
+    margin: 8px auto;
+    border-radius: 1px;
+    transform: none;
+  }
+  &:focus-visible {
+    outline: 2px solid var(--kyt-outline-focus);
+    outline-offset: 2px;
+  }
+}
+html[kyt-playlists] ytd-playlist-video-renderer[kyt-picked] {
+  background: var(--kyt-selected-bg);
+}
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] ytd-item-section-renderer > #header:has(> .kyt-pl-bar) {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  & > .kyt-pl-bar {
+    display: contents;
+  }
+  & > :not(.kyt-pl-bar) {
+    order: 2;
+  }
+  & :is(.kyt-pl-count, .kyt-pl-actions) {
+    order: 3;
+  }
+  & .kyt-search {
+    order: 4;
+  }
+  /* Sort chip in line with the rows' thumbnails (check + its margins + the 12px gap, then 24px). */
+  & > chip-bar-view-model {
+    margin-left: 24px;
+  }
+}
+/* Hidden actions keep their space for the slide-in; one row of it, so the header never grows while idle. */
+.kyt-pl-actions:not([kyt-on]) {
+  height: var(--kyt-chip-h);
+  overflow: hidden;
+}
+.kyt-pl-bar > .kyt-search {
+  flex: 0 1 314px;
+  min-width: 200px;
+  margin-left: auto;
+}
+html[kyt-playlists] ytd-playlist-video-renderer[kyt-pl-miss] {
+  display: none;
+}
+/* "Sort by:" before the sort chip's value (Figma 125:13891); the chip with a dropdown arrow is the sort. */
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] ytd-item-section-renderer > #header .ytChipShapeEndIconPadding > .ytChipShapeText::before {
+  content: var(--kyt-pl-sort-by) " ";
+  font-weight: 400;
+  color: var(--kyt-fg-muted);
+}
+.kyt-pl-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 40px;
+  margin-bottom: 8px;
+}
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] ytd-playlist-video-renderer {
+  margin-bottom: 4px;
+}
+.kyt-pl-count:empty {
+  display: none;
+}
+.kyt-pl-count {
+  min-width: 2ch;
+  font: 500 14px / 20px Roboto, Arial, sans-serif;
+  color: var(--kyt-fg);
+  font-variant-numeric: tabular-nums;
+}
+.kyt-pl-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-8px);
+  transition: opacity 150ms, transform 200ms cubic-bezier(0.2, 0, 0, 1), visibility 0s 200ms;
+  &[kyt-on] {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: opacity 150ms, transform 200ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  & button.kyt-pl-act {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: var(--kyt-chip-h);
+    padding: 0 14px 0 10px;
+    border-radius: calc(var(--kyt-chip-h) / 2);
+    font: 500 14px / 20px Roboto, Arial, sans-serif;
+    --kyt-icon-size: 20px;
+  }
+  & button[hidden] {
+    display: none;
+  }
+  & .kyt-dd-menu {
+    max-height: 320px;
+    overflow-y: auto;
+    min-width: 220px;
+  }
+  & .kyt-dd-menu[aria-busy="true"] {
+    min-height: 36px;
+  }
+  & .kyt-dd-item[aria-disabled="true"] {
+    color: var(--kyt-fg-muted);
+    pointer-events: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kyt-pl-check,
+  .kyt-pl-check::after,
+  .kyt-pl-actions {
+    transition: none;
+  }
+}
+
+/* Library > Playlists: YouTube's chips left, our layout toggle and search pill right (Figma 125:12932). */
+html[kyt-playlists] ytd-rich-grid-renderer[kyt-pl-library] > #header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end; /* the chip bar has 16px of padding above its chips */
+  gap: 16px;
+  box-sizing: border-box; /* the grid centres its children, so extra width would shift the chips left */
+  padding-right: 24px; /* line up with the chips' own 24px inset */
+  & > chip-bar-view-model {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+.kyt-pl-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  & > .kyt-chips {
+    display: flex;
+    gap: 8px;
+  }
+  & > .kyt-search {
+    flex: 0 1 314px;
+    min-width: 200px;
+  }
+}
+/* List layout: one playlist per row, thumbnail left. */
+html[kyt-playlists-library="list"] ytd-rich-grid-renderer[kyt-pl-library] > #contents {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-self: stretch;
+  width: auto;
+  margin: 0 24px;
+  & > ytd-rich-item-renderer {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+  & .ytLockupViewModelHost {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 16px;
+    max-width: none;
+  }
+  & .ytLockupViewModelContentImage {
+    flex: none;
+    width: 250px;
+    margin: 0;
+  }
+  & .ytLockupViewModelMetadata {
+    flex: 1;
+    min-width: 0;
+  }
+  & .ytLockupMetadataViewModelTitle {
+    font-size: 16px;
+    line-height: 22px;
+  }
+}
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] > yt-page-header-renderer .kyt-pl-duration {
+  order: 4;
+}
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] > yt-page-header-renderer .ytContentMetadataViewModelMetadataRow > :is(.ytContentMetadataViewModelMetadataTextLastPart, .ytContentMetadataViewModelMetadataText:has(+ .ytContentMetadataViewModelDelimiter + .ytContentMetadataViewModelMetadataTextLastPart)) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: 400 14px / 20px Roboto, Arial, sans-serif;
+  color: var(--kyt-fg);
+  &::before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    background-color: var(--kyt-fg-muted);
+    mask: var(--kyt-pl-i) center / contain no-repeat;
+  }
+}
+
+/* View-model header: the ⋮ menu's rows as round buttons after YouTube's own (same 40px tonal circles). */
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] > yt-page-header-renderer {
+  & .ytFlexibleActionsViewModelActionRow {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  &[kyt-pl-menu] .ytFlexibleActionsViewModelActionIconOnlyButton:nth-last-child(2) {
+    display: none; /* YouTube's ⋮, still clicked by our buttons */
+  }
+}
+.kyt-pl-hacts {
+  display: contents;
+  & > .kyt-pl-hact {
+    all: unset;
+    box-sizing: border-box;
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+    border-radius: 20px;
+    background: color-mix(in srgb, currentColor 10%, transparent); /* YouTube's tonal circle */
+    color: var(--kyt-fg);
+    cursor: pointer;
+    --kyt-icon-size: 24px;
+    transition: background-color 150ms;
+    &:hover {
+      background: var(--kyt-hover-bg);
+    }
+    &:focus-visible {
+      outline: 2px solid var(--kyt-outline-focus);
+      outline-offset: 2px;
+    }
+  }
+}
+/* The menu opens for a frame so a button can tap its row; keep it from showing. */
+html[kyt-playlists][kyt-pl-proxy] ytd-popup-container tp-yt-iron-dropdown {
+  opacity: 0 !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* YouTube's own header buttons (stamped with their icon type) in our icons: Add videos, Edit, Share, and Shuffle and
+   Download on the older header Watch later and Liked videos use. */
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] > :is(yt-page-header-renderer, ytd-playlist-header-renderer) {
+  & :is([kyt-icon="ADD"], [kyt-icon="EDIT"], [kyt-icon="SHARE"], [kyt-icon="SHUFFLE"], [kyt-icon="OFFLINE_DOWNLOAD"]) .ytSpecButtonShapeNextIcon {
+    background-color: currentColor;
+    mask: var(--kyt-i) center / contain no-repeat;
+    & > * { visibility: hidden; }
+  }
+  & [kyt-icon="ADD"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-add); }
+  & [kyt-icon="EDIT"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-edit); }
+  & [kyt-icon="SHARE"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-share); }
+  & [kyt-icon="SHUFFLE"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-shuffle); }
+  & [kyt-icon="OFFLINE_DOWNLOAD"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-download); }
+}
+
+/* Until a button is stamped it would show YouTube's icon for a frame, then ours. If stamping never lands, YouTube's icon
+   shows after 0.4s rather than a blank. */
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] > yt-page-header-renderer button-view-model:not([kyt-icon]) .ytSpecButtonShapeNextIcon {
+  animation: kyt-pl-unhide 0s 0.4s both;
+}
+@keyframes kyt-pl-unhide {
+  from { visibility: hidden; }
+  to { visibility: visible; }
+}

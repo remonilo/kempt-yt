@@ -15,6 +15,8 @@ test('routeOf', () => {
     ['/@LofiGirl/videos', 'channel'],
     ['/feed/history', 'history'],
     ['/feed/library', 'other'],
+    ['/playlist', 'playlist'],
+    ['/feed/playlists', 'playlists'],
     ['/post/Ugkx_W0Js78ktwItCh5dgI7iljR2rAIEOg4-', 'post'],
     ['/@StarTalk/posts', 'channel'],
   ];
