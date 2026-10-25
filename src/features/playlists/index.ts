@@ -6,22 +6,22 @@ import { local } from '../../core/i18n.ts';
 import { S } from '../../core/selectors.ts';
 import { layoutToggle } from '../../core/layout.ts';
 import { matcher } from '../../core/text.ts';
-import type { MenuItem, PlaylistWords } from './page.ts';
+import type { LibraryCard, MenuItem, PlaylistWords } from './page.ts';
 import { WATCH_LATER } from '../watch-later-btn/index.ts';
 
 
 const WORDS = {
-  en: { search: 'Search playlists', find: 'Search playlist', sortBy: 'Sort by:', download: 'Download' },
-  es: { search: 'Buscar listas', find: 'Buscar en la lista', sortBy: 'Ordenar por:', download: 'Descargar' },
-  pt: { search: 'Pesquisar playlists', find: 'Pesquisar na playlist', sortBy: 'Ordenar por:', download: 'Fazer download' },
-  de: { search: 'Playlists durchsuchen', find: 'Playlist durchsuchen', sortBy: 'Sortieren nach:', download: 'Herunterladen' },
-  fr: { search: 'Rechercher des playlists', find: 'Rechercher dans la playlist', sortBy: 'Trier par :', download: 'Télécharger' },
-  ru: { search: 'Поиск плейлистов', find: 'Поиск в плейлисте', sortBy: 'Сортировка:', download: 'Скачать' },
-  ja: { search: '再生リストを検索', find: '再生リスト内を検索', sortBy: '並べ替え:', download: 'ダウンロード' },
-  ko: { search: '재생목록 검색', find: '재생목록에서 검색', sortBy: '정렬 기준:', download: '오프라인 저장' },
-  hi: { search: 'प्लेलिस्ट खोजें', find: 'प्लेलिस्ट में खोजें', sortBy: 'क्रम से लगाएं:', download: 'डाउनलोड करें' },
-  id: { search: 'Telusuri playlist', find: 'Telusuri di playlist', sortBy: 'Urutkan:', download: 'Download' },
-  tr: { search: 'Oynatma listelerinde ara', find: 'Oynatma listesinde ara', sortBy: 'Sıralama ölçütü:', download: 'İndir' },
+  en: { search: 'Search playlists', find: 'Search playlist', sortBy: 'Sort by:', download: 'Download', playAll: 'Play all', share: 'Copy link', edit: 'Edit', remove: 'Delete' },
+  es: { search: 'Buscar listas', find: 'Buscar en la lista', sortBy: 'Ordenar por:', download: 'Descargar', playAll: 'Reproducir todo', share: 'Copiar enlace', edit: 'Editar', remove: 'Eliminar' },
+  pt: { search: 'Pesquisar playlists', find: 'Pesquisar na playlist', sortBy: 'Ordenar por:', download: 'Fazer download', playAll: 'Reproduzir tudo', share: 'Copiar link', edit: 'Editar', remove: 'Excluir' },
+  de: { search: 'Playlists durchsuchen', find: 'Playlist durchsuchen', sortBy: 'Sortieren nach:', download: 'Herunterladen', playAll: 'Alle wiedergeben', share: 'Link kopieren', edit: 'Bearbeiten', remove: 'Löschen' },
+  fr: { search: 'Rechercher des playlists', find: 'Rechercher dans la playlist', sortBy: 'Trier par :', download: 'Télécharger', playAll: 'Tout lire', share: 'Copier le lien', edit: 'Modifier', remove: 'Supprimer' },
+  ru: { search: 'Поиск плейлистов', find: 'Поиск в плейлисте', sortBy: 'Сортировка:', download: 'Скачать', playAll: 'Воспроизвести все', share: 'Копировать ссылку', edit: 'Изменить', remove: 'Удалить' },
+  ja: { search: '再生リストを検索', find: '再生リスト内を検索', sortBy: '並べ替え:', download: 'ダウンロード', playAll: 'すべて再生', share: 'リンクをコピー', edit: '編集', remove: '削除' },
+  ko: { search: '재생목록 검색', find: '재생목록에서 검색', sortBy: '정렬 기준:', download: '오프라인 저장', playAll: '모두 재생', share: '링크 복사', edit: '수정', remove: '삭제' },
+  hi: { search: 'प्लेलिस्ट खोजें', find: 'प्लेलिस्ट में खोजें', sortBy: 'क्रम से लगाएं:', download: 'डाउनलोड करें', playAll: 'सभी चलाएं', share: 'लिंक कॉपी करें', edit: 'संपादित करें', remove: 'हटाएं' },
+  id: { search: 'Telusuri playlist', find: 'Telusuri di playlist', sortBy: 'Urutkan:', download: 'Download', playAll: 'Putar semua', share: 'Salin link', edit: 'Edit', remove: 'Hapus' },
+  tr: { search: 'Oynatma listelerinde ara', find: 'Oynatma listesinde ara', sortBy: 'Sıralama ölçütü:', download: 'İndir', playAll: 'Tümünü oynat', share: 'Bağlantıyı kopyala', edit: 'Düzenle', remove: 'Sil' },
 };
 
 type Call = Parameters<NonNullable<Feature['run']>>[0]['call'];
@@ -72,7 +72,7 @@ export const playlists: Feature = {
       page = new AbortController();
       const sig = AbortSignal.any([signal, page.signal]);
       if (location.pathname === '/playlist') playlist(sig, call);
-      if (location.pathname === '/feed/playlists') library(sig);
+      if (location.pathname === '/feed/playlists') library(sig, call);
     };
     start();
     document.addEventListener('kyt:navigate', start, { signal });
@@ -144,7 +144,7 @@ async function playlist(signal: AbortSignal, call: Call) {
 }
 
 /** Library > Playlists (Figma 125:12932): grid/list toggle and a title search beside YouTube's chips. */
-async function library(signal: AbortSignal) {
+async function library(signal: AbortSignal, call: Call) {
   const grid = await waitFor(S.playlistsGrid, { signal });
   const header = grid?.querySelector(':scope > #header');
   const contents = grid?.querySelector(':scope > #contents');
@@ -169,9 +169,95 @@ async function library(signal: AbortSignal) {
   };
   input.addEventListener('input', search, { signal });
   observe(contents, { childList: true }, () => input.value && search(), signal);
+
+  // Owner, stat line and actions under each card (Figma 125:12932), built from what the lockup already shows. Edit and
+  // Delete exist only on the user's own playlists: YouTube gives those ⋮ rows to nobody else.
+  let info: { account: string; avatar: string; cards: LibraryCard[] } | undefined;
+  const idOf = (it: Element) => {
+    const href = it.querySelector<HTMLAnchorElement>('a.ytLockupViewModelContentImage')?.href;
+    try { return href ? new URL(href).searchParams.get('list') : null; } catch { return null; }
+  };
+  // Sorting re-renders the lockups after the items are added, so a card can lack its footer without a childList change on contents.
+  const stale = () => [...items()].some((it) => {
+    const id = idOf(it);
+    return id && it.querySelector(S.lockupMeta) && it.querySelector<HTMLElement>('.kyt-pl-foot')?.dataset.id !== id;
+  });
+  const decorate = async () => {
+    if (!stale()) return;
+    await waitFor(S.mastheadMenu, { signal }); // its data carries the avatar
+    info = await call('libraryCards', S.playlistsGrid).catch(() => undefined);
+    if (signal.aborted) return;
+    const avatar = info?.avatar;
+    for (const it of items()) {
+      const href = it.querySelector<HTMLAnchorElement>('a.ytLockupViewModelContentImage')?.href;
+      const id = idOf(it);
+      if (!href) continue;
+      const meta = it.querySelector(S.lockupMeta);
+      const old = it.querySelector<HTMLElement>('.kyt-pl-foot');
+      if (!id || !meta || old?.dataset.id === id) continue;
+      old?.remove();
+      const card = info?.cards.find((c) => c.id === id);
+      const own = !!(card?.edit || card?.del) || id === 'WL' || id === 'LL';
+      const rows = it.querySelectorAll('.ytContentMetadataViewModelMetadataRow');
+      const first = rows[0]?.querySelector('.ytContentMetadataViewModelMetadataText')?.textContent?.trim();
+      const updated = rows[1] && !rows[1].querySelector('a') ? rows[1].textContent : '';
+      const stat = (name: string, text?: string | null) => text ? el('span', 'kyt-pl-stat', icon(name), text.trim()) : '';
+      // Own playlists show "Private" in the owner slot, so the owner is the account; others show their owner there.
+      const name = own ? info?.account : first;
+      const owner = el('div', 'kyt-pl-owner');
+      if (own && avatar) {
+        const img = el('img', 'kyt-pl-avatar');
+        img.src = avatar;
+        img.alt = '';
+        owner.append(img);
+      }
+      if (name) owner.append(el('span', 'kyt-pl-name', name));
+      const btn = (cls: string, name: string, label: string) => {
+        const b = el('button', `kyt-pl-btn ${cls}`, icon(name));
+        b.title = b.ariaLabel = label;
+        return b;
+      };
+      const play = el('a', 'kyt-pl-play', icon('play'), words.playAll);
+      play.href = href;
+      const btns = el('div', 'kyt-pl-btns', play);
+      // Watch later and Liked videos are not shareable or editable.
+      if (id !== 'WL' && id !== 'LL') {
+        const copy = btn('kyt-pl-share', 'share', words.share);
+        // Copies the link: YouTube's share dialog needs an entity id we can't build for playlists (a guessed one spins forever).
+        copy.addEventListener('click', () => {
+          navigator.clipboard.writeText(`${location.origin}/playlist?list=${id}`);
+          copy.setAttribute('kyt-copied', '');
+        }, { signal });
+        copy.addEventListener('animationend', () => copy.removeAttribute('kyt-copied'), { signal });
+        btns.append(copy);
+      }
+      if (card?.edit) {
+        const edit = btn('kyt-pl-edit', 'edit', words.edit);
+        edit.addEventListener('click', () => call('libraryRun', S.playlistsGrid, id, 'EDIT'), { signal });
+        btns.append(edit);
+      }
+      if (card?.del) {
+        // No timers: the first click arms the button, the second deletes, leaving the button disarms it.
+        const del = btn('kyt-pl-delete', 'delete', words.remove);
+        del.addEventListener('click', () => {
+          if (!del.hasAttribute('kyt-armed')) return del.setAttribute('kyt-armed', '');
+          call('libraryRun', S.playlistsGrid, id, 'DELETE');
+        }, { signal });
+        del.addEventListener('mouseleave', () => del.removeAttribute('kyt-armed'), { signal });
+        del.addEventListener('blur', () => del.removeAttribute('kyt-armed'), { signal });
+        btns.append(del);
+      }
+      const foot = el('div', 'kyt-pl-foot', owner, el('div', 'kyt-pl-stats', own ? stat('hide', first) : '', stat('date', updated)), btns);
+      foot.dataset.id = id;
+      meta.append(foot);
+    }
+  };
+  decorate();
+  observe(contents, { childList: true, subtree: true }, decorate, signal);
   signal.addEventListener('abort', () => {
     grid.removeAttribute('kyt-pl-library');
     for (const it of items()) it.hidden = false;
+    for (const f of contents.querySelectorAll('.kyt-pl-foot')) f.remove();
   }, { once: true });
 }
 

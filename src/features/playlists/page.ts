@@ -1,4 +1,4 @@
-import { find, savePlaylists, text, walk } from '../../page/youtube.ts';
+import { cfg, find, savePlaylists, text, walk } from '../../page/youtube.ts';
 
 // Bulk actions reuse each row's own menu commands, sent through YouTube's handler (`yt-service-request`), so YouTube
 // does the request, the toast and the list update. Picked rows carry [kyt-picked], set by the content script.
@@ -31,10 +31,41 @@ const editEndpoint = (playlistId: string, actions: unknown[], extra: Record<stri
 });
 
 export interface PlaylistWords { listId: string; editable: boolean; queue: string; save: string; remove: string }
+export interface LibraryCard { id: string; edit: boolean; del: boolean }
 export interface MenuItem { title: string; icon: string }
 export interface SaveTarget { id: string; title: string; has: boolean }
 
+// A library card's own ⋮ rows (owned playlists: Edit, Delete), by YouTube's imageName.
+const cardRows = (item: any): any[] => {
+  const rows: any[] = [];
+  for (const x of walk(item?.data?.content?.lockupViewModel?.metadata?.lockupMetadataViewModel?.menuButton)) {
+    if (Array.isArray(x.listItems)) rows.push(...x.listItems.map((i: any) => i.listItemViewModel).filter(Boolean));
+  }
+  return rows;
+};
+const cardRow = (sel: string, id: string, kind: string) => {
+  const item = [...document.querySelectorAll<any>(`${sel} ytd-rich-item-renderer`)].find((e) => e.data?.content?.lockupViewModel?.contentId === id);
+  const row = cardRows(item).find((r) => r.leadingImage?.sources?.[0]?.clientResource?.imageName === kind);
+  return { item, cmd: row?.rendererContext?.commandContext?.onTap?.innertubeCommand };
+};
+
 export const playlistsPage = {
+  /** Which library cards can be edited or deleted (YouTube gives those rows only for the user's own playlists), plus the account name. */
+  libraryCards(sel: string): { account: string; avatar: string; cards: LibraryCard[] } {
+    const cards = [...document.querySelectorAll<any>(`${sel} ytd-rich-item-renderer`)].map((item) => {
+      const kinds = cardRows(item).map((r) => r.leadingImage?.sources?.[0]?.clientResource?.imageName);
+      return { id: item.data?.content?.lockupViewModel?.contentId as string, edit: kinds.includes('EDIT'), del: kinds.includes('DELETE') };
+    });
+    const avatar = find(document.querySelector<any>('ytd-masthead')?.data, (x) => x.avatar?.thumbnails)?.avatar.thumbnails[0]?.url ?? '';
+    return { account: cfg('USER_ACCOUNT_NAME') || '', avatar, cards };
+  },
+
+  /** Runs a card's own Edit or Delete command through YouTube's handler. */
+  libraryRun(sel: string, id: string, kind: 'EDIT' | 'DELETE') {
+    const { item, cmd } = cardRow(sel, id, kind);
+    if (cmd && item) serviceRequest(item, cmd);
+  },
+
   /** Total length from the row data. Null while more rows can still load, so a partial sum never shows. */
   playlistSeconds(sel: string) {
     const items: any[] = document.querySelector<any>(sel)?.data?.contents ?? [];
