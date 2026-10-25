@@ -227,7 +227,7 @@ html[kyt-icons] ytd-popup-container :is(ytd-compact-link-renderer[kyt-icon2="CHE
 
 /* Playlist panel (watch page, in the tab section) and the miniplayer's queue chevron + corner buttons. */
 html[kyt-icons] :is(
-  ytd-playlist-panel-renderer :is(#trailing-icon, ytd-playlist-loop-button-renderer button .ytSpecButtonShapeNextIcon, ytd-toggle-button-renderer button .ytSpecButtonShapeNextIcon, #playlist-actions ytd-menu-renderer yt-icon, ytd-playlist-panel-video-renderer #menu yt-icon),
+  ytd-playlist-panel-renderer :is(#trailing-icon, ytd-playlist-loop-button-renderer button .ytSpecButtonShapeNextIcon, #playlist-actions ytd-toggle-button-renderer button .ytSpecButtonShapeNextIcon, ytd-slim-metadata-toggle-button-renderer button .ytSpecButtonShapeNextIcon, #playlist-actions ytd-menu-renderer yt-icon, ytd-playlist-panel-video-renderer #menu yt-icon),
   ytd-miniplayer .ytdMiniplayerInfoBarExpand .ytSpecButtonShapeNextIcon
 ) {
   background-color: currentColor;
@@ -237,8 +237,18 @@ html[kyt-icons] :is(
 html[kyt-icons] ytd-playlist-panel-renderer {
   & #trailing-icon { --kyt-i: var(--kyt-i-close); }
   & ytd-playlist-loop-button-renderer .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-repeat); }
-  & ytd-toggle-button-renderer .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-shuffle); }
+  & #playlist-actions ytd-toggle-button-renderer .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-shuffle); }
+  /* The playing row's like and dislike (first and second slim toggle). */
+  & ytd-slim-metadata-toggle-button-renderer:first-child .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-liked); }
+  & ytd-slim-metadata-toggle-button-renderer:first-child button[aria-pressed="true"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-liked-selected); }
+  & ytd-slim-metadata-toggle-button-renderer:not(:first-child) .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-dislike); }
+  & ytd-slim-metadata-toggle-button-renderer:not(:first-child) button[aria-pressed="true"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-dislike-selected); }
   & ytd-menu-renderer yt-icon { --kyt-i: var(--kyt-i-more); }
+  /* Pressed: Loop cycles off, playlist (path with a centre dot), video (path with a "1"); Shuffle sets aria-pressed. */
+  & ytd-playlist-loop-button-renderer button:has(path[d*="ZM12 10a2"]) .ytSpecButtonShapeNextIcon,
+  & #playlist-actions ytd-toggle-button-renderer button[aria-pressed="true"] .ytSpecButtonShapeNextIcon,
+  & ytd-playlist-loop-button-renderer button:has(path[d*="ZM13 15V8"]) .ytSpecButtonShapeNextIcon { color: var(--kyt-accent, currentColor); }
+  & ytd-playlist-loop-button-renderer button:has(path[d*="ZM13 15V8"]) .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-repeat-one); }
 }
 html[kyt-icons] ytd-miniplayer {
   & .ytdMiniplayerInfoBarExpand .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-arrow-right); rotate: -90deg; }

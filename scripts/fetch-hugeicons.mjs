@@ -14,6 +14,7 @@ const ICONS = {
   ask: 'AiMagic', // Ask (YouTube's SPARK)
   image: 'Image02', // popup: Set as playlist thumbnail
   repeat: 'Repeat', // playlist panel: Loop
+  'repeat-one': 'RepeatOne01', // playlist panel: Loop video
   thanks: 'DollarCircle', // Thanks (YouTube's MONEY_HEART)
   movies: 'Clapperboard',
   memberships: 'StarCircle',

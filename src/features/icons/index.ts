@@ -20,7 +20,7 @@ const NAMES = ['menu', 'arrow-left', 'search', 'mic', 'close', 'add', 'notifs', 
   // channel header, About dialog (...more), posts
   'link', 'info', 'date', 'mail', 'phone', 'people', 'views', 'your-videos',
   // History's right column, playlist menus
-  'delete', 'edit', 'eye', 'image', 'repeat', 'shuffle', 'arrow-down'];
+  'delete', 'edit', 'eye', 'image', 'repeat', 'repeat-one', 'shuffle', 'arrow-down'];
 
 export const icons: Feature = {
   id: 'icons',
