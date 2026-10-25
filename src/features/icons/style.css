@@ -207,6 +207,16 @@ html[kyt-icons] ytd-popup-container :is([kyt-icon="ADD_TO_QUEUE_TAIL"], [kyt-ico
 html[kyt-icons] ytd-popup-container [kyt-icon="WATCH_LATER"] { --kyt-i: var(--kyt-i-watch-later); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container [kyt-icon="SHARE"] { --kyt-i: var(--kyt-i-share); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container :is([kyt-icon="HIDE"], [kyt-icon="NOT_INTERESTED"], [kyt-icon="BLOCK"]) { --kyt-i: var(--kyt-i-not-interested); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+/* Playlist row, header and library card menus. */
+html[kyt-icons] ytd-popup-container [kyt-icon="VISIBILITY"] { --kyt-i: var(--kyt-i-eye); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container :is([kyt-icon="DELETE"], [kyt-icon="DELETE_CAIRO"]) { --kyt-i: var(--kyt-i-delete); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="LIBRARY_REMOVE"] { --kyt-i: var(--kyt-i-delete); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="IMAGE"] { --kyt-i: var(--kyt-i-image); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="EDIT"] { --kyt-i: var(--kyt-i-edit); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="SHUFFLE"] { --kyt-i: var(--kyt-i-shuffle); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="VERTICAL_ALIGN_TOP"] { --kyt-i: var(--kyt-i-arrow-down); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container [kyt-icon="VERTICAL_ALIGN_TOP"] :is(tp-yt-paper-item > yt-icon, .ytIconWrapperHost) { rotate: 180deg; }
+html[kyt-icons] ytd-popup-container [kyt-icon="VERTICAL_ALIGN_BOTTOM"] { --kyt-i: var(--kyt-i-arrow-down); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container [kyt-icon="VISIBILITY_OFF"] { --kyt-i: var(--kyt-i-hide); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container :is([kyt-icon="REMOVE"], [kyt-icon="REMOVE_CIRCLE"], [kyt-icon="REMOVE_CIRCLE_OUTLINE"], [kyt-icon="DO_NOT_DISTURB"], [kyt-icon="DO_NOT_DISTURB_ON"]) { --kyt-i: var(--kyt-i-exclude); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 /* Download rows carry no icon type. */
@@ -214,6 +224,33 @@ html[kyt-icons] ytd-popup-container ytd-menu-service-item-download-renderer #pri
 /* Appearance has no stamp: its type depends on the chosen theme. Chevrons are Figma's arrow-right. */
 html[kyt-icons] ytd-popup-container ytd-toggle-theme-compact-link-renderer #primary-icon { --kyt-i: var(--kyt-i-appearance); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container :is(ytd-compact-link-renderer[kyt-icon2="CHEVRON_RIGHT"] #right-icon, ytd-toggle-theme-compact-link-renderer #secondary-icon) { --kyt-i: var(--kyt-i-arrow-right); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+
+/* Playlist panel (watch page, in the tab section) and the miniplayer's queue chevron + corner buttons. */
+html[kyt-icons] :is(
+  ytd-playlist-panel-renderer :is(#trailing-icon, ytd-playlist-loop-button-renderer button .ytSpecButtonShapeNextIcon, ytd-toggle-button-renderer button .ytSpecButtonShapeNextIcon, #playlist-actions ytd-menu-renderer yt-icon, ytd-playlist-panel-video-renderer #menu yt-icon),
+  ytd-miniplayer .ytdMiniplayerInfoBarExpand .ytSpecButtonShapeNextIcon
+) {
+  background-color: currentColor;
+  mask: var(--kyt-i) center / contain no-repeat;
+  & > * { visibility: hidden; }
+}
+html[kyt-icons] ytd-playlist-panel-renderer {
+  & #trailing-icon { --kyt-i: var(--kyt-i-close); }
+  & ytd-playlist-loop-button-renderer .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-repeat); }
+  & ytd-toggle-button-renderer .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-shuffle); }
+  & ytd-menu-renderer yt-icon { --kyt-i: var(--kyt-i-more); }
+}
+html[kyt-icons] ytd-miniplayer {
+  & .ytdMiniplayerInfoBarExpand .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-arrow-right); rotate: -90deg; }
+  & .ytdMiniplayerInfoBarExpand [aria-expanded="true"] .ytSpecButtonShapeNextIcon { rotate: 90deg; }
+  & :is(.ytp-miniplayer-close-button, .ytp-miniplayer-expand-watch-page-button) > svg {
+    background-color: #fff;
+    mask: var(--kyt-i) center / contain no-repeat content-box;
+    & > * { visibility: hidden; }
+  }
+  & .ytp-miniplayer-close-button > svg { --kyt-i: var(--kyt-i-close); }
+  & .ytp-miniplayer-expand-watch-page-button > svg { --kyt-i: var(--kyt-i-fullscreen); }
+}
 
 /* Like / dislike pop when pressed, in place of YouTube's Lottie animation. Compositor-only; runs on the pressed one only. */
 html[kyt-icons] :is(ytd-watch-metadata :is(like-button-view-model, dislike-button-view-model), :is(ytd-comment-engagement-bar, ytd-comment-action-buttons-renderer) :is(#like-button, #dislike-button)) [aria-pressed="true"] .ytSpecButtonShapeNextIcon {

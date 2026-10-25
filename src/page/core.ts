@@ -36,9 +36,11 @@ function menuItems(v: any) {
 }
 
 function onClick(e: Event) {
-  // Channel-page Subscribe chip: its bell sheet (All / Personalized / None / Unsubscribe) is in its data the same way.
-  const card = (e.target as Element).closest?.(`${CARDS}, yt-subscribe-button-view-model`) as any;
-  const raw = card?.rawProps?.data ?? card?.data;
+  // Channel-page Subscribe chip: its bell sheet (All / Personalized / None / Unsubscribe) is in its data the same way,
+  // and so is a playlist header's ⋮ menu.
+  const card = (e.target as Element).closest?.(`${CARDS}, yt-subscribe-button-view-model, yt-page-header-renderer`) as any;
+  // Playlist-page lockups (2026-10) keep their data on the wrapper div; their own `data` is a symbol.
+  const raw = card?.rawProps?.data ?? (typeof card?.data === 'symbol' ? card.parentElement?.data : card?.data);
   const items = card && (e.target as Element).closest('button') ? menuItems(typeof raw === 'function' ? raw() : raw) : null;
   cardMenu = items?.size ? items : null;
 }

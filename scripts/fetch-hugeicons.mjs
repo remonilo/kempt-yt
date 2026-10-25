@@ -12,6 +12,8 @@ const SCALE = 0.85;
 /** Our file name -> Hugeicons component name (without "Icon"). */
 const ICONS = {
   ask: 'AiMagic', // Ask (YouTube's SPARK)
+  image: 'Image02', // popup: Set as playlist thumbnail
+  repeat: 'Repeat', // playlist panel: Loop
   thanks: 'DollarCircle', // Thanks (YouTube's MONEY_HEART)
   movies: 'Clapperboard',
   memberships: 'StarCircle',
