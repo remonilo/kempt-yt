@@ -377,8 +377,8 @@ function headerMenu(browse: Element | null, signal: AbortSignal, call: Call) {
     html.setAttribute('kyt-pl-proxy', '');
     try {
       more.click();
-      const first = await waitFor('ytd-popup-container yt-list-item-view-model', { signal, timeout: 3000 });
-      const rows = first && [...document.querySelectorAll<HTMLElement>('ytd-popup-container yt-list-item-view-model')];
+      const first = await waitFor(S.popupListItem, { signal, timeout: 3000 });
+      const rows = first && [...document.querySelectorAll<HTMLElement>(S.popupListItem)];
       (rows?.[i]?.querySelector<HTMLElement>('.ytListItemViewModelContainer') ?? rows?.[i])?.click();
     } finally {
       requestAnimationFrame(() => html.removeAttribute('kyt-pl-proxy'));

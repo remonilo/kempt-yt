@@ -35,12 +35,12 @@ async function mount(signal: AbortSignal) {
   // comments element is observed, not every player tick.
   const scope = routeOf(location.pathname) === 'watch' ? await waitFor(S.comments, { signal }) : document;
   if (!scope) return;
-  const first = await waitFor(`:is(ytd-watch-flexy, ytd-browse:not([hidden])) ytd-comments-header-renderer ${HEADER_ITEMS}`, { root: scope, signal, timeout: Infinity });
+  const first = await waitFor(`${S.pageCommentsHeader} ${HEADER_ITEMS}`, { root: scope, signal, timeout: Infinity });
   // YouTube swaps the header renderer (post pages re-render it on every visit) but keeps its #header container,
   // so the row follows whichever header is current.
-  const root = first?.closest('ytd-comments-header-renderer')?.parentElement;
+  const root = first?.closest(S.commentsHeader)?.parentElement;
   if (!root || signal.aborted) return;
-  const header = () => root.querySelector('ytd-comments-header-renderer');
+  const header = () => root.querySelector(S.commentsHeader);
   sortChips(() => header()?.querySelectorAll<HTMLElement>(HEADER_ITEMS) ?? [], (row) => {
     const menu = header()?.querySelector('#sort-menu');
     if (menu && menu.nextElementSibling !== row) menu.after(row);

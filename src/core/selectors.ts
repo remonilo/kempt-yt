@@ -19,6 +19,8 @@ export const S = {
   watchMore: 'ytd-watch-metadata ytd-menu-renderer > #button-shape', // the visible ⋯ button
   comments: 'ytd-watch-flexy ytd-comments#comments',
   commentList: 'ytd-item-section-renderer > #contents', // inside comments: threads + continuation row
+  commentsHeader: 'ytd-comments-header-renderer', // the renderer is swapped on navigation; its parent #header stays
+  pageCommentsHeader: ':is(ytd-watch-flexy, ytd-browse:not([hidden])) ytd-comments ytd-comments-header-renderer', // not the hidden one in post pages' ytd-backstage-items
   commentThread: 'ytd-comment-thread-renderer',
   commentText: ':is(#author-text, #content-text)', // inside a ytd-comment-view-model; not its buttons or counts
   liveChat: 'ytd-live-chat-frame#chat',
@@ -56,6 +58,7 @@ export const S = {
   lockupMeta: '.ytLockupViewModelMetadata', // title, channel and metadata rows of a lockup
   lockupChannel: '.ytLockupMetadataViewModelMetadata a[href^="/"]', // first is the channel ("/@handle"); collabs may have none
   lockupAvatar: '.ytLockupMetadataViewModelAvatar img',
+  popupListItem: 'ytd-popup-container yt-list-item-view-model', // rows of a view-model ⋯ menu
   fsActions: '#movie_player .ytp-fullscreen-quick-actions', // fullscreen like/dislike/comments/share/⋯ row; needs stamp
   progressBar: '#movie_player .ytp-chrome-bottom .ytp-progress-bar', // #movie_player also holds a hidden 0x0 spare bar outside .ytp-chrome-bottom
   liveBadge: '.ytBadgeShapeThumbnailLive', // the red LIVE thumbnail badge of a stream on now (any language)

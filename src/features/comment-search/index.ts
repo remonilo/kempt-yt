@@ -54,17 +54,17 @@ async function mountPage(signal: AbortSignal) {
   // On the watch page only the comments element is observed, not every player tick.
   const watch = routeOf(location.pathname) === 'watch';
   const host = watch ? await waitFor(S.comments, { signal }) : document;
-  const first = host && await waitFor(':is(ytd-watch-flexy, ytd-browse:not([hidden])) ytd-comments ytd-comments-header-renderer #sort-menu',
+  const first = host && await waitFor(`${S.pageCommentsHeader} #sort-menu`,
     { root: host, signal, timeout: Infinity });
   // `ytd-comments`: post pages also hold a hidden header with its own #sort-menu in ytd-backstage-items.
   // Both pages keep the header container while swapping the header renderer inside it.
-  const root = first?.closest('ytd-comments-header-renderer')?.parentElement;
+  const root = first?.closest(S.commentsHeader)?.parentElement;
   if (!root || signal.aborted) return;
   mount({
     scope: () => root.closest('ytd-comments'),
     root,
     place(box, none) {
-      const header = root.querySelector('ytd-comments-header-renderer');
+      const header = root.querySelector(S.commentsHeader);
       // After comment-sort's chips when they are on, else after YouTube's dropdown.
       const anchor = header?.querySelector('.kyt-sort') ?? header?.querySelector('#sort-menu');
       if (anchor && anchor.nextElementSibling !== box) anchor.after(box);
