@@ -3,20 +3,21 @@ import { el, waitFor } from '../../core/dom.ts';
 import { icon, setIcon } from '../../core/icon.ts';
 import { local } from '../../core/i18n.ts';
 import { S } from '../../core/selectors.ts';
+import { WATCH_LATER } from '../watch-later-btn/index.ts';
 
-/** YouTube's own names for Watch later and Share. */
+/** YouTube's own name for Share. */
 const WORDS = {
-  en: { wl: 'Watch later', share: 'Share' },
-  es: { wl: 'Ver más tarde', share: 'Compartir' },
-  pt: { wl: 'Assistir mais tarde', share: 'Compartilhar' },
-  de: { wl: 'Später ansehen', share: 'Teilen' },
-  fr: { wl: 'À regarder plus tard', share: 'Partager' },
-  ru: { wl: 'Смотреть позже', share: 'Поделиться' },
-  ja: { wl: '後で見る', share: '共有' },
-  ko: { wl: '나중에 볼 동영상', share: '공유' },
-  hi: { wl: 'बाद में देखें', share: 'शेयर करें' },
-  id: { wl: 'Tonton nanti', share: 'Bagikan' },
-  tr: { wl: 'Daha sonra izle', share: 'Paylaş' },
+  en: { share: 'Share' },
+  es: { share: 'Compartir' },
+  pt: { share: 'Compartilhar' },
+  de: { share: 'Teilen' },
+  fr: { share: 'Partager' },
+  ru: { share: 'Поделиться' },
+  ja: { share: '共有' },
+  ko: { share: '공유' },
+  hi: { share: 'शेयर करें' },
+  id: { share: 'Bagikan' },
+  tr: { share: 'Paylaş' },
 };
 
 const videoId = (a: HTMLAnchorElement | null) => {
@@ -33,7 +34,7 @@ export const notifActions: Feature = {
     if (!(await call('signedIn'))) return console.info('kyt: signed out, notif-actions off');
     const popups = await waitFor(S.popups, { signal, timeout: Infinity });
     if (!popups) return;
-    const words = local(WORDS);
+    const words = { wl: local(WATCH_LATER), ...local(WORDS) };
     const saved = new Set<string>(); // no per-item lookup on open (one request per item); filled after a click
 
     const render = (bar: HTMLElement) => {

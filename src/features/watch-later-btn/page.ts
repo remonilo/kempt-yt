@@ -1,9 +1,8 @@
-import { find, innertube } from '../../page/youtube.ts';
+import { innertube, savePlaylists } from '../../page/youtube.ts';
 
 export const watchLater = {
   async inWatchLater(videoId: string) {
-    const res = await innertube('playlist/get_add_to_playlist', { videoIds: [videoId] });
-    return find(res, (x) => x.playlistId === 'WL' && 'containsSelectedVideos' in x)?.containsSelectedVideos === 'ALL';
+    return (await savePlaylists(videoId)).some((p) => p.id === 'WL' && p.all);
   },
 
   async setWatchLater(videoId: string, add: boolean) {

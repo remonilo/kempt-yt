@@ -1,4 +1,4 @@
-import { innertube, text, walk } from '../../page/youtube.ts';
+import { savePlaylists, text, walk } from '../../page/youtube.ts';
 
 // Bulk actions reuse each row's own menu commands, sent through YouTube's handler (`yt-service-request`), so YouTube
 // does the request, the toast and the list update. Picked rows carry [kyt-picked], set by the content script.
@@ -83,15 +83,8 @@ export const playlistsPage = {
   async playlistTargets(sel: string): Promise<SaveTarget[]> {
     // The endpoint 400s on more than one id; the list is the same for any video, `has` only means something for one.
     const ids = picked(sel).map((r) => r.videoId);
-    const res = await innertube('playlist/get_add_to_playlist', { videoIds: [ids[0] ?? 'dQw4w9WgXcQ'] });
     const list = document.querySelector<any>(sel)?.data?.playlistId;
-    const out: SaveTarget[] = [];
-    for (const x of walk(res)) {
-      if (x.playlistId && x.playlistId !== list && 'containsSelectedVideos' in x) {
-        out.push({ id: x.playlistId, title: text(x.title), has: ids.length === 1 && x.containsSelectedVideos === 'ALL' });
-      }
-    }
-    return out;
+    return (await savePlaylists(ids[0])).filter((p) => p.id !== list).map((p) => ({ id: p.id, title: p.title, has: ids.length === 1 && p.all }));
   },
 
   playlistSave(sel: string, target: string) {

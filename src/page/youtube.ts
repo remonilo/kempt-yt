@@ -44,6 +44,13 @@ export function find(o: any, test: (x: any) => boolean): any {
   for (const x of walk(o)) if (test(x)) return x;
 }
 
+/** YouTube's Save dialog list for a video: every playlist, and whether it holds the video (`all`). Any video id lists them. */
+export async function savePlaylists(videoId = 'dQw4w9WgXcQ'): Promise<{ id: string; title: string; all: boolean }[]> {
+  const res = await innertube('playlist/get_add_to_playlist', { videoIds: [videoId] });
+  return [...walk(res)].filter((x) => typeof x.playlistId === 'string' && 'containsSelectedVideos' in x)
+    .map((x) => ({ id: x.playlistId, title: text(x.title), all: x.containsSelectedVideos === 'ALL' }));
+}
+
 export const text = (t: any): string => t?.simpleText ?? t?.runs?.map((r: any) => r.text).join('') ?? t?.content ?? '';
 
 // By URL, so the `navigate` handler can follow links we render ourselves like YouTube does. Filled by handlers

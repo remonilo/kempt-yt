@@ -61,5 +61,10 @@ export const S = {
   popupListItem: 'ytd-popup-container yt-list-item-view-model', // rows of a view-model ⋯ menu
   fsActions: '#movie_player .ytp-fullscreen-quick-actions', // fullscreen like/dislike/comments/share/⋯ row; needs stamp
   progressBar: '#movie_player .ytp-chrome-bottom .ytp-progress-bar', // #movie_player also holds a hidden 0x0 spare bar outside .ytp-chrome-bottom
+  lockupTitle: '.ytLockupMetadataViewModelTitle', // title link of a view-model lockup
+  shortsLink: 'a[href^="/shorts/"]',
+  sectionHeader: 'ytd-item-section-header-renderer', // day header of a history/playlist section
+  rowTitle: '#video-title', // title of a classic list row
+  rowChannel: 'ytd-channel-name',
   liveBadge: '.ytBadgeShapeThumbnailLive', // the red LIVE thumbnail badge of a stream on now (any language)
 } as const;

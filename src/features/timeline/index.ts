@@ -9,6 +9,7 @@ import { inRange, inType, kindOf, pastRange, type Range, type Type } from './fil
 import { matcher } from '../../core/text.ts';
 import { dropdown } from '../../core/dropdown.ts';
 import { saveOption } from '../../core/settings.ts';
+import { COMMON, layoutToggle } from '../../core/layout.ts';
 
 
 function head(label: string, el: HTMLElement = document.createElement('div')): HTMLElement {
@@ -57,17 +58,17 @@ function ageOf(item: Element): string {
 
 /** Chip words are YouTube's own search filter chips in each language. */
 const WORDS = {
-  en: { all: 'All', videos: 'Videos', live: 'Live', shorts: 'Shorts', search: 'Search subscriptions', viewAs: 'View as', timeline: 'Timeline', plain: 'Plain', grid: 'Grid', list: 'List', range: 'Date range', any: 'Any time', today: 'Today', week: 'This week', month: 'This month', older: 'Older', byChannel: 'Channels', showAll: 'Show all', loadMore: 'Load more' },
-  es: { all: 'Todo', videos: 'Vídeos', live: 'En directo', shorts: 'Shorts', search: 'Buscar en suscripciones', viewAs: 'Ver como', timeline: 'Cronología', plain: 'Simple', grid: 'Cuadrícula', list: 'Lista', range: 'Fecha', any: 'Cualquier fecha', today: 'Hoy', week: 'Esta semana', month: 'Este mes', older: 'Más antiguos', byChannel: 'Canales', showAll: 'Mostrar todo', loadMore: 'Cargar más' },
-  pt: { all: 'Tudo', videos: 'Vídeos', live: 'Ao vivo', shorts: 'Shorts', search: 'Pesquisar inscrições', viewAs: 'Ver como', timeline: 'Linha do tempo', plain: 'Simples', grid: 'Grade', list: 'Lista', range: 'Data', any: 'Qualquer data', today: 'Hoje', week: 'Esta semana', month: 'Este mês', older: 'Mais antigos', byChannel: 'Canais', showAll: 'Mostrar tudo', loadMore: 'Carregar mais' },
-  de: { all: 'Alle', videos: 'Videos', live: 'Live', shorts: 'Shorts', search: 'Abos durchsuchen', viewAs: 'Ansicht', timeline: 'Zeitleiste', plain: 'Einfach', grid: 'Raster', list: 'Liste', range: 'Zeitraum', any: 'Beliebig', today: 'Heute', week: 'Diese Woche', month: 'Dieser Monat', older: 'Älter', byChannel: 'Kanäle', showAll: 'Alle anzeigen', loadMore: 'Mehr laden' },
-  fr: { all: 'Tout', videos: 'Vidéos', live: 'En direct', shorts: 'Shorts', search: 'Rechercher dans les abonnements', viewAs: 'Affichage', timeline: 'Chronologie', plain: 'Simple', grid: 'Grille', list: 'Liste', range: 'Période', any: 'Toutes les dates', today: 'Aujourd\'hui', week: 'Cette semaine', month: 'Ce mois-ci', older: 'Plus anciens', byChannel: 'Chaînes', showAll: 'Tout afficher', loadMore: 'Charger plus' },
-  ru: { all: 'Все', videos: 'Видео', live: 'В эфире', shorts: 'Shorts', search: 'Поиск по подпискам', viewAs: 'Вид', timeline: 'Хронология', plain: 'Простой', grid: 'Сетка', list: 'Список', range: 'Период', any: 'За всё время', today: 'Сегодня', week: 'На этой неделе', month: 'В этом месяце', older: 'Раньше', byChannel: 'Каналы', showAll: 'Показать все', loadMore: 'Загрузить ещё' },
-  ja: { all: 'すべて', videos: '動画', live: 'ライブ', shorts: 'ショート', search: '登録チャンネルを検索', viewAs: '表示', timeline: 'タイムライン', plain: 'シンプル', grid: 'グリッド', list: 'リスト', range: '期間', any: '期間指定なし', today: '今日', week: '今週', month: '今月', older: 'それ以前', byChannel: 'チャンネル', showAll: 'すべて表示', loadMore: 'さらに読み込む' },
-  ko: { all: '전체', videos: '동영상', live: '라이브', shorts: 'Shorts', search: '구독 검색', viewAs: '보기', timeline: '타임라인', plain: '기본', grid: '그리드', list: '목록', range: '기간', any: '전체 기간', today: '오늘', week: '이번 주', month: '이번 달', older: '이전', byChannel: '채널', showAll: '모두 보기', loadMore: '더 불러오기' },
-  hi: { all: 'सभी', videos: 'वीडियो', live: 'लाइव', shorts: 'Shorts', search: 'सदस्यता में खोजें', viewAs: 'इस रूप में देखें', timeline: 'टाइमलाइन', plain: 'सादा', grid: 'ग्रिड', list: 'सूची', range: 'तारीख', any: 'कभी भी', today: 'आज', week: 'इस हफ़्ते', month: 'इस महीने', older: 'पुराने', byChannel: 'चैनल', showAll: 'सभी दिखाएं', loadMore: 'और लोड करें' },
-  id: { all: 'Semua', videos: 'Video', live: 'Live', shorts: 'Shorts', search: 'Telusuri subscription', viewAs: 'Tampilan', timeline: 'Linimasa', plain: 'Biasa', grid: 'Petak', list: 'Daftar', range: 'Tanggal', any: 'Kapan saja', today: 'Hari ini', week: 'Minggu ini', month: 'Bulan ini', older: 'Lebih lama', byChannel: 'Channel', showAll: 'Tampilkan semua', loadMore: 'Muat lainnya' },
-  tr: { all: 'Tümü', videos: 'Videolar', live: 'Canlı', shorts: 'Shorts', search: 'Aboneliklerde ara', viewAs: 'Görünüm', timeline: 'Zaman çizelgesi', plain: 'Düz', grid: 'Izgara', list: 'Liste', range: 'Tarih', any: 'Her zaman', today: 'Bugün', week: 'Bu hafta', month: 'Bu ay', older: 'Daha eski', byChannel: 'Kanallar', showAll: 'Tümünü göster', loadMore: 'Daha fazla yükle' },
+  en: { all: 'All', live: 'Live', shorts: 'Shorts', search: 'Search subscriptions', viewAs: 'View as', timeline: 'Timeline', plain: 'Plain', range: 'Date range', any: 'Any time', today: 'Today', week: 'This week', month: 'This month', older: 'Older', byChannel: 'Channels', showAll: 'Show all', loadMore: 'Load more' },
+  es: { all: 'Todo', live: 'En directo', shorts: 'Shorts', search: 'Buscar en suscripciones', viewAs: 'Ver como', timeline: 'Cronología', plain: 'Simple', range: 'Fecha', any: 'Cualquier fecha', today: 'Hoy', week: 'Esta semana', month: 'Este mes', older: 'Más antiguos', byChannel: 'Canales', showAll: 'Mostrar todo', loadMore: 'Cargar más' },
+  pt: { all: 'Tudo', live: 'Ao vivo', shorts: 'Shorts', search: 'Pesquisar inscrições', viewAs: 'Ver como', timeline: 'Linha do tempo', plain: 'Simples', range: 'Data', any: 'Qualquer data', today: 'Hoje', week: 'Esta semana', month: 'Este mês', older: 'Mais antigos', byChannel: 'Canais', showAll: 'Mostrar tudo', loadMore: 'Carregar mais' },
+  de: { all: 'Alle', live: 'Live', shorts: 'Shorts', search: 'Abos durchsuchen', viewAs: 'Ansicht', timeline: 'Zeitleiste', plain: 'Einfach', range: 'Zeitraum', any: 'Beliebig', today: 'Heute', week: 'Diese Woche', month: 'Dieser Monat', older: 'Älter', byChannel: 'Kanäle', showAll: 'Alle anzeigen', loadMore: 'Mehr laden' },
+  fr: { all: 'Tout', live: 'En direct', shorts: 'Shorts', search: 'Rechercher dans les abonnements', viewAs: 'Affichage', timeline: 'Chronologie', plain: 'Simple', range: 'Période', any: 'Toutes les dates', today: 'Aujourd\'hui', week: 'Cette semaine', month: 'Ce mois-ci', older: 'Plus anciens', byChannel: 'Chaînes', showAll: 'Tout afficher', loadMore: 'Charger plus' },
+  ru: { all: 'Все', live: 'В эфире', shorts: 'Shorts', search: 'Поиск по подпискам', viewAs: 'Вид', timeline: 'Хронология', plain: 'Простой', range: 'Период', any: 'За всё время', today: 'Сегодня', week: 'На этой неделе', month: 'В этом месяце', older: 'Раньше', byChannel: 'Каналы', showAll: 'Показать все', loadMore: 'Загрузить ещё' },
+  ja: { all: 'すべて', live: 'ライブ', shorts: 'ショート', search: '登録チャンネルを検索', viewAs: '表示', timeline: 'タイムライン', plain: 'シンプル', range: '期間', any: '期間指定なし', today: '今日', week: '今週', month: '今月', older: 'それ以前', byChannel: 'チャンネル', showAll: 'すべて表示', loadMore: 'さらに読み込む' },
+  ko: { all: '전체', live: '라이브', shorts: 'Shorts', search: '구독 검색', viewAs: '보기', timeline: '타임라인', plain: '기본', range: '기간', any: '전체 기간', today: '오늘', week: '이번 주', month: '이번 달', older: '이전', byChannel: '채널', showAll: '모두 보기', loadMore: '더 불러오기' },
+  hi: { all: 'सभी', live: 'लाइव', shorts: 'Shorts', search: 'सदस्यता में खोजें', viewAs: 'इस रूप में देखें', timeline: 'टाइमलाइन', plain: 'सादा', range: 'तारीख', any: 'कभी भी', today: 'आज', week: 'इस हफ़्ते', month: 'इस महीने', older: 'पुराने', byChannel: 'चैनल', showAll: 'सभी दिखाएं', loadMore: 'और लोड करें' },
+  id: { all: 'Semua', live: 'Live', shorts: 'Shorts', search: 'Telusuri subscription', viewAs: 'Tampilan', timeline: 'Linimasa', plain: 'Biasa', range: 'Tanggal', any: 'Kapan saja', today: 'Hari ini', week: 'Minggu ini', month: 'Bulan ini', older: 'Lebih lama', byChannel: 'Channel', showAll: 'Tampilkan semua', loadMore: 'Muat lainnya' },
+  tr: { all: 'Tümü', live: 'Canlı', shorts: 'Shorts', search: 'Aboneliklerde ara', viewAs: 'Görünüm', timeline: 'Zaman çizelgesi', plain: 'Düz', range: 'Tarih', any: 'Her zaman', today: 'Bugün', week: 'Bu hafta', month: 'Bu ay', older: 'Daha eski', byChannel: 'Kanallar', showAll: 'Tümünü göster', loadMore: 'Daha fazla yükle' },
 };
 const TYPES: Type[] = ['all', 'videos', 'live', 'shorts'];
 
@@ -76,7 +77,7 @@ const opt = (key: string, def: string) => html.getAttribute(`kyt-timeline-${key}
 
 function toolbar(state: { type: Type; range: Range; query: string }, onChange: () => void, signal: AbortSignal): HTMLElement {
   const bar = document.createElement('kyt-bar');
-  const words = local(WORDS);
+  const words = { ...local(COMMON), ...local(WORDS) };
   // View as and the layout chips write the same options as the popup; the runner mirrors them back onto <html>.
   const set = (key: string, v: string) => {
     html.setAttribute(`kyt-timeline-${key}`, v); // before storage answers, so the click feels instant
@@ -102,24 +103,7 @@ function toolbar(state: { type: Type; range: Range; query: string }, onChange: (
     onChange();
   }, { signal });
 
-  const layout = el('div', 'kyt-chips kyt-layout');
-  layout.role = 'group';
-  for (const v of ['grid', 'list'] as const) {
-    const b = el('button', 'kyt-chip', icon(v));
-    b.dataset.layout = v;
-    b.title = b.ariaLabel = words[v];
-    layout.append(b);
-  }
-  const syncLayout = () => {
-    for (const b of layout.children as HTMLCollectionOf<HTMLElement>) b.ariaPressed = String(b.dataset.layout === opt('layout', 'grid'));
-  };
-  layout.addEventListener('click', (e) => {
-    const v = (e.target as Element).closest<HTMLElement>('[data-layout]')?.dataset.layout;
-    if (v && v !== opt('layout', 'grid')) (set('layout', v), syncLayout());
-  }, { signal });
-  // The popup can change both too.
-  observe(html, { attributeFilter: ['kyt-timeline-view', 'kyt-timeline-layout'] }, () => (view.sync(), syncLayout()), signal);
-  syncLayout();
+  const layout = layoutToggle('timeline', 'layout', 'grid', signal);
 
   // Filters like the chips: per visit, not saved.
   const range = dropdown(words.range, { any: words.any, today: words.today, week: words.week, month: words.month, older: words.older },
@@ -203,7 +187,7 @@ function subscriptions(grid: Element, signal: AbortSignal, call: Ctx['call']): v
       : Number.parseInt(getComputedStyle(grid).getPropertyValue('--ytd-rich-grid-items-per-row')) || 4;
     const inGroup = new Map<HTMLElement, number>();
     const kindOfItem = (c: Element) => kindOf({
-      short: c.querySelector('a[href^="/shorts/"]') !== null,
+      short: c.querySelector(S.shortsLink) !== null,
       badge: c.querySelector(S.liveBadge) !== null,
       age: ages.get(c) ?? null,
       readable,
@@ -368,7 +352,7 @@ function history(list: Element, signal: AbortSignal): void {
     const now = new Date();
     if (datesFor !== dayKey(now) + lang()) (dates.clear(), (datesFor = dayKey(now) + lang()));
     for (const sec of list.querySelectorAll(':scope > ytd-item-section-renderer')) {
-      const yt = sec.querySelector('ytd-item-section-header-renderer');
+      const yt = sec.querySelector(S.sectionHeader);
       const title = yt?.querySelector(S.historyTitle)?.textContent?.trim();
       if (yt && !watched.has(yt)) {
         watched.add(yt);

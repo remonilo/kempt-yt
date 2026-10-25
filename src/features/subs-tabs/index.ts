@@ -1,34 +1,32 @@
 import type { Feature } from '../../core/feature.ts';
 import { el, keep, observe, waitFor } from '../../core/dom.ts';
-import { placeMenu } from '../../core/dropdown.ts';
+import { outsideClick, placeMenu } from '../../core/dropdown.ts';
 import { icon, setIcon } from '../../core/icon.ts';
 import { local } from '../../core/i18n.ts';
 import { S } from '../../core/selectors.ts';
-import { saveOption } from '../../core/settings.ts';
+import { COMMON, layoutToggle } from '../../core/layout.ts';
 import { matcher } from '../../core/text.ts';
 import { sortChannels, type Sort } from './sort.ts';
 import type { Bell, SubChannel, SubWords } from './page.ts';
 
 type Tab = 'videos' | 'channels';
-type Layout = 'grid' | 'list';
 
 const WORDS = {
-  en: { videos: 'Videos', channels: 'Channels', grid: 'Grid', list: 'List', search: 'Search channels', relevance: 'Relevance', newUploads: 'New uploads' },
-  es: { videos: 'Vídeos', channels: 'Canales', grid: 'Cuadrícula', list: 'Lista', search: 'Buscar canales', relevance: 'Relevancia', newUploads: 'Nuevos vídeos' },
-  pt: { videos: 'Vídeos', channels: 'Canais', grid: 'Grade', list: 'Lista', search: 'Pesquisar canais', relevance: 'Relevância', newUploads: 'Novos envios' },
-  de: { videos: 'Videos', channels: 'Kanäle', grid: 'Raster', list: 'Liste', search: 'Kanäle durchsuchen', relevance: 'Relevanz', newUploads: 'Neue Uploads' },
-  fr: { videos: 'Vidéos', channels: 'Chaînes', grid: 'Grille', list: 'Liste', search: 'Rechercher des chaînes', relevance: 'Pertinence', newUploads: 'Nouvelles vidéos' },
-  ru: { videos: 'Видео', channels: 'Каналы', grid: 'Сетка', list: 'Список', search: 'Поиск каналов', relevance: 'По релевантности', newUploads: 'Новые видео' },
-  ja: { videos: '動画', channels: 'チャンネル', grid: 'グリッド', list: 'リスト', search: 'チャンネルを検索', relevance: '関連性', newUploads: '新着' },
-  ko: { videos: '동영상', channels: '채널', grid: '그리드', list: '목록', search: '채널 검색', relevance: '관련성', newUploads: '새 업로드' },
-  hi: { videos: 'वीडियो', channels: 'चैनल', grid: 'ग्रिड', list: 'सूची', search: 'चैनल खोजें', relevance: 'प्रासंगिकता', newUploads: 'नए अपलोड' },
-  id: { videos: 'Video', channels: 'Channel', grid: 'Petak', list: 'Daftar', search: 'Telusuri channel', relevance: 'Relevansi', newUploads: 'Upload baru' },
-  tr: { videos: 'Videolar', channels: 'Kanallar', grid: 'Izgara', list: 'Liste', search: 'Kanallarda ara', relevance: 'Alaka düzeyi', newUploads: 'Yeni yüklemeler' },
+  en: { channels: 'Channels', search: 'Search channels', relevance: 'Relevance', newUploads: 'New uploads' },
+  es: { channels: 'Canales', search: 'Buscar canales', relevance: 'Relevancia', newUploads: 'Nuevos vídeos' },
+  pt: { channels: 'Canais', search: 'Pesquisar canais', relevance: 'Relevância', newUploads: 'Novos envios' },
+  de: { channels: 'Kanäle', search: 'Kanäle durchsuchen', relevance: 'Relevanz', newUploads: 'Neue Uploads' },
+  fr: { channels: 'Chaînes', search: 'Rechercher des chaînes', relevance: 'Pertinence', newUploads: 'Nouvelles vidéos' },
+  ru: { channels: 'Каналы', search: 'Поиск каналов', relevance: 'По релевантности', newUploads: 'Новые видео' },
+  ja: { channels: 'チャンネル', search: 'チャンネルを検索', relevance: '関連性', newUploads: '新着' },
+  ko: { channels: '채널', search: '채널 검색', relevance: '관련성', newUploads: '새 업로드' },
+  hi: { channels: 'चैनल', search: 'चैनल खोजें', relevance: 'प्रासंगिकता', newUploads: 'नए अपलोड' },
+  id: { channels: 'Channel', search: 'Telusuri channel', relevance: 'Relevansi', newUploads: 'Upload baru' },
+  tr: { channels: 'Kanallar', search: 'Kanallarda ara', relevance: 'Alaka düzeyi', newUploads: 'Yeni yüklemeler' },
 };
 
 // The Videos tab's layout and view live in timeline's toolbar; this one is the Channels tab's.
 const html = document.documentElement;
-const layoutOf = () => (html.getAttribute('kyt-subs-tabs-channels') ?? 'grid') as Layout;
 
 const BELL_ICON: Record<Bell, string> = { all: 'notifs-selected', personalized: 'notifs', none: 'notifs-disabled' };
 
@@ -48,7 +46,7 @@ export const subsTabs: Feature = {
     const grid = await waitFor(S.subsRichGrid, { signal, timeout: Infinity });
     const contents = grid?.querySelector(':scope > #contents');
     if (!grid || !contents || signal.aborted) return;
-    const words = local(WORDS);
+    const words = { ...local(COMMON), ...local(WORDS) };
     let tab: Tab = 'videos';
 
     // Header: the two tabs.
@@ -62,14 +60,7 @@ export const subsTabs: Feature = {
       return b;
     };
     tabs.append(tabBtn('videos'), el('span', 'kyt-subs-sep'), tabBtn('channels', count));
-    const toggle = el('div', 'kyt-chips kyt-layout');
-    toggle.role = 'group';
-    for (const v of ['grid', 'list'] as Layout[]) {
-      const b = el('button', 'kyt-chip', icon(v));
-      b.dataset.layout = v;
-      b.title = b.ariaLabel = words[v];
-      toggle.append(b);
-    }
+    const toggle = layoutToggle('subs-tabs', 'channels', 'grid', signal);
     const head = el('div', 'kyt-subs-head', tabs);
 
     // Sort chips and the New uploads filter; per visit, like the feed's chips.
@@ -98,21 +89,12 @@ export const subsTabs: Feature = {
       grid.setAttribute('kyt-subs-tab', tab);
       view.hidden = tab !== 'channels';
       for (const b of tabs.querySelectorAll<HTMLElement>('[role=tab]')) b.ariaSelected = String(b.dataset.tab === tab);
-      const layout = layoutOf();
-      for (const b of toggle.children as HTMLCollectionOf<HTMLElement>) b.ariaPressed = String(b.dataset.layout === layout);
     };
 
     tabs.addEventListener('click', (e) => {
       const t = (e.target as Element).closest<HTMLElement>('[role=tab]')?.dataset.tab as Tab | undefined;
       if (!t || t === tab) return;
       tab = t;
-      sync();
-    }, { signal });
-    toggle.addEventListener('click', (e) => {
-      const v = (e.target as Element).closest<HTMLElement>('[data-layout]')?.dataset.layout as Layout | undefined;
-      if (!v || v === layoutOf()) return;
-      html.setAttribute('kyt-subs-tabs-channels', v); // before storage answers, so the click feels instant
-      saveOption('subs-tabs', 'channels', v);
       sync();
     }, { signal });
     // The popup can change it too.
@@ -222,9 +204,9 @@ export const subsTabs: Feature = {
     const menu = el('div', 'kyt-dd-menu kyt-subs-menu');
     menu.role = 'menu';
     let menuFor: HTMLElement | null = null;
-    let outside: AbortController | undefined;
+    let stop = () => {};
     const close = () => {
-      outside?.abort();
+      stop();
       if (!menuFor) return;
       menuFor.ariaExpanded = 'false';
       menuFor.parentElement!.removeAttribute('open');
@@ -244,11 +226,8 @@ export const subsTabs: Feature = {
       btn.parentElement!.setAttribute('open', '');
       btn.ariaExpanded = 'true';
       menuFor = btn;
-      outside = new AbortController();
-      document.addEventListener('pointerdown', (e) => btn.parentElement!.contains(e.target as Node) || close(),
-        { signal: AbortSignal.any([signal, outside.signal]), capture: true });
+      stop = outsideClick(btn.parentElement!, close, signal);
     };
-    signal.addEventListener('abort', () => outside?.abort(), { once: true });
 
     const ask = el('p');
     const no = el('button', 'kyt-chip');

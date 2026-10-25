@@ -4,22 +4,22 @@ import { icon } from '../../core/icon.ts';
 import { dropdown } from '../../core/dropdown.ts';
 import { local, uiLang } from '../../core/i18n.ts';
 import { S } from '../../core/selectors.ts';
-import { saveOption } from '../../core/settings.ts';
+import { layoutToggle } from '../../core/layout.ts';
 import type { SearchFilterGroup } from './page.ts';
 import { isUploadDate, pickYear, readRange, shift, withRange, yearSpan } from './query.ts';
 
 const WORDS = {
-  en: { any: 'Any', custom: 'Custom range', hint: 'Exact days or whole years', grid: 'Grid', list: 'List', from: 'From', to: 'To', apply: 'Apply', clear: 'Clear' },
-  es: { any: 'Cualquiera', custom: 'Rango personalizado', hint: 'Días exactos o años', grid: 'Cuadrícula', list: 'Lista', from: 'Desde', to: 'Hasta', apply: 'Aplicar', clear: 'Borrar' },
-  pt: { any: 'Qualquer', custom: 'Período personalizado', hint: 'Dias exatos ou anos', grid: 'Grade', list: 'Lista', from: 'De', to: 'Até', apply: 'Aplicar', clear: 'Limpar' },
-  de: { any: 'Beliebig', custom: 'Eigener Zeitraum', hint: 'Genaue Tage oder ganze Jahre', grid: 'Raster', list: 'Liste', from: 'Von', to: 'Bis', apply: 'Anwenden', clear: 'Löschen' },
-  fr: { any: 'Tous', custom: 'Période personnalisée', hint: 'Jours précis ou années', grid: 'Grille', list: 'Liste', from: 'Du', to: 'Au', apply: 'Appliquer', clear: 'Effacer' },
-  ru: { any: 'Любые', custom: 'Свой период', hint: 'Точные дни или годы', grid: 'Сетка', list: 'Список', from: 'С', to: 'По', apply: 'Применить', clear: 'Сбросить' },
-  ja: { any: 'すべて', custom: 'カスタム期間', hint: '日付または年で指定', grid: 'グリッド', list: 'リスト', from: '開始', to: '終了', apply: '適用', clear: 'クリア' },
-  ko: { any: '전체', custom: '사용자 지정 기간', hint: '정확한 날짜 또는 연도', grid: '그리드', list: '목록', from: '시작', to: '종료', apply: '적용', clear: '지우기' },
-  hi: { any: 'कोई भी', custom: 'अपनी तारीखें', hint: 'सटीक दिन या पूरे साल', grid: 'ग्रिड', list: 'सूची', from: 'से', to: 'तक', apply: 'लागू करें', clear: 'हटाएं' },
-  id: { any: 'Semua', custom: 'Rentang khusus', hint: 'Tanggal pasti atau tahun', grid: 'Petak', list: 'Daftar', from: 'Dari', to: 'Sampai', apply: 'Terapkan', clear: 'Hapus' },
-  tr: { any: 'Tümü', custom: 'Özel aralık', hint: 'Belirli günler veya yıllar', grid: 'Izgara', list: 'Liste', from: 'Başlangıç', to: 'Bitiş', apply: 'Uygula', clear: 'Temizle' },
+  en: { any: 'Any', custom: 'Custom range', hint: 'Exact days or whole years', from: 'From', to: 'To', apply: 'Apply', clear: 'Clear' },
+  es: { any: 'Cualquiera', custom: 'Rango personalizado', hint: 'Días exactos o años', from: 'Desde', to: 'Hasta', apply: 'Aplicar', clear: 'Borrar' },
+  pt: { any: 'Qualquer', custom: 'Período personalizado', hint: 'Dias exatos ou anos', from: 'De', to: 'Até', apply: 'Aplicar', clear: 'Limpar' },
+  de: { any: 'Beliebig', custom: 'Eigener Zeitraum', hint: 'Genaue Tage oder ganze Jahre', from: 'Von', to: 'Bis', apply: 'Anwenden', clear: 'Löschen' },
+  fr: { any: 'Tous', custom: 'Période personnalisée', hint: 'Jours précis ou années', from: 'Du', to: 'Au', apply: 'Appliquer', clear: 'Effacer' },
+  ru: { any: 'Любые', custom: 'Свой период', hint: 'Точные дни или годы', from: 'С', to: 'По', apply: 'Применить', clear: 'Сбросить' },
+  ja: { any: 'すべて', custom: 'カスタム期間', hint: '日付または年で指定', from: '開始', to: '終了', apply: '適用', clear: 'クリア' },
+  ko: { any: '전체', custom: '사용자 지정 기간', hint: '정확한 날짜 또는 연도', from: '시작', to: '종료', apply: '적용', clear: '지우기' },
+  hi: { any: 'कोई भी', custom: 'अपनी तारीखें', hint: 'सटीक दिन या पूरे साल', from: 'से', to: 'तक', apply: 'लागू करें', clear: 'हटाएं' },
+  id: { any: 'Semua', custom: 'Rentang khusus', hint: 'Tanggal pasti atau tahun', from: 'Dari', to: 'Sampai', apply: 'Terapkan', clear: 'Hapus' },
+  tr: { any: 'Tümü', custom: 'Özel aralık', hint: 'Belirli günler veya yıllar', from: 'Başlangıç', to: 'Bitiş', apply: 'Uygula', clear: 'Temizle' },
 };
 type Words = (typeof WORDS)['en'];
 type Go = (q: string, p: string) => void;
@@ -64,7 +64,7 @@ async function mount(signal: AbortSignal, call: Call) {
   const row = el('div', 'kyt-search-filters');
   row.role = 'toolbar';
   for (const g of groups) row.append(group(g, query, sp, go, words, signal));
-  row.append(layoutToggle(words, signal));
+  row.append(layoutToggle('search-filters', 'layout', 'grid', signal));
   keep(row, header, () => {
     const bar = header.querySelector(':scope > #chip-bar');
     if (bar && bar.previousElementSibling !== row) bar.before(row);
@@ -241,29 +241,3 @@ function rangeForm(query: string, cur: ReturnType<typeof readRange>, spOut: stri
   };
 }
 
-// Grid/list chips like the Subscriptions toolbar; the layout itself is CSS on html[kyt-search-filters-layout].
-const html = document.documentElement;
-function layoutToggle(words: Words, signal: AbortSignal) {
-  const toggle = el('div', 'kyt-chips kyt-layout');
-  toggle.role = 'group';
-  for (const v of ['grid', 'list'] as const) {
-    const b = el('button', 'kyt-chip', icon(v));
-    b.dataset.layout = v;
-    b.title = b.ariaLabel = words[v];
-    toggle.append(b);
-  }
-  const sync = () => {
-    const layout = html.getAttribute('kyt-search-filters-layout') ?? 'grid';
-    for (const b of toggle.children as HTMLCollectionOf<HTMLElement>) b.ariaPressed = String(b.dataset.layout === layout);
-  };
-  toggle.addEventListener('click', (e) => {
-    const v = (e.target as Element).closest<HTMLElement>('[data-layout]')?.dataset.layout;
-    if (!v) return;
-    html.setAttribute('kyt-search-filters-layout', v); // before storage answers, so the click feels instant
-    saveOption('search-filters', 'layout', v);
-  }, { signal });
-  // The popup can change it too.
-  observe(html, { attributeFilter: ['kyt-search-filters-layout'] }, sync, signal);
-  sync();
-  return toggle;
-}

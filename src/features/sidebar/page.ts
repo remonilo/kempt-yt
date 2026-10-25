@@ -1,4 +1,4 @@
-import { endpoints, innertube, sleep, text, walk } from '../../page/youtube.ts';
+import { endpoints, innertube, savePlaylists, sleep, text } from '../../page/youtube.ts';
 import type { Entry, Section } from './nav.ts';
 import { waitFor } from '../../core/dom.ts';
 
@@ -63,15 +63,14 @@ export const sidebar = {
   async playlists() {
     // ponytail: the add-to-playlist list (any video id works) has every playlist but no thumbnails;
     // browse FEplaylist_aggregation if the dropdown ever shows them.
-    const res = await innertube('playlist/get_add_to_playlist', { videoIds: ['dQw4w9WgXcQ'] });
-    return [...walk(res)].filter((x) => typeof x.playlistId === 'string' && 'containsSelectedVideos' in x && x.playlistId !== 'WL')
+    return (await savePlaylists()).filter((x) => x.id !== 'WL')
       .map((x) => {
-        const url = `/playlist?list=${x.playlistId}`;
+        const url = `/playlist?list=${x.id}`;
         endpoints.set(url, {
           commandMetadata: { webCommandMetadata: { url, webPageType: 'WEB_PAGE_TYPE_PLAYLIST', rootVe: 5754 } },
-          browseEndpoint: { browseId: `VL${x.playlistId}` },
+          browseEndpoint: { browseId: `VL${x.id}` },
         });
-        return { title: text(x.title), url };
+        return { title: x.title, url };
       });
   },
 };

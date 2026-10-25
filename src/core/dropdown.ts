@@ -20,6 +20,14 @@ export function placeMenu(root: HTMLElement, menu: HTMLElement): void {
   root.toggleAttribute('kyt-up', below < menu.offsetHeight + 8 && r.top - top > below);
 }
 
+/** Calls `onOutside` on a pointerdown outside `root` until the returned stop function runs or `signal` aborts. */
+export function outsideClick(root: Element, onOutside: () => void, signal: AbortSignal): () => void {
+  const ctl = new AbortController();
+  document.addEventListener('pointerdown', (e) => root.contains(e.target as Node) || onOutside(),
+    { signal: AbortSignal.any([signal, ctl.signal]), capture: true });
+  return () => ctl.abort();
+}
+
 /**
  * A chip that opens a menu of choices ("View as: Timeline ▾"). Styled in theme/tokens.css. The outside-click
  * listener exists only while the menu is open. Call `sync()` when the value changes elsewhere. `opts.on` marks
@@ -44,16 +52,13 @@ export function dropdown(prefix: string, choices: Record<string, string>, get: (
   }
   const root = el('div', 'kyt-dd', btn, menu);
 
-  let outside: AbortController | undefined;
+  let stop = () => {};
   const open = (on: boolean) => {
     if (on) placeMenu(root, menu);
     root.toggleAttribute('open', on);
     btn.ariaExpanded = String(on);
-    outside?.abort();
-    if (!on) return;
-    outside = new AbortController();
-    const sig = AbortSignal.any([signal, outside.signal]);
-    document.addEventListener('pointerdown', (e) => root.contains(e.target as Node) || open(false), { signal: sig, capture: true });
+    stop();
+    if (on) stop = outsideClick(root, () => open(false), signal);
   };
   const sync = () => {
     const v = get();
@@ -74,7 +79,6 @@ export function dropdown(prefix: string, choices: Record<string, string>, get: (
     open(false);
     btn.focus();
   }, { signal });
-  signal.addEventListener('abort', () => outside?.abort(), { once: true });
   open(false);
   sync();
   return { root, sync, close: () => open(false) };

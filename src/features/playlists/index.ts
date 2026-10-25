@@ -1,28 +1,27 @@
 import type { Feature } from '../../core/feature.ts';
 import { el, keep, observe, waitFor } from '../../core/dom.ts';
-import { placeMenu } from '../../core/dropdown.ts';
+import { outsideClick, placeMenu } from '../../core/dropdown.ts';
 import { icon, iconUrl } from '../../core/icon.ts';
 import { local } from '../../core/i18n.ts';
 import { S } from '../../core/selectors.ts';
-import { saveOption } from '../../core/settings.ts';
+import { layoutToggle } from '../../core/layout.ts';
 import { matcher } from '../../core/text.ts';
 import type { MenuItem, PlaylistWords } from './page.ts';
 import { WATCH_LATER } from '../watch-later-btn/index.ts';
 
-type Layout = 'grid' | 'list';
 
 const WORDS = {
-  en: { grid: 'Grid', list: 'List', search: 'Search playlists', find: 'Search playlist', sortBy: 'Sort by:', download: 'Download' },
-  es: { grid: 'Cuadrícula', list: 'Lista', search: 'Buscar listas', find: 'Buscar en la lista', sortBy: 'Ordenar por:', download: 'Descargar' },
-  pt: { grid: 'Grade', list: 'Lista', search: 'Pesquisar playlists', find: 'Pesquisar na playlist', sortBy: 'Ordenar por:', download: 'Fazer download' },
-  de: { grid: 'Raster', list: 'Liste', search: 'Playlists durchsuchen', find: 'Playlist durchsuchen', sortBy: 'Sortieren nach:', download: 'Herunterladen' },
-  fr: { grid: 'Grille', list: 'Liste', search: 'Rechercher des playlists', find: 'Rechercher dans la playlist', sortBy: 'Trier par :', download: 'Télécharger' },
-  ru: { grid: 'Сетка', list: 'Список', search: 'Поиск плейлистов', find: 'Поиск в плейлисте', sortBy: 'Сортировка:', download: 'Скачать' },
-  ja: { grid: 'グリッド', list: 'リスト', search: '再生リストを検索', find: '再生リスト内を検索', sortBy: '並べ替え:', download: 'ダウンロード' },
-  ko: { grid: '그리드', list: '목록', search: '재생목록 검색', find: '재생목록에서 검색', sortBy: '정렬 기준:', download: '오프라인 저장' },
-  hi: { grid: 'ग्रिड', list: 'सूची', search: 'प्लेलिस्ट खोजें', find: 'प्लेलिस्ट में खोजें', sortBy: 'क्रम से लगाएं:', download: 'डाउनलोड करें' },
-  id: { grid: 'Petak', list: 'Daftar', search: 'Telusuri playlist', find: 'Telusuri di playlist', sortBy: 'Urutkan:', download: 'Download' },
-  tr: { grid: 'Izgara', list: 'Liste', search: 'Oynatma listelerinde ara', find: 'Oynatma listesinde ara', sortBy: 'Sıralama ölçütü:', download: 'İndir' },
+  en: { search: 'Search playlists', find: 'Search playlist', sortBy: 'Sort by:', download: 'Download' },
+  es: { search: 'Buscar listas', find: 'Buscar en la lista', sortBy: 'Ordenar por:', download: 'Descargar' },
+  pt: { search: 'Pesquisar playlists', find: 'Pesquisar na playlist', sortBy: 'Ordenar por:', download: 'Fazer download' },
+  de: { search: 'Playlists durchsuchen', find: 'Playlist durchsuchen', sortBy: 'Sortieren nach:', download: 'Herunterladen' },
+  fr: { search: 'Rechercher des playlists', find: 'Rechercher dans la playlist', sortBy: 'Trier par :', download: 'Télécharger' },
+  ru: { search: 'Поиск плейлистов', find: 'Поиск в плейлисте', sortBy: 'Сортировка:', download: 'Скачать' },
+  ja: { search: '再生リストを検索', find: '再生リスト内を検索', sortBy: '並べ替え:', download: 'ダウンロード' },
+  ko: { search: '재생목록 검색', find: '재생목록에서 검색', sortBy: '정렬 기준:', download: '오프라인 저장' },
+  hi: { search: 'प्लेलिस्ट खोजें', find: 'प्लेलिस्ट में खोजें', sortBy: 'क्रम से लगाएं:', download: 'डाउनलोड करें' },
+  id: { search: 'Telusuri playlist', find: 'Telusuri di playlist', sortBy: 'Urutkan:', download: 'Download' },
+  tr: { search: 'Oynatma listelerinde ara', find: 'Oynatma listesinde ara', sortBy: 'Sıralama ölçütü:', download: 'İndir' },
 };
 
 type Call = Parameters<NonNullable<Feature['run']>>[0]['call'];
@@ -151,41 +150,21 @@ async function library(signal: AbortSignal) {
   if (!grid || !header || !contents || signal.aborted) return;
   const html = document.documentElement;
   const words = local(WORDS);
-  const layoutOf = () => (html.getAttribute('kyt-playlists-library') ?? 'list') as Layout;
   grid.setAttribute('kyt-pl-library', '');
 
-  const toggle = el('div', 'kyt-chips kyt-layout');
-  toggle.role = 'group';
-  for (const v of ['grid', 'list'] as Layout[]) {
-    const b = el('button', 'kyt-chip', icon(v));
-    b.dataset.layout = v;
-    b.title = b.ariaLabel = words[v];
-    toggle.append(b);
-  }
+  const toggle = layoutToggle('playlists', 'library', 'list', signal);
   const input = el('input');
   input.type = 'text';
   input.placeholder = words.search;
   const tools = el('div', 'kyt-pl-tools', toggle, el('label', 'kyt-search', icon('search'), input));
   keep(tools, header, () => tools.parentElement !== header && header.append(tools), signal, { childList: true });
 
-  const sync = () => {
-    for (const b of toggle.children as HTMLCollectionOf<HTMLElement>) b.ariaPressed = String(b.dataset.layout === layoutOf());
-  };
-  toggle.addEventListener('click', (e) => {
-    const v = (e.target as Element).closest<HTMLElement>('[data-layout]')?.dataset.layout as Layout | undefined;
-    if (!v || v === layoutOf()) return;
-    html.setAttribute('kyt-playlists-library', v); // before storage answers, so the click feels instant
-    saveOption('playlists', 'library', v);
-    sync();
-  }, { signal });
-  observe(html, { attributeFilter: ['kyt-playlists-library'] }, sync, signal);
-  sync();
 
   // Every playlist is on the page at once, so the search filters the loaded cards.
   const items = () => contents.querySelectorAll<HTMLElement>(':scope > ytd-rich-item-renderer');
   const search = () => {
     const hit = matcher(input.value);
-    for (const it of items()) it.hidden = !hit(it.querySelector('.ytLockupMetadataViewModelTitle')?.textContent ?? '');
+    for (const it of items()) it.hidden = !hit(it.querySelector(S.lockupTitle)?.textContent ?? '');
   };
   input.addEventListener('input', search, { signal });
   observe(contents, { childList: true }, () => input.value && search(), signal);
@@ -279,7 +258,7 @@ function bulk(list: Element, contents: Element, words: PlaylistWords, signal: Ab
   function search() {
     const hit = matcher(input.value);
     for (const r of rows()) {
-      const miss = !hit(`${r.querySelector('#video-title')?.textContent ?? ''} ${r.querySelector('ytd-channel-name')?.textContent ?? ''}`);
+      const miss = !hit(`${r.querySelector(S.rowTitle)?.textContent ?? ''} ${r.querySelector(S.rowChannel)?.textContent ?? ''}`);
       r.toggleAttribute('kyt-pl-miss', miss);
       if (miss) r.removeAttribute('kyt-picked');
     }
@@ -291,22 +270,19 @@ function bulk(list: Element, contents: Element, words: PlaylistWords, signal: Ab
   queue.addEventListener('click', () => call('playlistQueue', S.playlistList).then(clear), { signal });
   wl.addEventListener('click', () => call('playlistSave', S.playlistList, 'WL').then(clear), { signal });
 
-  let outside: AbortController | undefined;
+  let stop = () => {};
   const close = () => {
-    outside?.abort();
+    stop();
     saveDd.removeAttribute('open');
     save.ariaExpanded = 'false';
   };
-  signal.addEventListener('abort', () => outside?.abort(), { once: true });
   save.addEventListener('click', async () => {
     if (saveDd.hasAttribute('open')) return close();
     menu.replaceChildren();
     menu.ariaBusy = 'true';
     saveDd.setAttribute('open', '');
     save.ariaExpanded = 'true';
-    outside = new AbortController();
-    document.addEventListener('pointerdown', (e) => saveDd.contains(e.target as Node) || close(),
-      { signal: AbortSignal.any([signal, outside.signal]), capture: true });
+    stop = outsideClick(saveDd, close, signal);
     const targets = await call('playlistTargets', S.playlistList).catch(() => []);
     if (!saveDd.hasAttribute('open')) return;
     menu.ariaBusy = null;
