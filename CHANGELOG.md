@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.9.0](https://github.com/remonilo/kempt-yt/compare/v0.8.0...v0.9.0) (2026-10-25)
+
+
+### Features
+
+* **icons:** consistent icon in playlist menus, the playlist panel and the miniplayer ([eeb2ccc](https://github.com/remonilo/kempt-yt/commit/eeb2ccc6570a3d1847d348440d3f161fb065ec5b))
+* **notif-actions:** Watch later and Share in the notifications panel ([fafd957](https://github.com/remonilo/kempt-yt/commit/fafd9576f2bbc493775579d69aaf5207d97aa244))
+* **playlists:** playlist page redesign with bulk select ([baa812a](https://github.com/remonilo/kempt-yt/commit/baa812a067f10635dfe21754e2e1e1740bd3c699))
+
+
+### Bug Fixes
+
+* audit fixes for abort safety, leaks, bridge and settings races ([d50a4cc](https://github.com/remonilo/kempt-yt/commit/d50a4cc5a1caae0d8e4c040ba2e684abd6e8fca9))
+* **comment-layout:** one pill for the creator-replied replies button ([4b04734](https://github.com/remonilo/kempt-yt/commit/4b04734dcf646654b427b5667dbc155c22a5d105))
+* **icons:** Kempt gear and Hide icon in the notifications panel ([d5e554b](https://github.com/remonilo/kempt-yt/commit/d5e554b7d7efc8e96c61f94bb639b9fc7311b1ad))
+* **icons:** playlist panel Loop and Shuffle show their pressed state ([715675a](https://github.com/remonilo/kempt-yt/commit/715675a6d86e21ef9cb6192bc82070d34a33e73d))
+* **notif-actions:** dark panel background while it loads ([870e62e](https://github.com/remonilo/kempt-yt/commit/870e62e55725c7b0ebb25b2e1fd1d5895911fc84))
+* **playlists:** header buttons run their commands directly, no menu flash ([c4e882a](https://github.com/remonilo/kempt-yt/commit/c4e882adf6eb2d3b7ef1d0fb6f25a3f9cfeafa66))
+
 ## [0.8.0](https://github.com/remonilo/kempt-yt/compare/v0.7.0...v0.8.0) (2026-10-18)
 
 
