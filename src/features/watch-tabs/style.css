@@ -101,7 +101,7 @@ html[kyt-watch-tabs] .kyt-tab:not([hidden]):not(.kyt-tab:not([hidden]) ~ *):not(
 /* Only the selected tab's content shows. [kyt-tab] is set by the script, so nothing hides before it runs.
    The playlist panel (Watch later, any list) is part of Videos: it sits above #related in both layouts and
    hides with it, so it never covers comments. Theater ("none") keeps it beside the title as YouTube does.
-   Likewise anything else YouTube puts in the right column (donation shelf, future shelves) belongs to Videos:
+   Likewise anything else YouTube puts in the right column (future shelves; the donation shelf moves to Info) belongs to Videos:
    another tab keeps only the bar, its own box, #panels (Ask AI, transcript) and live chat, so no shelf stacks
    under that tab's scroller. A whitelist, so new shelves are covered. In one column these sit under the player. */
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="videos"]) #related,
@@ -227,4 +227,56 @@ html[kyt-watch-tabs-aiAs="button"] ytd-watch-metadata [kyt-icon="SPARK"] .ytSpec
 }
 html[kyt-watch-tabs-aiAs="button"] ytd-watch-metadata [kyt-icon="SPARK"] .ytSpecButtonShapeNextButtonTextContent {
   display: none;
+}
+
+/* YouTube's cards in the Info tab (index.ts). The ticket shelf is laid out for the wide column under the video:
+   nearest event beside the list of the rest. In the side column both stack, and venues end in an ellipsis. */
+html[kyt-watch-tabs] .kyt-tab-info > :is(#clarify-box, #ticket-shelf, ytd-merch-shelf-renderer, #donation-shelf):not(:empty) {
+  display: block;
+  margin-top: 12px;
+}
+html[kyt-watch-tabs] .kyt-tab-info #ticket-shelf {
+  & #body {
+    flex-direction: column;
+    gap: 12px;
+  }
+  & #separator {
+    display: none;
+  }
+  & #primary-event {
+    width: auto;
+  }
+  & #meta {
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+  }
+  & :is(#rest-events, #table, table) {
+    width: 100%;
+  }
+  & .where-column-td {
+    width: 100%;
+    max-width: 0; /* lets the venue shrink to an ellipsis inside the table */
+  }
+}
+
+/* A card waits in Info (index.ts sets [kyt-dot] until Info is opened on this video). */
+html[kyt-watch-tabs-dot] .kyt-tab[kyt-dot] > span {
+  position: relative;
+  padding-right: 14px;
+}
+html[kyt-watch-tabs-dot] .kyt-tab[kyt-dot] > span::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  right: 2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--kyt-accent);
+  animation: kyt-dot-in 200ms ease-out;
+}
+@keyframes kyt-dot-in {
+  from { opacity: 0; }
 }

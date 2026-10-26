@@ -36,6 +36,7 @@ export const watchTabs: Feature = {
   options: {
     ai: { type: 'boolean', label: 'Ask AI', default: true },
     aiAs: { type: 'choice', label: 'Show as', default: 'button', choices: { button: 'Icon button', tab: 'Tab' }, parent: 'ai' },
+    dot: { type: 'boolean', label: 'Dot on Info for tickets, merch, donations', default: true },
   },
   async run({ signal, call }) {
     const flexy = await waitFor(S.watchFlexy, { signal });
@@ -116,7 +117,11 @@ export const watchTabs: Feature = {
       }
       tab = t;
       render();
-      if (t === 'info') call('relayout', '.kyt-tab-info');
+      if (t === 'info') {
+        cardsSeen = true;
+        call('relayout', '.kyt-tab-info');
+      }
+      dot();
     };
 
     // Localized count ("2.4M") from the comments header. It lands ~1s after navigation, so re-read on #panels changes.
@@ -143,6 +148,16 @@ export const watchTabs: Feature = {
       } else if (tab === 'ai' && !panels.querySelector(`[kyt-ai]${EXPANDED}`)) select(back);
     };
 
+    const cardHomes = new Map<Element, [Node, Node | null]>(); // moved cards go back here on abort
+    // A card hides behind Info, so the tab gets a dot (style.css, option `dot`) until Info is opened on this video.
+    let cardsSeen = false;
+    const dot = () => {
+      // Slots stay in the box empty; a card counts once YouTube renders into it (merch renders as its own node).
+      const has = [...infoBox.children].some((c) => c.matches('ytd-merch-shelf-renderer') ? !c.hasAttribute('hidden')
+        : c.matches('#clarify-box, #ticket-shelf, #donation-shelf') && [...c.children].some((x) => !x.hasAttribute('hidden')));
+      btns.get('info')!.toggleAttribute('kyt-dot', has && !cardsSeen && tab !== 'info');
+    };
+    observe(infoBox, { childList: true }, dot, signal);
     const mount = () => {
       const panels = panelsEl();
       if (!panels) return;
@@ -156,7 +171,15 @@ export const watchTabs: Feature = {
       const ours = [bar, infoBox, commentsBox];
       if (ours.some((n, i) => (i ? ours[i - 1] : anchor).nextElementSibling !== n)) anchor.after(...ours);
       const d = flexy.querySelector(S.description); // only matches while it's still in ytd-watch-metadata
-      if (d) infoBox.replaceChildren(d);
+      if (d) infoBox.prepend(d);
+      for (const card of flexy.querySelectorAll(S.watchCards)) {
+        if (!cardHomes.has(card)) {
+          cardHomes.set(card, [card.parentNode!, card.nextSibling]);
+          observe(card, { childList: true, subtree: true, attributeFilter: ['hidden'] }, dot, signal);
+        }
+        infoBox.append(card);
+      }
+      dot();
       const c = [...flexy.querySelectorAll(S.comments)].find((x) => x.parentElement !== commentsBox);
       if (c) commentsBox.replaceChildren(c);
     };
@@ -214,12 +237,14 @@ export const watchTabs: Feature = {
     watch(panelsEl(), { subtree: true, childList: true, characterData: true }, count);
 
     // The frame is reused for the next video: forget our expand so select() doesn't collapse the new chat.
-    document.addEventListener('kyt:navigate', () => (chatOpened = false, select('videos')), { signal });
+    document.addEventListener('kyt:navigate', () => (chatOpened = false, cardsSeen = false, select('videos')), { signal });
     document.addEventListener('yt-page-data-updated', () => (ai(), render()), { signal });
 
     signal.addEventListener('abort', () => {
-      const d = infoBox.firstElementChild;
+      const d = infoBox.querySelector(':scope > #description');
       if (d) descHome.insertBefore(d, descNext?.parentNode === descHome ? descNext : null);
+      // Reverse, so a card whose old next sibling also moved finds it home already.
+      for (const [card, [home, next]] of [...cardHomes].reverse()) home.insertBefore(card, next?.parentNode === home ? next : null);
       const c = commentsBox.firstElementChild;
       if (c) commentsHome.append(c);
       infoBox.remove();

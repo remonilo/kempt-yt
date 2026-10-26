@@ -24,6 +24,7 @@ The title, channel row and action buttons stay under the player. Only the descri
 The switch is **Watch page → Tabs**, with two options:
 
 - **Ask AI** shows the Ask AI entry. It's on by default.
+- **Dot on Info** puts a small accent dot on the Info tab when it holds one of YouTube's cards (tickets, merch, a donation shelf, a context panel). The dot goes once you open Info and comes back on the next video with a card. It's on by default.
 - **Show as** keeps Ask AI as YouTube's button under the video, moved first in the action row (the default), or makes it a full tab.
 
 ## Behavior
@@ -31,13 +32,14 @@ The switch is **Watch page → Tabs**, with two options:
 - In the two-column layout the panel is one screen tall and only the open tab scrolls, so the video stays in view. In the single-column layout the whole page scrolls.
 - A white pill slides to the selected tab.
 - **Cinema mode** closes the open tab and reopens it when you leave cinema. Clicking a tab while in cinema leaves cinema.
-- Anything another extension adds to the right column (a donation shelf, Return YouTube Dislike's box) belongs to the Videos tab.
+- YouTube's cards around the video (context panel, concert tickets, merch, donation shelf) move into the Info tab, under the description.
+- Anything another extension adds to the right column (Return YouTube Dislike's box) belongs to the Videos tab.
 
 ## How it works
 
 Kempt adds a tab bar at the top of `#secondary-inner`, YouTube's right column. The tabs move YouTube's own elements and never copy them:
 
-- The description and `ytd-comments` move into boxes after YouTube's own panels (`#panels`, the playlist, the chat and similar). When the feature turns off, they move back to where they came from.
+- The description, YouTube's card slots (`#clarify-box`, `#ticket-shelf`, the merch shelf, `#donation-shelf`) and `ytd-comments` move into boxes after YouTube's own panels (`#panels`, the playlist, the chat and similar). When the feature turns off, they move back to where they came from.
 - Related videos and the chat stay where they are and only show or hide. The chat is an iframe: moving it would reload it.
 - Hidden tabs use `display: none`. YouTube's lazy loaders (more comments, more videos) fire when the tab opens.
 - Every other tab shows a fixed list of children (the bar, its own box, `#panels`, `#chat-container`) and hides the rest. A shelf YouTube adds later lands in Videos instead of stacking under the comments.

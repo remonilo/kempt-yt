@@ -33,6 +33,9 @@ export const S = {
   panelSortItems: '#menu yt-dropdown-menu tp-yt-paper-listbox > a', // inside panelTitle: the comments sort icon menu
   chatContainer: 'ytd-watch-flexy #chat-container',
   description: 'ytd-watch-metadata #description',
+  // Cards YouTube adds around the action row: context panel, concert tickets, merch (dom-if + its stamp), donations.
+  // .ytd-watch-flexy (Polymer's scope class) keeps out the same-id slots inside descriptions (metadata, engagement panel).
+  watchCards: 'ytd-watch-flexy :is(#clarify-box, #ticket-shelf, ytd-merch-shelf-renderer, dom-if#merch-shelf, #donation-shelf).ytd-watch-flexy:not(.kyt-tab-info *)',
   askButton: 'ytd-watch-metadata [kyt-icon="SPARK"] button', // needs stamp(S.watchActions)
   watchSubscribe: 'ytd-watch-metadata ytd-subscribe-button-renderer', // its bell needs stampBell
   channelHeader: 'ytd-browse:not([hidden]) yt-page-header-view-model', // channel header; its Subscribe bell needs stampBell
