@@ -5,7 +5,7 @@ banner:
   content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
-Click the Kempt icon in the browser toolbar. Changes apply to open YouTube tabs at once.
+Click the Kempt icon in the browser toolbar. The tabs at the top switch between the groups below (Look, Menus, Watch, Feeds), and the popup reopens on the last one. Changes apply to open YouTube tabs at once.
 
 ![Kempt popup](../../../assets/screenshots/popup.png)
 
@@ -19,11 +19,11 @@ Click the Kempt icon in the browser toolbar. Changes apply to open YouTube tabs 
 | | [Accent Subscribe button](/kempt-yt/docs/features/look/#subscribe-button) | | On |
 | | [Outlined search bar](/kempt-yt/docs/features/look/#search-bar) | | On |
 | | [Icons](/kempt-yt/docs/features/icons/) | | On |
-| Navigation | [Redesigned sidebar](/kempt-yt/docs/features/sidebar/) | Hide "You", "Your channel", "Your videos", "Courses" | On, all hidden |
+| Menus | [Redesigned sidebar](/kempt-yt/docs/features/sidebar/) | Hide "You", "Your channel", "Your videos", "Courses" | On, all hidden |
 | | [Settings in top bar](/kempt-yt/docs/features/top-bar/) | | On |
 | | [Watch later button](/kempt-yt/docs/features/top-bar/#watch-later-button) | | On |
 | | [Notification actions](/kempt-yt/docs/features/top-bar/#notification-actions) | | On |
-| Watch page | [Tabs](/kempt-yt/docs/features/watch-tabs/) | Ask AI on or off; as an icon button or a tab | On |
+| Watch | [Tabs](/kempt-yt/docs/features/watch-tabs/) | Ask AI on or off; as an icon button or a tab; dot on Info for cards | On, dot on |
 | | [Comment sort as buttons](/kempt-yt/docs/features/comment-sort/) | | On |
 | | [Comment search](/kempt-yt/docs/features/comment-search/) | | On |
 | | Comment layout | | On |

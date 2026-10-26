@@ -11,7 +11,8 @@ export type Option = { label: string; cssVar?: string; parent?: string } & (
   | { type: 'choice'; default: string; choices: Record<string, string> }
 );
 
-export const GROUPS = { look: 'Look', navigation: 'Navigation', watch: 'Watch page', feeds: 'Feeds' } as const;
+// One word each: they are the popup's tabs, and five must fit in 360px.
+export const GROUPS = { look: 'Look', navigation: 'Menus', watch: 'Watch', feeds: 'Feeds' } as const;
 export type Group = keyof typeof GROUPS;
 
 export interface Ctx {

@@ -1,5 +1,6 @@
 // Screenshot of the popup for the README and site: dist/popup.html in headless Firefox with a stubbed chrome API.
 // usage: node scripts/popup-shot.mjs [out.png] [--light] [--scale=3] [--open=sidebar,grid] [--height=N]
+//   --tab=feeds shows that group's tab (look, navigation, watch, feeds).
 //   --open expands the rows whose label contains those words; --height crops the shot (default: the whole popup).
 import puppeteer from 'puppeteer-core';
 import { readFile } from 'node:fs/promises';
@@ -35,6 +36,7 @@ try {
   page.on('pageerror', (e) => console.error('page error:', e.message));
   await page.goto(`file://${resolve('dist/popup.html')}`, { waitUntil: 'load' });
   await new Promise((r) => setTimeout(r, 500));
+  if (flag('tab')) await page.evaluate((t) => [...document.querySelectorAll('.kp-tabs button')].find((b) => b.textContent.toLowerCase().startsWith(t))?.click(), flag('tab'));
   const groups = flag('open')?.split(',') ?? [];
   const opened = await page.evaluate((groups) => {
     const hit = [];

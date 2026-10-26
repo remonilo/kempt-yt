@@ -218,13 +218,33 @@ function featureItem(f: Feature) {
   return item;
 }
 
+// One group at a time, picked from tabs in the header, so the popup fits without scrolling. The last tab is
+// remembered in the popup's own localStorage: it is UI state, not a setting.
 const groups = new Map<Group, HTMLElement>();
-for (const [key, title] of Object.entries(GROUPS) as [Group, string][]) {
+const sections = new Map<Group, HTMLElement>();
+for (const key of Object.keys(GROUPS) as Group[]) {
   const card = el('div', 'kp-card');
+  const section = el('section', 'kp-section', card);
+  section.role = 'tabpanel';
   groups.set(key, card);
-  app.append(el('section', 'kp-section', el('h2', '', title), card));
+  sections.set(key, section);
+  app.append(section);
 }
 for (const f of features) groups.get(f.group)!.append(featureItem(f));
+
+const show = (g: string) => {
+  for (const [k, s] of sections) s.hidden = k !== g;
+  localStorage.setItem('kp-tab', g);
+};
+const tabs = segmented(GROUPS, show);
+tabs.el.classList.add('kp-tabs');
+tabs.el.role = 'tablist';
+for (const b of tabs.el.querySelectorAll('button')) b.role = 'tab';
+document.querySelector('.kp-header')!.append(tabs.el);
+const first = localStorage.getItem('kp-tab') ?? 'look';
+const start = first in GROUPS ? first : 'look';
+tabs.set(start);
+show(start);
 
 const reset = el('button', 'kp-link', 'Reset all');
 reset.type = 'button';

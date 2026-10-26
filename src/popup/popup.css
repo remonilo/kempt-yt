@@ -31,12 +31,19 @@ button { cursor: pointer; }
   mask: center / contain no-repeat;
 }
 
-.kp-header { display: flex; align-items: center; gap: 10px; padding: 16px 16px 4px; }
+.kp-header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 10px; padding: 16px 12px 4px; }
+.kp-header > .kp-title { padding: 0 4px; }
+/* Group tabs: the segmented control at full width, a bit taller than the in-row ones. */
+.kp-tabs { flex: 1 0 100%; font-size: 13px; }
+.kp-tabs button { padding: 6px 4px; }
+/* Every tab keeps the height of the tallest, so switching tabs doesn't resize the popup. */
+#app { display: grid; }
+.kp-section { grid-area: 1 / 1; }
+.kp-section[hidden] { display: block; visibility: hidden; }
 .kp-title { font-weight: 500; font-size: 16px; line-height: 18px; }
 .kp-title small { display: block; color: var(--kp-muted); font-size: 12px; font-weight: 400; line-height: 14px; }
 
 .kp-section { padding: 8px 12px 4px; }
-.kp-section h2 { margin: 8px 4px 6px; color: var(--kp-muted); font-size: 12px; font-weight: 500; line-height: 16px; }
 .kp-card { background: var(--kp-card); border-radius: 12px; overflow: hidden; }
 .kp-card > * + * { border-top: 1px solid var(--kp-line); }
 
