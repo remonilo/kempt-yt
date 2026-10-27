@@ -70,6 +70,10 @@ Short comments in the source point here. Each entry is a constraint YouTube impo
 
 The hidden `#sort-menu` items still work when clicked. Find them by index, because the list re-renders, and sync the chips from `aria-selected`.
 
+## Captions
+
+Auto-captions use a rollup window (`.ytp-caption-window-rollup`, permanent). `.ytp-rollup-mode` is only on during the scroll transition. YouTube sets the rollup width to the largest of a measured line of dashes, the previous width and the text width, so it only grows. Its height is the rendered height of the last lines, and lines past that stay in the DOM, moved up with `transform` and hidden by the window's `overflow: hidden`. Caption drag (`g.hX` in base.js) listens for `mousedown` on the window, then `mousemove`/`mouseup` on the document. It moves the window on the first `mousemove`, so the browser's native drag can start from the video container now under the press point (YouTube only cancels `dragstart` on the window). That drag eats the `mouseup` and the caption keeps following the cursor. Headless Firefox never requests captions; `scripts/captions-chrome.mjs` gets real caption windows in headless Helium by answering timedtext with a fake track.
+
 ## Progress bar
 
 `#movie_player` can hold two `.ytp-progress-bar`: the real one in `.ytp-chrome-bottom`, and a hidden 0x0 spare that comes first in DOM order. A bare `.ytp-progress-bar` selector matches the spare. Scope to `#movie_player .ytp-chrome-bottom .ytp-progress-bar`. The Home hover preview (`#inline-preview-player`) is a second player with no bar.

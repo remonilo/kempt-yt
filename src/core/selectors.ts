@@ -64,6 +64,7 @@ export const S = {
   // A view-model ⋯ menu once open: closed menus stay in the DOM (aria-hidden), and rows render before `focused` is set.
   openPopupMenu: 'ytd-popup-container tp-yt-iron-dropdown[focused]:not([aria-hidden="true"]):has(yt-list-item-view-model)',
   fsActions: '#movie_player .ytp-fullscreen-quick-actions', // fullscreen like/dislike/comments/share/⋯ row; needs stamp
+  videoContainer: '.html5-video-player .html5-video-container', // holds the <video>; a native drag starting here steals the mouseup
   progressBar: '#movie_player .ytp-chrome-bottom .ytp-progress-bar', // #movie_player also holds a hidden 0x0 spare bar outside .ytp-chrome-bottom
   lockupTitle: '.ytLockupMetadataViewModelTitle', // title link of a view-model lockup
   shortsLink: 'a[href^="/shorts/"]',

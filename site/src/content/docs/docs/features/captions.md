@@ -26,7 +26,8 @@ Size applies while you drag the slider. YouTube's own Subtitles → Options entr
 
 ## How it works
 
-- The feature is CSS only. YouTube writes its caption settings as inline styles, so Kempt's rules use `!important`.
+- The feature is mostly CSS. YouTube writes its caption settings as inline styles, so Kempt's rules use `!important`.
 - The size is `4.6cqh` of the caption container (clamped to 13 to 48 px), times the Size slider. YouTube's own default measures about `4.4cqh`.
 - YouTube sizes each caption window for its own text. A centred window gets the width of Kempt's text and centres on YouTube's anchor, so placement and dragging keep working. Windows anchored at an edge keep YouTube's position.
-- Auto-generated captions keep YouTube's clip, so old lines still scroll out of the top.
+- Auto-generated captions (rollup windows) keep YouTube's width, height and clip, so old lines still scroll out of the top. YouTube makes that window wider than its text, so Box and Blur give each line its own plate there.
+- YouTube moves the caption on the first mousemove of a drag. The browser then starts its own drag from whatever is under the press point by then (the video), which swallows the mouseup, so the caption stayed stuck to the cursor. The feature's only script cancels a native drag that starts in the player's video container.

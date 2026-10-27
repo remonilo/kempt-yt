@@ -10,16 +10,16 @@ html[kyt-captions] .ytp-caption-window-container {
 /* YouTube sizes the window for its own text. A centre-anchored window is written as `left: <anchor>%;
    width: Wpx; margin-left: -W/2px`: keep its left (so its placement and dragging still work), take the
    text's width and centre on the anchor with translate. Windows anchored at an edge (no negative margin)
-   keep YouTube's left and width. Auto-captions (rollup) scroll lines out of the top, so they keep their
-   clip and only lose the fixed height. */
-html[kyt-captions] .caption-window[style*="margin-left: -"] {
+   keep YouTube's left and width. Auto-captions (rollup) keep YouTube's box: it only ever widens the window
+   (it measures a line of dashes), sets the height from our rendered lines and clips the lines it scrolls out
+   of the top; a window that fit the text would re-centre with every word. */
+html[kyt-captions] .caption-window[style*="margin-left: -"]:not(.ytp-caption-window-rollup) {
   width: max-content !important;
   max-width: 90%;
   margin-left: 0 !important;
   translate: -50% 0;
 }
-html[kyt-captions] .caption-window { height: auto !important; }
-html[kyt-captions] .caption-window:not(.ytp-rollup-mode) { overflow: visible !important; }
+html[kyt-captions] .caption-window:not(.ytp-caption-window-rollup) { height: auto !important; overflow: visible !important; }
 
 /* YouTube's background and window colour, wherever its build paints them. Our box is drawn below. */
 html[kyt-captions] :is(.caption-window, .caption-window *) {
@@ -40,15 +40,26 @@ html[kyt-captions][kyt-captions-style="shadow"] .caption-window .ytp-caption-seg
 }
 html[kyt-captions]:not([kyt-captions-style="shadow"]) .caption-window .ytp-caption-segment { text-shadow: none !important; }
 
-/* Box and Blur: one rounded plate behind the whole caption (the window, which fits the text). */
+/* Box and Blur: one rounded plate behind the whole caption (the window, which fits the text). Rollup windows
+   are wider than their text, so there each line gets its own plate. */
 html[kyt-captions]:is([kyt-captions-style="box"], [kyt-captions-style="blur"]) .caption-window {
+  font-size: var(--kyt-cap); /* em below = the caption's size */
+}
+html[kyt-captions]:is([kyt-captions-style="box"], [kyt-captions-style="blur"]) .caption-window:not(.ytp-caption-window-rollup) {
   padding: 0.3em 0.65em;
   border-radius: 0.6em;
-  font-size: var(--kyt-cap); /* em above = the caption's size */
 }
-html[kyt-captions][kyt-captions-style="box"] .caption-window { background: rgba(0, 0, 0, 0.6) !important; }
+html[kyt-captions]:is([kyt-captions-style="box"], [kyt-captions-style="blur"]) .ytp-caption-window-rollup .caption-visual-line {
+  display: block !important;
+  width: fit-content !important;
+  padding: 0.1em 0.5em;
+  border-radius: 0.4em;
+}
+html[kyt-captions][kyt-captions-style="box"] :is(.caption-window:not(.ytp-caption-window-rollup), .ytp-caption-window-rollup .caption-visual-line) {
+  background: rgba(0, 0, 0, 0.6) !important;
+}
 /* Blur is opt-in: a blur over live video re-renders with every frame (GPU work while captions show). */
-html[kyt-captions][kyt-captions-style="blur"] .caption-window {
+html[kyt-captions][kyt-captions-style="blur"] :is(.caption-window:not(.ytp-caption-window-rollup), .ytp-caption-window-rollup .caption-visual-line) {
   background: rgba(20, 20, 20, 0.35) !important;
   backdrop-filter: blur(16px) saturate(1.4);
 }
