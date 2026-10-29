@@ -229,9 +229,9 @@ html[kyt-watch-tabs-aiAs="button"] ytd-watch-metadata [kyt-icon="SPARK"] .ytSpec
   display: none;
 }
 
-/* YouTube's cards in the Info tab (index.ts). The ticket shelf is laid out for the wide column under the video:
+/* YouTube's cards in the Info tab (index.ts), Shop's product panel included. The ticket shelf is laid out for the wide column under the video:
    nearest event beside the list of the rest. In the side column both stack, and venues end in an ellipsis. */
-html[kyt-watch-tabs] .kyt-tab-info > :is(#clarify-box, #ticket-shelf, ytd-merch-shelf-renderer, #donation-shelf):not(:empty) {
+html[kyt-watch-tabs] .kyt-tab-info > :is(#clarify-box, #ticket-shelf, ytd-merch-shelf-renderer, #donation-shelf, ytd-engagement-panel-section-list-renderer):not(:empty) {
   display: block;
   margin-top: 12px;
 }

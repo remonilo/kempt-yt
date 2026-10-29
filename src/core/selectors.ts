@@ -29,6 +29,8 @@ export const S = {
   panels: 'ytd-watch-flexy #panels', // engagement panels: transcript, Ask, ...
   shortsPanels: 'ytd-shorts #anchored-panel', // the Shorts player's engagement panels: comments, description, audio
   commentsPanel: 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-comments-section"]',
+  // Shop button's product lists (one per entry point). watch-tabs moves an expanded one into Info.
+  shoppingPanels: 'ytd-engagement-panel-section-list-renderer[target-id^="shopping_panel"]',
   panelTitle: 'ytd-engagement-panel-title-header-renderer', // inside a panel: title, icon menus, close
   panelSortItems: '#menu yt-dropdown-menu tp-yt-paper-listbox > a', // inside panelTitle: the comments sort icon menu
   chatContainer: 'ytd-watch-flexy #chat-container',

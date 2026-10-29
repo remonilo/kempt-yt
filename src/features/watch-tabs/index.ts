@@ -139,6 +139,7 @@ export const watchTabs: Feature = {
     const onPanels = () => {
       const panels = panelsEl();
       if (!panels) return;
+      shop();
       if (askedAt) {
         const opened = [...panels.querySelectorAll(EXPANDED)].find((p) => !askedAt!.has(p));
         if (opened) {
@@ -146,6 +147,27 @@ export const watchTabs: Feature = {
           askedAt = null;
         }
       } else if (tab === 'ai' && !panels.querySelector(`[kyt-ai]${EXPANDED}`)) select(back);
+    };
+
+    // Shop's product panel opens in Info, under the description. YouTube reuses #panels' children by position for the next video
+    // (a moved panel leaks with stale products), so a panel leaves #panels only while expanded and goes back when it
+    // closes or a navigation starts.
+    const shopHomes = new Map<Element, Node | null>();
+    let navigating = false;
+    const shopBack = (p: Element) => {
+      const home = panelsEl(), next = shopHomes.get(p);
+      shopHomes.delete(p);
+      home?.insertBefore(p, next?.parentNode === home ? next : null);
+    };
+    const shop = () => {
+      for (const p of [...shopHomes.keys()]) if (navigating || !p.matches(EXPANDED)) shopBack(p);
+      const open = !navigating && panelsEl()?.querySelector(`:scope > ${S.shoppingPanels}${EXPANDED}`);
+      if (!open) return;
+      shopHomes.set(open, open.nextSibling);
+      const d = infoBox.querySelector(':scope > #description');
+      if (d) d.after(open);
+      else infoBox.prepend(open);
+      select('info');
     };
 
     const cardHomes = new Map<Element, [Node, Node | null]>(); // moved cards go back here on abort
@@ -234,17 +256,20 @@ export const watchTabs: Feature = {
       signal.addEventListener('abort', () => ro.disconnect(), { once: true });
     }
     watch(panelsEl(), { subtree: true, attributeFilter: ['visibility'] }, onPanels);
+    watch(infoBox, { subtree: true, attributeFilter: ['visibility'] }, shop);
     watch(panelsEl(), { subtree: true, childList: true, characterData: true }, count);
 
     // The frame is reused for the next video: forget our expand so select() doesn't collapse the new chat.
     document.addEventListener('kyt:navigate', () => (chatOpened = false, cardsSeen = false, select('videos')), { signal });
-    document.addEventListener('yt-page-data-updated', () => (ai(), render()), { signal });
+    document.addEventListener('yt-navigate-start', () => (navigating = true, shop()), { signal });
+    document.addEventListener('yt-page-data-updated', () => (navigating = false, ai(), render()), { signal });
 
     signal.addEventListener('abort', () => {
       const d = infoBox.querySelector(':scope > #description');
       if (d) descHome.insertBefore(d, descNext?.parentNode === descHome ? descNext : null);
       // Reverse, so a card whose old next sibling also moved finds it home already.
       for (const [card, [home, next]] of [...cardHomes].reverse()) home.insertBefore(card, next?.parentNode === home ? next : null);
+      [...shopHomes.keys()].forEach(shopBack);
       const c = commentsBox.firstElementChild;
       if (c) commentsHome.append(c);
       infoBox.remove();
