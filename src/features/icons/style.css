@@ -16,7 +16,7 @@ html[kyt-icons] :is(
   ytd-about-channel-renderer :is(tr yt-icon:is([icon="mail"], [icon="phone"], [icon="info"], [icon="youtube"], [icon="privacy_public"], [icon="info_outline"], [icon="person_radar"], [icon="my_videos"], [icon="trending_up"]), #share-channel .ytSpecButtonShapeNextIcon),
   yt-page-header-view-model :is(yt-attribution-view-model .ytAttributedStringImageElement, a[href$="/community"] .ytSpecButtonShapeNextIcon),
   ytd-expandable-tab-renderer #icon-button yt-icon,
-  ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"], [kyt-icon="CONTENT_CUT"], [kyt-icon="SPARK"], [kyt-icon="MONEY_HEART"]) .ytSpecButtonShapeNextIcon,
+  ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"], [kyt-icon="CONTENT_CUT"], [kyt-icon="SPARK"], [kyt-icon="MONEY_HEART"], [kyt-icon="OUTLINE_BAG"]) .ytSpecButtonShapeNextIcon,
   ytd-watch-metadata ytd-menu-renderer > #button-shape .ytSpecButtonShapeNextIcon,
   ytd-watch-metadata ytd-subscription-notification-toggle-button-renderer-next .ytSpecButtonShapeNextIcon,
   yt-page-header-view-model yt-subscribe-button-view-model button.ytSpecButtonShapeNextIconLeadingTrailing > .ytSpecButtonShapeNextIcon,
@@ -28,9 +28,9 @@ html[kyt-icons] :is(
   & > * { visibility: hidden; }
 }
 
-/* Icon-only buttons: Create (Tonal + IconLeading; logged-out "Sign in" is Outline, so it's untouched) and Share/Save/Download.
-   Download moves between the row and the ⋯ menu with the row's width; in the row it keeps its label otherwise. */
-html[kyt-icons] :is(ytd-masthead #buttons > ytd-button-renderer button.ytSpecButtonShapeNextTonal.ytSpecButtonShapeNextIconLeading, ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"]) button) {
+/* Icon-only buttons: Create (Tonal + IconLeading; logged-out "Sign in" is Outline, so it's untouched) and Share/Save/Download/Shop.
+   Download and Shop move between the row and the ⋯ menu with the row's width; in the row they keep their label otherwise. */
+html[kyt-icons] :is(ytd-masthead #buttons > ytd-button-renderer button.ytSpecButtonShapeNextTonal.ytSpecButtonShapeNextIconLeading, ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"], [kyt-icon="OUTLINE_BAG"]) button) {
   width: 40px;
   padding: 0;
   justify-content: center;
@@ -136,6 +136,7 @@ html[kyt-icons] ytd-watch-metadata [kyt-icon="SHARE"] .ytSpecButtonShapeNextIcon
 html[kyt-icons] ytd-watch-metadata [kyt-icon="PLAYLIST_ADD"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-save); }
 html[kyt-icons] ytd-watch-metadata [kyt-icon="OFFLINE_DOWNLOAD"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-download); }
 html[kyt-icons] ytd-watch-metadata [kyt-icon="CONTENT_CUT"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-clip); }
+html[kyt-icons] ytd-watch-metadata [kyt-icon="OUTLINE_BAG"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-shopping); }
 /* Hugeicons: Figma has no Ask or Thanks */
 html[kyt-icons] ytd-watch-metadata [kyt-icon="SPARK"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-ask); }
 html[kyt-icons] ytd-watch-metadata [kyt-icon="MONEY_HEART"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-thanks); }
@@ -190,6 +191,7 @@ html[kyt-icons] ytd-popup-container [kyt-icon="NOTIFICATIONS_ACTIVE"] { --kyt-i:
 html[kyt-icons] ytd-popup-container [kyt-icon="NOTIFICATIONS_NONE"] { --kyt-i: var(--kyt-i-notifs); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container [kyt-icon="NOTIFICATIONS_OFF"] { --kyt-i: var(--kyt-i-notifs-disabled); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container [kyt-icon="PERSON_MINUS"] { --kyt-i: var(--kyt-i-exclude); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+html[kyt-icons] ytd-popup-container :is([kyt-icon="OUTLINE_BAG"], [kyt-icon="BAG"]) { --kyt-i: var(--kyt-i-shopping); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container [kyt-icon="CONTENT_CUT"] { --kyt-i: var(--kyt-i-clip); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container :is([kyt-icon="ACCOUNT_BOX"], [kyt-icon="GOOGLE_ACCOUNT"], [kyt-icon="GOOGLE_G"]) { --kyt-i: var(--kyt-i-you); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container :is([kyt-icon="SWITCH_ACCOUNTS"], [kyt-icon="ACCOUNT_SWITCHER"], [kyt-icon="SWITCH_ACCOUNT"]) { --kyt-i: var(--kyt-i-switch-account); --kyt-ibg: currentColor; --kyt-vis: hidden; }

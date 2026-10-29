@@ -8,7 +8,7 @@ import { routeOf } from '../../core/router.ts';
 // CSS can't build a url() from parts and the extension origin differs per install and browser, so each icon is a
 // custom property on <html>: --kyt-i-<name>.
 const NAMES = ['menu', 'arrow-left', 'search', 'mic', 'close', 'add', 'notifs', 'notifs-selected', 'notifs-disabled', 'more', 'you',
-  'liked', 'liked-selected', 'dislike', 'dislike-selected', 'share', 'save', 'download', 'clip', 'ask', 'thanks',
+  'liked', 'liked-selected', 'dislike', 'dislike-selected', 'share', 'save', 'download', 'clip', 'ask', 'thanks', 'shopping',
   // popup menus: account menu and the watch page's ⋯ menu
   'report', 'arrow-right', 'keyboard', 'settings', 'help', 'feedback', 'switch-account', 'sign-out', 'studio', 'your-data',
   'appearance', 'language', 'restricted', 'globe',
