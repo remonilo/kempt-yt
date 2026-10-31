@@ -199,6 +199,10 @@ html[kyt-search-filters][kyt-search-filters-layout="grid"] ytd-search ytd-sectio
   & > ytd-item-section-renderer > #contents > :not(ytd-video-renderer, yt-lockup-view-model) {
     grid-column: 1 / -1;
   }
+  /* The grid has no row gap (cards carry 32px below), so a channel row would touch the cards under it. */
+  & ytd-item-section-renderer > #contents > ytd-channel-renderer {
+    margin-bottom: 32px;
+  }
   & ytd-shelf-renderer ytd-vertical-list-renderer > #items {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
