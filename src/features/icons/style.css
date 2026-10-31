@@ -255,6 +255,17 @@ html[kyt-icons] ytd-playlist-panel-renderer {
   & ytd-playlist-loop-button-renderer button:has(path[d*="ZM13 15V8"]) .ytSpecButtonShapeNextIcon { color: var(--kyt-accent, currentColor); }
   & ytd-playlist-loop-button-renderer button:has(path[d*="ZM13 15V8"]) .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-repeat-one); }
 }
+/* Chapters panel rows: Share and Repeat chapter, shown on hover. Repeating is the one-item loop, in the accent. */
+html[kyt-icons] ytd-macro-markers-list-item-renderer {
+  & :is(#share-button, #repeat-button) .ytSpecButtonShapeNextIcon {
+    background-color: currentColor;
+    mask: var(--kyt-i) center / contain no-repeat;
+    & > * { visibility: hidden; }
+  }
+  & #share-button .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-share); }
+  & #repeat-button .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-repeat); }
+  & #repeat-button button[aria-pressed="true"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-repeat-one); color: var(--kyt-accent, currentColor); }
+}
 html[kyt-icons] ytd-miniplayer {
   & .ytdMiniplayerInfoBarExpand .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-arrow-right); rotate: -90deg; }
   & .ytdMiniplayerInfoBarExpand [aria-expanded="true"] .ytSpecButtonShapeNextIcon { rotate: 90deg; }
