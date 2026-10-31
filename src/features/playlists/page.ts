@@ -5,6 +5,12 @@ import { cfg, find, savePlaylists, text, walk } from '../../page/youtube.ts';
 const picked = (sel: string): any[] =>
   [...document.querySelectorAll<any>(`${sel} ytd-playlist-video-renderer[kyt-picked]`)].map((r) => r.data).filter(Boolean);
 
+/** A lockup row's length from its thumbnail badge ("1:02:03"); 0 for live, upcoming or missing. */
+const badgeSeconds = (item: any): number => {
+  const t: string = find(item, (x) => /^\d+(:\d\d)+$/.test(x?.thumbnailBadgeViewModel?.text ?? ''))?.thumbnailBadgeViewModel.text ?? '';
+  return t ? t.split(':').reduce((n, p) => n * 60 + Number(p), 0) : 0;
+};
+
 const menuItem = (row: any, iconType: string) => row?.menu?.menuRenderer?.items
   ?.map((i: any) => Object.values(i)[0] as any).find((r: any) => r?.icon?.iconType === iconType);
 
@@ -69,8 +75,8 @@ export const playlistsPage = {
   /** Total length from the row data. Null while more rows can still load, so a partial sum never shows. */
   playlistSeconds(sel: string) {
     const items: any[] = document.querySelector<any>(sel)?.data?.contents ?? [];
-    if (!items.length || items.some((i) => i.continuationItemRenderer)) return null;
-    return items.reduce((n, i) => n + Number(i.playlistVideoRenderer?.lengthSeconds ?? 0), 0);
+    if (!items.length || items.some((i) => i.continuationItemRenderer || i.continuationItemViewModel)) return null;
+    return items.reduce((n, i) => n + (i.playlistVideoRenderer ? Number(i.playlistVideoRenderer.lengthSeconds ?? 0) : badgeSeconds(i)), 0);
   },
 
   /** Button labels in the UI language, from the first row's menu. */
@@ -92,6 +98,18 @@ export const playlistsPage = {
       if (Array.isArray(a)) return a.map((b: any) => b.buttonViewModel?.iconName ?? '');
     }
     return [];
+  },
+
+  /** Course headers: description and "...More" label (YouTube's own About dialog behind it). Null for other playlists. */
+  playlistAbout(sel: string): { text: string; more: string } | null {
+    const d = document.querySelector<any>(sel)?.data;
+    return d?.onDescriptionTap ? { text: text(d.descriptionText), more: text(d.descriptionTapText) } : null;
+  },
+
+  /** Opens the course's About dialog, as YouTube's narrow header does. */
+  playlistAboutOpen(sel: string) {
+    const h = document.querySelector<any>(sel);
+    if (h?.data?.onDescriptionTap) serviceRequest(h, h.data.onDescriptionTap);
   },
 
   /** The header ⋮ menu in YouTube's row order (Download is its own view model, titled by the client). */

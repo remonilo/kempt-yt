@@ -57,6 +57,8 @@ export const S = {
   playlistHeader: 'ytd-browse[page-subtype="playlist"]:not([hidden]) > yt-page-header-renderer', // its action buttons need stamp
   playlistHeaderOld: 'ytd-browse[page-subtype="playlist"]:not([hidden]) > ytd-playlist-header-renderer', // Watch later, Liked videos; same stamp
   playlistList: 'ytd-browse[page-subtype="playlist"]:not([hidden]) ytd-playlist-video-list-renderer', // rows in #contents, data.contents
+  // Other people's playlists and Liked videos (2026-05): lockup rows in #contents, data.contents[].lockupViewModel.
+  playlistLockups: 'ytd-browse[page-subtype="playlist"]:not([hidden]) yt-item-section-renderer',
   historyActions: 'ytd-browse[page-subtype="history"] ytd-browse-feed-actions-renderer', // right column; buttons need stamp
   historyLinks: 'ytd-browse[page-subtype="history"] ytd-browse-feed-actions-renderer ytd-compact-link-renderer', // Comments/Posts/Live chat (My Activity)
   lockupDate: '.ytContentMetadataViewModelMetadataText', // last one in a lockup is the age ("7 hr ago"), aria-label has the long form

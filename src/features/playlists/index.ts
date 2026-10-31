@@ -34,7 +34,7 @@ const MENU_ICONS: Record<string, string> = {
 };
 
 // Icons the stylesheet masks in (stat and row pills): --kyt-pl-<key>.
-const ICONS = { shuffle: 'shuffle', download: 'download', add: 'add', edit: 'edit', share: 'share', save: 'save', views: 'eye', date: 'date', videos: 'play', duration: 'timelapse', check: 'check' };
+const ICONS = { shuffle: 'shuffle', download: 'download', add: 'add', edit: 'edit', share: 'share', save: 'save', views: 'eye', date: 'date', videos: 'play', duration: 'timelapse', check: 'check', comments: 'comments' };
 
 const clock = (s: number) => {
   const h = Math.floor(s / 3600);
@@ -121,26 +121,55 @@ async function playlist(signal: AbortSignal, call: Call) {
   if (!stats || signal.aborted) return;
   // The header works without the old list: other people's playlists render rows as lockups (no list renderer).
   if (stats.matches('yt-content-metadata-view-model')) headerMenu(stats.closest('ytd-browse'), signal, call);
+  else courseAbout(signal, call);
 
-  const list = await waitFor(S.playlistList, { signal });
+  const list = await waitFor(`${S.playlistList}, ${S.playlistLockups}`, { signal });
   const contents = list?.querySelector(':scope > #contents');
   if (!list || !contents || signal.aborted) return;
+  const sel = list.matches(S.playlistList) ? S.playlistList : S.playlistLockups;
 
   // Total duration: only once every row has loaded.
   const duration = el('span', 'kyt-pl-duration');
   duration.hidden = true;
   keep(duration, stats, () => duration.parentElement !== stats && stats.append(duration), signal, { childList: true });
+  // Lockup rows render before their data lands, with no row added after, so watch the subtree until a sum shows.
+  let deep = sel === S.playlistLockups;
   const update = async () => {
-    const s = await call('playlistSeconds', S.playlistList).catch(() => null);
+    const s = await call('playlistSeconds', sel).catch(() => null);
     if (signal.aborted) return;
     duration.hidden = s == null;
     duration.textContent = s == null ? '' : clock(s);
+    if (deep && s != null) {
+      deep = false;
+      obs.disconnect();
+      obs.observe(contents, { childList: true });
+    }
   };
-  observe(contents, { childList: true }, update, signal);
+  const obs = observe(contents, { childList: true, subtree: deep }, update, signal);
   update();
 
+  if (sel !== S.playlistList) return; // lockup rows carry no menu commands for bulk select
   const words = await call('playlistWords', S.playlistList).catch(() => null);
   if (words && !signal.aborted) bulk(list, contents, words, signal, call);
+}
+
+/** Course playlists: the long description becomes one line with YouTube's "...More", which opens its About dialog. */
+async function courseAbout(signal: AbortSignal, call: Call) {
+  const about = await call('playlistAbout', S.playlistHeaderOld).catch(() => null);
+  const header = document.querySelector(S.playlistHeaderOld);
+  const desc = header?.querySelector('.metadata-wrapper > .description');
+  if (!about || !header || !desc || signal.aborted) return;
+  header.setAttribute('kyt-pl-course', '');
+  signal.addEventListener('abort', () => header.removeAttribute('kyt-pl-course'), { once: true });
+  // Our own line: YouTube empties its snippet below about 1000px wide.
+  const more = el('button', 'kyt-pl-more', about.more);
+  more.type = 'button';
+  const line = el('div', 'kyt-pl-about', el('span', '', about.text.replace(/\s+/g, ' ')), more);
+  keep(line, desc, () => line.parentElement !== desc && desc.append(line), signal, { childList: true });
+  line.addEventListener('click', (e) => {
+    e.preventDefault();
+    call('playlistAboutOpen', S.playlistHeaderOld).catch(() => {});
+  }, { signal });
 }
 
 /** Library > Playlists (Figma 125:12932): grid/list toggle and a title search beside YouTube's chips. */
@@ -149,7 +178,6 @@ async function library(signal: AbortSignal, call: Call) {
   const header = grid?.querySelector(':scope > #header');
   const contents = grid?.querySelector(':scope > #contents');
   if (!grid || !header || !contents || signal.aborted) return;
-  const html = document.documentElement;
   const words = local(WORDS);
   grid.setAttribute('kyt-pl-library', '');
 

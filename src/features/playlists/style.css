@@ -115,6 +115,50 @@ html[kyt-playlists] ytd-browse[page-subtype="playlist"] > ytd-playlist-header-re
   }
 }
 
+/* Course playlists (old header): cover sized like the view-model header's, description on one line ending in "...More". */
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] > ytd-playlist-header-renderer[kyt-pl-course] {
+  & .thumbnail-wrapper {
+    align-self: flex-start;
+    width: calc(200px * 16 / 9);
+    aspect-ratio: 16 / 9;
+  }
+  /* yt-dynamic-sizing-formatted-string caps the title at 312px; the view-model header's title takes the row. */
+  & #title-display #container {
+    max-width: none !important;
+  }
+  /* Ours replaces YouTube's description, which is empty below about 1000px wide. */
+  & .metadata-wrapper > .description {
+    display: block !important;
+    min-width: 0;
+    & > :not(.kyt-pl-about) {
+      display: none !important;
+    }
+  }
+  & .kyt-pl-about {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font: 400 14px / 20px Roboto, Arial, sans-serif;
+    color: var(--kyt-fg-muted);
+    cursor: pointer;
+    & > span {
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+  & .kyt-pl-more {
+    flex: none;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: 500 14px / 20px Roboto, Arial, sans-serif;
+    color: var(--kyt-fg);
+    cursor: pointer;
+  }
+}
+
 /* The view-model header owned playlists get: same card, thumbnail left, title, metadata and actions right. */
 html[kyt-playlists] ytd-browse[page-subtype="playlist"] > yt-page-header-renderer {
   --kyt-pl-cover-h: 200px; /* title, info rows and the actions row stack to about this; the cover is 16:9 at the same height */
@@ -297,8 +341,9 @@ html[kyt-playlists] ytd-browse[page-subtype="playlist"] ytd-playlist-video-rende
 }
 html[kyt-playlists] ytd-browse[page-subtype="playlist"] ytd-playlist-byline-renderer .byline-item {
   &:nth-child(1 of .byline-item) { --kyt-pl-i: var(--kyt-pl-videos); order: 2; }
-  &:nth-child(2 of .byline-item) { --kyt-pl-i: var(--kyt-pl-views); order: 1; }
-  &:nth-child(3 of .byline-item) { --kyt-pl-i: var(--kyt-pl-date); order: 4; }
+  /* Courses have no views item: videos, then updated. */
+  &:nth-child(2 of .byline-item):not(:nth-last-child(1 of .byline-item)) { --kyt-pl-i: var(--kyt-pl-views); order: 1; }
+  &:nth-last-child(1 of .byline-item):not(:nth-child(1 of .byline-item)) { --kyt-pl-i: var(--kyt-pl-date); order: 4; }
 }
 .kyt-pl-duration {
   --kyt-pl-i: var(--kyt-pl-duration);
@@ -717,11 +762,11 @@ html[kyt-playlists][kyt-pl-proxy] ytd-popup-container tp-yt-iron-dropdown {
   animation: none !important;
 }
 
-/* YouTube's own header buttons (stamped with their icon type) in our icons: Add videos, Edit, Share, and Shuffle and
-   Download on the older header Watch later and Liked videos use. */
+/* YouTube's own header buttons (stamped with their icon type) in our icons: Add videos, Edit, Share, Play, Comments (courses), and
+   Shuffle and Download on the older header Watch later and Liked videos use. */
 html[kyt-playlists] ytd-browse[page-subtype="playlist"] > :is(yt-page-header-renderer, ytd-playlist-header-renderer) {
-  & :is([kyt-icon="ADD"], [kyt-icon="EDIT"], [kyt-icon="SHARE"], [kyt-icon="SHUFFLE"], [kyt-icon="OFFLINE_DOWNLOAD"]) .ytSpecButtonShapeNextIcon,
-  & toggle-button-view-model button .ytSpecButtonShapeNextIcon {
+  & :is([kyt-icon="ADD"], [kyt-icon="EDIT"], [kyt-icon="SHARE"], [kyt-icon="SHUFFLE"], [kyt-icon="OFFLINE_DOWNLOAD"], [kyt-icon="PLAY_ARROW"], [kyt-icon="COMMENT"]) .ytSpecButtonShapeNextIcon,
+  & :is(toggle-button-view-model, ytd-toggle-button-renderer) button .ytSpecButtonShapeNextIcon {
     background-color: currentColor;
     mask: var(--kyt-i) center / contain no-repeat;
     & > * { visibility: hidden; }
@@ -730,9 +775,11 @@ html[kyt-playlists] ytd-browse[page-subtype="playlist"] > :is(yt-page-header-ren
   & [kyt-icon="EDIT"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-edit); }
   & [kyt-icon="SHARE"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-share); }
   /* Save is a toggle whose icon type lags when it flips, so key on aria-pressed, not the stamp. */
-  & toggle-button-view-model button .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-save); }
+  & :is(toggle-button-view-model, ytd-toggle-button-renderer) button .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-save); }
   /* Saved: same icon in the accent, like the other pressed toggles. */
-  & toggle-button-view-model button[aria-pressed="true"] .ytSpecButtonShapeNextIcon { color: var(--kyt-accent, currentColor); }
+  & :is(toggle-button-view-model, ytd-toggle-button-renderer) button[aria-pressed="true"] .ytSpecButtonShapeNextIcon { color: var(--kyt-accent, currentColor); }
+  & [kyt-icon="PLAY_ARROW"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-videos); }
+  & [kyt-icon="COMMENT"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-comments); }
   & [kyt-icon="SHUFFLE"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-shuffle); }
   & [kyt-icon="OFFLINE_DOWNLOAD"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-pl-download); }
 }
