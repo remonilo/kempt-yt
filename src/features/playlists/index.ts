@@ -11,17 +11,17 @@ import { WATCH_LATER } from '../watch-later-btn/index.ts';
 
 
 const WORDS = {
-  en: { search: 'Search playlists', find: 'Search playlist', sortBy: 'Sort by:', download: 'Download', playAll: 'Play all', share: 'Copy link', edit: 'Edit', remove: 'Delete' },
-  es: { search: 'Buscar listas', find: 'Buscar en la lista', sortBy: 'Ordenar por:', download: 'Descargar', playAll: 'Reproducir todo', share: 'Copiar enlace', edit: 'Editar', remove: 'Eliminar' },
-  pt: { search: 'Pesquisar playlists', find: 'Pesquisar na playlist', sortBy: 'Ordenar por:', download: 'Fazer download', playAll: 'Reproduzir tudo', share: 'Copiar link', edit: 'Editar', remove: 'Excluir' },
-  de: { search: 'Playlists durchsuchen', find: 'Playlist durchsuchen', sortBy: 'Sortieren nach:', download: 'Herunterladen', playAll: 'Alle wiedergeben', share: 'Link kopieren', edit: 'Bearbeiten', remove: 'Löschen' },
-  fr: { search: 'Rechercher des playlists', find: 'Rechercher dans la playlist', sortBy: 'Trier par :', download: 'Télécharger', playAll: 'Tout lire', share: 'Copier le lien', edit: 'Modifier', remove: 'Supprimer' },
-  ru: { search: 'Поиск плейлистов', find: 'Поиск в плейлисте', sortBy: 'Сортировка:', download: 'Скачать', playAll: 'Воспроизвести все', share: 'Копировать ссылку', edit: 'Изменить', remove: 'Удалить' },
-  ja: { search: '再生リストを検索', find: '再生リスト内を検索', sortBy: '並べ替え:', download: 'ダウンロード', playAll: 'すべて再生', share: 'リンクをコピー', edit: '編集', remove: '削除' },
-  ko: { search: '재생목록 검색', find: '재생목록에서 검색', sortBy: '정렬 기준:', download: '오프라인 저장', playAll: '모두 재생', share: '링크 복사', edit: '수정', remove: '삭제' },
-  hi: { search: 'प्लेलिस्ट खोजें', find: 'प्लेलिस्ट में खोजें', sortBy: 'क्रम से लगाएं:', download: 'डाउनलोड करें', playAll: 'सभी चलाएं', share: 'लिंक कॉपी करें', edit: 'संपादित करें', remove: 'हटाएं' },
-  id: { search: 'Telusuri playlist', find: 'Telusuri di playlist', sortBy: 'Urutkan:', download: 'Download', playAll: 'Putar semua', share: 'Salin link', edit: 'Edit', remove: 'Hapus' },
-  tr: { search: 'Oynatma listelerinde ara', find: 'Oynatma listesinde ara', sortBy: 'Sıralama ölçütü:', download: 'İndir', playAll: 'Tümünü oynat', share: 'Bağlantıyı kopyala', edit: 'Düzenle', remove: 'Sil' },
+  en: { search: 'Search playlists', find: 'Search playlist', sortBy: 'Sort by:', download: 'Download', playAll: 'Play all', share: 'Copy link', edit: 'Edit', remove: 'Delete', addTo: 'Add to playlist', queue: 'Add to queue' },
+  es: { search: 'Buscar listas', find: 'Buscar en la lista', sortBy: 'Ordenar por:', download: 'Descargar', playAll: 'Reproducir todo', share: 'Copiar enlace', edit: 'Editar', remove: 'Eliminar', addTo: 'Añadir a lista', queue: 'Añadir a la cola' },
+  pt: { search: 'Pesquisar playlists', find: 'Pesquisar na playlist', sortBy: 'Ordenar por:', download: 'Fazer download', playAll: 'Reproduzir tudo', share: 'Copiar link', edit: 'Editar', remove: 'Excluir', addTo: 'Adicionar à playlist', queue: 'Adicionar à fila' },
+  de: { search: 'Playlists durchsuchen', find: 'Playlist durchsuchen', sortBy: 'Sortieren nach:', download: 'Herunterladen', playAll: 'Alle wiedergeben', share: 'Link kopieren', edit: 'Bearbeiten', remove: 'Löschen', addTo: 'Zu Playlist hinzufügen', queue: 'Zur Warteschlange hinzufügen' },
+  fr: { search: 'Rechercher des playlists', find: 'Rechercher dans la playlist', sortBy: 'Trier par :', download: 'Télécharger', playAll: 'Tout lire', share: 'Copier le lien', edit: 'Modifier', remove: 'Supprimer', addTo: 'Ajouter à une playlist', queue: 'Ajouter à la file d\'attente' },
+  ru: { search: 'Поиск плейлистов', find: 'Поиск в плейлисте', sortBy: 'Сортировка:', download: 'Скачать', playAll: 'Воспроизвести все', share: 'Копировать ссылку', edit: 'Изменить', remove: 'Удалить', addTo: 'Добавить в плейлист', queue: 'Добавить в очередь' },
+  ja: { search: '再生リストを検索', find: '再生リスト内を検索', sortBy: '並べ替え:', download: 'ダウンロード', playAll: 'すべて再生', share: 'リンクをコピー', edit: '編集', remove: '削除', addTo: '再生リストに追加', queue: 'キューに追加' },
+  ko: { search: '재생목록 검색', find: '재생목록에서 검색', sortBy: '정렬 기준:', download: '오프라인 저장', playAll: '모두 재생', share: '링크 복사', edit: '수정', remove: '삭제', addTo: '재생목록에 추가', queue: '현재 재생목록에 추가' },
+  hi: { search: 'प्लेलिस्ट खोजें', find: 'प्लेलिस्ट में खोजें', sortBy: 'क्रम से लगाएं:', download: 'डाउनलोड करें', playAll: 'सभी चलाएं', share: 'लिंक कॉपी करें', edit: 'संपादित करें', remove: 'हटाएं', addTo: 'प्लेलिस्ट में जोड़ें', queue: 'कतार में जोड़ें' },
+  id: { search: 'Telusuri playlist', find: 'Telusuri di playlist', sortBy: 'Urutkan:', download: 'Download', playAll: 'Putar semua', share: 'Salin link', edit: 'Edit', remove: 'Hapus', addTo: 'Tambahkan ke playlist', queue: 'Tambahkan ke antrean' },
+  tr: { search: 'Oynatma listelerinde ara', find: 'Oynatma listesinde ara', sortBy: 'Sıralama ölçütü:', download: 'İndir', playAll: 'Tümünü oynat', share: 'Bağlantıyı kopyala', edit: 'Düzenle', remove: 'Sil', addTo: 'Oynatma listesine ekle', queue: 'Sıraya ekle' },
 };
 
 type Call = Parameters<NonNullable<Feature['run']>>[0]['call'];
@@ -123,9 +123,29 @@ async function playlist(signal: AbortSignal, call: Call) {
   if (stats.matches('yt-content-metadata-view-model')) headerMenu(stats.closest('ytd-browse'), signal, call);
   else courseAbout(signal, call);
 
-  const list = await waitFor(`${S.playlistList}, ${S.playlistLockups}`, { signal });
-  const contents = list?.querySelector(':scope > #contents');
-  if (!list || !contents || signal.aborted) return;
+  // Opening another playlist swaps the list element (old list and lockup section trade places), and the previous one
+  // lingers for a moment after the navigation: rebind whenever the live one changes.
+  const browse = stats.closest('ytd-browse');
+  if (!browse) return;
+  let cur: Element | null = null;
+  let sub: AbortController | undefined;
+  const bind = () => {
+    const list = document.querySelector(`${S.playlistList}, ${S.playlistLockups}`);
+    if (list === cur || (list && !list.querySelector(':scope > #contents'))) return;
+    cur = list;
+    sub?.abort();
+    if (!list) return;
+    sub = new AbortController();
+    rows(list, stats, AbortSignal.any([signal, sub.signal]), call);
+  };
+  observe(browse, { childList: true, subtree: true }, bind, signal);
+  bind();
+}
+
+/** Duration and bulk select for one list element. */
+function rows(list: Element, stats: Element, signal: AbortSignal, call: Call) {
+  const contents = list.querySelector(':scope > #contents');
+  if (!contents) return;
   const sel = list.matches(S.playlistList) ? S.playlistList : S.playlistLockups;
 
   // Total duration: only once every row has loaded.
@@ -148,9 +168,13 @@ async function playlist(signal: AbortSignal, call: Call) {
   const obs = observe(contents, { childList: true, subtree: deep }, update, signal);
   update();
 
-  if (sel !== S.playlistList) return; // lockup rows carry no menu commands for bulk select
-  const words = await call('playlistWords', S.playlistList).catch(() => null);
-  if (words && !signal.aborted) bulk(list, contents, words, signal, call);
+  // Lockup rows carry no menu, and the section's data can land without a DOM change, so their labels are ours.
+  if (sel === S.playlistLockups) {
+    const w = local(WORDS);
+    bulk(list, contents, sel, { listId: new URLSearchParams(location.search).get('list') ?? '', editable: false, remove: '', save: w.addTo, queue: w.queue }, signal, call);
+    return;
+  }
+  call('playlistWords', sel).catch(() => null).then((words) => words && !signal.aborted && bulk(list, contents, sel, words, signal, call));
 }
 
 /** Course playlists: the long description becomes one line with YouTube's "...More", which opens its About dialog. */
@@ -290,8 +314,10 @@ async function library(signal: AbortSignal, call: Call) {
 }
 
 /** Bulk select (Figma 125:13891): a round checkbox per row, a bar with select-all and the actions. */
-function bulk(list: Element, contents: Element, words: PlaylistWords, signal: AbortSignal, call: Call) {
-  const rows = () => contents.querySelectorAll<HTMLElement>(':scope > ytd-playlist-video-renderer');
+function bulk(list: Element, contents: Element, sel: string, words: PlaylistWords, signal: AbortSignal, call: Call) {
+  // Lockup rows (other people's playlists, Liked videos) are bare divs; the last div holds the continuation.
+  const row = sel === S.playlistList ? ':scope > ytd-playlist-video-renderer' : ':scope > div:has(> yt-lockup-view-model)';
+  const rows = () => contents.querySelectorAll<HTMLElement>(row);
   const check = () => {
     const b = el('button', 'kyt-pl-check');
     b.role = 'checkbox';
@@ -339,7 +365,7 @@ function bulk(list: Element, contents: Element, words: PlaylistWords, signal: Ab
   };
 
   // In the section header beside YouTube's sort chip (CSS orders them), else above the rows.
-  const header = list.closest('ytd-item-section-renderer')?.querySelector(':scope > #header') ?? null;
+  const header = list.closest('ytd-item-section-renderer, yt-item-section-renderer')?.querySelector(':scope > #header') ?? null;
   keep(bar, [header ?? list, contents], () => {
     if (header && bar.parentElement !== header) header.prepend(bar);
     else if (!header && bar.nextElementSibling !== contents) contents.before(bar);
@@ -347,7 +373,7 @@ function bulk(list: Element, contents: Element, words: PlaylistWords, signal: Ab
     if (input.value) search();
     sync();
     // Opening another playlist reuses this list while words still describe the previous one ("Remove from X").
-    call('playlistWords', S.playlistList).then((w) => {
+    if (sel === S.playlistList) call('playlistWords', sel).then((w) => {
       if (!w || signal.aborted || w.listId === words.listId) return;
       Object.assign(words, w);
       remove.hidden = !words.editable || !words.remove;
@@ -381,7 +407,7 @@ function bulk(list: Element, contents: Element, words: PlaylistWords, signal: Ab
   function search() {
     const hit = matcher(input.value);
     for (const r of rows()) {
-      const miss = !hit(`${r.querySelector(S.rowTitle)?.textContent ?? ''} ${r.querySelector(S.rowChannel)?.textContent ?? ''}`);
+      const miss = !hit(`${r.querySelector(`${S.rowTitle}, ${S.lockupTitle}`)?.textContent ?? ''} ${r.querySelector(`${S.rowChannel}, ${S.lockupChannel}`)?.textContent ?? ''}`);
       r.toggleAttribute('kyt-pl-miss', miss);
       if (miss) r.removeAttribute('kyt-picked');
     }
@@ -389,9 +415,9 @@ function bulk(list: Element, contents: Element, words: PlaylistWords, signal: Ab
   input.addEventListener('input', () => (search(), sync()), { signal });
 
   // Removal re-renders the list (rows are reused for other videos), so the picks go.
-  remove.addEventListener('click', () => call('playlistRemove', S.playlistList).then(clear), { signal });
-  queue.addEventListener('click', () => call('playlistQueue', S.playlistList).then(clear), { signal });
-  wl.addEventListener('click', () => call('playlistSave', S.playlistList, 'WL').then(clear), { signal });
+  remove.addEventListener('click', () => call('playlistRemove', sel).then(clear), { signal });
+  queue.addEventListener('click', () => call('playlistQueue', sel).then(clear), { signal });
+  wl.addEventListener('click', () => call('playlistSave', sel, 'WL').then(clear), { signal });
 
   let stop = () => {};
   const close = () => {
@@ -406,7 +432,7 @@ function bulk(list: Element, contents: Element, words: PlaylistWords, signal: Ab
     saveDd.setAttribute('open', '');
     save.ariaExpanded = 'true';
     stop = outsideClick(saveDd, close, signal);
-    const targets = await call('playlistTargets', S.playlistList).catch(() => []);
+    const targets = await call('playlistTargets', sel).catch(() => []);
     if (!saveDd.hasAttribute('open')) return;
     menu.ariaBusy = null;
     menu.replaceChildren(...targets.filter((t) => t.id !== words.listId).map((t) => {
@@ -422,7 +448,7 @@ function bulk(list: Element, contents: Element, words: PlaylistWords, signal: Ab
     const id = (e.target as Element).closest<HTMLElement>('[data-id]')?.dataset.id;
     if (!id) return;
     close();
-    call('playlistSave', S.playlistList, id).then(clear);
+    call('playlistSave', sel, id).then(clear);
   }, { signal });
   bar.addEventListener('keydown', (e) => e.key === 'Escape' && saveDd.hasAttribute('open') && (close(), save.focus()), { signal });
 }

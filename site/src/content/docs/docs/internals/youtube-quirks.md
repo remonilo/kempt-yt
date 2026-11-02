@@ -23,6 +23,7 @@ Short comments in the source point here. Each entry is a constraint YouTube impo
 - Signed in, YouTube redraws the masthead `#buttons` (when Notifications arrives) and the watch action row (when Ask arrives, and on the Subscribe animation), and drops nodes it didn't create. Anything Kempt inserts there goes through `keep()` in `src/core/dom.ts`.
 - `keep` and `stamp` run synchronously in the observer callback, before paint. A `requestAnimationFrame` delay paints the re-rendered element unstamped for one frame.
 - Stamp channel tabs by URL slug, never by title. The mini guide's root exists early, but its entries render later.
+- Opening another playlist swaps the row list element: the old list (`ytd-playlist-video-list-renderer`) and the lockup section (`yt-item-section-renderer`) trade places, and the previous one lingers for a moment after `yt-navigate-finish`. A `waitFor` right after navigation can return the outgoing list. `playlists` rebinds whenever the live list changes. The lockup section's `.data` can also land without any DOM change, so don't wait on it.
 
 - A view-model ⋯ menu (`tp-yt-iron-dropdown` in `ytd-popup-container`) keeps its previous rows after it closes, only `aria-hidden` and `display: none`. Waiting for `yt-list-item-view-model` matches those stale rows at once, so a click lands on a closed menu or on the last menu's row. Wait for the dropdown with `[focused]:not([aria-hidden="true"])`: YouTube sets `focused` a few ms after the new rows render.
 

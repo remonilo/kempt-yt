@@ -395,16 +395,91 @@ html[kyt-playlists] ytd-browse[page-subtype="playlist"] ytd-playlist-byline-rend
     outline-offset: 2px;
   }
 }
-html[kyt-playlists] ytd-playlist-video-renderer[kyt-picked] {
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] [kyt-picked] {
   background: var(--kyt-selected-bg);
 }
-html[kyt-playlists] ytd-browse[page-subtype="playlist"] ytd-item-section-renderer > #header:has(> .kyt-pl-bar) {
+/* Lockup rows (other people's playlists, Liked videos) are bare divs: check, then the lockup, laid out like the rows above. */
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] .ytSectionListRendererContents:has(> yt-item-section-renderer .kyt-pl-check) {
+  padding: 0 !important; /* YouTube's inline 0 48px; the old list spans the header card's width */
+}
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] yt-item-section-renderer > #contents > div:has(> .kyt-pl-check) {
   display: flex;
+  align-items: center;
+  padding: 8px 0;
+  margin-bottom: 4px !important; /* YouTube's inline 16px */
+  border-radius: 12px;
+  &[kyt-pl-miss] {
+    display: none;
+  }
+  &:hover:not([kyt-picked]) {
+    background: color-mix(in srgb, var(--kyt-fg) 10%, transparent); /* the old rows' hover grey */
+  }
+  & > .kyt-pl-check {
+    margin-right: 12px;
+  }
+  & > yt-lockup-view-model {
+    flex: 1;
+    min-width: 0;
+  }
+  /* The whole row lights up instead. */
+  & yt-touch-feedback-shape {
+    display: none;
+  }
+  & a.ytLockupViewModelContentImage {
+    padding-right: 16px;
+  }
+  & .ytLockupMetadataViewModelTitle {
+    margin-bottom: 8px;
+  }
+  /* Views and age as pills above the channel, as in the old rows. */
+  & yt-content-metadata-view-model {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  & .ytContentMetadataViewModelMetadataRow:nth-child(2) {
+    order: -1;
+    display: flex;
+    gap: 8px;
+    & > :is(.ytContentMetadataViewModelLeadingIcon, .ytContentMetadataViewModelDelimiter) {
+      display: none;
+    }
+    & > .ytContentMetadataViewModelMetadataText {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 14px;
+      background: var(--kyt-pill-bg);
+      color: var(--kyt-fg);
+      font: 400 13px / 18px Roboto, Arial, sans-serif;
+      --kyt-pl-i: var(--kyt-pl-views);
+      &:last-of-type {
+        --kyt-pl-i: var(--kyt-pl-date);
+      }
+      &::before {
+        content: "";
+        width: 16px;
+        height: 16px;
+        background-color: var(--kyt-fg-muted);
+        mask: var(--kyt-pl-i) center / contain no-repeat;
+      }
+    }
+  }
+}
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] :is(ytd-item-section-renderer, yt-item-section-renderer) > #header:has(> .kyt-pl-bar) {
+  display: flex;
+  flex-wrap: wrap; /* the search pill takes the next line before the actions wrap (Liked videos has three chips) */
   align-items: center;
   gap: 12px;
   margin-bottom: 8px;
   & > .kyt-pl-bar {
     display: contents;
+  }
+  & .kyt-pl-actions {
+    flex: none;
   }
   & > :not(.kyt-pl-bar) {
     order: 2;
@@ -430,7 +505,7 @@ html[kyt-playlists] ytd-browse[page-subtype="playlist"] ytd-item-section-rendere
   min-width: 200px;
   margin-left: auto;
 }
-html[kyt-playlists] ytd-playlist-video-renderer[kyt-pl-miss] {
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] [kyt-pl-miss] {
   display: none;
 }
 /* "Sort by:" before the sort chip's value (Figma 125:13891); the chip with a dropdown arrow is the sort. */

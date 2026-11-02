@@ -2,8 +2,14 @@ import { cfg, find, savePlaylists, text, walk } from '../../page/youtube.ts';
 
 // Bulk actions reuse each row's own menu commands, sent through YouTube's handler (`yt-service-request`), so YouTube
 // does the request, the toast and the list update. Picked rows carry [kyt-picked], set by the content script.
+// Old list rows carry a playlistVideoRenderer, lockup rows (other people's playlists, Liked videos) a lockupViewModel.
 const picked = (sel: string): any[] =>
-  [...document.querySelectorAll<any>(`${sel} ytd-playlist-video-renderer[kyt-picked]`)].map((r) => r.data).filter(Boolean);
+  [...document.querySelectorAll<any>(`${sel} [kyt-picked]`)].map((r) => r.data).filter(Boolean);
+const videoId = (row: any): string => row.videoId ?? row.contentId;
+
+/** A row's Add to queue command: the old row's menu item, or the lockup's thumbnail hover button. */
+const queueCommand = (row: any) => menuItem(row, 'ADD_TO_QUEUE_TAIL')?.serviceEndpoint
+  ?? find(row, (x) => x.buttonViewModel?.iconName === 'ADD_TO_QUEUE_TAIL')?.buttonViewModel.onTap?.innertubeCommand;
 
 /** A lockup row's length from its thumbnail badge ("1:02:03"); 0 for live, upcoming or missing. */
 const badgeSeconds = (item: any): number => {
@@ -133,7 +139,7 @@ export const playlistsPage = {
 
   playlistQueue(sel: string) {
     const list = document.querySelector(sel);
-    for (const row of picked(sel)) serviceRequest(list, menuItem(row, 'ADD_TO_QUEUE_TAIL')?.serviceEndpoint);
+    for (const row of picked(sel)) serviceRequest(list, queueCommand(row));
   },
 
   /** One request for every picked row: their remove commands merged (actions + the client-side row removal). */
@@ -149,13 +155,13 @@ export const playlistsPage = {
   /** The user's playlists for the Save menu, as YouTube's own Save dialog lists them. */
   async playlistTargets(sel: string): Promise<SaveTarget[]> {
     // The endpoint 400s on more than one id; the list is the same for any video, `has` only means something for one.
-    const ids = picked(sel).map((r) => r.videoId);
-    const list = document.querySelector<any>(sel)?.data?.playlistId;
+    const ids = picked(sel).map(videoId);
+    const list = document.querySelector<any>(sel)?.data?.playlistId ?? new URLSearchParams(location.search).get('list');
     return (await savePlaylists(ids[0])).filter((p) => p.id !== list).map((p) => ({ id: p.id, title: p.title, has: ids.length === 1 && p.all }));
   },
 
   playlistSave(sel: string, target: string) {
-    const ids = [...new Set(picked(sel).map((r) => r.videoId as string))];
+    const ids = [...new Set(picked(sel).map(videoId))];
     if (ids.length) serviceRequest(document.querySelector(sel), editEndpoint(target, ids.map((v) => ({ action: 'ACTION_ADD_VIDEO', addedVideoId: v }))));
   },
 };
