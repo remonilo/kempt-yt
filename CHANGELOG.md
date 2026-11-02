@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.10.0](https://github.com/remonilo/kempt-yt/compare/v0.9.0...v0.10.0) (2026-11-02)
+
+
+### Features
+
+* **icons:** chapters panel share and repeat icons ([10978d0](https://github.com/remonilo/kempt-yt/commit/10978d0ae65a7d175113b907ae0d9ef3c2be30fa))
+* **icons:** own Shop button icon, icon-only in the action row ([e370a8c](https://github.com/remonilo/kempt-yt/commit/e370a8c24bcca32fc0525d327465bffc168a779d))
+* **playlists:** bulk select and search on lockup playlists ([ab6ddf2](https://github.com/remonilo/kempt-yt/commit/ab6ddf2a9c98c320626741e01feb9e0f86b0d555))
+* **playlists:** duration on other people's playlists, course header with About dialog ([2184b01](https://github.com/remonilo/kempt-yt/commit/2184b0146eccc892c5789789f8dc827d0bf7d2fd))
+* **playlists:** owner row, Play all, Copy link, Edit and Delete on library cards ([0b7e436](https://github.com/remonilo/kempt-yt/commit/0b7e436c957356608f8b2707a0e3d0fc9136de36))
+* **popup:** group tabs instead of one long list ([7d571ad](https://github.com/remonilo/kempt-yt/commit/7d571addc2838cdc4f6bf2517f5bfa0c27ec52c4))
+* **watch-tabs:** move YouTube's cards into the Info tab, with a dot until it's opened ([4ac61d1](https://github.com/remonilo/kempt-yt/commit/4ac61d1e1197e3de7ba8adce46f0110885bd4641))
+* **watch-tabs:** Shop product panel opens in the Info tab ([2c1e301](https://github.com/remonilo/kempt-yt/commit/2c1e301d6a8b907b650b4668bc67666b747d4455))
+
+
+### Bug Fixes
+
+* **captions:** fit the auto-caption plate to each line, stop browser's video drag from locking caption drag ([6edac8f](https://github.com/remonilo/kempt-yt/commit/6edac8fb3a94b2e21a7b646d00f6ae6ba1fd1282))
+* **icons:** save to library row in the playlist panel menu ([15ff278](https://github.com/remonilo/kempt-yt/commit/15ff278c2229ec8a1bdd70f1c62f11b04c8e2792))
+* **playlists:** header buttons and Save icon on playlists that use lockup rows ([7a0939a](https://github.com/remonilo/kempt-yt/commit/7a0939afa8fa727536d31ab6cea18be5116db56b))
+* **playlists:** refresh bulk bar labels when another playlist opens ([2b3db1e](https://github.com/remonilo/kempt-yt/commit/2b3db1e7d641de9a0235da6cf690ce70d3dc5ff8))
+* **search-filters:** gap below channel row in grid layout ([e0dcde1](https://github.com/remonilo/kempt-yt/commit/e0dcde152f90ce6eb4d5147dd18d60a61b5a0015))
+
 ## [0.9.0](https://github.com/remonilo/kempt-yt/compare/v0.8.0...v0.9.0) (2026-10-25)
 
 
