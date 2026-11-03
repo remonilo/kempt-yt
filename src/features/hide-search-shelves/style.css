@@ -1,0 +1,2 @@
+/* Top-level shelves between results. A channel result's "Latest from" shelf has the same markup, so it goes too. */
+html[kyt-hide-search-shelves] ytd-search ytd-item-section-renderer > #contents > :is(ytd-shelf-renderer, ytd-horizontal-card-list-renderer) { display: none !important; }

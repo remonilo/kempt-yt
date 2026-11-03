@@ -22,8 +22,31 @@ import { subsTabs } from './subs-tabs/index.ts';
 import { timeline } from './timeline/index.ts';
 import { watchLaterBtn } from './watch-later-btn/index.ts';
 import { watchTabs } from './watch-tabs/index.ts';
+import { hideHomeFeed } from './hide-home-feed/index.ts';
+import { hideHomeChips } from './hide-home-chips/index.ts';
+import { subsHome } from './subs-home/index.ts';
+import { hideExplore } from './hide-explore/index.ts';
+import { hideSubs } from './hide-subs/index.ts';
+import { hideSecondary } from './hide-secondary/index.ts';
+import { hideRelated } from './hide-related/index.ts';
+import { hidePlaylist } from './hide-playlist/index.ts';
+import { hideChat } from './hide-chat/index.ts';
+import { hideComments } from './hide-comments/index.ts';
+import { hideAvatars } from './hide-avatars/index.ts';
+import { hideDescription } from './hide-description/index.ts';
+import { hideChannel } from './hide-channel/index.ts';
+import { hideActions } from './hide-actions/index.ts';
+import { hideMerch } from './hide-merch/index.ts';
+import { hideEndscreen } from './hide-endscreen/index.ts';
+import { hideAutoplay } from './hide-autoplay/index.ts';
+import { hideNotifs } from './hide-notifs/index.ts';
+import { hideCreate } from './hide-create/index.ts';
+import { hideMixes } from './hide-mixes/index.ts';
+import { hideSearchShelves } from './hide-search-shelves/index.ts';
 
 // A feature's style.css is picked up by build.mjs automatically.
 export const features: Feature[] = [accent, font, selectedBg, subscribeRed, searchBar, icons,
   sidebar, settingsTopbar, watchLaterBtn, notifActions, shorts, watchTabs, captions, commentSort, commentSearch, commentLayout,
-  timeline, subsTabs, playlists, channelTabs, searchFilters, grid, progressBar];
+  timeline, subsTabs, playlists, channelTabs, searchFilters, grid, progressBar,
+  // Hide tab, in page order
+  hideHomeFeed, hideHomeChips, subsHome, hideExplore, hideSubs, hideSecondary, hideRelated, hidePlaylist, hideChat, hideComments, hideAvatars, hideDescription, hideChannel, hideActions, hideMerch, hideEndscreen, hideAutoplay, hideNotifs, hideCreate, hideMixes, hideSearchShelves];

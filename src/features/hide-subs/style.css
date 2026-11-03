@@ -1,0 +1,7 @@
+html[kyt-hide-subs] :is(
+  :is(ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer)[kyt-icon^="TAB_SUBSCRIPTIONS"],
+  ytd-guide-section-renderer:has(> #items > ytd-guide-subscriptions-section-renderer),
+  ytd-guide-subscriptions-section-renderer,
+  .kyt-nav-item[data-icon^="TAB_SUBSCRIPTIONS"],
+  ytd-browse[page-subtype="subscriptions"] ytd-two-column-browse-results-renderer
+) { display: none !important; }

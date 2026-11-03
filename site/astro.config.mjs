@@ -43,6 +43,7 @@ export default defineConfig({
             { label: 'Captions', slug: 'docs/features/captions' },
             { label: 'Wavy progress bar', slug: 'docs/features/progress-bar' },
             { label: 'Grid size', slug: 'docs/features/grid' },
+            { label: 'Hide', slug: 'docs/features/hide' },
             { label: 'Sidebar', slug: 'docs/features/sidebar' },
             { label: 'Look', slug: 'docs/features/look' },
             { label: 'Icons', slug: 'docs/features/icons' },

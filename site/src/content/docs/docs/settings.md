@@ -5,7 +5,7 @@ banner:
   content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
-Click the Kempt icon in the browser toolbar. The tabs at the top switch between the groups below (Look, Menus, Watch, Feeds), and the popup reopens on the last one. Changes apply to open YouTube tabs at once.
+Click the Kempt icon in the browser toolbar. The tabs at the top switch between the groups below (Look, Menus, Watch, Feeds, Hide), and the popup reopens on the last one. Changes apply to open YouTube tabs at once.
 
 ![Kempt popup](../../../assets/screenshots/popup.png)
 
@@ -29,9 +29,12 @@ Click the Kempt icon in the browser toolbar. The tabs at the top switch between 
 | | Comment layout | | On |
 | | [Captions](/kempt-yt/docs/features/captions/) | Style Shadow, Box or Blur; Size 50% to 200% | On, Shadow, 100% |
 | | [Wavy progress bar](/kempt-yt/docs/features/progress-bar/) | Animate wave | Off |
-| Feeds | [Hide Shorts](/kempt-yt/docs/features/shorts/) | | On |
-| | [Timeline](/kempt-yt/docs/features/timeline/) | | On |
+| Feeds | [Timeline](/kempt-yt/docs/features/timeline/) | | On |
 | | [Grid size](/kempt-yt/docs/features/grid/) | Videos per row (2 to 8), Shorts per row (3 to 10) | Off |
+| Hide | [Shorts](/kempt-yt/docs/features/shorts/) | | On |
+| | [Home feed, chips, Explore, Subscriptions, watch page parts, top bar buttons, Mixes, search shelves](/kempt-yt/docs/features/hide/) | | Off |
+| | [Subscriptions as Home](/kempt-yt/docs/features/hide/#subscriptions-as-home) | | Off |
+| | [Autoplay](/kempt-yt/docs/features/hide/#autoplay) | | Off |
 
 ## The color picker
 

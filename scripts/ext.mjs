@@ -14,6 +14,7 @@
 //   --with=<dir or .xpi> also installs another extension, e.g. Return YouTube Dislike (repeatable).
 //   --lang=de sets the browser language; logged out, YouTube follows it (its ?hl= is ignored).
 //   --set=id=0 turns a feature off (=1 on) in the extension's storage before loading, e.g. --set=shorts=0 (repeatable).
+//     With --css-only, hide-* flags stay off unless set here, e.g. --set=hide-comments=1.
 //   --profile=dir runs in that Firefox profile instead of a fresh one, e.g. --profile=~/.kempt-ff (signed in to YouTube).
 //     Close any Firefox using it first. Puppeteer restores the profile's prefs afterwards.
 //   --dump=scripts/x-dump.js runs a console dump script unchanged, last (after --click/--hover/--eval-after). What it
@@ -83,7 +84,10 @@ try {
   await sleep(ext ? 8000 : 4000);
   if (cssOnly) {
     const css = await readFile('dist/content.css', 'utf8');
-    const ids = [...new Set([...css.matchAll(/html\[kyt-([\w-]+)\]/g)].map((m) => m[1]))];
+    // Hide-tab flags would hide what the other checks look at: only those named in --set=hide-x=1 go on.
+    const on = sets.filter(([, v]) => v === '1').map(([k]) => k);
+    const ids = [...new Set([...css.matchAll(/html\[kyt-([\w-]+)\]/g)].map((m) => m[1]))]
+      .filter((id) => !id.startsWith('hide-') || on.includes(id));
     await page.addStyleTag({ content: css });
     await page.evaluate((ids) => ids.forEach((id) => document.documentElement.setAttribute(`kyt-${id}`, '')), ids);
   }

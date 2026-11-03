@@ -9,7 +9,7 @@ Shorts shelves disappear from Home, Subscriptions, search, channels and the side
 
 ## Settings
 
-The switch is **Feeds → Hide Shorts**, with no options.
+The switch is **Hide → Shorts**, with no options.
 
 ## How it works
 

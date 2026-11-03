@@ -1,0 +1,3 @@
+/* A Mix is a collection lockup on a list=RD link. Plain video results can link into a mix too, so the stacked
+   (collection) thumbnail tells them apart. */
+html[kyt-hide-mixes] :is(ytd-radio-renderer, ytd-compact-radio-renderer, ytd-rich-item-renderer:has(yt-collection-thumbnail-view-model):has(a[href*="list=RD"]), yt-lockup-view-model:has(yt-collection-thumbnail-view-model):has(a[href*="list=RD"])) { display: none !important; }

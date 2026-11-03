@@ -1,0 +1,4 @@
+/* With watch-tabs on, the column also holds our tabs, description and comments: only YouTube's own parts go
+   (watch-tabs then drops the Videos and Live chat tabs). */
+html[kyt-hide-secondary]:not([kyt-watch-tabs]) ytd-watch-flexy #secondary { display: none !important; }
+html[kyt-hide-secondary][kyt-watch-tabs] ytd-watch-flexy :is(#related, #playlist, #chat-container) { display: none !important; }

@@ -1,0 +1,1 @@
+html[kyt-hide-endscreen] #movie_player :is(.videowall-endscreen, .ytp-ce-element, .ytp-fullscreen-grid, .ytp-cards-button, .ytp-cards-teaser, .ytp-pause-overlay) { display: none !important; }

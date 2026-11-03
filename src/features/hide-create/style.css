@@ -1,0 +1,2 @@
+/* Create is the Tonal + IconLeading button; signed out, Sign in sits there as Outline. */
+html[kyt-hide-create] ytd-masthead #buttons > ytd-button-renderer:has(button.ytSpecButtonShapeNextTonal.ytSpecButtonShapeNextIconLeading) { display: none !important; }

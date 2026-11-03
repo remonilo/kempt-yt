@@ -79,15 +79,19 @@ export const watchTabs: Feature = {
     const chatFrame = () => flexy.querySelector<HTMLElement>(`${S.chatContainer} > ${S.liveChat}:not([hidden])`);
     const chatToggle = () => chatFrame()?.querySelector<HTMLElement>(S.chatToggle);
     let chatOpened = false; // we expanded it, so leaving the tab collapses it again
-    const available = (t: Tab) => t === 'chat' ? !!chatFrame() && (!chatFrame()!.hasAttribute('collapsed') || !!chatToggle())
+    // Hide-tab features can empty a tab: Comments, Live chat, or Videos with neither related videos nor a playlist.
+    const hidden = (...ids: string[]) => ids.some((id) => html.hasAttribute(`kyt-hide-${id}`));
+    const available = (t: Tab) => t === 'chat' ? !hidden('chat', 'secondary') && !!chatFrame() && (!chatFrame()!.hasAttribute('collapsed') || !!chatToggle())
       : t === 'ai' ? html.getAttribute('kyt-watch-tabs-aiAs') === 'tab' && !!flexy.querySelector(S.askButton)
+      : t === 'comments' ? !hidden('comments')
+      : t === 'videos' ? !hidden('related', 'secondary') || (!hidden('playlist') && !!flexy.querySelector(S.playlistPanel))
       : true;
 
     // Theater closes every tab (the column sits under the player); `tab` is kept and returns afterwards.
     const theater = () => flexy.hasAttribute('theater');
 
     const render = () => {
-      if (!available(tab)) tab = 'videos';
+      if (!available(tab)) tab = available('videos') ? 'videos' : 'info';
       const open = theater() ? 'none' : tab;
       const shown = TABS.filter(available);
       for (const [t, b] of btns) {
@@ -175,7 +179,7 @@ export const watchTabs: Feature = {
     let cardsSeen = false;
     const dot = () => {
       // Slots stay in the box empty; a card counts once YouTube renders into it (merch renders as its own node).
-      const has = [...infoBox.children].some((c) => c.matches('ytd-merch-shelf-renderer') ? !c.hasAttribute('hidden')
+      const has = !html.hasAttribute('kyt-hide-merch') && [...infoBox.children].some((c) => c.matches('ytd-merch-shelf-renderer') ? !c.hasAttribute('hidden')
         : c.matches('#clarify-box, #ticket-shelf, #donation-shelf') && [...c.children].some((x) => !x.hasAttribute('hidden')));
       btns.get('info')!.toggleAttribute('kyt-dot', has && !cardsSeen && tab !== 'info');
     };
@@ -238,6 +242,7 @@ export const watchTabs: Feature = {
     watch(flexy.querySelector(S.watchActions), { subtree: true, attributeFilter: ['kyt-icon'] }, () => (checkAi(), render()));
     // HTML lowercases attribute names: the runner's kyt-watch-tabs-aiAs lands as -aias.
     watch(html, { attributeFilter: ['kyt-watch-tabs-ai', 'kyt-watch-tabs-aias'] }, () => (ai(), render()));
+    watch(html, { attributeFilter: ['comments', 'chat', 'related', 'playlist', 'secondary', 'merch'].map((id) => `kyt-hide-${id}`) }, () => (render(), dot()));
     watch(flexy, { attributeFilter: ['theater'] }, () => (render(), requestAnimationFrame(align)));
     watch(flexy, { attributeFilter: ['is-two-columns_'] }, render);
 

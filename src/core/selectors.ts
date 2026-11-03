@@ -34,6 +34,7 @@ export const S = {
   panelTitle: 'ytd-engagement-panel-title-header-renderer', // inside a panel: title, icon menus, close
   panelSortItems: '#menu yt-dropdown-menu tp-yt-paper-listbox > a', // inside panelTitle: the comments sort icon menu
   chatContainer: 'ytd-watch-flexy #chat-container',
+  playlistPanel: 'ytd-watch-flexy ytd-playlist-panel-renderer#playlist:not([hidden])', // only while a list plays
   description: 'ytd-watch-metadata #description',
   // Cards YouTube adds around the action row: context panel, concert tickets, merch (dom-if + its stamp), donations.
   // .ytd-watch-flexy (Polymer's scope class) keeps out the same-id slots inside descriptions (metadata, engagement panel).
@@ -69,6 +70,8 @@ export const S = {
   openPopupMenu: 'ytd-popup-container tp-yt-iron-dropdown[focused]:not([aria-hidden="true"]):has(yt-list-item-view-model)',
   fsActions: '#movie_player .ytp-fullscreen-quick-actions', // fullscreen like/dislike/comments/share/⋯ row; needs stamp
   videoContainer: '.html5-video-player .html5-video-container', // holds the <video>; a native drag starting here steals the mouseup
+  autonav: '#movie_player .ytp-autonav-toggle', // player's Autoplay switch (a button)
+  autonavState: '.ytp-autonav-toggle-button', // inside autonav: carries aria-checked
   progressBar: '#movie_player .ytp-chrome-bottom .ytp-progress-bar', // #movie_player also holds a hidden 0x0 spare bar outside .ytp-chrome-bottom
   lockupTitle: '.ytLockupMetadataViewModelTitle', // title link of a view-model lockup
   shortsLink: 'a[href^="/shorts/"]',

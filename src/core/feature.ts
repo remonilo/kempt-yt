@@ -12,7 +12,7 @@ export type Option = { label: string; cssVar?: string; parent?: string } & (
 );
 
 // One word each: they are the popup's tabs, and five must fit in 360px.
-export const GROUPS = { look: 'Look', navigation: 'Menus', watch: 'Watch', feeds: 'Feeds' } as const;
+export const GROUPS = { look: 'Look', navigation: 'Menus', watch: 'Watch', feeds: 'Feeds', hide: 'Hide' } as const;
 export type Group = keyof typeof GROUPS;
 
 export interface Ctx {

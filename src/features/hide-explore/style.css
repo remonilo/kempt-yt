@@ -1,0 +1,6 @@
+/* YouTube's guide: the Explore section is the one holding these entries (titles are localized).
+   YouTube's Music/Premium links in "More from YouTube" are YOUTUBE_*, so the prefixes miss them. */
+html[kyt-hide-explore] :is(
+  ytd-guide-section-renderer:has(:is([kyt-icon^="NEWS"], [kyt-icon^="TROPHY"], [kyt-icon^="GAMING_LOGO"], [kyt-icon^="STAR_SHOOTING"], [kyt-icon^="MUSIC"])),
+  .kyt-nav-item[data-icon="EXPLORE"]
+) { display: none !important; }
