@@ -51,6 +51,9 @@ button { cursor: pointer; }
 .kp-row > .kp-icon { color: var(--kp-muted); }
 .kp-label { flex: 1; min-width: 0; }
 .kp-label small { display: block; color: var(--kp-muted); font-size: 12px; line-height: 16px; }
+/* Another switch already hides this one's parts: dimmed, still switchable. */
+.kp-row > :is(.kp-icon, .kp-label) { transition: opacity 150ms; }
+.kp-item.covered > .kp-row > :is(.kp-icon, .kp-label) { opacity: 0.45; }
 
 /* The thumb moves by transform. */
 .kp-switch {

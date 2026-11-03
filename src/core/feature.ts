@@ -37,6 +37,9 @@ export interface Feature {
    *  Boolean options that are true set html[kyt-<id>-<key>], choice options set html[kyt-<id>-<key>="<value>"],
    *  so CSS can gate on them. */
   options?: Record<string, Option>;
+  /** Features that already hide what this one hides; the popup dims this switch while one is on.
+   *  An array entry means all of those ids must be on. */
+  coveredBy?: (string | string[])[];
   /** Omit for CSS-only features. Listen to `kyt:navigate` for same-route navigation. */
   run?(ctx: Ctx): void | Promise<void>;
 }

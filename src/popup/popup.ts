@@ -181,10 +181,27 @@ function optionRows(f: Feature) {
   return box;
 }
 
+// A switch whose parts another switch already hides (coveredBy) is dimmed, and its hint names that switch.
+const onNow = new Map<string, boolean>();
+const covers: (() => void)[] = [];
+const setOn = (id: string, v: boolean) => (onNow.set(id, v), covers.forEach((c) => c()));
+const labelOf = (id: string) => features.find((f) => f.id === id)?.label ?? id;
+
+function coverHint(f: Feature, item: HTMLElement) {
+  if (!f.coveredBy) return;
+  const small = item.querySelector('.kp-label small');
+  covers.push(() => {
+    const by = f.coveredBy!.find((c) => [c].flat().every((id) => onNow.get(id)));
+    item.classList.toggle('covered', !!by);
+    if (small) small.textContent = by ? `Covered by ${labelOf([by].flat()[0])}` : f.hint ?? '';
+  });
+}
+
 function featureItem(f: Feature) {
   const item = el('div', 'kp-item');
   const sw = toggle(f.label, (v) => {
     item.classList.toggle('off', !v);
+    setOn(f.id, v);
     persist((s) => (s.features[f.id] = v));
   });
   const opts = Object.entries(f.options ?? {});
@@ -212,7 +229,8 @@ function featureItem(f: Feature) {
     item.append(row(f.label, f.hint, f.icon, sw.el));
   }
 
-  const show = (v: boolean) => (sw.set(v), item.classList.toggle('off', !v));
+  coverHint(f, item);
+  const show = (v: boolean) => (sw.set(v), item.classList.toggle('off', !v), setOn(f.id, v));
   show(f.defaultOn);
   settings.then((s) => show(isOn(f, s)));
   return item;

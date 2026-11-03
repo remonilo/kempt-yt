@@ -1,5 +1,5 @@
 import type { Feature } from '../../core/feature.ts';
 
 export const hideSecondary: Feature = {
-  id: 'hide-secondary', label: 'Watch sidebar', hint: 'Related, playlist, live chat and shelves', group: 'hide', icon: 'list', defaultOn: false,
+  id: 'hide-secondary', label: 'Watch column', hint: 'All beside the video, tabs too', group: 'hide', icon: 'list', defaultOn: false,
 };

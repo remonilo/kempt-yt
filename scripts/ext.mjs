@@ -15,6 +15,7 @@
 //   --lang=de sets the browser language; logged out, YouTube follows it (its ?hl= is ignored).
 //   --set=id=0 turns a feature off (=1 on) in the extension's storage before loading, e.g. --set=shorts=0 (repeatable).
 //     With --css-only, hide-* flags stay off unless set here, e.g. --set=hide-comments=1.
+//     With --profile the values persist in that profile: set them back (=0) afterwards.
 //   --profile=dir runs in that Firefox profile instead of a fresh one, e.g. --profile=~/.kempt-ff (signed in to YouTube).
 //     Close any Firefox using it first. Puppeteer restores the profile's prefs afterwards.
 //   --dump=scripts/x-dump.js runs a console dump script unchanged, last (after --click/--hover/--eval-after). What it
