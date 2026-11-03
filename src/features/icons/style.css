@@ -28,16 +28,8 @@ html[kyt-icons] :is(
   & > * { visibility: hidden; }
 }
 
-/* Icon-only buttons: Create (Tonal + IconLeading; logged-out "Sign in" is Outline, so it's untouched) and Share/Save/Download/Shop.
-   Download and Shop move between the row and the ⋯ menu with the row's width; in the row they keep their label otherwise. */
-html[kyt-icons] :is(ytd-masthead #buttons > ytd-button-renderer button.ytSpecButtonShapeNextTonal.ytSpecButtonShapeNextIconLeading, ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"], [kyt-icon="OUTLINE_BAG"]) button) {
-  width: 40px;
-  padding: 0;
-  justify-content: center;
-  & .ytSpecButtonShapeNextIcon { margin: 0 !important; } /* signed-in builds keep the 6px label gap otherwise */
-  & .ytSpecButtonShapeNextButtonTextContent { display: none; }
-}
-html[kyt-icons] ytd-masthead #buttons > ytd-button-renderer button.ytSpecButtonShapeNextTonal.ytSpecButtonShapeNextIconLeading {
+/* Create's circle, only while `button-labels` hides its label (a labelled pill stays YouTube's). */
+html[kyt-icons][kyt-button-labels-create] ytd-masthead #buttons > ytd-button-renderer button.ytSpecButtonShapeNextTonal.ytSpecButtonShapeNextIconLeading {
   border-radius: 50%;
   background: transparent !important;
   &:hover { background: var(--kyt-hover-bg) !important; }

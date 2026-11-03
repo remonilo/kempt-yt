@@ -5,7 +5,12 @@ export interface Settings {
 }
 
 const KEY = 'kempt-yt';
-const norm = (s?: Partial<Settings>): Settings => ({ features: s?.features ?? {}, options: s?.options ?? {} });
+export function norm(s?: Partial<Settings>): Settings {
+  const features = s?.features ?? {};
+  // 0.11 moved label hiding out of `icons` into `button-labels`: whoever turned icons off keeps YouTube's labels.
+  if (features.icons === false && features['button-labels'] === undefined) features['button-labels'] = false;
+  return { features, options: s?.options ?? {} };
+}
 
 export async function loadSettings(): Promise<Settings> {
   const r = await chrome.storage.sync.get(KEY);

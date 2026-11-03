@@ -8,6 +8,7 @@ import { commentSort } from './comment-sort/index.ts';
 import { font } from './font/index.ts';
 import { grid } from './grid/index.ts';
 import { icons } from './icons/index.ts';
+import { buttonLabels } from './button-labels/index.ts';
 import { notifActions } from './notif-actions/index.ts';
 import { playlists } from './playlists/index.ts';
 import { progressBar } from './progress-bar/index.ts';
@@ -45,7 +46,7 @@ import { hideMixes } from './hide-mixes/index.ts';
 import { hideSearchShelves } from './hide-search-shelves/index.ts';
 
 // A feature's style.css is picked up by build.mjs automatically.
-export const features: Feature[] = [accent, font, selectedBg, subscribeRed, searchBar, icons,
+export const features: Feature[] = [accent, font, selectedBg, subscribeRed, searchBar, icons, buttonLabels,
   sidebar, settingsTopbar, watchLaterBtn, notifActions, shorts, watchTabs, captions, commentSort, commentSearch, commentLayout,
   timeline, subsTabs, playlists, channelTabs, searchFilters, grid, progressBar,
   // Hide tab, in page order

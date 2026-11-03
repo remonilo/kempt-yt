@@ -13,7 +13,7 @@ Pressed like and dislike buttons use the filled version of their icon. The bell 
 
 ## Settings
 
-The switch is **Look → Icons**, with no options.
+The switch is **Look → Icons**, with no options. Icon-only buttons are a separate switch, **Look → Hide button labels**, with one option each for Create, Share, Save, Download and Shop. It works with Icons on or off: with Icons off the buttons keep YouTube's own icons. YouTube already shows Share, Save and Download without labels for many accounts.
 
 ## How it works
 
