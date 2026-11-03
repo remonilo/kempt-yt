@@ -375,6 +375,15 @@ html[kyt-icons] ytd-shorts {
     & button-view-model:has(path[d^="M10 3.158V7."]) { --kyt-i: var(--kyt-i-share); }
     & button-view-model:has(path[d^="M12 4a2 2 0 "]) { --kyt-i: var(--kyt-i-more); }
     & :is(like-button-view-model, dislike-button-view-model) [aria-pressed="true"] .ytSpecIconShapeHost { animation: kyt-icon-pop 300ms ease-out; }
+    /* Return YouTube Dislike adds its own dislike where YouTube has none: a div with a bare svg, no icon shape. */
+    & .ryd-synthetic-shorts-dislike .ytSpecButtonShapeNextIcon {
+      --kyt-i: var(--kyt-i-dislike);
+      background-color: currentColor;
+      mask: var(--kyt-i) center / contain no-repeat;
+      & > * { visibility: hidden; }
+    }
+    & .ryd-synthetic-shorts-dislike [aria-pressed="true"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-dislike-selected); animation: kyt-icon-pop 300ms ease-out; }
+    & .ryd-synthetic-shorts-dislike button[aria-pressed="true"] { color: inherit; } /* RYD paints it blue; the native like stays white */
   }
   & ytd-shorts-player-controls {
     & #play-pause-button-shape { --kyt-i: var(--kyt-i-play); }
@@ -389,7 +398,7 @@ html[kyt-icons] ytd-shorts {
   &:fullscreen #fullscreen-button-shape, :fullscreen & #fullscreen-button-shape { --kyt-i: var(--kyt-i-fullscreen-selected); }
 }
 @media (prefers-reduced-motion: reduce) {
-  html[kyt-icons] ytd-shorts reel-action-bar-view-model .ytSpecIconShapeHost { animation: none; }
+  html[kyt-icons] ytd-shorts reel-action-bar-view-model :is(.ytSpecIconShapeHost, .ryd-synthetic-shorts-dislike .ytSpecButtonShapeNextIcon) { animation: none; }
 }
 /* Theater lives on the watch page, outside the player. */
 html[kyt-icons] ytd-watch-flexy[theater] .ytp-delhi-modern-icons .ytp-size-button > svg { --kyt-i: var(--kyt-i-theater-selected); }
