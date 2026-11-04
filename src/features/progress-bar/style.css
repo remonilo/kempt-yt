@@ -12,8 +12,8 @@ html[kyt-progress-bar] .ytp-load-progress,
 html[kyt-progress-bar] .ytp-hover-progress {
   opacity: 0 !important;
 }
+html[kyt-progress-bar] { --kyt-wave-len: 24px; }
 .kyt-wave {
-  --kyt-wave-len: 24px;
   position: absolute;
   inset: 50% 0 auto 0;
   height: 8px;
@@ -30,7 +30,8 @@ html[kyt-progress-bar] .ytp-hover-progress {
 .kyt-wave i:first-child { clip-path: inset(0 calc((1 - var(--kyt-l, 0)) * 100%) 0 0); }
 .kyt-wave i:last-child { clip-path: inset(0 calc((1 - var(--kyt-p, 0)) * 100%) 0 0); }
 .kyt-wave::before,
-.kyt-wave i::before {
+.kyt-wave i::before,
+html[kyt-progress-bar] #previewbar > li::before {
   content: '';
   position: absolute;
   inset: 0 auto 0 calc(-1 * mod(var(--kyt-off, 0px), var(--kyt-wave-len))); /* phase: see index.ts */
@@ -40,17 +41,41 @@ html[kyt-progress-bar] .ytp-hover-progress {
 }
 .kyt-wave i:first-child::before { background: rgba(255, 255, 255, 0.4); }
 .kyt-wave i:last-child::before { background: var(--kyt-accent, #f03); }
+/* SponsorBlock segments become wave pieces in their category color (user-chosen, never recolored). The li keeps
+   SponsorBlock's inline background-color, but clipped to its text (an invisible &nbsp;) it paints nothing, while
+   ::before inherits the color. index.ts sets --kyt-off per li. */
+html[kyt-progress-bar] .ytp-progress-bar > #previewbar.sbNotInvidious { transform: none; } /* its scaleY would flatten the wave */
+html[kyt-progress-bar] #previewbar > li {
+  top: 50%;
+  height: 8px;
+  translate: 0 -50%;
+  overflow: hidden;
+  background-clip: text;
+}
+html[kyt-progress-bar] #previewbar > li::before {
+  background-color: inherit;
+  background-clip: border-box;
+}
+/* Highlight is a point in time: a dot on the centre line. */
+html[kyt-progress-bar] #previewbar > li[sponsorblock-category$='poi_highlight'] {
+  width: 8px;
+  min-width: 0;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background-clip: border-box;
+}
+html[kyt-progress-bar] #previewbar > li[sponsorblock-category$='poi_highlight']::before { content: none; }
 /* Always attached so a pause freezes the phase instead of snapping it back; only runs while playing with the
    controls showing. */
-html[kyt-progress-bar-drift] :is(.kyt-wave, .kyt-wave i)::before {
+html[kyt-progress-bar-drift] :is(.kyt-wave, .kyt-wave i, #previewbar > li)::before {
   animation: kyt-wave-drift 0.9s linear infinite paused;
 }
-html[kyt-progress-bar-drift] .html5-video-player.playing-mode:not(.ytp-autohide) :is(.kyt-wave, .kyt-wave i)::before {
+html[kyt-progress-bar-drift] .html5-video-player.playing-mode:not(.ytp-autohide) :is(.kyt-wave, .kyt-wave i, #previewbar > li)::before {
   animation-play-state: running;
 }
 @keyframes kyt-wave-drift {
   to { transform: translateX(calc(-1 * var(--kyt-wave-len))); }
 }
 @media (prefers-reduced-motion: reduce) {
-  html[kyt-progress-bar-drift] :is(.kyt-wave, .kyt-wave i)::before { animation: none; }
+  html[kyt-progress-bar-drift] :is(.kyt-wave, .kyt-wave i, #previewbar > li)::before { animation: none; }
 }

@@ -23,17 +23,37 @@ export const progressBar: Feature = {
       const lists = [...bar.querySelectorAll<HTMLElement>('.ytp-progress-list')];
       const x0 = bar.getBoundingClientRect().left;
       const offs = lists.map((l) => l.getBoundingClientRect().left - x0); // reads first, writes after
+      // SponsorBlock's segments (ul#previewbar > li) get the same phase so style.css can draw them as the wave.
+      const segs = [...bar.querySelectorAll<HTMLElement>('#previewbar > li')];
+      const segOffs = segs.map((s) => s.getBoundingClientRect().left - x0);
+      const fresh: Element[] = segs.filter((s) => !s.style.getPropertyValue('--kyt-off'));
+      for (const [i, s] of segs.entries()) s.style.setProperty('--kyt-off', `${segOffs[i]}px`);
       for (const [i, list] of lists.entries()) {
         let wave = list.querySelector<HTMLElement>(':scope > .kyt-wave');
         if (!wave) {
           wave = el('div', 'kyt-wave', el('i'), el('i')); // buffered, played
           list.append(wave);
+          fresh.push(wave);
         }
         wave.style.setProperty('--kyt-off', `${offs[i]}px`);
         for (const [sel, v] of [['.ytp-play-progress', '--kyt-p'], ['.ytp-load-progress', '--kyt-l']] as const) {
           const x = list.querySelector<HTMLElement>(sel)?.style.transform.match(/scaleX\(([^)]+)\)/)?.[1];
           wave.style.setProperty(v, x ?? '0');
         }
+      }
+      // Layers added later (chapter lists, SponsorBlock rerenders) start their drift at 0: put them on the clock of
+      // the existing ones so every piece stays in phase.
+      if (fresh.length) {
+        const drifts = (e: Element) =>
+          e.getAnimations({ subtree: true }).filter((a) => a instanceof CSSAnimation && a.animationName === 'kyt-wave-drift');
+        const old = [...bar.querySelectorAll('.kyt-wave')].find((w) => !fresh.includes(w));
+        const ref = old && drifts(old)[0];
+        // After both are ready: a running ref has a startTime, while copying currentTime into a pending animation
+        // would lag by a frame.
+        if (ref) for (const e of fresh) for (const a of drifts(e))
+          void Promise.all([ref.ready, a.ready]).then(() => {
+            if (ref.startTime != null) a.startTime = ref.startTime; else a.currentTime = ref.currentTime;
+          }, () => {}); // cancelled: the layer is gone
       }
     };
 
