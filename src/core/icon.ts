@@ -8,6 +8,12 @@ export function icon(name: string): HTMLSpanElement {
 
 export const iconUrl = (name: string) => chrome.runtime.getURL(`icons/${name}.svg`);
 
-export const setIcon = (el: HTMLElement, name: string) => setIconUrl(el, iconUrl(name));
+/** Icons on our own buttons that sit among YouTube's: with `icons` off they show YouTube's glyph (`yt-<name>.svg`). */
+const YT = new Set(['settings', 'watch-later', 'watch-later-selected']);
+
+export const setIcon = (el: HTMLElement, name: string) => {
+  setIconUrl(el, iconUrl(name));
+  if (YT.has(name)) el.style.setProperty('--kyt-yt-icon-src', `url("${iconUrl(`yt-${name}`)}")`);
+};
 
 export const setIconUrl = (el: HTMLElement, url: string) => el.style.setProperty('--kyt-icon-src', `url("${url}")`);

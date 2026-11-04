@@ -13,7 +13,7 @@ Pressed like and dislike buttons use the filled version of their icon. The bell 
 
 ## Settings
 
-The switch is **Look → Icons**, with no options. Icon-only buttons are a separate switch, **Look → Hide button labels**, with one option each for Create, Share, Save, Download and Shop. It works with Icons on or off: with Icons off the buttons keep YouTube's own icons. YouTube already shows Share, Save and Download without labels for many accounts.
+The switch is **Look → Icons**, with no options. The icon-only Create button is a separate switch, **Look → Hide button labels**. It works with Icons on or off: with Icons off Create keeps YouTube's own icon. YouTube already shows Share, Save, Download and Shop without labels. With Icons off, Kempt's own Settings and Watch later buttons use YouTube's icons too.
 
 ## How it works
 

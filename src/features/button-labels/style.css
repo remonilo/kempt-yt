@@ -1,10 +1,5 @@
-/* Create is Tonal + IconLeading (logged-out "Sign in" is Outline, so it's untouched). Download and Shop move between
-   the row and the ⋯ menu with the row's width; in the row they keep their label otherwise. */
-html[kyt-button-labels-create] ytd-masthead #buttons > ytd-button-renderer button.ytSpecButtonShapeNextTonal.ytSpecButtonShapeNextIconLeading,
-html[kyt-button-labels-share] ytd-watch-metadata [kyt-icon="SHARE"] button,
-html[kyt-button-labels-save] ytd-watch-metadata [kyt-icon="PLAYLIST_ADD"] button,
-html[kyt-button-labels-download] ytd-watch-metadata [kyt-icon="OFFLINE_DOWNLOAD"] button,
-html[kyt-button-labels-shop] ytd-watch-metadata [kyt-icon="OUTLINE_BAG"] button {
+/* Create is Tonal + IconLeading (logged-out "Sign in" is Outline, so it's untouched). */
+html[kyt-button-labels] ytd-masthead #buttons > ytd-button-renderer button.ytSpecButtonShapeNextTonal.ytSpecButtonShapeNextIconLeading {
   width: 40px;
   padding: 0;
   justify-content: center;

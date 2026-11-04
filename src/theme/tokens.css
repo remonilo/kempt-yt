@@ -48,6 +48,9 @@ ytd-masthead[dark] {
   background-color: currentColor;
   mask: var(--kyt-icon-src) center / contain no-repeat;
 }
+html:not([kyt-icons]) .kyt-icon {
+  mask-image: var(--kyt-yt-icon-src, var(--kyt-icon-src));
+}
 .kyt-icon.kyt-icon-color {
   background: var(--kyt-icon-src) center / contain no-repeat;
   mask: none;

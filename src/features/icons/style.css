@@ -29,7 +29,7 @@ html[kyt-icons] :is(
 }
 
 /* Create's circle, only while `button-labels` hides its label (a labelled pill stays YouTube's). */
-html[kyt-icons][kyt-button-labels-create] ytd-masthead #buttons > ytd-button-renderer button.ytSpecButtonShapeNextTonal.ytSpecButtonShapeNextIconLeading {
+html[kyt-icons][kyt-button-labels] ytd-masthead #buttons > ytd-button-renderer button.ytSpecButtonShapeNextTonal.ytSpecButtonShapeNextIconLeading {
   border-radius: 50%;
   background: transparent !important;
   &:hover { background: var(--kyt-hover-bg) !important; }
