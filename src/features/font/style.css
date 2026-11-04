@@ -9,3 +9,6 @@ html[kyt-font][kyt-font-family="system"] { --kyt-font: system-ui; }
 html[kyt-font] :is(body, body :not(.ytp-caption-segment, code, pre, kbd, samp)) {
   font-family: var(--kyt-font), Roboto, Arial, sans-serif !important;
 }
+
+/* YouTube's rolling view count sizes each digit column to its widest digit; proportional digits leave gaps after "1". */
+html[kyt-font] yt-animated-rolling-number { font-variant-numeric: tabular-nums; }
