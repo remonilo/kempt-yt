@@ -168,6 +168,7 @@ html[kyt-icons] ytd-about-channel-renderer {
 /* Popup menus: the account menu (masthead avatar) and the ⋯ menus. stampMenus sets kyt-icon="<type>" on each row
    (kyt-icon2 for its right-hand icon). Mapped rows set --kyt-i/--kyt-ibg/--kyt-vis on the row (they inherit down to the icon box); unmapped ones (Premium, ...) stay native. */
 html[kyt-icons] ytd-popup-container [kyt-icon] :is(:is(#content-icon, tp-yt-paper-item) > yt-icon, .ytListItemViewModelImageContainer:not(.ytListItemViewModelTrailing) > .ytIconWrapperHost),
+html[kyt-icons] ytd-popup-container yt-list-item-view-model:not([kyt-icon]) .ytListItemViewModelImageContainer:not(.ytListItemViewModelTrailing) > .ytIconWrapperHost,
 html[kyt-icons] ytd-popup-container ytd-menu-service-item-download-renderer #primary-entry > yt-icon,
 html[kyt-icons] ytd-popup-container :is(ytd-compact-link-renderer[kyt-icon2="CHEVRON_RIGHT"] #right-icon, ytd-toggle-theme-compact-link-renderer :is(#primary-icon, #secondary-icon)) {
   background-color: var(--kyt-ibg, transparent);
@@ -201,6 +202,21 @@ html[kyt-icons] ytd-popup-container :is([kyt-icon="ADD_TO_QUEUE_TAIL"], [kyt-ico
 html[kyt-icons] ytd-popup-container [kyt-icon="WATCH_LATER"] { --kyt-i: var(--kyt-i-watch-later); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container [kyt-icon="SHARE"] { --kyt-i: var(--kyt-i-share); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container :is([kyt-icon="HIDE"], [kyt-icon="NOT_INTERESTED"], [kyt-icon="BLOCK"]) { --kyt-i: var(--kyt-i-not-interested); --kyt-ibg: currentColor; --kyt-vis: hidden; }
+/* Shorts player ⋮ sheet: rows carry no data and no card click names them, so they go by their svg path's start (as
+   in the player settings menu). Not interested and Don't recommend share a glyph; the second of the pair is the channel one. */
+html[kyt-icons] ytd-popup-container yt-list-item-view-model:not([kyt-icon]) {
+  &:has(path:is([d^="M4 5a1 1 0 000 2"], [d^="M19 2H5a2 2 0 00"], [d^="M12 .5a1 1 0 00-"], [d^="M21 3H3a2 2 0 00"], [d^="M10 3H3v7c0 .265"], [d^="M13.02 2.002v.00"], [d^="M12 1C5.925 1 1 "], [d^="m4 2.999-.146.07"], [d^="M19 2H5a4 4 0 00"])) { --kyt-ibg: currentColor; --kyt-vis: hidden; }
+  &:has(path[d^="M4 5a1 1 0 000 2"]) { --kyt-i: var(--kyt-i-info); } /* Description */
+  &:has(path[d^="M19 2H5a2 2 0 00"]) { --kyt-i: var(--kyt-i-save); }
+  &:has(path[d^="M12 .5a1 1 0 00-"]) { --kyt-i: var(--kyt-i-ambient-mode); }
+  &:has(path[d^="M21 3H3a2 2 0 00"]) { --kyt-i: var(--kyt-i-cc); }
+  &:has(path[d^="M10 3H3v7c0 .265"]) { --kyt-i: var(--kyt-i-fullscreen); }
+  &:has(path[d^="M13.02 2.002v.00"]) { --kyt-i: var(--kyt-i-speed); }
+  &:has(path[d^="M12 1C5.925 1 1 "]) { --kyt-i: var(--kyt-i-not-interested); }
+  &:has(path[d^="M12 1C5.925 1 1 "]) + &:has(path[d^="M12 1C5.925 1 1 "]) { --kyt-i: var(--kyt-i-exclude); }
+  &:has(path[d^="m4 2.999-.146.07"]) { --kyt-i: var(--kyt-i-report); }
+  &:has(path[d^="M19 2H5a4 4 0 00"]) { --kyt-i: var(--kyt-i-feedback); }
+}
 /* Playlist row, header and library card menus. */
 html[kyt-icons] ytd-popup-container [kyt-icon="VISIBILITY"] { --kyt-i: var(--kyt-i-eye); --kyt-ibg: currentColor; --kyt-vis: hidden; }
 html[kyt-icons] ytd-popup-container :is([kyt-icon="DELETE"], [kyt-icon="DELETE_CAIRO"]) { --kyt-i: var(--kyt-i-delete); --kyt-ibg: currentColor; --kyt-vis: hidden; }
