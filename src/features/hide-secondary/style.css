@@ -4,3 +4,12 @@ html[kyt-hide-secondary] ytd-watch-flexy #secondary,
 html[kyt-hide-secondary] ytd-watch-flexy #below > :is(#related, #playlist, #chat-container, #panels, .kyt-tabs, .kyt-tab-info, .kyt-tab-comments) {
   display: none !important;
 }
+/* Fullscreen moves chat and panels into a column beside the player, with Show chat / Comments buttons over it.
+   Comments live in the Watch column only with watch-tabs on; without it they stay under the video, so their
+   fullscreen panel and button stay too. */
+html[kyt-hide-secondary] .ytp-fullscreen-quick-actions [kyt-icon="MESSAGE_BUBBLE_OVERLAP"],
+html[kyt-hide-secondary][kyt-watch-tabs] .ytp-fullscreen-quick-actions [kyt-icon="COMMENT"],
+html[kyt-hide-secondary][kyt-watch-tabs] ytd-watch-flexy #panels-full-bleed-container,
+html[kyt-hide-secondary]:not([kyt-watch-tabs]) ytd-watch-flexy #panels-full-bleed-container:not(:has([target-id="engagement-panel-comments-section"][visibility="ENGAGEMENT_PANEL_VISIBILITY_EXPANDED"])) {
+  display: none !important;
+}
