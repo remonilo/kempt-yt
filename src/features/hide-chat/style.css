@@ -1,1 +1,4 @@
-html[kyt-hide-chat] ytd-watch-flexy #chat-container { display: none !important; }
+html[kyt-hide-chat] :is(ytd-watch-flexy #chat-container, .ytp-fullscreen-quick-actions [kyt-icon="MESSAGE_BUBBLE_OVERLAP"]) { display: none !important; }
+/* Fullscreen puts chat in a fixed-width column beside the player; with chat gone it was an empty strip.
+   Kept while it shows an open engagement panel. */
+html[kyt-hide-chat] ytd-watch-flexy #panels-full-bleed-container:not(:has([visibility="ENGAGEMENT_PANEL_VISIBILITY_EXPANDED"])) { display: none !important; }

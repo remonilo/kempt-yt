@@ -1,1 +1,3 @@
 html[kyt-hide-home-chips] ytd-browse[page-subtype="home"] ytd-feed-filter-chip-bar-renderer { display: none !important; }
+/* The masthead's frosted band still reserves the chip row (112px), a tinted empty strip over the feed. */
+html[kyt-hide-home-chips] ytd-app:has(ytd-browse[page-subtype="home"]:not([hidden])) #frosted-glass.with-chipbar { height: 56px; }
