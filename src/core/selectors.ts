@@ -36,6 +36,9 @@ export const S = {
   chatContainer: 'ytd-watch-flexy #chat-container',
   playlistPanel: 'ytd-watch-flexy ytd-playlist-panel-renderer#playlist:not([hidden])', // only while a list plays
   description: 'ytd-watch-metadata #description',
+  descExpand: 'ytd-text-inline-expander > #expand', // description's "...more"
+  descCollapse: 'ytd-text-inline-expander > #collapse', // description's "Show less"
+  player: '#movie_player',
   // Cards YouTube adds around the action row: context panel, concert tickets, merch (dom-if + its stamp), donations.
   // .ytd-watch-flexy (Polymer's scope class) keeps out the same-id slots inside descriptions (metadata, engagement panel).
   watchCards: 'ytd-watch-flexy :is(#clarify-box, #ticket-shelf, ytd-merch-shelf-renderer, dom-if#merch-shelf, #donation-shelf).ytd-watch-flexy:not(.kyt-tab-info *)',

@@ -204,6 +204,10 @@ html[kyt-watch-tabs] .kyt-tab-info #description {
   margin: 0;
   min-width: 0; /* YouTube's max(381px, 50%) is sized for the row beside the actions */
 }
+/* ...more and Show less dimmed, so they read as controls, not description text. */
+html[kyt-watch-tabs] .kyt-tab-info #description ytd-text-inline-expander > :is(#expand, #collapse) {
+  color: var(--kyt-fg-muted);
+}
 html[kyt-watch-tabs] .kyt-tab-comments ytd-comments {
   margin: 0;
 }

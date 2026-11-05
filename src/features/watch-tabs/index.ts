@@ -260,6 +260,22 @@ export const watchTabs: Feature = {
       ro.observe(meta);
       signal.addEventListener('abort', () => ro.disconnect(), { once: true });
     }
+    // The description opens expanded when it fits within the player's height, decided once per video the first
+    // time Info shows it (hidden, it measures 0). Runs before paint, so a too-tall one never flashes open.
+    let fitted = false;
+    const fit = new ResizeObserver(() => {
+      const h = desc.getBoundingClientRect().height;
+      if (fitted || !h) return;
+      fitted = true;
+      const more = desc.querySelector<HTMLElement>(S.descExpand);
+      if (!more || more.hidden || !more.offsetParent) return;
+      more.click();
+      const player = flexy.querySelector(S.player)?.getBoundingClientRect().height ?? 0;
+      if (desc.getBoundingClientRect().height > player) desc.querySelector<HTMLElement>(S.descCollapse)?.click();
+    });
+    fit.observe(desc);
+    signal.addEventListener('abort', () => fit.disconnect(), { once: true });
+    document.addEventListener('kyt:navigate', () => (fitted = false), { signal });
     watch(panelsEl(), { subtree: true, attributeFilter: ['visibility'] }, onPanels);
     watch(infoBox, { subtree: true, attributeFilter: ['visibility'] }, shop);
     watch(panelsEl(), { subtree: true, childList: true, characterData: true }, count);
