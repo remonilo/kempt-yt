@@ -43,6 +43,7 @@ import { hideEndscreen } from './hide-endscreen/index.ts';
 import { hideAutoplay } from './hide-autoplay/index.ts';
 import { hideNotifs } from './hide-notifs/index.ts';
 import { hideCreate } from './hide-create/index.ts';
+import { hideYoodle } from './hide-yoodle/index.ts';
 import { hideMixes } from './hide-mixes/index.ts';
 import { hideSearchShelves } from './hide-search-shelves/index.ts';
 
@@ -51,4 +52,4 @@ export const features: Feature[] = [accent, font, selectedBg, subscribeRed, sear
   sidebar, settingsTopbar, watchLaterBtn, notifActions, shorts, watchTabs, captions, commentSort, commentSearch, commentLayout,
   timeline, subsTabs, playlists, downloads, channelTabs, searchFilters, grid, progressBar,
   // Hide tab, in page order
-  hideHomeFeed, hideHomeChips, subsHome, hideExplore, hideSubs, hideSecondary, hideRelated, hidePlaylist, hideChat, hideComments, hideAvatars, hideDescription, hideChannel, hideActions, hideMerch, hideEndscreen, hideAutoplay, hideNotifs, hideCreate, hideMixes, hideSearchShelves];
+  hideHomeFeed, hideHomeChips, subsHome, hideExplore, hideSubs, hideSecondary, hideRelated, hidePlaylist, hideChat, hideComments, hideAvatars, hideDescription, hideChannel, hideActions, hideMerch, hideEndscreen, hideAutoplay, hideNotifs, hideCreate, hideYoodle, hideMixes, hideSearchShelves];

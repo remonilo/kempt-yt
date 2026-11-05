@@ -1,0 +1,4 @@
+/* A Yoodle (event logo) shows ytd-yoodle-renderer and marks the normal logo hidden; swap them back. */
+html[kyt-hide-yoodle] ytd-topbar-logo-renderer ytd-yoodle-renderer { display: none !important; }
+html[kyt-hide-yoodle] ytd-topbar-logo-renderer #logo > div[hidden] { display: block !important; }
+html[kyt-hide-yoodle] ytd-topbar-logo-renderer #logo > div > ytd-logo[hidden] { display: inline !important; }
