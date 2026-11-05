@@ -3,7 +3,7 @@ import type { Feature } from '../../core/feature.ts';
 const SUBS = '/feed/subscriptions';
 
 export const subsHome: Feature = {
-  id: 'subs-home', label: 'Subscriptions as Home', hint: 'Home and the logo open Subscriptions', group: 'hide', icon: 'subs',
+  id: 'subs-home', label: 'Subscriptions as Home', hint: 'Home and the logo open Subscriptions', group: 'hide', section: 'Home & feeds', icon: 'subs',
   defaultOn: false,
   run({ signal, call }) {
     // Clicks on Home links (logo, guide): go straight to Subscriptions, Home never renders.

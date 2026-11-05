@@ -1,6 +1,7 @@
 // Screenshot of the popup for the README and site: dist/popup.html in headless Firefox with a stubbed chrome API.
 // usage: node scripts/popup-shot.mjs [out.png] [--light] [--scale=3] [--open=sidebar,grid] [--height=N]
 //   --tab=feeds shows that group's tab (look, navigation, watch, feeds).
+//   --scroll=N scrolls the tab's content by N px.
 //   --open expands the rows whose label contains those words; --height crops the shot (default: the whole popup).
 import puppeteer from 'puppeteer-core';
 import { readFile } from 'node:fs/promises';
@@ -52,6 +53,7 @@ try {
   await new Promise((r) => setTimeout(r, 500));
   const height = Number(flag('height') ?? (await page.evaluate(() => document.documentElement.scrollHeight)));
   await page.setViewport({ width: 360, height, deviceScaleFactor: Number(flag('scale') ?? 3) });
+  if (flag('scroll')) await page.evaluate((y) => document.getElementById('app').scrollTo(0, y), Number(flag('scroll')));
   await new Promise((r) => setTimeout(r, 300));
   await page.screenshot({ path: out });
   console.log('saved', out, `360x${height}`, 'opened:', opened.join(',') || 'none');

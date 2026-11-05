@@ -236,19 +236,28 @@ function featureItem(f: Feature) {
   return item;
 }
 
-// One group at a time, picked from tabs in the header, so the popup fits without scrolling. The last tab is
+// One group at a time, picked from tabs in the header; only the tab's content scrolls. The last tab is
 // remembered in the popup's own localStorage: it is UI state, not a setting.
-const groups = new Map<Group, HTMLElement>();
 const sections = new Map<Group, HTMLElement>();
 for (const key of Object.keys(GROUPS) as Group[]) {
-  const card = el('div', 'kp-card');
-  const section = el('section', 'kp-section', card);
+  const section = el('section', 'kp-section');
   section.role = 'tabpanel';
-  groups.set(key, card);
   sections.set(key, section);
   app.append(section);
 }
-for (const f of features) groups.get(f.group)!.append(featureItem(f));
+// A new card, under a sticky heading when the feature has a section, each time the section changes.
+const cardSection = new Map<HTMLElement, string | undefined>();
+for (const f of features) {
+  const section = sections.get(f.group)!;
+  let card = section.lastElementChild as HTMLElement | null;
+  if (!card || cardSection.get(card) !== f.section) {
+    if (f.section) section.append(el('h3', 'kp-heading', f.section));
+    card = el('div', 'kp-card');
+    cardSection.set(card, f.section);
+    section.append(card);
+  }
+  card.append(featureItem(f));
+}
 
 const show = (g: string) => {
   for (const [k, s] of sections) s.hidden = k !== g;
@@ -258,7 +267,14 @@ const tabs = segmented(GROUPS, show);
 tabs.el.classList.add('kp-tabs');
 tabs.el.role = 'tablist';
 for (const b of tabs.el.querySelectorAll('button')) b.role = 'tab';
-document.querySelector('.kp-header')!.append(tabs.el);
+// Rate goes to the store this copy came from: Firefox serves extension pages from moz-extension://.
+const store = chrome.runtime.getURL('').startsWith('moz-extension:')
+  ? 'https://addons.mozilla.org/firefox/addon/kempt-for-youtube/reviews/'
+  : 'https://chromewebstore.google.com/detail/kempt-for-youtube/dpiheahglgggkdjcgdkiogpmhbmppfmg/reviews';
+const link = (cls: string, label: string, href: string) =>
+  Object.assign(el('a', `kp-icon-link ${cls}`, icon(cls)), { href, target: '_blank', rel: 'noopener', title: label, ariaLabel: label });
+const links = el('nav', 'kp-links', link('star', 'Rate Kempt', store), link('heart', 'Sponsor', 'https://github.com/sponsors/remonilo'));
+document.querySelector('.kp-header')!.append(links, tabs.el);
 const first = localStorage.getItem('kp-tab') ?? 'look';
 const start = first in GROUPS ? first : 'look';
 tabs.set(start);
@@ -272,6 +288,6 @@ reset.addEventListener('click', () => {
   reset.textContent = 'Click again to reset';
 });
 reset.addEventListener('blur', () => (delete reset.dataset.armed, (reset.textContent = 'Reset all')));
-app.append(el('footer', 'kp-footer', el('span', '', `v${chrome.runtime.getManifest().version}`), reset));
+document.body.append(el('footer', 'kp-footer', el('span', '', `v${chrome.runtime.getManifest().version}`), reset));
 
 settings.then(() => (app.inert = false));

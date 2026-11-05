@@ -4,7 +4,7 @@ import { S } from '../../core/selectors.ts';
 
 // The player's own switch is clicked, so YouTube stores the choice as if the user had; off restores it.
 export const hideAutoplay: Feature = {
-  id: 'hide-autoplay', label: 'Autoplay', hint: 'Turns it off and hides the switch', group: 'hide', icon: 'next',
+  id: 'hide-autoplay', label: 'Autoplay', hint: 'Turns it off and hides the switch', group: 'hide', section: 'Watch page', icon: 'next',
   defaultOn: false, routes: ['watch'],
   async run({ signal }) {
     const btn = await waitFor<HTMLElement>(S.autonav, { signal });

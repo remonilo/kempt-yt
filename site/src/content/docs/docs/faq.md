@@ -29,6 +29,8 @@ Yes. The dislike count shows inside Kempt's dislike button, and the ratio bar si
 
 Most extensions that add buttons or panels keep working. Anything that adds a box to the right column of the watch page lands in the Videos tab. If two extensions restyle the same thing, turn one of the two features off.
 
+PocketTube is not supported or tested. It changes the sidebar and the Subscriptions page, which Kempt's Redesigned sidebar and Timeline features replace, so the two may clash.
+
 ## Why is the Shorts chip still in search results?
 
 Shorts shelves are hidden everywhere. The search filter chip has no marker that works in every language, so it stays.

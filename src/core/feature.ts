@@ -28,6 +28,8 @@ export interface Feature {
   label: string;
   hint?: string;
   group: Group;
+  /** Popup sub-heading inside the group; features sharing one must sit together in src/features/index.ts. */
+  section?: string;
   /** A file name in src/icons/ without .svg. */
   icon?: string;
   defaultOn: boolean;

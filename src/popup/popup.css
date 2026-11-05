@@ -11,9 +11,13 @@
   color-scheme: dark;
   scrollbar-width: none;
 }
+/* Chrome's popup height cap: the header and footer stay put, only #app scrolls. */
 body {
   margin: 0;
   width: 360px;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
   background: var(--kp-bg);
   color: var(--kp-fg);
   font: 400 14px / 20px Roboto, system-ui, sans-serif;
@@ -33,17 +37,46 @@ button { cursor: pointer; }
 
 .kp-header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 10px; padding: 16px 12px 4px; }
 .kp-header > .kp-title { padding: 0 4px; }
+/* Rate (gold star) and Sponsor (pink heart, GitHub Sponsors' color): tinted circles, the glyph pops on hover. */
+.kp-links { display: flex; gap: 8px; margin-left: auto; }
+.kp-icon-link {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: var(--c);
+  background: color-mix(in srgb, var(--c) 14%, transparent);
+  transition: background-color 150ms;
+}
+.kp-icon-link.star { --c: #f5c518; }
+.kp-icon-link.heart { --c: #ea4aaa; }
+.kp-icon-link:hover { background: color-mix(in srgb, var(--c) 26%, transparent); }
+.kp-icon-link > .kp-icon { transition: transform 200ms var(--kp-ease); }
+.kp-icon-link:hover > .kp-icon { transform: scale(1.15); }
+.kp-icon-link.star:hover > .kp-icon { transform: scale(1.15) rotate(-12deg); }
 /* Group tabs: the segmented control at full width, a bit taller than the in-row ones. */
 .kp-tabs { flex: 1 0 100%; font-size: 13px; }
 .kp-tabs button { padding: 6px 4px; }
-/* Every tab keeps the height of the tallest, so switching tabs doesn't resize the popup. */
-#app { display: grid; }
-.kp-section { grid-area: 1 / 1; }
-.kp-section[hidden] { display: block; visibility: hidden; }
+#app { flex: 1; overflow-y: auto; scrollbar-width: none; }
 .kp-title { font-weight: 500; font-size: 16px; line-height: 18px; }
 .kp-title small { display: block; color: var(--kp-muted); font-size: 12px; font-weight: 400; line-height: 14px; }
 
-.kp-section { padding: 8px 12px 4px; }
+.kp-section { padding: 8px 12px; }
+/* Sticky, so a long tab still shows which part of YouTube the switches below belong to. */
+.kp-heading {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  margin: 0 -12px;
+  padding: 12px 24px 6px;
+  background: var(--kp-bg);
+  color: var(--kp-muted);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+}
+.kp-heading:first-child { margin-top: -8px; padding-top: 8px; }
 .kp-card { background: var(--kp-card); border-radius: 12px; overflow: hidden; }
 .kp-card > * + * { border-top: 1px solid var(--kp-line); }
 

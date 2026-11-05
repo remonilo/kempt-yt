@@ -10,7 +10,7 @@ const watchUrl = (path: string) => {
 
 export const shorts: Feature = {
   id: 'shorts',
-  label: 'Shorts', hint: 'Hidden, and opened as normal videos', group: 'hide', icon: 'shorts',
+  label: 'Shorts', hint: 'Hidden, and opened as normal videos', group: 'hide', section: 'Home & feeds', icon: 'shorts',
   defaultOn: true,
   async run({ signal, call }) {
     // Clicks inside YouTube: SPA jump straight to /watch, the Shorts player never loads.

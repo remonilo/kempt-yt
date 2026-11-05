@@ -50,7 +50,9 @@ import { hideSearchShelves } from './hide-search-shelves/index.ts';
 
 // A feature's style.css is picked up by build.mjs automatically.
 export const features: Feature[] = [accent, logo, font, selectedBg, subscribeRed, searchBar, icons, buttonLabels,
-  sidebar, settingsTopbar, watchLaterBtn, notifActions, shorts, watchTabs, captions, commentSort, commentSearch, commentLayout,
+  sidebar, settingsTopbar, watchLaterBtn, notifActions, watchTabs, captions, commentSort, commentSearch, commentLayout,
   timeline, subsTabs, playlists, downloads, channelTabs, searchFilters, grid, progressBar,
-  // Hide tab, in page order
-  hideHomeFeed, hideHomeChips, subsHome, hideExplore, hideSubs, hideSecondary, hideRelated, hidePlaylist, hideChat, hideComments, hideAvatars, hideDescription, hideChannel, hideActions, hideMerch, hideEndscreen, hideAutoplay, hideNotifs, hideCreate, hideYoodle, hideMixes, hideSearchShelves];
+  // Hide tab, grouped by section in page order
+  hideExplore, hideSubs, hideNotifs, hideCreate, hideYoodle,
+  shorts, hideHomeFeed, hideHomeChips, subsHome, hideMixes, hideSearchShelves,
+  hideSecondary, hideRelated, hidePlaylist, hideChat, hideComments, hideAvatars, hideDescription, hideChannel, hideActions, hideMerch, hideEndscreen, hideAutoplay];
