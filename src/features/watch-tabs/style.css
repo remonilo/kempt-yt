@@ -100,7 +100,7 @@ html[kyt-watch-tabs] .kyt-tab:not([hidden]):not(.kyt-tab:not([hidden]) ~ *):not(
 
 /* Only the selected tab's content shows. [kyt-tab] is set by the script, so nothing hides before it runs.
    The playlist panel (Watch later, any list) is part of Videos: it sits above #related in both layouts and
-   hides with it, so it never covers comments. Theater ("none") keeps it beside the title as YouTube does.
+   hides with it, so it never covers comments. Theater ("none") hides it too: the Videos tab leaves theater to show it.
    Likewise anything else YouTube puts in the right column (future shelves; the donation shelf moves to Info) belongs to Videos:
    another tab keeps only the bar, its own box, #panels (Ask AI, transcript) and live chat, so no shelf stacks
    under that tab's scroller. A whitelist, so new shelves are covered. In one column these sit under the player. */
@@ -109,7 +109,7 @@ html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="chat"], [fullscreen]
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="info"]) .kyt-tab-info,
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="comments"]) .kyt-tab-comments,
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="ai"]) [kyt-ai],
-html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="videos"], [kyt-tab="none"]) #playlist,
+html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="videos"]) #playlist,
 html[kyt-watch-tabs] ytd-watch-flexy[kyt-tab]:not([kyt-tab="videos"], [kyt-tab="none"]) #secondary-inner > :not(.kyt-tabs, .kyt-tab-info, .kyt-tab-comments, #panels, #chat-container) {
   display: none !important;
 }
