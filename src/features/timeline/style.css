@@ -269,6 +269,9 @@ html[kyt-timeline] ytd-browse[page-subtype="history"] {
     & #search-button { top: 1px; left: 0; }
     & #search-button :is(ytd-button-renderer, button) { width: 32px; height: 32px; padding: 0; justify-content: center; }
     & #search-button .ytSpecButtonShapeNextIcon { width: 20px; height: 20px; margin: 0 !important; }
+    & #clear-button { top: 1px; right: 0; }
+    & #clear-button :is(ytd-button-renderer, button, a) { width: 32px; height: 32px; padding: 0; justify-content: center; }
+    & #clear-button .ytSpecButtonShapeNextIcon { width: 20px; height: 20px; margin: 0 !important; }
   }
   & ytd-browse-feed-actions-renderer > #contents > ytd-button-renderer {
     margin: 0;
@@ -331,14 +334,7 @@ html[kyt-timeline] ytd-browse[page-subtype="history"]:has(ytd-search-box-rendere
     top: var(--ytd-masthead-height, 56px);
     padding-top: 8px; /* the chips row's top padding */
     gap: 8px;
-    & > * { pointer-events: auto; }
-  }
-  /* A long localized label shrinks Clear all, never the icons. */
-  & ytd-browse-feed-actions-renderer > #contents > [kyt-icon="DELETE"] {
-    min-width: 0;
-    flex: 0 1 auto;
-    & :is(button, a), & .ytSpecButtonShapeNextButtonTextContent { min-width: 0; max-width: 100%; }
-    & .ytSpecButtonShapeNextButtonTextContent span { overflow: hidden; text-overflow: ellipsis; }
+    pointer-events: auto;
   }
   & ytd-section-list-renderer > #header-container {
     position: sticky;
@@ -363,6 +359,15 @@ html[kyt-timeline] ytd-browse[page-subtype="history"]:has(ytd-search-box-rendere
   & ytd-section-list-renderer > #contents {
     isolation: isolate;
   }
+}
+
+/* A long localized label shrinks Clear all, never the icons. Outside the :has() block above: descendant rules under
+   :has() make Chromium restyle the whole page on every DOM change. */
+html[kyt-timeline] ytd-browse[page-subtype="history"] ytd-browse-feed-actions-renderer > #contents > [kyt-icon="DELETE"] {
+  min-width: 0;
+  flex: 0 1 auto;
+  & :is(button, a), & .ytSpecButtonShapeNextButtonTextContent { min-width: 0; max-width: 100%; }
+  & .ytSpecButtonShapeNextButtonTextContent span { overflow: hidden; text-overflow: ellipsis; }
 }
 
 /* View as Channels (Figma Subs 97:4644): a header row per channel, a divider between channels, one row of cards

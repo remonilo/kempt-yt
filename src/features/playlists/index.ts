@@ -369,7 +369,12 @@ function bulk(list: Element, contents: Element, sel: string, words: PlaylistWord
   keep(bar, [header ?? list, contents], () => {
     if (header && bar.parentElement !== header) header.prepend(bar);
     else if (!header && bar.nextElementSibling !== contents) contents.before(bar);
-    for (const r of rows()) if (!r.querySelector(':scope > .kyt-pl-check')) r.prepend(check());
+    // kyt-pl-row lets style.css skip :has(> .kyt-pl-check), which costs Chromium a page restyle per DOM change.
+    for (const r of rows()) {
+      if (r.querySelector(':scope > .kyt-pl-check')) continue;
+      r.prepend(check());
+      r.setAttribute('kyt-pl-row', '');
+    }
     if (input.value) search();
     sync();
     // Opening another playlist reuses this list while words still describe the previous one ("Remove from X").
@@ -385,6 +390,7 @@ function bulk(list: Element, contents: Element, sel: string, words: PlaylistWord
     for (const r of rows()) {
       r.removeAttribute('kyt-picked');
       r.removeAttribute('kyt-pl-miss');
+      r.removeAttribute('kyt-pl-row');
       r.querySelector(':scope > .kyt-pl-check')?.remove();
     }
   }, { once: true });

@@ -339,8 +339,9 @@ html[kyt-icons] .ytp-delhi-modern-icons {
   & .ytp-menuitem-icon > svg:has(path:is([d^="M12 .5C"], [d^="M9.65 6.00L"], [d^="M21.20 3.01L"], [d^="M12.33 1.00C"], [d^="M12 1c1.44"], [d^="M9 3C8.11"], [d^="M12 .99C5.92"], [d^="M11.48 2.14 3.91"], [d^="M19.4 .2C"])) {
     background-color: #fff;
     mask: var(--kyt-i) center / contain no-repeat;
-    & > * { visibility: hidden; }
+    --kyt-vis: hidden; /* read by the next rule: a `> *` under :has() makes Chromium restyle the page on every DOM change */
   }
+  & .ytp-menuitem-icon > svg > * { visibility: var(--kyt-vis, visible); }
   & .ytp-menuitem-icon > svg:has(path[d^="M12 .5C"]) { --kyt-i: var(--kyt-i-ambient-mode); }
   & .ytp-menuitem-icon > svg:has(path[d^="M9.65 6.00L"]) { --kyt-i: var(--kyt-i-annotations); }
   & .ytp-menuitem-icon > svg:has(path[d^="M21.20 3.01L"]) { --kyt-i: var(--kyt-i-cc); }
@@ -377,10 +378,12 @@ html[kyt-icons] ytd-shorts {
   & :is(
     reel-action-bar-view-model :is(like-button-view-model, dislike-button-view-model, button-view-model:has(path:is([d^="M1 6a4 4 0 0"], [d^="M10 3.158V7."], [d^="M12 4a2 2 0 "]))),
     ytd-shorts-player-controls :is(#play-pause-button-shape, volume-controls, ytm-closed-captioning-button, #menu-button, #fullscreen-button-shape)
-  ) .ytSpecIconShapeHost {
-    background-color: currentColor;
-    mask: var(--kyt-i) center / contain no-repeat;
-    & > * { visibility: hidden; }
+  ) { --kyt-ibg: currentColor; --kyt-vis: hidden; }
+  /* Kept out of the :has() rule above: a descendant rule under :has() makes Chromium restyle the page on every DOM change. */
+  & :is(reel-action-bar-view-model, ytd-shorts-player-controls) .ytSpecIconShapeHost {
+    background-color: var(--kyt-ibg, transparent);
+    mask: var(--kyt-i, none) center / contain no-repeat;
+    & > * { visibility: var(--kyt-vis, visible); }
   }
   & reel-action-bar-view-model {
     & like-button-view-model { --kyt-i: var(--kyt-i-liked); } /* logged out it is sometimes a heart; Figma uses the thumb */

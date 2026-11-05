@@ -90,6 +90,9 @@ html[kyt-channel-tabs] ytd-channel-sub-menu-renderer:has(> .kyt-sort) {
   & #sort-menu {
     display: none !important;
   }
+}
+/* .kyt-sort is ours, so no :has() needed (descendant rules under :has() cost Chromium a page restyle per DOM change). */
+html[kyt-channel-tabs] ytd-channel-sub-menu-renderer {
   & > .kyt-sort {
     display: flex;
     align-items: center;

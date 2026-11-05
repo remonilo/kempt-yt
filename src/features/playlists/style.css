@@ -402,7 +402,7 @@ html[kyt-playlists] ytd-browse[page-subtype="playlist"] [kyt-picked] {
 html[kyt-playlists] ytd-browse[page-subtype="playlist"] .ytSectionListRendererContents:has(> yt-item-section-renderer .kyt-pl-check) {
   padding: 0 !important; /* YouTube's inline 0 48px; the old list spans the header card's width */
 }
-html[kyt-playlists] ytd-browse[page-subtype="playlist"] yt-item-section-renderer > #contents > div:has(> .kyt-pl-check) {
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] yt-item-section-renderer > #contents > div[kyt-pl-row] {
   display: flex;
   align-items: center;
   padding: 8px 0;
@@ -470,6 +470,7 @@ html[kyt-playlists] ytd-browse[page-subtype="playlist"] yt-item-section-renderer
   }
 }
 html[kyt-playlists] ytd-browse[page-subtype="playlist"] :is(ytd-item-section-renderer, yt-item-section-renderer) > #header:has(> .kyt-pl-bar) {
+  --kyt-pl-order: 2; /* read by the rule below: a `> *` under :has() makes Chromium restyle the page on every DOM change */
   display: flex;
   flex-wrap: wrap; /* the search pill takes the next line before the actions wrap (Liked videos has three chips) */
   align-items: center;
@@ -480,9 +481,6 @@ html[kyt-playlists] ytd-browse[page-subtype="playlist"] :is(ytd-item-section-ren
   }
   & .kyt-pl-actions {
     flex: none;
-  }
-  & > :not(.kyt-pl-bar) {
-    order: 2;
   }
   & :is(.kyt-pl-count, .kyt-pl-actions) {
     order: 3;
@@ -495,14 +493,17 @@ html[kyt-playlists] ytd-browse[page-subtype="playlist"] :is(ytd-item-section-ren
     margin-left: 24px;
   }
 }
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] :is(ytd-item-section-renderer, yt-item-section-renderer) > #header > :not(.kyt-pl-bar) {
+  order: var(--kyt-pl-order, 0);
+}
 /* Hidden actions keep their space for the slide-in; one row of it, so the header never grows while idle. */
 .kyt-pl-actions:not([kyt-on]) {
   height: var(--kyt-chip-h);
   overflow: hidden;
 }
 .kyt-pl-bar > .kyt-search {
-  flex: 0 1 314px;
-  min-width: 200px;
+  flex: 1 1 200px; /* wraps only below 200px, so own playlists' wider actions keep it on the sort chip's line */
+  max-width: 314px;
   margin-left: auto;
 }
 html[kyt-playlists] ytd-browse[page-subtype="playlist"] [kyt-pl-miss] {
