@@ -197,8 +197,12 @@ async function courseAbout(signal: AbortSignal, call: Call) {
 }
 
 /** Library > Playlists (Figma 125:12932): grid/list toggle and a title search beside YouTube's chips. */
+let undoLibrary: (() => void) | undefined; // a cleanup waiting for YouTube to swap the page out
+
 async function library(signal: AbortSignal, call: Call) {
-  const grid = await waitFor(S.playlistsGrid, { signal });
+  undoLibrary?.();
+  // The grid is often already there in a hidden or History-marked ytd-browse; YouTube only flips those attributes.
+  const grid = await waitFor(S.playlistsGrid, { signal, attributes: ['hidden', 'page-subtype'] });
   const header = grid?.querySelector(':scope > #header');
   const contents = grid?.querySelector(':scope > #contents');
   if (!grid || !header || !contents || signal.aborted) return;
@@ -308,11 +312,22 @@ async function library(signal: AbortSignal, call: Call) {
   };
   decorate();
   observe(contents, { childList: true, subtree: true }, decorate, signal);
+  // YouTube keeps showing this page for up to ~0.6s after the route changes, so undoing at once flashes its own look:
+  // wait until it hides the browse, marks it as another page or re-renders it. Inert meanwhile if the feature went
+  // off (html[kyt-playlists] gates every rule).
   signal.addEventListener('abort', () => {
-    grid.removeAttribute('kyt-pl-library');
-    page?.removeAttribute('kyt-pl-library');
-    for (const it of items()) it.hidden = false;
-    for (const f of contents.querySelectorAll('.kyt-pl-foot')) f.remove();
+    const undo = () => {
+      mo.disconnect();
+      undoLibrary = undefined;
+      grid.removeAttribute('kyt-pl-library');
+      page?.removeAttribute('kyt-pl-library');
+      for (const it of items()) it.hidden = false;
+      for (const f of contents.querySelectorAll('.kyt-pl-foot')) f.remove();
+    };
+    const mo = new MutationObserver(undo);
+    if (page) mo.observe(page, { attributeFilter: ['hidden', 'page-subtype'] });
+    mo.observe(contents, { childList: true });
+    undoLibrary = undo;
   }, { once: true });
 }
 
