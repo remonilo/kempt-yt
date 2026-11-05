@@ -910,3 +910,25 @@ html[kyt-playlists] ytd-browse[page-subtype="playlist"] > yt-page-header-rendere
   from { visibility: hidden; }
   to { visibility: visible; }
 }
+
+/* The list header YouTube fixes under the masthead while scrolling (owned lists drop [not-sticky], lockup lists add
+   the StickyHeader class): frosted like History's chips row, one blur from the window top (JS sets html[kyt-stuck]). */
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] :is(ytd-item-section-renderer:not([not-sticky]) > #header, yt-item-section-renderer > #header.ytItemSectionRendererStickyHeader) {
+  background: transparent !important;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: calc(-1 * var(--ytd-masthead-height, 56px)) -24px 0; /* the page's 24px margins, not over the guide */
+    z-index: -1;
+    background: color-mix(in srgb, var(--kyt-bg) 80%, transparent);
+    backdrop-filter: blur(48px);
+  }
+}
+/* Lockup lists' fixed header is 100vw wide from its left edge, which pushes the search pill off screen. */
+html[kyt-playlists] ytd-browse[page-subtype="playlist"] yt-item-section-renderer > #header.ytItemSectionRendererStickyHeader {
+  width: var(--kyt-pl-head-w, auto) !important;
+}
+html[kyt-playlists][kyt-stuck] ytd-masthead #background {
+  background: transparent !important;
+  backdrop-filter: none !important;
+}

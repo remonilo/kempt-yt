@@ -1,5 +1,5 @@
 import type { Feature } from '../../core/feature.ts';
-import { el, keep, observe, waitFor } from '../../core/dom.ts';
+import { el, keep, observe, stuckUnderMasthead, waitFor } from '../../core/dom.ts';
 import { outsideClick, placeMenu } from '../../core/dropdown.ts';
 import { icon, iconUrl } from '../../core/icon.ts';
 import { local } from '../../core/i18n.ts';
@@ -369,6 +369,14 @@ function bulk(list: Element, contents: Element, sel: string, words: PlaylistWord
 
   // In the section header beside YouTube's sort chip (CSS orders them), else above the rows.
   const header = list.closest('ytd-item-section-renderer, yt-item-section-renderer')?.querySelector(':scope > #header') ?? null;
+  if (header) stuckUnderMasthead(header, signal);
+  // Lockup lists fix their header 100vw wide once stuck; style.css sizes it to the list with this.
+  const section = header?.parentElement;
+  if (header instanceof HTMLElement && section?.localName === 'yt-item-section-renderer') {
+    const ro = new ResizeObserver(() => header.style.setProperty('--kyt-pl-head-w', `${section.clientWidth}px`));
+    ro.observe(section);
+    signal.addEventListener('abort', () => (ro.disconnect(), header.style.removeProperty('--kyt-pl-head-w')), { once: true });
+  }
   keep(bar, [header ?? list, contents], () => {
     if (header && bar.parentElement !== header) header.prepend(bar);
     else if (!header && bar.nextElementSibling !== contents) contents.before(bar);

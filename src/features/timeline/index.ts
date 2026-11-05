@@ -1,5 +1,5 @@
 import type { Ctx, Feature } from '../../core/feature.ts';
-import { el, observe, waitFor } from '../../core/dom.ts';
+import { el, observe, stuckUnderMasthead, waitFor } from '../../core/dom.ts';
 import { routeOf } from '../../core/router.ts';
 import { S } from '../../core/selectors.ts';
 import { icon } from '../../core/icon.ts';
@@ -409,6 +409,7 @@ function link(href: string, label: string, tip = label): HTMLAnchorElement {
 async function historyHeader(signal: AbortSignal) {
   const row = await waitFor(S.historyChips, { signal, timeout: Infinity });
   if (!row || signal.aborted) return;
+  stuckUnderMasthead(row, signal);
   await waitFor(S.historyLinks, { signal }); // signed in only; logged out there are none
   if (signal.aborted) return;
   const links = el('div', 'kyt-hist-links');

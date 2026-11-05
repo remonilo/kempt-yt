@@ -361,6 +361,15 @@ html[kyt-timeline] ytd-browse[page-subtype="history"]:has(ytd-search-box-rendere
   }
 }
 
+/* Stuck (JS): one frost from the top of the window, so the masthead's own (made clear) leaves no seam. */
+html[kyt-timeline][kyt-stuck] ytd-browse[page-subtype="history"] ytd-section-list-renderer > #header-container::before {
+  top: calc(-1 * var(--ytd-masthead-height, 56px));
+}
+html[kyt-timeline][kyt-stuck] ytd-masthead #background {
+  background: transparent !important;
+  backdrop-filter: none !important;
+}
+
 /* A long localized label shrinks Clear all, never the icons. Outside the :has() block above: descendant rules under
    :has() make Chromium restyle the whole page on every DOM change. */
 html[kyt-timeline] ytd-browse[page-subtype="history"] ytd-browse-feed-actions-renderer > #contents > [kyt-icon="DELETE"] {
