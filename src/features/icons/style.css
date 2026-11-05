@@ -14,7 +14,7 @@ html[kyt-icons] :is(
   ytd-comment-action-buttons-renderer :is(#share-button, #reply-button-end) .ytSpecButtonShapeNextIcon,
   ytd-engagement-panel-title-header-renderer #visibility-button .ytSpecButtonShapeNextIcon,
   ytd-about-channel-renderer :is(tr yt-icon:is([icon="mail"], [icon="phone"], [icon="info"], [icon="youtube"], [icon="privacy_public"], [icon="info_outline"], [icon="person_radar"], [icon="my_videos"], [icon="trending_up"]), #share-channel .ytSpecButtonShapeNextIcon),
-  yt-page-header-view-model :is(yt-attribution-view-model .ytAttributedStringImageElement, a[href$="/community"] .ytSpecButtonShapeNextIcon),
+  yt-page-header-view-model :is(yt-attribution-view-model .ytAttributedStringImageElement, a:is([href$="/community"], [href="/account_downloads"]) .ytSpecButtonShapeNextIcon),
   ytd-expandable-tab-renderer #icon-button yt-icon,
   ytd-watch-metadata :is([kyt-icon="SHARE"], [kyt-icon="PLAYLIST_ADD"], [kyt-icon="OFFLINE_DOWNLOAD"], [kyt-icon="CONTENT_CUT"], [kyt-icon="SPARK"], [kyt-icon="MONEY_HEART"], [kyt-icon="OUTLINE_BAG"]) .ytSpecButtonShapeNextIcon,
   ytd-watch-metadata ytd-menu-renderer > #button-shape .ytSpecButtonShapeNextIcon,
@@ -45,6 +45,7 @@ html[kyt-icons] ytd-masthead #buttons > ytd-button-renderer .ytSpecButtonShapeNe
 html[kyt-icons] ytd-masthead #buttons > ytd-button-renderer .ytSpecButtonShapeNextOutline .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-you); }
 html[kyt-icons] ytd-masthead ytd-notification-topbar-button-renderer .ytSpecIconBadgeShapeIcon { --kyt-i: var(--kyt-i-notifs); }
 html[kyt-icons] ytd-simple-menu-header-renderer a[href="/account_notifications"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-settings); } /* bell panel gear */
+html[kyt-icons] yt-page-header-view-model a[href="/account_downloads"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-settings); } /* Downloads page Settings */
 html[kyt-icons] ytd-masthead ytd-topbar-menu-button-renderer yt-icon-button yt-icon { --kyt-i: var(--kyt-i-more); } /* signed out ⋮ */
 
 /* History's right column (signed in; logged out shows only Clear all and Pause). Turn on (PLAY_OUTLINED) replaces

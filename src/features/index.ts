@@ -11,6 +11,7 @@ import { icons } from './icons/index.ts';
 import { buttonLabels } from './button-labels/index.ts';
 import { notifActions } from './notif-actions/index.ts';
 import { playlists } from './playlists/index.ts';
+import { downloads } from './downloads/index.ts';
 import { progressBar } from './progress-bar/index.ts';
 import { searchBar } from './search-bar/index.ts';
 import { searchFilters } from './search-filters/index.ts';
@@ -48,6 +49,6 @@ import { hideSearchShelves } from './hide-search-shelves/index.ts';
 // A feature's style.css is picked up by build.mjs automatically.
 export const features: Feature[] = [accent, font, selectedBg, subscribeRed, searchBar, icons, buttonLabels,
   sidebar, settingsTopbar, watchLaterBtn, notifActions, shorts, watchTabs, captions, commentSort, commentSearch, commentLayout,
-  timeline, subsTabs, playlists, channelTabs, searchFilters, grid, progressBar,
+  timeline, subsTabs, playlists, downloads, channelTabs, searchFilters, grid, progressBar,
   // Hide tab, in page order
   hideHomeFeed, hideHomeChips, subsHome, hideExplore, hideSubs, hideSecondary, hideRelated, hidePlaylist, hideChat, hideComments, hideAvatars, hideDescription, hideChannel, hideActions, hideMerch, hideEndscreen, hideAutoplay, hideNotifs, hideCreate, hideMixes, hideSearchShelves];

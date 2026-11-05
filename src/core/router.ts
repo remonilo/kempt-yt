@@ -1,4 +1,4 @@
-export type Route = 'home' | 'watch' | 'shorts' | 'subscriptions' | 'history' | 'playlist' | 'playlists' | 'channel' | 'post' | 'other';
+export type Route = 'home' | 'watch' | 'shorts' | 'subscriptions' | 'history' | 'playlist' | 'playlists' | 'downloads' | 'channel' | 'post' | 'other';
 
 export function routeOf(path: string): Route {
   if (path === '/') return 'home';
@@ -9,6 +9,7 @@ export function routeOf(path: string): Route {
   if (path === '/feed/history') return 'history';
   if (path === '/playlist') return 'playlist';
   if (path === '/feed/playlists') return 'playlists';
+  if (path === '/feed/downloads') return 'downloads';
   if (path.startsWith('/post/')) return 'post'; // a channel post with its comments
   if (/^\/(@|channel\/|c\/|user\/)/.test(path)) return 'channel';
   return 'other';

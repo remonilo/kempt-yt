@@ -204,6 +204,8 @@ async function library(signal: AbortSignal, call: Call) {
   if (!grid || !header || !contents || signal.aborted) return;
   const words = local(WORDS);
   grid.setAttribute('kyt-pl-library', '');
+  const page = grid.closest('ytd-browse'); // no page-subtype on this feed; the header rules need a hook
+  page?.setAttribute('kyt-pl-library', '');
 
   const toggle = layoutToggle('playlists', 'library', 'list', signal);
   const input = el('input');
@@ -308,6 +310,7 @@ async function library(signal: AbortSignal, call: Call) {
   observe(contents, { childList: true, subtree: true }, decorate, signal);
   signal.addEventListener('abort', () => {
     grid.removeAttribute('kyt-pl-library');
+    page?.removeAttribute('kyt-pl-library');
     for (const it of items()) it.hidden = false;
     for (const f of contents.querySelectorAll('.kyt-pl-foot')) f.remove();
   }, { once: true });

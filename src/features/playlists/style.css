@@ -492,6 +492,12 @@ html[kyt-playlists] ytd-browse[page-subtype="playlist"] :is(ytd-item-section-ren
   & > chip-bar-view-model {
     margin-left: 24px;
   }
+  /* Lockup lists (Liked videos) wrap the chips in a div with a 16px bottom margin, which lifts them off the bar's centre;
+     the rows' thumbnails start 4px left of where the gap puts it. */
+  & > div:not(.kyt-pl-bar) {
+    margin-bottom: 0 !important;
+    margin-left: -4px;
+  }
 }
 html[kyt-playlists] ytd-browse[page-subtype="playlist"] :is(ytd-item-section-renderer, yt-item-section-renderer) > #header > :not(.kyt-pl-bar) {
   order: var(--kyt-pl-order, 0);
@@ -582,6 +588,32 @@ html[kyt-playlists] ytd-browse[page-subtype="playlist"] ytd-playlist-video-rende
   }
 }
 
+/* Library > Playlists header matches History's (timeline): 20px title over a full-width divider. The chip bar adds
+   16px above its chips, so 32px here gives History's gap. */
+html[kyt-playlists] ytd-browse[kyt-pl-library] {
+  /* History's centred column: YouTube's grid-N-columns widths (N x 214px, at most 6), picked with 28px to spare. */
+  --kyt-col: clamp(214px, round(down, 100% - 28px, 214px), 1284px);
+  & ytd-two-column-browse-results-renderer {
+    width: var(--kyt-col);
+    margin-inline: auto;
+  }
+  & #page-header-container {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--kyt-outline);
+    margin-bottom: 32px;
+  }
+  & #page-header {
+    /* History's; this feed gets 0 from a more specific YouTube rule, and a centred max width in grid view */
+    padding: 24px calc((100% - var(--kyt-col)) / 2) 4px !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+  & #page-header .ytPageHeaderViewModelTitle h1 {
+    font: 500 20px / 28px Roboto, Arial, sans-serif;
+  }
+}
+
 /* Library > Playlists: YouTube's chips left, our layout toggle and search pill right (Figma 125:12932). */
 html[kyt-playlists] ytd-rich-grid-renderer[kyt-pl-library] > #header {
   display: flex;
@@ -589,11 +621,20 @@ html[kyt-playlists] ytd-rich-grid-renderer[kyt-pl-library] > #header {
   align-items: flex-end; /* the chip bar has 16px of padding above its chips */
   gap: 16px;
   box-sizing: border-box; /* the grid centres its children, so extra width would shift the chips left */
-  padding-right: 24px; /* line up with the chips' own 24px inset */
   & > chip-bar-view-model {
     flex: 1 1 auto;
     min-width: 0;
+    padding-inline: 0 !important; /* chips start at the column edge, like History's */
   }
+}
+html[kyt-playlists] ytd-rich-grid-renderer[kyt-pl-library] > #contents {
+  padding-top: 36px !important; /* History's gap from the last chip row to the first day */
+}
+/* Grid view: cards carry 8px side margins, so the edge cards line up with the chips. */
+html[kyt-playlists-library="grid"] ytd-rich-grid-renderer[kyt-pl-library] > #contents {
+  width: calc(100% + 16px) !important;
+  max-width: none !important;
+  margin-inline: -8px !important;
 }
 .kyt-pl-tools {
   display: flex;
@@ -741,7 +782,7 @@ html[kyt-playlists-library="list"] ytd-rich-grid-renderer[kyt-pl-library] > #con
   gap: 16px;
   align-self: stretch;
   width: auto;
-  margin: 0 24px;
+  margin: 0;
   & > ytd-rich-item-renderer {
     width: 100%;
     max-width: none;

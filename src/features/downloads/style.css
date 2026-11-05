@@ -1,0 +1,30 @@
+/* Same header and column as History (timeline) and Library > Playlists (playlists). */
+html[kyt-downloads] ytd-browse[kyt-downloads] {
+  --kyt-col: clamp(214px, round(down, 100% - 28px, 214px), 1284px);
+  & #page-header-container {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--kyt-outline);
+    margin-bottom: 40px;
+  }
+  & #page-header {
+    padding: 24px calc((100% - var(--kyt-col)) / 2) 4px !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+  & #page-header .ytPageHeaderViewModelTitle h1 {
+    font: 500 20px / 28px Roboto, Arial, sans-serif;
+  }
+  /* Settings as a chip-height pill centred on the title, which sits at the bottom of its 50px box. */
+  & .ytPageHeaderViewModelTwoColumnSpaceBetweenRight {
+    align-self: flex-end;
+    margin-bottom: 2px;
+  }
+  & .ytPageHeaderViewModelTwoColumnSpaceBetweenRight .ytSpecButtonShapeNextHost {
+    height: var(--kyt-chip-h);
+  }
+  & ytd-two-column-browse-results-renderer {
+    width: var(--kyt-col) !important;
+    margin-inline: auto;
+  }
+}

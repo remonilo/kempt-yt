@@ -53,6 +53,7 @@ export const S = {
   // A hidden copy of the new header sits in yt-page-header-portal, hence the child combinator.
   playlistByline: 'ytd-browse[page-subtype="playlist"]:not([hidden]) ytd-playlist-header-renderer:not([hidden]) ytd-playlist-byline-renderer .metadata-stats, ' +
     'ytd-browse[page-subtype="playlist"]:not([hidden]) > yt-page-header-renderer yt-content-metadata-view-model',
+  downloadsHeader: 'ytd-browse:not([hidden]):not([page-subtype]) #page-header-container', // /feed/downloads has no page-subtype either
   playlistsGrid: 'ytd-browse:not([hidden]):not([page-subtype]) ytd-rich-grid-renderer', // Library > Playlists (/feed/playlists has no page-subtype)
   playlistBrowse: 'ytd-browse[page-subtype="playlist"]:not([hidden])',
   playlistHeader: 'ytd-browse[page-subtype="playlist"]:not([hidden]) > yt-page-header-renderer', // its action buttons need stamp
