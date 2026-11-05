@@ -1,5 +1,6 @@
 import type { Feature } from '../core/feature.ts';
 import { accent } from './accent/index.ts';
+import { logo } from './logo/index.ts';
 import { captions } from './captions/index.ts';
 import { commentLayout } from './comment-layout/index.ts';
 import { commentSearch } from './comment-search/index.ts';
@@ -48,7 +49,7 @@ import { hideMixes } from './hide-mixes/index.ts';
 import { hideSearchShelves } from './hide-search-shelves/index.ts';
 
 // A feature's style.css is picked up by build.mjs automatically.
-export const features: Feature[] = [accent, font, selectedBg, subscribeRed, searchBar, icons, buttonLabels,
+export const features: Feature[] = [accent, logo, font, selectedBg, subscribeRed, searchBar, icons, buttonLabels,
   sidebar, settingsTopbar, watchLaterBtn, notifActions, shorts, watchTabs, captions, commentSort, commentSearch, commentLayout,
   timeline, subsTabs, playlists, downloads, channelTabs, searchFilters, grid, progressBar,
   // Hide tab, in page order

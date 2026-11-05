@@ -1,0 +1,51 @@
+/* Pixel play button in front of YouTube's wordmark (topbar and guide drawer; a Yoodle's own ytd-logo is left alone).
+   14x10 pixel grid at 2px over the 28x20 icon slot at the start of the logo svg. ::before is the button: the accent
+   body cut to the notched silhouette, with the white triangle as a background image on top. */
+html[kyt-logo-style="pixel"] ytd-topbar-logo-renderer #logo > div > ytd-logo #logo-icon > .yt-icon-shape {
+  position: relative;
+}
+html[kyt-logo-style="pixel"] ytd-topbar-logo-renderer #logo > div > ytd-logo #logo-icon svg > g:first-child {
+  display: none;
+}
+html[kyt-logo-style="pixel"] ytd-topbar-logo-renderer #logo > div > ytd-logo #logo-icon > .yt-icon-shape::before,
+html[kyt-logo-style="pixel"] ytd-topbar-logo-renderer #logo > div > ytd-logo #logo-icon > .yt-icon-shape::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 20px;
+  pointer-events: none;
+}
+html[kyt-logo-style="pixel"] ytd-topbar-logo-renderer #logo > div > ytd-logo #logo-icon > .yt-icon-shape::before {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 10' shape-rendering='crispEdges'%3E%3Cpath fill='%23fff' d='M6 2h1v1h1v1h1v2h-1v1h-1v1H6z'/%3E%3C/svg%3E") 0 0 / 100% 100%,
+    var(--kyt-accent, #f03);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 10' shape-rendering='crispEdges'%3E%3Cpath d='M1 0h12v1h1v8h-1v1H1v-1H0V1h1z'/%3E%3C/svg%3E") 0 0 / 100% 100%;
+}
+
+/* A "/" stripe of pixels sweeps from the left: bright once when the logo first renders, then faint every 6s.
+   ::after is white, masked by the silhouette intersected with the stripe; the stripe layer's position moves 2px a
+   step so it stays on the pixel grid. */
+html[kyt-logo-style="pixel"] ytd-topbar-logo-renderer #logo > div > ytd-logo #logo-icon > .yt-icon-shape::after {
+  background: #fff;
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10' shape-rendering='crispEdges'%3E%3Cpath d='M9 0H11V1H10V2H9V3H8V4H7V5H6V6H5V7H4V8H3V9H2V10H0V9H1V8H2V7H3V6H4V5H5V4H6V3H7V2H8V1H9Z'/%3E%3C/svg%3E") -24px 0 / 24px 20px no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 10' shape-rendering='crispEdges'%3E%3Cpath d='M1 0h12v1h1v8h-1v1H1v-1H0V1h1z'/%3E%3C/svg%3E") 0 0 / 100% 100%;
+  mask-composite: intersect;
+  animation: kyt-logo-shine 0.8s steps(26) 0.4s, kyt-logo-shimmer 6s 1.2s infinite;
+}
+@keyframes kyt-logo-shine {
+  from { mask-position: -24px 0, 0 0; opacity: 0.7; }
+  to { mask-position: 28px 0, 0 0; opacity: 0.7; }
+}
+@keyframes kyt-logo-shimmer {
+  0% { mask-position: -24px 0, 0 0; opacity: 0.3; animation-timing-function: steps(26); }
+  12%, 100% { mask-position: 28px 0, 0 0; opacity: 0.3; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[kyt-logo-style="pixel"] ytd-topbar-logo-renderer #logo > div > ytd-logo #logo-icon > .yt-icon-shape::after { animation: none; }
+}
+
+/* With the mini guide the feed starts 24px further right than the logo: line the logo up with the chips and grid. */
+html[kyt-logo] ytd-masthead[mini-guide-visible] ytd-topbar-logo-renderer { margin-left: 24px; }
