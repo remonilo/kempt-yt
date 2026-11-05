@@ -21,14 +21,16 @@ html[kyt-progress-bar] { --kyt-wave-len: 24px; }
   overflow: hidden;
   pointer-events: none;
 }
+/* Cut to length by width + overflow, not clip-path or a mask: Firefox moves a transform animation under a clip-path or
+   mask ancestor to the main thread (measured ~40% of a core with the controls showing). No transition, so a seek
+   doesn't sweep every chapter at once. */
 .kyt-wave i {
   position: absolute;
-  inset: 0;
+  inset: 0 auto 0 0;
   overflow: hidden;
-  transition: clip-path 0.25s linear;
 }
-.kyt-wave i:first-child { clip-path: inset(0 calc((1 - var(--kyt-l, 0)) * 100%) 0 0); }
-.kyt-wave i:last-child { clip-path: inset(0 calc((1 - var(--kyt-p, 0)) * 100%) 0 0); }
+.kyt-wave i:first-child { width: calc(var(--kyt-l, 0) * 100%); }
+.kyt-wave i:last-child { width: calc(var(--kyt-p, 0) * 100%); }
 .kyt-wave::before,
 .kyt-wave i::before,
 html[kyt-progress-bar] #previewbar > li::before {
@@ -44,7 +46,6 @@ html[kyt-progress-bar] #previewbar > li::before {
 /* SponsorBlock segments become wave pieces in their category color (user-chosen, never recolored). The li keeps
    SponsorBlock's inline background-color, but clipped to its text (an invisible &nbsp;) it paints nothing, while
    ::before inherits the color. index.ts sets --kyt-off per li. */
-html[kyt-progress-bar] .ytp-progress-bar > #previewbar.sbNotInvidious { transform: none; } /* its scaleY would flatten the wave */
 html[kyt-progress-bar] #previewbar > li {
   top: 50%;
   height: 8px;
