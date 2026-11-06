@@ -18,12 +18,13 @@ async function css() {
 
 async function statics() {
   await mkdir(out, { recursive: true });
+  const noJunk = (src) => !src.endsWith('.DS_Store');
   await cp('manifest.json', `${out}/manifest.json`);
   await cp('src/popup/popup.html', `${out}/popup.html`);
   await cp('src/popup/popup.css', `${out}/popup.css`);
-  await cp('src/icons', `${out}/icons`, { recursive: true }); // loaded by name, see core/icon.ts
-  await cp('src/brand', `${out}/brand`, { recursive: true });
-  await cp('src/fonts', `${out}/fonts`, { recursive: true }); // features/font, see scripts/fetch-fonts.mjs
+  await cp('src/icons', `${out}/icons`, { recursive: true, filter: noJunk }); // loaded by name, see core/icon.ts
+  await cp('src/brand', `${out}/brand`, { recursive: true, filter: noJunk });
+  await cp('src/fonts', `${out}/fonts`, { recursive: true, filter: noJunk }); // features/font, see scripts/fetch-fonts.mjs
   await cp('THIRD_PARTY_NOTICES.md', `${out}/THIRD_PARTY_NOTICES.md`); // icon and font licenses ship with the assets
   await css();
 }
