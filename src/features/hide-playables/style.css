@@ -1,0 +1,9 @@
+/* A Playable is a mini-game card (feeds, shelves, search); the sidebar entry links to /playables.
+   The Playables page itself stays: emptying it makes YouTube load continuations forever. */
+html[kyt-hide-playables] :is(
+  ytd-rich-section-renderer:has(mini-game-card-view-model),
+  ytd-rich-item-renderer:has(mini-game-card-view-model),
+  grid-shelf-view-model:has(mini-game-card-view-model),
+  :is(ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer):has(a[href$="/playables"]),
+  .kyt-nav-item:has(a[href$="/playables"])
+):not(ytd-browse[page-subtype="playables"] *) { display: none !important; }

@@ -46,6 +46,7 @@ import { hideNotifs } from './hide-notifs/index.ts';
 import { hideCreate } from './hide-create/index.ts';
 import { hideYoodle } from './hide-yoodle/index.ts';
 import { hideMixes } from './hide-mixes/index.ts';
+import { hidePlayables } from './hide-playables/index.ts';
 import { hideSearchShelves } from './hide-search-shelves/index.ts';
 
 // A feature's style.css is picked up by build.mjs automatically.
@@ -54,5 +55,5 @@ export const features: Feature[] = [accent, logo, font, selectedBg, subscribeRed
   timeline, subsTabs, playlists, downloads, channelTabs, searchFilters, grid, progressBar,
   // Hide tab, grouped by section in page order
   hideExplore, hideSubs, hideNotifs, hideCreate, hideYoodle,
-  shorts, hideHomeFeed, hideHomeChips, subsHome, hideMixes, hideSearchShelves,
+  shorts, hideHomeFeed, hideHomeChips, subsHome, hideMixes, hidePlayables, hideSearchShelves,
   hideSecondary, hideRelated, hidePlaylist, hideChat, hideComments, hideAvatars, hideDescription, hideChannel, hideActions, hideMerch, hideEndscreen, hideAutoplay];

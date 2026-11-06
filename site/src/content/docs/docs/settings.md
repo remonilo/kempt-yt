@@ -32,7 +32,7 @@ Click the Kempt icon in the browser toolbar. The tabs at the top switch between 
 | Feeds | [Timeline](/kempt-yt/docs/features/timeline/) | | On |
 | | [Grid size](/kempt-yt/docs/features/grid/) | Videos per row (2 to 8), Shorts per row (3 to 10) | Off |
 | Hide | [Shorts](/kempt-yt/docs/features/shorts/) | | On |
-| | [Home feed, chips, Explore, Subscriptions, watch page parts, top bar buttons, Mixes, search shelves](/kempt-yt/docs/features/hide/) | | Off |
+| | [Home feed, chips, Explore, Subscriptions, watch page parts, top bar buttons, Mixes, Playables, search shelves](/kempt-yt/docs/features/hide/) | | Off |
 | | [Subscriptions as Home](/kempt-yt/docs/features/hide/#subscriptions-as-home) | | Off |
 | | [Autoplay](/kempt-yt/docs/features/hide/#autoplay) | | Off |
 

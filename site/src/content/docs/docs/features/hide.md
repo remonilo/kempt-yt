@@ -13,7 +13,7 @@ The **Hide** tab in the popup has one switch per part of YouTube, modelled on th
 | Sidebar | Explore (Music, Gaming, News and the rest), Subscriptions (entry, channel list and the feed page) |
 | Watch page | Watch column, Related videos, Playlist panel, Live chat, Comments, Comment avatars, Description, Channel row, Action buttons, Merch and offers, End screen, Autoplay |
 | Top bar | Notification bell, Create button, Special logos (Yoodles) |
-| Everywhere | Mixes, Search extras (shelves such as People also watched) |
+| Everywhere | Mixes, Playables (mini games), Search extras (shelves such as People also watched) |
 
 ## With the watch page tabs
 
