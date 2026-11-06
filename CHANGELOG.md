@@ -1,5 +1,43 @@
 # Changelog
 
+## [0.11.0](https://github.com/remonilo/kempt-yt/compare/v0.10.0...v0.11.0) (2026-11-06)
+
+
+### Features
+
+* **button-labels:** hide button labels with or without Kempt icons ([9a25329](https://github.com/remonilo/kempt-yt/commit/9a25329bd4be18a81411ec5fb4e5b25703b1b34e))
+* **hide:** dim overlapping switches, Watch column hides whole column ([aa122c6](https://github.com/remonilo/kempt-yt/commit/aa122c6a4c2df8b9c5912984039d510d5264e86e))
+* **hide:** hide Playables ([2045975](https://github.com/remonilo/kempt-yt/commit/2045975a67e3ef0fce399912012a03ec5a09a2fe))
+* **hide:** hide special event logos (Yoodles) ([132670c](https://github.com/remonilo/kempt-yt/commit/132670cb57987487d40beef248722c72f65b9ff8))
+* **hide:** Hide tabs with switches ([05fbb91](https://github.com/remonilo/kempt-yt/commit/05fbb9186799024237ba7588d01679a642ed8893))
+* History's header and column on Library and Downloads ([eca6e9b](https://github.com/remonilo/kempt-yt/commit/eca6e9b1b1f6cdb64020786fe41186959e550e95))
+* **icons:** Shorts player menu icons ([554599f](https://github.com/remonilo/kempt-yt/commit/554599fc8953fc50882d236d087f010fa206196c))
+* **logo:** logo restyle with a pixel play button style ([7522aae](https://github.com/remonilo/kempt-yt/commit/7522aae37bbec83ba27409feb2f72dcea9963f69))
+* **logo:** snake, comet and paper boat styles ([f1a9246](https://github.com/remonilo/kempt-yt/commit/f1a9246c35073e118cc7929fee5dcc990b2f7ed6))
+* **popup:** sticky tabs, Hide sub-headings, Rate and Sponsor links ([261a73d](https://github.com/remonilo/kempt-yt/commit/261a73d957b222876410bd6cf36006b83ce5954e))
+* **progress-bar:** snake, comet and paper boat styles ([5cbdc06](https://github.com/remonilo/kempt-yt/commit/5cbdc06f5f70fd78a1f2c8716dff8b1e70385c9c))
+* **watch-tabs:** open short ([11e9a2e](https://github.com/remonilo/kempt-yt/commit/11e9a2e957e4450f502370cc83f18870e97eed20))
+
+
+### Bug Fixes
+
+* **button-labels:** Create only; YouTube icons on our buttons with Icons off ([63005b9](https://github.com/remonilo/kempt-yt/commit/63005b90479416dfd308299fefb4703b1d0cf06c))
+* **font:** even digit spacing in rolling view counts ([36ee38b](https://github.com/remonilo/kempt-yt/commit/36ee38b193f4134035395a64835c9251483fafd9))
+* frost sticky rows on History and playlist pages as one with the masthead ([6a7ac69](https://github.com/remonilo/kempt-yt/commit/6a7ac6910a4a83ab2bb19400e755342f5564a819))
+* **hide-secondary:** hide fullscreen chat and comments ([9b7a636](https://github.com/remonilo/kempt-yt/commit/9b7a636a87840cad07e14b67e1c26d6b95faefef))
+* **hide:** fullscreen chat and comments buttons, Home chips gap ([e881629](https://github.com/remonilo/kempt-yt/commit/e881629b61da876ff6c417961b77447ec98aef2e))
+* **icons:** our dislike icon on Return ([8bbfa07](https://github.com/remonilo/kempt-yt/commit/8bbfa074e328b7bb5e67f010b797a1f67bbf49d6))
+* **playlists:** keep Library styled while YouTube swaps it in and out ([118414f](https://github.com/remonilo/kempt-yt/commit/118414f084f35f1a1caa206cb644ddeb74d5fb3f))
+* **progress-bar:** SponsorBlock segments follow the ([b7806a9](https://github.com/remonilo/kempt-yt/commit/b7806a949675899864e451364f5eea9bb74a6624))
+* **progress-bar:** SponsorBlock segments on the wave, drift off the main thread ([c3aa722](https://github.com/remonilo/kempt-yt/commit/c3aa7225e58e0cb49dace413ecce78b5ef8382d1))
+* **selected-bg:** keyboard focus ring on masthead icon buttons ([5f020a9](https://github.com/remonilo/kempt-yt/commit/5f020a99d3296360a490d40ecd5e87f164bfaae3))
+* **watch-tabs:** hide the playlist panel in theater ([7669638](https://github.com/remonilo/kempt-yt/commit/76696382ae4c5d5676ac619f810c9187a5b453aa))
+
+
+### Performance Improvements
+
+* keep :has() out of descendant rules ([7ee243e](https://github.com/remonilo/kempt-yt/commit/7ee243e5cb83d3ac0da0742a5cdbb289e17b6cd7))
+
 ## [0.10.0](https://github.com/remonilo/kempt-yt/compare/v0.9.0...v0.10.0) (2026-11-02)
 
 
