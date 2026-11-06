@@ -1,0 +1,65 @@
+<!doctype html>
+<!-- Mock of the two store pages with the proposed copy and images. Open in a browser; not pixel-exact to either store. -->
+<meta charset="utf-8">
+<title>Kempt store listing preview</title>
+<style>
+  body { margin: 0; font: 14px/1.5 system-ui, sans-serif; background: #f1f3f4; color: #202124; }
+  section { max-width: 1100px; margin: 32px auto; background: #fff; border-radius: 12px; padding: 32px 40px; box-shadow: 0 1px 3px #0002; }
+  .tag { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: #5f6368; margin-bottom: 18px; }
+  .head { display: flex; gap: 20px; align-items: center; }
+  .head img { width: 64px; height: 64px; }
+  h1 { font-size: 28px; margin: 0; font-weight: 500; }
+  .meta { color: #5f6368; font-size: 13px; }
+  .btn { margin-left: auto; background: #1a73e8; color: #fff; border-radius: 20px; padding: 10px 24px; font-weight: 500; }
+  .amo .btn { background: #0060df; border-radius: 4px; }
+  .shots { display: flex; gap: 12px; overflow-x: auto; margin: 28px 0; padding-bottom: 8px; }
+  .shots img { height: 320px; border-radius: 8px; flex: none; }
+  .summary { font-size: 16px; margin: 16px 0 0; }
+  pre { white-space: pre-wrap; font: inherit; color: #3c4043; }
+  .promo { display: flex; gap: 16px; align-items: end; }
+  .promo img { max-width: calc(60% - 8px); height: auto; border-radius: 8px; box-shadow: 0 1px 3px #0003; }
+  .amo { background: #f9f9fa; }
+  .amo h1 { font-weight: 700; }
+  .toggle { font-size: 13px; margin: 0 auto; max-width: 1100px; color: #5f6368; }
+</style>
+<p class="toggle">Screenshots: <a href="#" onclick="swap('')">captioned</a> · <a href="#" onclick="swap('-plain')">plain</a></p>
+
+<section>
+  <div class="tag">Chrome Web Store (mock)</div>
+  <div class="head">
+    <img src="icon-128-padded.png" alt="">
+    <div><h1>Kempt for YouTube</h1><div class="meta">remonilo.github.io · Extension · Entertainment</div></div>
+    <div class="btn">Add to Chrome</div>
+  </div>
+  <div class="shots" data-shots></div>
+  <h3>Overview</h3>
+  <p class="summary">A tidy, consistent redesign of YouTube: one accent color and icon set, comments beside the video, a feed sorted by day.</p>
+  <pre data-desc></pre>
+  <h3>Promo images</h3>
+  <div class="promo"><img src="promo-small-440x280.png" style="max-width: 40%" alt=""><img src="promo-marquee-1400x560.png" width="700" alt=""></div>
+</section>
+
+<section class="amo">
+  <div class="tag">Firefox Add-ons (mock)</div>
+  <div class="head">
+    <img src="../src/brand/128.png" alt="">
+    <div><h1>Kempt for YouTube</h1><div class="meta">by remonilo · Appearance</div>
+      <p class="summary">A tidy, consistent redesign of YouTube. One accent color and icon set, comments in a tab beside the video, readable captions and a Subscriptions feed sorted by day. Every change is a switch. No tracking, no data collected.</p></div>
+    <div class="btn">Add to Firefox</div>
+  </div>
+  <div class="shots" data-shots></div>
+  <h3>About this extension</h3>
+  <pre data-desc></pre>
+</section>
+
+<script type="module">
+  const names = ['1-home', '2-watch', '3-captions', '4-subscriptions', '5-settings'];
+  window.swap = (v) => document.querySelectorAll('[data-shots]').forEach((el) => {
+    el.replaceChildren(...names.map((n) => Object.assign(new Image(), { src: `screenshot-${n}${v}.png`, alt: '' })));
+  });
+  swap('');
+  // The description lives in listing.md only; pull it from the first ```text block.
+  const md = await fetch('listing.md').then((r) => r.text()).catch(() => '');
+  const desc = md.match(/```text\n([\s\S]*?)```/)?.[1] ?? 'Open through a local server (npx serve store) to load the description from listing.md.';
+  document.querySelectorAll('[data-desc]').forEach((el) => { el.textContent = desc; });
+</script>
