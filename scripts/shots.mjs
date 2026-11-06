@@ -44,6 +44,27 @@ const SHOTS = {
     },
   },
   // No captions entry: headless Firefox never requests timedtext. scripts/captions-shot.js shoots it in Chromium.
+  sidebar: {
+    url: 'https://www.youtube.com/',
+    setup: async (p) => {
+      await p.evaluate(pause);
+      // Opens the first and last dropdowns (Explore, Subscriptions); the open set is saved, so close them after.
+      await p.evaluate(() => { const a = [...document.querySelectorAll('.kyt-nav-arrow')]; a[0]?.click(); a.at(-1)?.click(); });
+      await sleep(1200);
+    },
+    after: async (p) => p.evaluate(() => { const a = [...document.querySelectorAll('.kyt-nav-item[open] > .kyt-nav-row .kyt-nav-arrow')]; a.forEach((b) => b.click()); }),
+  },
+  shorts: {
+    // A Shorts link opens in the normal player: take the first Short from a channel's Shorts tab and open it.
+    url: 'https://www.youtube.com/@GugaFoods/shorts',
+    setup: async (p) => {
+      const href = await p.evaluate(() => document.querySelector('a[href^="/shorts/"]')?.href);
+      if (!href) return;
+      await p.goto(href, { waitUntil: 'load' });
+      await sleep(8000);
+      await atFrame(p, 3);
+    },
+  },
   subs: { url: 'https://www.youtube.com/feed/subscriptions', setup: async (p) => { await p.evaluate(pause); } },
   history: { url: 'https://www.youtube.com/feed/history', setup: async (p) => { await p.evaluate(pause); } },
   search: { url: 'https://www.youtube.com/results?search_query=paper+boat', setup: async (p) => { await p.evaluate(pause); } },
@@ -63,7 +84,7 @@ try {
   for (const a of process.argv.filter((a) => a.startsWith('--with='))) await browser.installExtension(resolve(a.slice(7).replace(/^~(?=\/)/, homedir())));
   const page = await browser.newPage();
   await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 2 });
-  for (const [name, { url, setup }] of Object.entries(SHOTS)) {
+  for (const [name, { url, setup, after }] of Object.entries(SHOTS)) {
     if (only && !only.includes(name)) continue;
     await page.goto(url, { waitUntil: 'load', timeout: 60_000 });
     await page.bringToFront();
@@ -74,5 +95,6 @@ try {
     const path = join(out, `${name}${light ? '-light' : ''}.png`);
     await page.screenshot({ path });
     console.log(`saved ${path}`);
+    await after?.(page);
   }
 } finally { await browser.close(); }

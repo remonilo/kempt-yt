@@ -1,6 +1,8 @@
 <div align="center">
 
-<h1>Kempt</h1>
+<img src="src/brand/128.png" alt="" width="72" />
+
+<h1>Kempt for YouTube</h1>
 
 <p align="center">
   <a href="https://remonilo.github.io/kempt-yt/docs/">Docs</a>
@@ -12,34 +14,32 @@
   <a href="https://remonilo.github.io/kempt-yt/docs/privacy/">Privacy</a>
 </p>
 
-[![Last commit](https://img.shields.io/github/last-commit/remonilo/kempt-yt?style=flat-square)](https://github.com/remonilo/kempt-yt/commits/main)
-[![Issues](https://img.shields.io/github/issues/remonilo/kempt-yt?style=flat-square)](https://github.com/remonilo/kempt-yt/issues)
-[![Stars](https://img.shields.io/github/stars/remonilo/kempt-yt?style=flat-square)](https://github.com/remonilo/kempt-yt/stargazers)
-[![License](https://img.shields.io/github/license/remonilo/kempt-yt?style=flat-square)](LICENSE)
-[![Sponsor](https://img.shields.io/badge/sponsor-%E2%9D%A4-ea4aaa?style=flat-square)](https://github.com/sponsors/remonilo)
+<p align="center">
+  <a href="https://addons.mozilla.org/firefox/addon/kempt-for-youtube/"><img src="https://img.shields.io/amo/v/kempt-for-youtube?style=flat-square&logo=firefoxbrowser&logoColor=white&label=Firefox&color=cb274a" alt="Firefox Add-ons version"></a>
+  <a href="https://chromewebstore.google.com/detail/kempt-for-youtube/dpiheahglgggkdjcgdkiogpmhbmppfmg"><img src="https://img.shields.io/chrome-web-store/v/dpiheahglgggkdjcgdkiogpmhbmppfmg?style=flat-square&logo=googlechrome&logoColor=white&label=Chrome&color=cb274a" alt="Chrome Web Store version"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/remonilo/kempt-yt?style=flat-square" alt="MIT license"></a>
+  <a href="https://github.com/remonilo/kempt-yt/commits/main"><img src="https://img.shields.io/github/last-commit/remonilo/kempt-yt?style=flat-square" alt="Last commit"></a>
+</p>
 
-### A kempt and consistent redesign of YouTube
+### A tidy, consistent redesign of YouTube
 
-One accent color and icon set. Every change is a switch you can turn off.
+One accent color, one icon set, one font. Every change is a switch you can turn off.
 
 </div>
-
-> [!WARNING]
-> This README and the [docs](https://remonilo.github.io/kempt-yt/docs/) are outdated and will be updated once v1.0 is released.
 
 <div align="center">
   <table>
     <tr>
       <td colspan="2">
-        <img src="site/src/assets/screenshots/demo.png" alt="Watch page with Kempt" />
+        <img src="site/src/assets/screenshots/tabs.png" alt="Watch page with the Comments tab beside the player" />
       </td>
     </tr>
     <tr>
       <td width="50%">
-        <img src="site/src/assets/screenshots/timeline.png" alt="Subscriptions timeline" />
+        <img src="site/src/assets/screenshots/timeline.png" alt="Subscriptions on a timeline with date headers" />
       </td>
       <td width="50%">
-        <img src="site/src/assets/screenshots/sidebar.png" alt="Redesigned sidebar" />
+        <img src="site/src/assets/screenshots/sidebar.png" alt="Sidebar with Explore and Subscriptions open" />
       </td>
     </tr>
   </table>
@@ -56,28 +56,22 @@ One accent color and icon set. Every change is a switch you can turn off.
 
 ## Features
 
-- Watch page tabs for info, comments, videos, live chat and Ask AI, beside the player <details> <summary><sup>click to see the tabs</sup></summary><img src="site/src/assets/screenshots/tabs.png" alt="Watch page tabs" /></details>
-- Apple-style captions in your font: Shadow, Box or Blur, sized 50 to 200% <details> <summary><sup>click to see the captions</sup></summary><img src="site/src/assets/screenshots/captions.png" alt="Captions" /></details>
-- Subscriptions timeline with date headers, All / Videos / Live / Shorts chips and a search box
+- Watch page tabs for info, comments, videos, live chat and Ask AI, beside the player. Only the open tab scrolls. <details> <summary><sup>click to see the tabs</sup></summary><img src="site/src/assets/screenshots/tabs.png" alt="Watch page tabs" /></details>
+- Readable captions in your font: Shadow, Box or Blur, sized 50 to 200% <details> <summary><sup>click to see the captions</sup></summary><img src="site/src/assets/screenshots/captions.png" alt="Captions" /></details>
+- Subscriptions on a timeline with date headers, Videos and Channels tabs, filter chips and a search box
   - History gets the same date headers
+  - optionally open Subscriptions as your Home page
 - Sidebar with dropdowns for Explore, Subscriptions and Playlists
-  - hide the entries you never use
-- One accent color and one icon set across chips, tabs, the progress bar, Subscribe, every button and popup menu
-- Font choice, bundled in the extension
-  - Plus Jakarta Sans by default
-  - Inter, Geist, Figtree or your system font instead
-- Grid size for videos and Shorts per row on Home, Subscriptions and channels
-- Hide Shorts, with Shorts links opening in the normal player
-- Small fixes
-  - outlined search bar
-  - Settings in the top bar
-  - Watch later button
-  - Watch later and Share in the notifications panel
-  - comment sort as chips
-  - optional wavy progress bar
+- One accent color and one icon set across chips, tabs, the progress bar, Subscribe, buttons and menus
+  - an optional accent logo and progress bar styles
+- Font choice, bundled in the extension: Plus Jakarta Sans by default, or Inter, Geist, Figtree or your system font
+- Grid size for Home, Subscriptions and channels; search results as a grid or a list, with a custom date range
+- Shorts links open in the normal player, with a seek bar
+- About 30 switches to hide what you don't use: Shorts, the Home feed, Mixes, Playables, end screens, comments, live chat and more
+- Smaller fixes: outlined search bar, Watch later button, comment sort as chips, comment search, Watch later and Share in the notifications panel
 - A switch for every change in the popup <details> <summary><sup>click to see the popup</sup></summary><img src="site/src/assets/screenshots/popup.png" alt="Kempt popup" width="260" /></details>
 - Labels in 11 languages that follow YouTube's UI language
-- CSS first, no background timers, observers that disconnect once done, and reduced motion respected
+- CSS first, no background timers, observers that disconnect once done, and reduced motion respected ([measured](https://remonilo.github.io/kempt-yt/docs/internals/performance/))
 
 ## Quick start
 
@@ -114,7 +108,16 @@ Reload any YouTube tab that was open before.
 
 ## Privacy
 
-Kempt collects nothing and has no server. It asks for one permission, `storage`, for your settings, and runs on `www.youtube.com` only. The few requests it makes go to YouTube with your session, and YouTube's own menus send the same ones. [Details][privacy_link].
+Kempt collects no data and has no server. It loads no remote code and runs no analytics.
+
+| Permission | Why |
+| --- | --- |
+| `storage` | Saves your settings. Your browser may sync them through your own browser account. |
+| `https://www.youtube.com/*` | Runs Kempt on YouTube. It runs on no other site. |
+
+The few requests it makes go to YouTube with your session, and YouTube's own menus send the same ones. [Details][privacy_link].
+
+Every [GitHub release](https://github.com/remonilo/kempt-yt/releases) attaches the zip built by CI from that tag (`npm ci && npm run build`) and a source zip. Release notes are in the [changelog](CHANGELOG.md).
 
 ## Contributing
 
@@ -140,11 +143,11 @@ YouTube's UI is built from many teams' parts. It mixes three icon styles, and it
 
 ## Credits
 
-Icons from [YouTube Redesign (Community)](https://www.figma.com/community/file/1450380484645543336/youtube-redesign) by Juxtopposed, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), exported and modified. Remaining icons from [Hugeicons](https://hugeicons.com) (MIT). Fonts (Inter, Plus Jakarta Sans, Geist, Figtree) are under the SIL Open Font License 1.1. Kempt is not affiliated with or endorsed by YouTube or Google.
+Icons from [YouTube Redesign (Community)](https://www.figma.com/community/file/1450380484645543336/youtube-redesign) by Juxtopposed, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), exported and modified. Remaining icons from [Hugeicons](https://hugeicons.com) (MIT). Fonts (Inter, Plus Jakarta Sans, Geist, Figtree) are under the SIL Open Font License 1.1. Kempt for YouTube is an independent project, not affiliated with or endorsed by YouTube or Google. YouTube is a trademark of Google LLC.
 
 ## Support
 
-Kempt is free and I maintain it alone. [Sponsor on GitHub](https://github.com/sponsors/remonilo) if it saves you some annoyance.
+Kempt is free and I maintain it alone. [Sponsor on GitHub](https://github.com/sponsors/remonilo) if it saves you some annoyance. A rating on [Firefox Add-ons][firefox_link] or the [Chrome Web Store][chrome_link] helps others find it.
 
 ## License
 
