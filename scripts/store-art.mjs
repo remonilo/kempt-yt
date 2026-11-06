@@ -38,11 +38,11 @@ const captioned = (title, sub, img, { pos = 'top', crop = '', style = '' } = {})
 const full = (img) => `<style>${base} body { width: 1280px; height: 800px; background: url(${img}) center / cover; }</style>`;
 
 const SHOTS = [
-  ['1-home', 'YouTube, kept tidy', 'One accent color, one icon set, one font across the whole site.', shot('home')],
-  ['2-watch', 'Comments one click away', 'Info, comments and up next share one panel beside the player.', shot('comments')],
-  ['3-captions', 'Subtitles you can read', 'Clean captions in your font, sized to the player.', shot('captions-player'), { pos: 'bottom', style: 'height: auto; bottom: 0; border-radius: 16px 16px 0 0' }],
-  ['4-subscriptions', 'Your feed, by day', 'Subscriptions on a timeline, with filters and search.', shot('subs')],
-  ['5-settings', 'Every change is a switch', 'Turn anything off in the popup. YouTube comes back at once.', null],
+  ['1-home', 'Your accent color', 'Chips, tabs, the progress bar and Subscribe use the color you pick.', shot('home')],
+  ['2-watch', 'Tabs beside the video', 'Info, Comments, Videos and Live chat share one panel next to the player.', shot('comments')],
+  ['3-captions', 'Resizable captions', 'Captions in your font, from 50 to 200%.', shot('captions-player'), { pos: 'bottom', style: 'height: auto; bottom: 0; border-radius: 16px 16px 0 0' }],
+  ['4-subscriptions', 'Subscriptions by date', 'Videos under date headers, with type filters and search.', shot('subs')],
+  ['5-settings', 'Settings popup', 'Each feature turns off on its own, without a reload.', null],
 ];
 
 // The popup over a dimmed Home shot, for the last screenshot.
@@ -70,7 +70,7 @@ const tile = `
     h1 { font-size: 34px; font-weight: 800; letter-spacing: -0.02em; }
     p { font-size: 15px; color: #c8c8c8; font-weight: 500; margin-top: -8px; }
   </style>
-  <div class="glow"></div><div class="c"><img src="${icon}"><h1>Kempt</h1><p>A tidy redesign for YouTube</p></div>`;
+  <div class="glow"></div><div class="c"><img src="${icon}"><h1>Kempt</h1><p>for YouTube</p></div>`;
 
 const marquee = `
   <style>${base}
@@ -84,7 +84,7 @@ const marquee = `
       background: url(${shot('comments')}) left top / cover; box-shadow: 0 0 0 1px #ffffff1f, 0 30px 80px #000; }
   </style>
   <div class="glow"></div>
-  <div class="text"><img src="${icon}"><h1>YouTube,<br>kept tidy.</h1><p>One accent, one icon set, comments beside the player and a feed sorted by day. Every change is a switch.</p></div>
+  <div class="text"><img src="${icon}"><h1>Kempt</h1><p>Restyles YouTube in your accent color.</p></div>
   <div class="shot"></div>`;
 
 await mkdir(out, { recursive: true });

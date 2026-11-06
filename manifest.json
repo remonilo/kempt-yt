@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Kempt for YouTube",
   "version": "0.11.0",
-  "description": "A consistent redesign of YouTube's UI.",
+  "description": "Restyles YouTube in your accent color.",
   "minimum_chrome_version": "120",
   "permissions": [
     "storage"

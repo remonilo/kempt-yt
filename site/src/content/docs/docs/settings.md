@@ -39,7 +39,7 @@ Click the Kempt icon in the browser toolbar. The tabs at the top switch between 
 | Hide | [Shorts](/kempt-yt/docs/features/shorts/) | | On |
 | | [Subscriptions as Home](/kempt-yt/docs/features/hide/#subscriptions-as-home) | | Off |
 | | [Autoplay](/kempt-yt/docs/features/hide/#autoplay) | | Off |
-| | [About 25 more: Explore, Subscriptions, top bar buttons, Special logos, Home feed and chips, Mixes, Playables, Search extras, watch page parts](/kempt-yt/docs/features/hide/) | | Off |
+| | [22 more: Explore, Subscriptions, top bar buttons, Special logos, Home feed and chips, Mixes, Playables, Search extras, watch page parts](/kempt-yt/docs/features/hide/) | | Off |
 
 The Hide tab groups its switches under sub-headings by page. A switch another one already covers is dimmed, and says which switch covers it.
 

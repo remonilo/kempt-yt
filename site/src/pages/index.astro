@@ -15,38 +15,38 @@ const formats = ['avif', 'webp'] as const;
 /** One timeline group per area of YouTube, in the order you meet them. */
 const groups = [
   {
-    id: 'watch', date: 'Watch page', title: 'Comments one click away',
-    text: 'Info, Comments, Videos, Live chat and Ask AI share one panel beside the player. Only the open tab scrolls, so the video stays in view. Comment sort becomes two chips with a search box, Watch later gets its own button, and the progress bar can turn into a wave, a snake, a comet or a paper boat.',
+    id: 'watch', date: 'Watch page', title: 'Tabs beside the video',
+    text: 'Info, Comments, Videos and Live chat share one panel next to the player. Only the open tab scrolls.',
     shot: 'tabs', docs: 'docs/features/watch-tabs/',
   },
   {
-    id: 'captions', date: 'Captions', title: 'Subtitles you can read',
-    text: 'Captions in your font, white and semibold, sized to the player. Pick a soft shadow, a dark box or a blurred plate, at any size from 50 to 200%. They slide up out of the way when the controls show.',
+    id: 'captions', date: 'Captions', title: 'Resizable captions',
+    text: 'Captions in your font, with a shadow, a box or a blurred plate, from 50 to 200%.',
     shot: 'captions', docs: 'docs/features/captions/',
   },
   {
-    id: 'timeline', date: 'Subscriptions', title: 'Your feed, by day',
-    text: 'Uploads sit under date headers on a timeline: Today, Yesterday, 2 weeks ago. Chips filter All, Videos, Live and Shorts, a search box filters by title or channel, and a Channels tab lists who you follow. History gets the same headers, and Subscriptions can replace Home.',
+    id: 'timeline', date: 'Subscriptions', title: 'Subscriptions by date',
+    text: 'Videos sit under date headers, with type filters and search. A Channels tab lists who you follow.',
     shot: 'timeline', docs: 'docs/features/timeline/',
   },
   {
-    id: 'sidebar', date: 'Sidebar', title: 'Everything in its place',
-    text: 'Explore folds into a dropdown under Home. Subscriptions and Playlists open in place, and channels with new uploads get a dot. The entries you never use can go.',
+    id: 'sidebar', date: 'Sidebar', title: 'Sidebar dropdowns',
+    text: 'Explore, Subscriptions and Playlists open in place.',
     shot: 'sidebar', docs: 'docs/features/sidebar/',
   },
   {
-    id: 'look', date: 'Look', title: 'One accent, one icon set',
-    text: 'Chips, tabs, the progress bar and Subscribe share one color, and you pick it. A single icon set replaces YouTube\'s three in buttons and menus, drawn over YouTube\'s own so they keep working. The search bar becomes one outlined pill, search results get filter chips with a custom date range, and all text is set in Plus Jakarta Sans or a font you pick.',
+    id: 'look', date: 'Look', title: 'Your accent color',
+    text: 'Chips, tabs, the progress bar and Subscribe use the color you pick, with one icon set across buttons and menus.',
     shot: 'look', docs: 'docs/features/look/',
   },
   {
-    id: 'shorts', date: 'Hide', title: 'Less of what you skip',
-    text: 'Shorts shelves disappear, and a Shorts link opens in the normal player with a seek bar. About 30 more switches hide what you never use: the Home feed, Mixes, Playables, end screens, comments, live chat, the Create button.',
+    id: 'shorts', date: 'Hide', title: 'Hide parts of YouTube',
+    text: 'Shorts are hidden by default and open in the normal player. The Hide tab in settings can also remove 22 other parts.',
     shot: 'shorts', docs: 'docs/features/hide/',
   },
   {
-    id: 'popup', date: 'Settings', title: 'Every change is a switch',
-    text: 'Turn any feature off in the popup and its CSS and code are gone at once, with YouTube\'s page back as it was. No reload.',
+    id: 'popup', date: 'Settings', title: 'Settings popup',
+    text: 'Each feature turns off on its own, and YouTube\'s page comes back without a reload.',
     shot: 'popup-web', docs: 'docs/settings/',
   },
 ];
@@ -65,7 +65,7 @@ const facts = [
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kempt for YouTube</title>
-  <meta name="description" content="Kempt is a free, open-source browser extension that gives YouTube one tidy, consistent design: one accent color, one icon set, comments beside the video." />
+  <meta name="description" content="Kempt is a free, open-source browser extension that restyles YouTube in your accent color." />
   <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
 </head>
 <body>
@@ -88,8 +88,9 @@ const facts = [
 
   <main class="frame">
     <section class="hero wrap">
+      <img class="mark" src={`${base}logo.svg`} alt="" width="88" height="88" />
       <h1>Kempt</h1>
-      <p class="lead">A tidy, consistent redesign of YouTube. One accent color, one icon set, and less clutter.</p>
+      <p class="lead">Restyles YouTube in your accent color.</p>
       <div class="buttons">
         <a class="btn light" href="#install">Install</a>
         <a class="btn" href={repo}>Source</a>
@@ -217,6 +218,7 @@ const facts = [
 
   /* Hero */
   .hero { text-align: center; padding: 96px 0 72px; }
+  .hero .mark { display: block; margin: 0 auto 24px; width: 88px; height: 88px; } /* logo slot: swap public/logo.svg */
   .hero h1 { font-size: clamp(56px, 10vw, 96px); line-height: 1; font-weight: 700; letter-spacing: -0.05em; }
   .lead { color: var(--muted); font-size: 19px; margin: 20px auto 32px; max-width: 520px; }
   .buttons { display: flex; gap: 10px; justify-content: center; }

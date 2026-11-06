@@ -21,9 +21,9 @@
   <a href="https://github.com/remonilo/kempt-yt/commits/main"><img src="https://img.shields.io/github/last-commit/remonilo/kempt-yt?style=flat-square" alt="Last commit"></a>
 </p>
 
-### A tidy, consistent redesign of YouTube
+### Restyles YouTube in your accent color.
 
-One accent color, one icon set, one font. Every change is a switch you can turn off.
+Free and open source, for Firefox and Chrome.
 
 </div>
 
@@ -67,9 +67,9 @@ One accent color, one icon set, one font. Every change is a switch you can turn 
 - Font choice, bundled in the extension: Plus Jakarta Sans by default, or Inter, Geist, Figtree or your system font
 - Grid size for Home, Subscriptions and channels; search results as a grid or a list, with a custom date range
 - Shorts links open in the normal player, with a seek bar
-- About 30 switches to hide what you don't use: Shorts, the Home feed, Mixes, Playables, end screens, comments, live chat and more
+- Shorts hidden by default, plus 22 more switches in the Hide tab
 - Smaller fixes: outlined search bar, Watch later button, comment sort as chips, comment search, Watch later and Share in the notifications panel
-- A switch for every change in the popup <details> <summary><sup>click to see the popup</sup></summary><img src="site/src/assets/screenshots/popup.png" alt="Kempt popup" width="260" /></details>
+- Each feature turns off on its own, and YouTube's page comes back without a reload. <details> <summary><sup>click to see the popup</sup></summary><img src="site/src/assets/screenshots/popup.png" alt="Kempt popup" width="260" /></details>
 - Labels in 11 languages that follow YouTube's UI language
 - CSS first, no background timers, observers that disconnect once done, and reduced motion respected ([measured](https://remonilo.github.io/kempt-yt/docs/internals/performance/))
 
