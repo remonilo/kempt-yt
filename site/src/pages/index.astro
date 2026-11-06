@@ -16,7 +16,7 @@ const formats = ['avif', 'webp'] as const;
 const groups = [
   {
     id: 'watch', date: 'Watch page', title: 'Comments one click away',
-    text: 'Info, Comments, Videos, Live chat and Ask AI share one panel beside the player. Only the open tab scrolls, so the video stays in view. Comment sort becomes two chips, Watch later gets its own button, and the seek bar can ripple as a wave.',
+    text: 'Info, Comments, Videos, Live chat and Ask AI share one panel beside the player. Only the open tab scrolls, so the video stays in view. Comment sort becomes two chips with a search box, Watch later gets its own button, and the progress bar can turn into a wave, a snake, a comet or a paper boat.',
     shot: 'tabs', docs: 'docs/features/watch-tabs/',
   },
   {
@@ -26,7 +26,7 @@ const groups = [
   },
   {
     id: 'timeline', date: 'Subscriptions', title: 'Your feed, by day',
-    text: 'Uploads sit under date headers on a timeline: Today, Yesterday, 2 weeks ago. Chips filter All, Videos, Live and Shorts; the search box filters by title or channel. History gets the same headers.',
+    text: 'Uploads sit under date headers on a timeline: Today, Yesterday, 2 weeks ago. Chips filter All, Videos, Live and Shorts, a search box filters by title or channel, and a Channels tab lists who you follow. History gets the same headers, and Subscriptions can replace Home.',
     shot: 'timeline', docs: 'docs/features/timeline/',
   },
   {
@@ -36,13 +36,13 @@ const groups = [
   },
   {
     id: 'look', date: 'Look', title: 'One accent, one icon set',
-    text: 'Chips, tabs, the progress bar and Subscribe share one color, and you pick it. A single icon set replaces YouTube\'s three in buttons and menus, drawn over YouTube\'s own so they keep working. The search bar becomes one outlined pill, and all text is set in Plus Jakarta Sans or a font you pick.',
+    text: 'Chips, tabs, the progress bar and Subscribe share one color, and you pick it. A single icon set replaces YouTube\'s three in buttons and menus, drawn over YouTube\'s own so they keep working. The search bar becomes one outlined pill, search results get filter chips with a custom date range, and all text is set in Plus Jakarta Sans or a font you pick.',
     shot: 'look', docs: 'docs/features/look/',
   },
   {
-    id: 'shorts', date: 'Shorts', title: 'Shorts, gone',
-    text: 'Shorts shelves disappear from Home, Subscriptions, search and channels. A Shorts link opens in the normal player, with a seek bar.',
-    shot: 'shorts', docs: 'docs/features/shorts/',
+    id: 'shorts', date: 'Hide', title: 'Less of what you skip',
+    text: 'Shorts shelves disappear, and a Shorts link opens in the normal player with a seek bar. About 30 more switches hide what you never use: the Home feed, Mixes, Playables, end screens, comments, live chat, the Create button.',
+    shot: 'shorts', docs: 'docs/features/hide/',
   },
   {
     id: 'popup', date: 'Settings', title: 'Every change is a switch',
@@ -54,7 +54,7 @@ const groups = [
 const facts = [
   ['11 languages', 'Labels follow YouTube\'s UI language.'],
   ['Light on battery', 'CSS first. No background timers; observers stop once done.'],
-  ['Private', 'One permission: storage. No server, no analytics.'],
+  ['Private', 'No data collected, no remote code, no analytics. One permission: storage.'],
   ['Light and dark', 'Follows YouTube\'s theme.'],
 ];
 ---
@@ -65,7 +65,7 @@ const facts = [
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kempt for YouTube</title>
-  <meta name="description" content="A browser extension that gives YouTube one consistent, quiet design." />
+  <meta name="description" content="Kempt is a free, open-source browser extension that gives YouTube one tidy, consistent design: one accent color, one icon set, comments beside the video." />
   <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
 </head>
 <body>
@@ -89,7 +89,7 @@ const facts = [
   <main class="frame">
     <section class="hero wrap">
       <h1>Kempt</h1>
-      <p class="lead">YouTube but kempt. One accent color and icon set, and less clutter.</p>
+      <p class="lead">A tidy, consistent redesign of YouTube. One accent color, one icon set, and less clutter.</p>
       <div class="buttons">
         <a class="btn light" href="#install">Install</a>
         <a class="btn" href={repo}>Source</a>
@@ -102,7 +102,7 @@ const facts = [
     <div class="cross wrap" aria-hidden="true"></div>
     <figure class="shot hero-shot wrap">
       <Picture src={shot('demo')} formats={formats} fallbackFormat="webp" widths={[640, 1280, 2200]} sizes="(max-width: 1148px) calc(100vw - 48px), 1100px"
-        alt="Kempt on a YouTube watch page" loading="eager" fetchpriority="high" />
+        alt="YouTube's Home page with Kempt" loading="eager" fetchpriority="high" />
     </figure>
 
     <section id="what" class="wrap">
@@ -144,7 +144,7 @@ const facts = [
 
   <footer class="wrap foot">
     <span>Kempt for YouTube · <a href={`${repo}/blob/main/LICENSE`}>MIT License</a> · <a href={sponsor}>Sponsor</a></span>
-    <span>Not affiliated with YouTube or Google.</span>
+    <span>Not affiliated with or endorsed by YouTube or Google. YouTube is a trademark of Google LLC.</span>
   </footer>
 
   <script>
