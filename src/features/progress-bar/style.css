@@ -12,11 +12,16 @@ html[kyt-progress-bar] .ytp-load-progress,
 html[kyt-progress-bar] .ytp-hover-progress {
   opacity: 0 !important;
 }
-html[kyt-progress-bar] { --kyt-wave-len: 24px; }
+html[kyt-progress-bar] {
+  --kyt-wave-len: 24px;
+  --kyt-wave-h: 8px;
+  --kyt-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 8'%3E%3Cpath d='M0 4Q6 0 12 4T24 4' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  --kyt-track: var(--kyt-wave); /* track, buffered and SponsorBlock layers */
+}
 .kyt-wave {
   position: absolute;
   inset: 50% 0 auto 0;
-  height: 8px;
+  height: var(--kyt-wave-h);
   translate: 0 -50%;
   overflow: hidden;
   pointer-events: none;
@@ -24,7 +29,13 @@ html[kyt-progress-bar] { --kyt-wave-len: 24px; }
 /* Cut to length by width + overflow, not clip-path or a mask: Firefox moves a transform animation under a clip-path or
    mask ancestor to the main thread (measured ~40% of a core with the controls showing). No transition, so a seek
    doesn't sweep every chapter at once. */
-.kyt-wave i {
+/* YouTube squashes the lists to 0.667 tall at rest and stretches the hovered chapter to 1.667 on hover. Undo both
+   (same 0.2s as YouTube's list transition): every chapter keeps one size, matching the unscaled SponsorBlock pieces. */
+html[kyt-progress-bar] .kyt-wave { scale: 1 1.5; transition: scale 0.2s; }
+html[kyt-progress-bar] .ytp-progress-bar:hover .kyt-wave { scale: 1; }
+html[kyt-progress-bar] .ytp-progress-bar:hover .ytp-exp-chapter-hover-effect .kyt-wave { scale: 1 0.6; }
+.kyt-wave i,
+.kyt-seg {
   position: absolute;
   inset: 0 auto 0 0;
   overflow: hidden;
@@ -33,22 +44,29 @@ html[kyt-progress-bar] { --kyt-wave-len: 24px; }
 .kyt-wave i:last-child { width: calc(var(--kyt-p, 0) * 100%); }
 .kyt-wave::before,
 .kyt-wave i::before,
+.kyt-seg::before,
 html[kyt-progress-bar] #previewbar > li::before {
   content: '';
   position: absolute;
   inset: 0 auto 0 calc(-1 * mod(var(--kyt-off, 0px), var(--kyt-wave-len))); /* phase: see index.ts */
   width: calc(100% + var(--kyt-wave-len) + mod(var(--kyt-off, 0px), var(--kyt-wave-len)));
   background: rgba(40, 40, 40, 0.6);
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 8'%3E%3Cpath d='M0 4Q6 0 12 4T24 4' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x 0 50% / var(--kyt-wave-len) 8px;
+  mask: var(--kyt-track) repeat-x 0 50% / var(--kyt-wave-len) var(--kyt-wave-h);
 }
 .kyt-wave i:first-child::before { background: rgba(255, 255, 255, 0.4); }
-.kyt-wave i:last-child::before { background: var(--kyt-accent, #f03); }
+.kyt-wave i:last-child::before {
+  background: var(--kyt-accent, #f03);
+  mask-image: var(--kyt-wave);
+}
 /* SponsorBlock segments become wave pieces in their category color (user-chosen, never recolored). The li keeps
    SponsorBlock's inline background-color, but clipped to its text (an invisible &nbsp;) it paints nothing, while
    ::before inherits the color. index.ts sets --kyt-off per li. */
+/* SponsorBlock copies YouTube's squash (scaleY(0.667) at rest, 1 on hover) onto its bar; the wave keeps one size, so
+   its pieces must too. */
+html[kyt-progress-bar] #previewbar { transform: none !important; }
 html[kyt-progress-bar] #previewbar > li {
   top: 50%;
-  height: 8px;
+  height: var(--kyt-wave-h);
   translate: 0 -50%;
   overflow: hidden;
   background-clip: text;
@@ -68,15 +86,190 @@ html[kyt-progress-bar] #previewbar > li[sponsorblock-category$='poi_highlight'] 
 html[kyt-progress-bar] #previewbar > li[sponsorblock-category$='poi_highlight']::before { content: none; }
 /* Always attached so a pause freezes the phase instead of snapping it back; only runs while playing with the
    controls showing. */
-html[kyt-progress-bar-drift] :is(.kyt-wave, .kyt-wave i, #previewbar > li)::before {
+html[kyt-progress-bar-drift] :is(.kyt-wave, .kyt-wave i, .kyt-seg, #previewbar > li)::before {
   animation: kyt-wave-drift 0.9s linear infinite paused;
 }
-html[kyt-progress-bar-drift] .html5-video-player.playing-mode:not(.ytp-autohide) :is(.kyt-wave, .kyt-wave i, #previewbar > li)::before {
+html[kyt-progress-bar-drift] .html5-video-player.playing-mode:not(.ytp-autohide) :is(.kyt-wave, .kyt-wave i, .kyt-seg, #previewbar > li)::before {
   animation-play-state: running;
 }
 @keyframes kyt-wave-drift {
   to { transform: translateX(calc(-1 * var(--kyt-wave-len))); }
 }
 @media (prefers-reduced-motion: reduce) {
-  html[kyt-progress-bar-drift] :is(.kyt-wave, .kyt-wave i, #previewbar > li)::before { animation: none; }
+  html[kyt-progress-bar-drift] :is(.kyt-wave, .kyt-wave i, .kyt-seg, #previewbar > li)::before { animation: none; }
+}
+
+/* Heads are svg backgrounds, not clip-paths: a clip-path can move Firefox's transform animation to the main thread.
+   Other styles: a straight track, the played layer drawn by --kyt-wave, and a head on the scrubber container (always
+   there while the controls show, unlike YouTube's button, which only scales in on hover). The button stays for its
+   hover hit area but paints nothing. */
+html[kyt-progress-bar-style]:not([kyt-progress-bar-style="wave"]) {
+  --kyt-track: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 8' preserveAspectRatio='none'%3E%3Cpath d='M0 4H24' stroke='%23000' stroke-width='3'/%3E%3C/svg%3E");
+}
+html[kyt-progress-bar-style]:not([kyt-progress-bar-style="wave"]) .ytp-scrubber-button { opacity: 0 !important; }
+/* The straight track only runs ahead of the head: one gradient on .kyt-wave, buffered from --kyt-p to --kyt-l, then
+   track. The wave layers stay attached but hidden: removing their animation would restart it, and a switch back to
+   Wave would draw SponsorBlock pieces out of phase with the played wave. */
+html[kyt-progress-bar-style]:not([kyt-progress-bar-style="wave"]) :is(.kyt-wave, .kyt-wave i:first-child, #previewbar > li)::before { visibility: hidden; }
+html[kyt-progress-bar-style]:not([kyt-progress-bar-style="wave"]) .kyt-wave {
+  background: linear-gradient(90deg, #0000 calc(var(--kyt-p, 0) * 100%), rgba(255, 255, 255, 0.4) 0 calc(var(--kyt-l, 0) * 100%),
+    rgba(40, 40, 40, 0.6) 0) 0 50% / 100% 4.5px no-repeat;
+}
+/* SponsorBlock segments: a straight line in their own color (content box, 3px: #previewbar is not scaled like the
+   lists). --kyt-pos (playhead x, on the bar) cuts off the part behind the head: the snake eats them, the boat's
+   water takes their color instead. */
+html[kyt-progress-bar-style]:not([kyt-progress-bar-style="wave"]) #previewbar > li:not([sponsorblock-category$='poi_highlight']) {
+  box-sizing: border-box;
+  padding: calc((var(--kyt-wave-h) - 3px) / 2) 0;
+  background-clip: content-box;
+}
+html[kyt-progress-bar-style="snake"][kyt-progress-bar] #previewbar > li:not([sponsorblock-category$='poi_highlight']), /* beats the padding shorthand above */
+html[kyt-progress-bar-style="boat"][kyt-progress-bar] #previewbar > li:not([sponsorblock-category$='poi_highlight']) {
+  padding-left: max(0px, var(--kyt-pos, 0px) - var(--kyt-off, 0px));
+}
+html[kyt-progress-bar-style]:not([kyt-progress-bar-style="wave"]) .ytp-scrubber-container::before,
+html[kyt-progress-bar-style]:not([kyt-progress-bar-style="wave"]) .ytp-scrubber-container::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+/* Head animations follow the drift rule: attached always, running only while playing with the controls showing. */
+html[kyt-progress-bar-drift] .ytp-scrubber-container::before,
+html[kyt-progress-bar-drift] .ytp-scrubber-container::after { animation-play-state: paused; }
+html[kyt-progress-bar-drift] .html5-video-player.playing-mode:not(.ytp-autohide) .ytp-scrubber-container::before,
+html[kyt-progress-bar-drift] .html5-video-player.playing-mode:not(.ytp-autohide) .ytp-scrubber-container::after {
+  animation-play-state: running;
+}
+html[kyt-progress-bar]:not([kyt-progress-bar-drift]) .ytp-scrubber-container::before,
+html[kyt-progress-bar]:not([kyt-progress-bar-drift]) .ytp-scrubber-container::after { animation: none !important; }
+
+/* Snake: thick round body, head with eyes and a flicking tongue. Each chapter start ahead of the head is an apple,
+   gone once that chapter has played (--kyt-p > 0). */
+html[kyt-progress-bar-style="snake"] {
+  --kyt-wave-len: 28px;
+  --kyt-wave-h: 12px;
+  --kyt-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 12'%3E%3Cpath d='M0 6Q7 1 14 6T28 6' fill='none' stroke='%23000' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+html[kyt-progress-bar-style="snake"] .ytp-scrubber-container::before {
+  left: -4px;
+  top: -1.5px;
+  width: 20px;
+  height: 15px;
+  border-radius: 50% 60% 60% 50%;
+  background:
+    radial-gradient(circle at 12px 4.5px, #111 0.8px, #fff 1.2px 2px, #0000 2.4px),
+    radial-gradient(circle at 12px 10.5px, #111 0.8px, #fff 1.2px 2px, #0000 2.4px),
+    var(--kyt-accent, #f03);
+}
+html[kyt-progress-bar-style="snake"] .ytp-scrubber-container::after {
+  left: 15px;
+  top: 4px;
+  width: 9px;
+  height: 4px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 4'%3E%3Cpath d='M0 1.5h6L9 0 7 2l2 2-3-1.5H0z' fill='%23ff7aa2'/%3E%3C/svg%3E");
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  animation: kyt-snake-tongue 1.6s ease-in-out infinite;
+}
+@keyframes kyt-snake-tongue {
+  0%, 70%, 100% { transform: scaleX(0); }
+  80%, 90% { transform: scaleX(1); }
+}
+html[kyt-progress-bar-style="snake"] .ytp-chapter-hover-container:not(:first-child)::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff8 1px, #0000 2px), #3ddc84;
+  scale: calc(1 - min(1, var(--kyt-p, 0) * 10000));
+  transition: scale 0.15s;
+  z-index: 40; /* above the chapter's own track (.ytp-progress-list is z-index 39) */
+  pointer-events: none;
+}
+/* YouTube stretches the hovered chapter 1.667x tall (scaleY on the container): undo it for the apple and the bodies,
+   which would turn into tall zigzags. Wave keeps YouTube's grow. */
+/* The class stays on the last hovered chapter after the pointer leaves, so key on the bar's :hover too. */
+html[kyt-progress-bar-style="snake"] .ytp-progress-bar:hover .ytp-exp-chapter-hover-effect::after { transform: scaleY(0.6); }
+
+/* Comet: glowing line with sparkles streaming back, a turning star for a head. */
+html[kyt-progress-bar-style="comet"] { --kyt-wave-h: 12px; --kyt-wave-len: 60px; }
+html[kyt-progress-bar-style="comet"] .kyt-wave i:last-child::before {
+  mask: none;
+  background:
+    radial-gradient(1.2px 1.2px at 5px 2px, #fff 98%, #0000),
+    radial-gradient(0.8px 0.8px at 17px 10px, #fffc 98%, #0000),
+    radial-gradient(1px 1px at 29px 3px, #ffd6de 98%, #0000),
+    radial-gradient(0.8px 0.8px at 41px 9px, #fff9 98%, #0000),
+    radial-gradient(1.2px 1.2px at 52px 1.5px, #fffc 98%, #0000);
+  background-size: var(--kyt-wave-len) 100%;
+}
+/* The tail fades in over the whole played length, across chapters: the gradient is sized to the playhead x
+   (--kyt-pos) and shifted back by this chapter's x (--kyt-off). On the unanimated wrapper, so it doesn't drift. */
+html[kyt-progress-bar-style="comet"] .kyt-wave i:last-child {
+  --kyt-tail: calc(-1 * var(--kyt-off, 0px)) 50% / var(--kyt-pos, 0px);
+  background:
+    linear-gradient(90deg, #0000, #fff8) var(--kyt-tail) 1.5px no-repeat,
+    linear-gradient(90deg, #0000, color-mix(in srgb, var(--kyt-accent, #f03) 40%, #0000) 60%, var(--kyt-accent, #f03)) var(--kyt-tail) 4px no-repeat,
+    linear-gradient(90deg, #0000 30%, color-mix(in srgb, var(--kyt-accent, #f03) 35%, #0000)) var(--kyt-tail) 10px no-repeat;
+}
+html[kyt-progress-bar-style="comet"] .ytp-scrubber-container::after {
+  left: -6px;
+  top: -6px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--kyt-accent, #f03) 70%, #0000), #0000);
+}
+html[kyt-progress-bar-style="comet"] .ytp-scrubber-container::before {
+  z-index: 1;
+  left: -2px;
+  top: -2px;
+  width: 16px;
+  height: 16px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 0l2 6 6 2-6 2-2 6-2-6-6-2 6-2z' fill='%23fff'/%3E%3C/svg%3E");
+  animation: kyt-comet-spin 2.4s linear infinite;
+}
+@keyframes kyt-comet-spin { to { rotate: 1turn; } }
+
+/* Paper boat: the played part is water with a lighter crest line, a paper boat rocks on it. */
+html[kyt-progress-bar-style="boat"] {
+  --kyt-wave-h: 12px;
+  --kyt-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 12'%3E%3Cpath d='M0 5Q6 2 12 5T24 5V10H0z'/%3E%3C/svg%3E");
+}
+html[kyt-progress-bar-style="boat"] .kyt-wave i:last-child::before {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 12'%3E%3Cpath d='M0 5Q6 2 12 5T24 5' fill='none' stroke='%23fff' stroke-opacity='.55' stroke-width='1.5'/%3E%3C/svg%3E") repeat-x 0 0 / var(--kyt-wave-len) 100%,
+    var(--kyt-accent, #f03);
+}
+html[kyt-progress-bar-style="boat"] :is(.kyt-wave i:last-child, .kyt-seg)::before { animation-duration: 1.6s; }
+/* Water inside SponsorBlock segments takes the segment's color (index.ts adds the .kyt-seg copies). Hidden, not
+   removed, in the other styles so their drift stays in phase. */
+.kyt-seg { visibility: hidden; }
+html[kyt-progress-bar-style="boat"] .kyt-seg { visibility: visible; }
+html[kyt-progress-bar-style="boat"] .kyt-seg::before {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 12'%3E%3Cpath d='M0 5Q6 2 12 5T24 5' fill='none' stroke='%23fff' stroke-opacity='.55' stroke-width='1.5'/%3E%3C/svg%3E") repeat-x 0 0 / var(--kyt-wave-len) 100%,
+    var(--kyt-seg);
+  mask-image: var(--kyt-wave);
+}
+html[kyt-progress-bar-style="boat"] .ytp-scrubber-container::before {
+  left: -7px;
+  top: -9px;
+  width: 26px;
+  height: 18px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 18'%3E%3Cpath d='M1 10h24l-4 7H5z' fill='%23fff'/%3E%3Cpath d='M8 10 13 1l5 9z' fill='%23e8e8e8'/%3E%3Cpath d='M13 1v9' stroke='%23bbb'/%3E%3C/svg%3E");
+  transform-origin: 50% 100%;
+  animation: kyt-boat-rock 1.6s ease-in-out infinite;
+}
+@keyframes kyt-boat-rock {
+  0%, 100% { rotate: -6deg; translate: 0 0; }
+  50% { rotate: 6deg; translate: 0 -2px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[kyt-progress-bar] .ytp-scrubber-container::before,
+  html[kyt-progress-bar] .ytp-scrubber-container::after { animation: none !important; }
 }

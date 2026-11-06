@@ -8,10 +8,14 @@ import { S } from '../../core/selectors.ts';
  *  per-frame observer). */
 export const progressBar: Feature = {
   id: 'progress-bar',
-  label: 'Wavy progress bar', hint: 'Played part ripples while playing', group: 'watch', icon: 'wave',
+  label: 'Fun progress bar', hint: 'Wave, snake, comet or paper boat', group: 'watch', icon: 'wave',
   defaultOn: false,
   routes: ['watch'],
-  options: { drift: { type: 'boolean', label: 'Animate wave', default: true } },
+  options: {
+    style: { type: 'choice', label: 'Style', default: 'wave',
+      choices: { wave: 'Wave', snake: 'Snake', comet: 'Comet', boat: 'Paper boat' } },
+    drift: { type: 'boolean', label: 'Animate', default: true },
+  },
   async run({ signal }) {
     const bar = await waitFor<HTMLElement>(S.progressBar, { signal, timeout: Infinity });
     const player = bar?.closest<HTMLElement>('#movie_player');
@@ -22,10 +26,13 @@ export const progressBar: Feature = {
     const sync = () => {
       const lists = [...bar.querySelectorAll<HTMLElement>('.ytp-progress-list')];
       const x0 = bar.getBoundingClientRect().left;
-      const offs = lists.map((l) => l.getBoundingClientRect().left - x0); // reads first, writes after
+      const rects = lists.map((l) => l.getBoundingClientRect()); // reads first, writes after
+      const offs = rects.map((r) => r.left - x0);
+      let pos = 0; // playhead x in the bar: SponsorBlock segments behind it are cut off in the non-wave styles
       // SponsorBlock's segments (ul#previewbar > li) get the same phase so style.css can draw them as the wave.
       const segs = [...bar.querySelectorAll<HTMLElement>('#previewbar > li')];
-      const segOffs = segs.map((s) => s.getBoundingClientRect().left - x0);
+      const segRects = segs.map((s) => s.getBoundingClientRect());
+      const segOffs = segRects.map((r) => r.left - x0);
       const fresh: Element[] = segs.filter((s) => !s.style.getPropertyValue('--kyt-off'));
       for (const [i, s] of segs.entries()) s.style.setProperty('--kyt-off', `${segOffs[i]}px`);
       for (const [i, list] of lists.entries()) {
@@ -36,11 +43,32 @@ export const progressBar: Feature = {
           fresh.push(wave);
         }
         wave.style.setProperty('--kyt-off', `${offs[i]}px`);
+        // Paper boat colors the water inside SponsorBlock segments: a copy of each segment that overlaps this chapter,
+        // inside the played layer so it is cut at the playhead. Rebuilt only when the segments move.
+        const played = wave.lastElementChild!;
+        const mine = segs.flatMap((sg, j) => {
+          const x = segOffs[j], w = segRects[j].width;
+          return !sg.matches('[sponsorblock-category$="poi_highlight"]') && x < offs[i] + rects[i].width && x + w > offs[i]
+            ? [[x, w, sg.style.backgroundColor] as const] : [];
+        });
+        const key = mine.join('|');
+        if (played.getAttribute('data-kyt-segs') !== key) {
+          played.setAttribute('data-kyt-segs', key);
+          played.replaceChildren(...mine.map(([x, w, color]) => {
+            const b = el('b', 'kyt-seg');
+            b.style.cssText = `left:${x - offs[i]}px;width:${w}px;--kyt-off:${x}px;--kyt-seg:${color}`;
+            fresh.push(b);
+            return b;
+          }));
+        }
+        // On the chapter container (unscaled, unlike the list): the snake's apple (its ::after) hides once --kyt-p > 0.
         for (const [sel, v] of [['.ytp-play-progress', '--kyt-p'], ['.ytp-load-progress', '--kyt-l']] as const) {
           const x = list.querySelector<HTMLElement>(sel)?.style.transform.match(/scaleX\(([^)]+)\)/)?.[1];
-          wave.style.setProperty(v, x ?? '0');
+          list.parentElement?.style.setProperty(v, x ?? '0');
+          if (v === '--kyt-p' && Number(x) > 0) pos = offs[i] + Number(x) * rects[i].width;
         }
       }
+      bar.style.setProperty('--kyt-pos', `${pos}px`);
       // Layers added later (chapter lists, SponsorBlock rerenders) start their drift at 0: put them on the clock of
       // the existing ones so every piece stays in phase.
       if (fresh.length) {
@@ -62,6 +90,7 @@ export const progressBar: Feature = {
     for (const type of ['timeupdate', 'progress', 'seeked', 'durationchange', 'loadedmetadata'])
       player.addEventListener(type, sync, { capture: true, signal });
     bar.addEventListener('pointermove', (e) => e.buttons && sync(), { signal });
+    bar.addEventListener('click', sync, { signal }); // a click seek moves YouTube's fill before seeked fires
     // YouTube rebuilds the segment lists when chapters load or change, often while buffering (no media events).
     observe(bar, { childList: true, subtree: true }, sync, signal);
     const ro = new ResizeObserver(sync);
@@ -69,6 +98,11 @@ export const progressBar: Feature = {
     signal.addEventListener('abort', () => {
       ro.disconnect();
       bar.querySelectorAll('.kyt-wave').forEach((w) => w.remove());
+      bar.style.removeProperty('--kyt-pos');
+      bar.querySelectorAll<HTMLElement>('.ytp-progress-list').forEach((l) => {
+        l.parentElement?.style.removeProperty('--kyt-p');
+        l.parentElement?.style.removeProperty('--kyt-l');
+      });
     }, { once: true });
     sync();
   },
