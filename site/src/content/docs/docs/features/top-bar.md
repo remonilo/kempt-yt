@@ -1,8 +1,6 @@
 ---
 title: Top bar & Watch later
 description: A Settings button beside your avatar, a Watch later button under the video, and Watch later and Share in the notifications panel.
-banner:
-  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 All three need a signed-in account, so they appear only when you're signed in.
@@ -11,7 +9,7 @@ All three need a signed-in account, so they appear only when you're signed in.
 
 A gear button sits before your avatar and opens YouTube's settings. The Settings entry in the sidebar goes away.
 
-The switch is **Navigation → Settings in top bar**, with no options.
+The switch is **Menus → Settings in top bar**, with no options.
 
 Kempt inserts a link to `/account` in the top bar's end slot (`ytd-masthead #end`). The tooltip follows YouTube's UI language.
 
@@ -19,7 +17,7 @@ Kempt inserts a link to `/account` in the top bar's end slot (`ytd-masthead #end
 
 A Watch later button sits in the action row under the video. Click it to add the video to Watch later; it fills in. Click again to remove it.
 
-The switch is **Navigation → Watch later button**, with no options.
+The switch is **Menus → Watch later button**, with no options.
 
 The button asks the [page bridge](/kempt-yt/docs/internals/page-bridge/) for two things:
 
@@ -32,7 +30,7 @@ Both run in YouTube's page with your session and sign their requests the way You
 
 Each video in the notifications panel (the bell) gets two pills under its title: Watch later and Share. Watch later adds the video and fills in; click again to remove it. Share opens YouTube's own share dialog over the panel. Neither opens the video or closes the panel.
 
-The switch is **Navigation → Notification actions**, with no options.
+The switch is **Menus → Notification actions**, with no options.
 
 The Watch later pill starts unfilled even when the video is already saved: checking every notification would send one request per item each time the panel opens. It uses the same `setWatchLater` request as the Watch later button.
 

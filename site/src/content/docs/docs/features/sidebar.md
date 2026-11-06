@@ -1,8 +1,6 @@
 ---
 title: Sidebar
 description: Explore, Subscriptions and Playlists as dropdowns, and fewer entries.
-banner:
-  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 ![Redesigned sidebar](../../../../assets/screenshots/sidebar.png)
@@ -19,7 +17,7 @@ At the bottom, the Google LLC line opens **More from YouTube** (Music, Kids) and
 
 ## Settings
 
-The switch is **Navigation → Redesigned sidebar**. Its options are **Hide "You"**, **Hide "Your channel"**, **Hide "Your videos"** and **Hide "Courses"**, all on by default.
+The switch is **Menus → Redesigned sidebar**. Its options are **Hide "You"**, **Hide "Your channel"**, **Hide "Your videos"** and **Hide "Courses"**, all on by default.
 
 ## The collapsed sidebar
 

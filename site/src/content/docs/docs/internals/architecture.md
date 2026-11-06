@@ -1,8 +1,6 @@
 ---
 title: Architecture
 description: The core model, the runner, the router and how CSS switches on and off.
-banner:
-  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 Kempt is a Manifest V3 extension with no framework and no background worker. esbuild bundles the TypeScript, and tests run on `node:test`.

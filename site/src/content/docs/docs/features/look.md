@@ -1,13 +1,11 @@
 ---
 title: Look
 description: Accent color, font, tinted hover and selection, Subscribe button and search bar.
-banner:
-  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
-![Accent color and search bar](../../../../assets/screenshots/look.png)
+![Search results with the outlined search bar, filter chips and accent](../../../../assets/screenshots/look.png)
 
-Five small switches make YouTube's surfaces agree with each other. All but Font are CSS only.
+The Look tab's switches make YouTube's surfaces agree with each other. Most are CSS only.
 
 ## Accent color
 
@@ -36,6 +34,20 @@ Subscribe is the accent. Its text is white on a dark accent and black on a light
 The search box becomes one outlined pill, with the magnifier on the left and the microphone inside. Suggestions line up with the pill and use the same frosted surface as the top bar.
 
 This one is CSS only. The search button moves left with flex `order: -1`, and the microphone sits inside the box. YouTube shipped a new search box (`yt-searchbox`) in 2025, and the rules cover both versions.
+
+## Logo
+
+Off by default. The YouTube logo's play button takes the accent color in one of four styles: Pixel play button, Snake, Comet or Paper boat. The last three pair with the [Fun progress bar](/kempt-yt/docs/features/progress-bar/) styles of the same name. The wordmark and region code stay YouTube's. Each style animates once when the page loads and again on hover; with reduced motion on, it stays still.
+
+It is CSS only: YouTube's icon is hidden and pseudo-elements draw the new one in its place, so the logo keeps its link.
+
+## Hide button labels
+
+On by default. The Create button in the top bar shows only its icon. YouTube already draws Share, Save, Download and Shop icon-only on narrow pages; this makes Create match everywhere. It works with or without Kempt's [Icons](/kempt-yt/docs/features/icons/).
+
+## Channel tabs
+
+On by default. A channel's tabs (Home, Videos, Live, Playlists and the rest) get even spacing and the accent underline, with the search box moved to the right end of the row. On the Playlists tab, YouTube's sort dropdown becomes chips.
 
 ## Light and dark
 

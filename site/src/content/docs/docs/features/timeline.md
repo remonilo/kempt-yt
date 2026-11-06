@@ -1,11 +1,9 @@
 ---
 title: Timeline
 description: Subscriptions and History grouped under date headers, with type chips and search.
-banner:
-  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
-![Subscriptions timeline](../../../../assets/screenshots/timeline.png)
+![Subscriptions with the Videos and Channels tabs and the timeline](../../../../assets/screenshots/timeline.png)
 
 Subscriptions and History become a timeline, with a line down the left and a dot and date before each group of videos. The dot of the group you're reading fills with the accent.
 
@@ -29,9 +27,28 @@ On Subscriptions, the first row holds:
 
 A date header whose group has no match hides too.
 
+On the right of the toolbar:
+
+- **View as** picks Timeline (date headers), Plain (YouTube's own order, no headers) or Channels (one row per channel, in order of its newest loaded video).
+- **Date range** narrows the feed to Today, This week, This month or Older.
+- The grid and list chips switch the layout.
+
+## Subscriptions tabs
+
+A header with two tabs sits above the feed, like History's: **Videos** (the feed above) and **Channels** with your subscription count.
+
+The Channels tab lists every channel you follow as cards, with their Subscribe buttons. Chips sort by Relevance (YouTube's own order), A to Z or Z to A, and a New uploads chip keeps only channels with new videos. A search box filters by name. The list comes from YouTube's sidebar data, so opening the tab sends no extra request when the sidebar has already loaded.
+
 ## Settings
 
-The switch is **Feeds → Timeline**, with no options.
+| Switch | Option | Choices | Default |
+| --- | --- | --- | --- |
+| **Feeds → Timeline** | Subscriptions view | Timeline, Plain, Channels | Timeline |
+| | Subscriptions layout | Grid, List | Grid |
+| **Feeds → Subscriptions tabs** | Channels layout | Grid, List | Grid |
+| | Channels per row | 3 to 8 | 5 |
+
+View as and the layout chips on the page change the same options as the popup.
 
 ## How it works
 

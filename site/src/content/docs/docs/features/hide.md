@@ -1,8 +1,6 @@
 ---
 title: Hide
 description: Switch off the parts of YouTube that pull you into the next video.
-banner:
-  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 The **Hide** tab in the popup has one switch per part of YouTube, modelled on the Unhook extension. Every switch is off by default except [Shorts](/kempt-yt/docs/features/shorts/), and each works on its own.
