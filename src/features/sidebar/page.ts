@@ -17,12 +17,12 @@ function guideEntry(r: any, header?: boolean): Entry {
 
 function guideEntries(items: any[] = []): Entry[] {
   return items.flatMap((it) => {
-    const [type, r] = Object.entries(it)[0] as [string, any];
+    const [type, r] = (Object.entries(it ?? {})[0] ?? []) as [string?, any?];
     if (type === 'guideEntryRenderer') return [guideEntry(r)];
-    if (type === 'guideDownloadsEntryRenderer') return [guideEntry(r.entryRenderer.guideEntryRenderer)];
+    if (type === 'guideDownloadsEntryRenderer') return guideEntries([r.entryRenderer ?? {}]);
     if (type === 'guideCollapsibleEntryRenderer') return guideEntries(r.expandableItems);
     if (type === 'guideCollapsibleSectionEntryRenderer')
-      return [guideEntry(r.headerEntry.guideEntryRenderer, true), ...guideEntries(r.sectionItems)];
+      return [...guideEntries([r.headerEntry ?? {}]).map((e) => ({ ...e, header: true })), ...guideEntries(r.sectionItems)];
     return []; // sign-in promo and anything new
   });
 }
@@ -40,8 +40,8 @@ export const sidebar = {
     // A failed fetch is forgotten so the next run retries.
     data ??= (await (guideFetch ??= innertube('guide', {}).catch(() => (guideFetch = undefined, null))))?.items;
     return (data?.map((s: any) => {
-      const [type, r] = Object.entries(s)[0] as [string, any];
-      return { type, title: text(r.formattedTitle), entries: guideEntries(r.items) };
+      const [type, r] = (Object.entries(s ?? {})[0] ?? []) as [string?, any?];
+      return { type, title: text(r?.formattedTitle), entries: guideEntries(r?.items) };
     }) ?? null) as Section[] | null;
   },
 
