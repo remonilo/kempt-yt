@@ -28,10 +28,25 @@ Kempt should cost nothing you can measure.
 - The page world waits for YouTube's globals (`signedIn`, the guide data, icon names) with short capped loops of 100 ms sleeps. They end on success and never run in the background.
 - Repairs write only when needed: they check first, then write. A write that changes nothing still costs a style recalculation.
 
+## Measured
+
+Kempt 0.11.0, Firefox 159 headless, signed in, 1400x900, default settings. CPU seconds, median of 3 runs (Home: 5). Load is the content processes from navigation to 10 s after the load event. Steady is the next 30 s with the page left alone; the watch page plays the whole time with its controls forced visible. Total adds the parent, GPU and media processes.
+
+| Page          | Kempt | Load | Steady | Steady (total) |
+| ------------- | ----- | ---- | ------ | -------------- |
+| Home          | off   | 3.30 | 0.58   | 0.70           |
+| Home          | on    | 3.31 | 0.67   | 0.82           |
+| Watch         | off   | 3.01 | 1.89   | 16.67          |
+| Watch         | on    | 3.28 | 1.99   | 17.12          |
+| Subscriptions | off   | 3.10 | 0.46   | 0.56           |
+| Subscriptions | on    | 3.18 | 0.44   | 0.53           |
+
+Every difference is about 0.3 s or less, inside the spread between runs. Signed-in Home sometimes starts a card's inline preview by itself, which costs about 10 s per 30 s whether Kempt runs or not, so the script keeps previews paused on feed pages.
+
 ## Checking
 
 Open the browser's Performance panel on Home, a watch page, Subscriptions and History, and record with Kempt on and off. The difference should be lost in the noise.
 
 In Chromium, `node scripts/style-cost.mjs` (Helium, headless) times a style flush on a watch page with each rule of `dist/content.css` enabled alone and prints the expensive ones.
 
-Headless numbers come from the tab's content process: run `scripts/ext.mjs` with an `--eval` that plays the video for 30 s, and sample `ps` CPU time of the Firefox processes whose command line has `-isForBrowser`. Video decoding and compositing run in other processes and swamp the difference. Force the player controls visible with injected CSS (`.ytp-chrome-bottom { opacity: 1 !important }`), since most of the player's animations only run while they show.
+`node scripts/perf.mjs [--profile=~/.kempt-ff] [--runs=3] [--secs=30]` produces the table above: it alternates fresh headless Firefox runs with and without `dist/` and samples `ps` CPU time of the processes whose command line has `-isForBrowser`. Video decoding and compositing run in other processes and swamp the difference. Force the player controls visible with injected CSS (`.ytp-chrome-bottom { opacity: 1 !important }`), since most of the player's animations only run while they show.
