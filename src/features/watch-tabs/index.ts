@@ -232,8 +232,7 @@ export const watchTabs: Feature = {
 
     call('stamp', S.watchActions, 'watch-tabs');
     ai();
-    const below = flexy.querySelector('#below')!;
-    keep(bar, [flexy.querySelector('#secondary-inner')!, below, descHome, commentsHome], mount, signal, { childList: true });
+    keep(bar, [flexy.querySelector('#secondary-inner'), flexy.querySelector('#below'), descHome, commentsHome], mount, signal, { childList: true });
     render();
     count();
 

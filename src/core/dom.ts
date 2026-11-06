@@ -43,7 +43,7 @@ export function waitFor<T extends Element = Element>(
  */
 export function keep(
   el: Element,
-  root: Node | Node[],
+  root: Node | null | (Node | null)[],
   mount: () => void,
   signal: AbortSignal,
   init: MutationObserverInit = { childList: true, subtree: true },
@@ -51,7 +51,7 @@ export function keep(
   if (signal.aborted) return;
   const obs = new MutationObserver(mount);
   mount();
-  for (const r of [root].flat()) obs.observe(r, init);
+  for (const r of [root].flat()) if (r) obs.observe(r, init);
   signal.addEventListener('abort', () => {
     obs.disconnect();
     el.remove();

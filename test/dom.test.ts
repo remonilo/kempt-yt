@@ -21,6 +21,14 @@ test('dom helpers: an already-aborted signal attaches nothing', async () => {
   assert.equal(observed, 0);
 });
 
+test('keep: missing roots are skipped, the rest observed', () => {
+  const before = observed;
+  let mounted = 0;
+  keep({} as Element, [null, {} as Node, null], () => mounted++, new AbortController().signal);
+  assert.equal(mounted, 1);
+  assert.equal(observed - before, 1);
+});
+
 test('saveOption: same-tick writes both land', async () => {
   let stored: any = { 'kempt-yt': { features: {}, options: {} } };
   (globalThis as any).chrome = { storage: { sync: {
