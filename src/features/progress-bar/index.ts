@@ -33,6 +33,12 @@ export const progressBar: Feature = {
       const segs = [...bar.querySelectorAll<HTMLElement>('#previewbar > li')];
       const segRects = segs.map((s) => s.getBoundingClientRect());
       const segOffs = segRects.map((r) => r.left - x0);
+      // SponsorBlock sizes each li by inline left/right %. Our cut-off padding (style.css) widens a passed li to the
+      // playhead, so take its width from right, not the rect.
+      const pb = segs[0]?.parentElement?.getBoundingClientRect();
+      const segWs = segs.map((s, i) => pb && s.style.right.endsWith('%')
+        ? pb.right - pb.width * parseFloat(s.style.right) / 100 - segRects[i].left
+        : segRects[i].width);
       const fresh: Element[] = segs.filter((s) => !s.style.getPropertyValue('--kyt-off'));
       for (const [i, s] of segs.entries()) s.style.setProperty('--kyt-off', `${segOffs[i]}px`);
       for (const [i, list] of lists.entries()) {
@@ -47,7 +53,7 @@ export const progressBar: Feature = {
         // inside the played layer so it is cut at the playhead. Rebuilt only when the segments move.
         const played = wave.lastElementChild!;
         const mine = segs.flatMap((sg, j) => {
-          const x = segOffs[j], w = segRects[j].width;
+          const x = segOffs[j], w = segWs[j];
           return !sg.matches('[sponsorblock-category$="poi_highlight"]') && x < offs[i] + rects[i].width && x + w > offs[i]
             ? [[x, w, sg.style.backgroundColor] as const] : [];
         });
