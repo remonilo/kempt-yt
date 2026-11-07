@@ -2,7 +2,10 @@ import type { Feature } from '../../core/feature.ts';
 import { el, keep, waitFor } from '../../core/dom.ts';
 import { icon, setIcon, setIconUrl } from '../../core/icon.ts';
 import { S } from '../../core/selectors.ts';
+import { local } from '../../core/i18n.ts';
 import { buildNav, EXPLORE, isHere, type Entry, type Nav, type Row } from './nav.ts';
+import { collectionUrl, COLLECTIONS_URL, loadCollections, onCollectionsChange } from '../subs-tabs/collections.ts';
+import { WORDS as COL_WORDS } from '../subs-tabs/collections-view.ts';
 
 // Keys drop YouTube's _CAIRO suffix. Unlisted types use YouTube's own SVG.
 const FIGMA: Record<string, string> = {
@@ -12,7 +15,7 @@ const FIGMA: Record<string, string> = {
   MUSIC: 'music', GAMING_LOGO: 'games', NEWS: 'news', TROPHY: 'sports', STAR_SHOOTING_OUTLINE: 'trending',
   FASHION: 'fashion', LIVE: 'live', FLAG: 'report', SETTINGS: 'settings', CONTENT_CUT: 'clip',
   // Hugeicons (scripts/fetch-hugeicons.mjs). The signed-in types below CLAPPERBOARD are unverified guesses.
-  CLAPPERBOARD: 'movies', SPONSORSHIP_STAR: 'memberships',
+  KYT_COLLECTIONS: 'collections', CLAPPERBOARD: 'movies', SPONSORSHIP_STAR: 'memberships',
   MY_VIDEOS: 'your-videos', PODCAST: 'podcasts', PODCASTS: 'podcasts', BAG: 'shopping', HELP: 'help', FEEDBACK: 'feedback',
 };
 /** No filled variant: Figma's download, report, clip and every Hugeicon. */
@@ -80,6 +83,9 @@ export const sidebar: Feature = {
         const list = await playlists;
         if (!list.length) playlists = undefined; // failed or empty: ask again on the next open
         box.replaceChildren(...list.map((c) => link(c, cls, icon('library'))));
+      } else if (children === 'collections') {
+        const list = await loadCollections();
+        box.replaceChildren(...list.map((c) => link({ title: c.name, url: collectionUrl(c.id) }, cls, icon('collection'))));
       } else box.replaceChildren(...children.map((c) => link(c, cls)));
       setActive();
     }
@@ -191,7 +197,11 @@ export const sidebar: Feature = {
       const j = JSON.stringify(sections);
       if (j !== json) {
         json = j;
-        render(buildNav(sections));
+        // Collections live on the Subscriptions page's tabs; without subs-tabs there is nothing to open.
+        const cols = document.documentElement.hasAttribute('kyt-subs-tabs')
+          ? { title: local(COL_WORDS).collections, url: COLLECTIONS_URL, icon: 'KYT_COLLECTIONS' }
+          : null;
+        render(buildNav(sections, cols));
       }
       setActive();
     }
@@ -199,6 +209,13 @@ export const sidebar: Feature = {
     await refresh();
     if (!json || signal.aborted) return; // no data: YouTube's own sidebar stays
     document.addEventListener('kyt:navigate', refresh, { signal });
+    addEventListener('hashchange', setActive, { signal });
+    // An open Collections dropdown follows edits from the Subscriptions page or another tab.
+    onCollectionsChange(() => {
+      const box = nav.querySelector<HTMLElement>('.kyt-nav-item[data-icon="KYT_COLLECTIONS"]');
+      const list = box?.querySelector<HTMLElement>('.kyt-nav-list');
+      if (list) fill(list, 'collections');
+    }, signal);
 
     // Each sidebar mounts when YouTube creates its host: the mini guide on narrow or collapsed layouts,
     // the full guide on wide pages or on the first ☰ click.

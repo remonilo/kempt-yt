@@ -40,6 +40,7 @@ CAPTIONS
 
 FEEDS
 • Subscriptions and History grouped under date headers. Subscriptions also gets type filters, search and a Channels tab.
+• Collections: put channels in a group, such as Tech or Cooking, and get a feed of only those. Each collection has a sidebar entry.
 • Pick how many videos fit in a row on Home, Subscriptions and channels.
 • Search filter chips with a custom date range, results as a grid or a list.
 • Open Subscriptions as your Home page, if you like.

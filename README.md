@@ -59,6 +59,7 @@ Free and open source, for Firefox and Chrome.
 - Watch page tabs for info, comments, videos, live chat and Ask AI, beside the player. Only the open tab scrolls. <details> <summary><sup>click to see the tabs</sup></summary><img src="site/src/assets/screenshots/tabs.png" alt="Watch page tabs" /></details>
 - Readable captions in your font: Shadow, Box or Blur, sized 50 to 200% <details> <summary><sup>click to see the captions</sup></summary><img src="site/src/assets/screenshots/captions.png" alt="Captions" /></details>
 - Subscriptions on a timeline with date headers, Videos and Channels tabs, filter chips and a search box
+- Collections: your own groups of channels, each with its own feed and a sidebar entry
   - History gets the same date headers
   - optionally open Subscriptions as your Home page
 - Sidebar with dropdowns for Explore, Subscriptions and Playlists

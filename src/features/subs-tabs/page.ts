@@ -93,7 +93,85 @@ export function parseChannels(res: any, commands: Commands = new Map()) {
   return { channels, words };
 }
 
+export interface ChannelVideo {
+  id: string;
+  title: string;
+  thumb: string;
+  duration: string;
+  /** "577K" */
+  views: string;
+  /** Short form for the card ("5h ago") and long form for date grouping ("5 hours ago"). */
+  age: string;
+  ageLong: string;
+  /** Live now (YouTube's red LIVE badge). */
+  live: boolean;
+}
+
+/** Reads a channel's Videos tab (browse with the tab's params). Pure, for tests. */
+export function parseChannelVideos(res: any): ChannelVideo[] {
+  const out: ChannelVideo[] = [];
+  for (const x of walk(res)) {
+    const l = x.lockupViewModel;
+    if (l?.contentType !== 'LOCKUP_CONTENT_TYPE_VIDEO' || !l.contentId) continue;
+    const meta = l.metadata?.lockupMetadataViewModel;
+    const parts = meta?.metadata?.contentMetadataViewModel?.metadataRows?.flatMap((r: any) => r.metadataParts ?? []) ?? [];
+    const sources = l.contentImage?.thumbnailViewModel?.image?.sources ?? [];
+    const badge = find(l.contentImage, (o) => o.thumbnailBadgeViewModel)?.thumbnailBadgeViewModel;
+    const last = parts.at(-1);
+    out.push({
+      id: l.contentId,
+      title: text(meta?.title),
+      thumb: sources.at(-1)?.url ?? `https://i.ytimg.com/vi/${l.contentId}/mqdefault.jpg`,
+      duration: badge?.text ?? '',
+      views: parts.length > 1 ? text(parts[0].text) : '',
+      age: text(last?.text),
+      ageLong: last?.accessibilityLabel ?? text(last?.text),
+      live: !!badge?.badgeStyle?.includes('LIVE'),
+    });
+  }
+  return out;
+}
+
+// YouTube reloads the page on a popstate between two entries that differ only in the hash. Collections' hash entries
+// (#collections, #collection=<id>) are Kempt's, so their pops stop here and only `hashchange` runs.
+const ours = (hash: string) => hash.startsWith('#collection');
+let lastUrl = '';
+let hashPops = false;
+
 export const subsChannels = {
+  /** Idempotent; the listener stays for the tab's life (one cheap check per back/forward). */
+  collectionPops() {
+    lastUrl = location.href;
+    if (hashPops) return;
+    hashPops = true;
+    addEventListener('popstate', (e) => {
+      const [wasPage, was = ''] = lastUrl.split('#');
+      const [page, now = ''] = location.href.split('#');
+      lastUrl = location.href;
+      if (wasPage === page && (ours(`#${was}`) || ours(`#${now}`))) e.stopImmediatePropagation();
+    }, { capture: true });
+    // navigate() pushes hash entries itself and fires hashchange; YouTube's router fires yt-navigate-finish.
+    const seen = () => (lastUrl = location.href);
+    addEventListener('hashchange', seen);
+    document.addEventListener('yt-navigate-finish', seen);
+  },
+
+  /** Sets the hash without YouTube's router, then fires `hashchange` (the tabs and the sidebar follow it). */
+  setHash(hash: string, push: boolean) {
+    history[push ? 'pushState' : 'replaceState'](history.state, '', location.pathname + location.search + hash);
+    dispatchEvent(new HashChangeEvent('hashchange'));
+  },
+
+  /** A channel's first page of uploads (about 30, no Shorts) from its Videos tab, plus its Live tab when it has one. */
+  async channelVideos(id: string) {
+    const res = await innertube('browse', { browseId: id, params: 'EgZ2aWRlb3PyBgQKAjoA' });
+    // Without a Live tab YouTube answers the streams params with the Home tab, so ask only when it's listed.
+    const streams = res?.contents?.twoColumnBrowseResultsRenderer?.tabs?.some((t: any) =>
+      t.tabRenderer?.endpoint?.commandMetadata?.webCommandMetadata?.url?.endsWith('/streams'));
+    const live = streams ? await innertube('browse', { browseId: id, params: 'EgdzdHJlYW1z8gYECgJ6AA==' }) : null;
+    return [...parseChannelVideos(res), ...(live ? parseChannelVideos(live) : [])];
+  },
+
   /** Every subscribed channel from /feed/channels (FEchannels): one request, no paging (109 in one response). */
   async subsChannels() {
     return parseChannels(await innertube('browse', { browseId: 'FEchannels' }), commands);

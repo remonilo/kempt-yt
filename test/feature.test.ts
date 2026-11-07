@@ -70,7 +70,7 @@ test('runner: attributes, parent options, route gating, isolation', async () => 
 });
 
 test('isHere', () => {
-  const at = (pathname: string, search = '') => ({ pathname, search });
+  const at = (pathname: string, search = '', hash = '') => ({ pathname, search, hash });
   assert.ok(isHere('/', at('/')));
   assert.ok(!isHere('/', at('/feed/history')), 'home is not a prefix of everything');
   assert.ok(isHere('/shorts/', at('/shorts/abc')));
@@ -79,4 +79,7 @@ test('isHere', () => {
   assert.ok(isHere('/playlist?list=WL', at('/playlist', '?list=WL&x=1')));
   assert.ok(!isHere('/playlist?list=WL', at('/playlist', '?list=LL')));
   assert.ok(!isHere('kyt:EXPLORE', at('/')));
+  assert.ok(isHere('/feed/subscriptions#collection=a', at('/feed/subscriptions', '', '#collection=a')));
+  assert.ok(!isHere('/feed/subscriptions#collection=a', at('/feed/subscriptions', '', '#collection=b')));
+  assert.ok(!isHere('/feed/subscriptions', at('/feed/subscriptions', '', '#collections')), 'Subscriptions is not lit on Collections');
 });

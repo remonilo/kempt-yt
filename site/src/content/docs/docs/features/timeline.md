@@ -35,9 +35,17 @@ On the right of the toolbar:
 
 ## Subscriptions tabs
 
-A header with two tabs sits above the feed, like History's: **Videos** (the feed above) and **Channels** with your subscription count.
+A header with three tabs sits above the feed, like History's: **Videos** (the feed above), **Channels** with your subscription count, and **Collections**.
 
 The Channels tab lists every channel you follow as cards, with their Subscribe buttons. Chips sort by Relevance (YouTube's own order), A to Z or Z to A, and a New uploads chip keeps only channels with new videos. A search box filters by name. The list comes from YouTube's sidebar data, so opening the tab sends no extra request when the sidebar has already loaded.
+
+## Collections
+
+A collection is a feed made of only the channels you put in it, such as "Tech" or "Cooking". The Collections tab lists each one with its channels: **New collection** names one, **Add channels** opens a searchable list of your subscriptions, and the pencil and bin rename or delete it. The menu on a Subscribed button in the Channels tab has an **Add to collection** list too.
+
+**View** opens the collection's feed: the newest videos and streams from its channels, with the Videos tab's toolbar. Its View as and layout are the same options as on the Videos tab. The sidebar lists your collections in a dropdown under Subscriptions, and each one has its own address (`/feed/subscriptions#collection=…`), so back, forward and bookmarks work.
+
+Collections are saved in your browser's sync storage, so they follow your browser account the way your settings do. YouTube never sees them. The feed asks YouTube for each channel's latest uploads (about 30 per channel, no Shorts) when you open it, a few channels at a time, and keeps them until you leave the page.
 
 ## Settings
 

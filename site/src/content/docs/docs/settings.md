@@ -31,7 +31,7 @@ Click the Kempt icon in the browser toolbar. The tabs at the top switch between 
 | | [Comment layout](/kempt-yt/docs/features/comment-sort/#comment-layout) | | On |
 | | [Fun progress bar](/kempt-yt/docs/features/progress-bar/) | Style: Wave, Snake, Comet, Paper boat; Animate | Off, Wave, animated |
 | Feeds | [Timeline](/kempt-yt/docs/features/timeline/) | Subscriptions view: Timeline, Plain, Channels; layout: Grid or List | On, Timeline, Grid |
-| | [Subscriptions tabs](/kempt-yt/docs/features/timeline/#subscriptions-tabs) | Channels layout: Grid or List; channels per row | On, Grid, 5 per row |
+| | [Subscriptions tabs](/kempt-yt/docs/features/timeline/#subscriptions-tabs) | Videos, Channels and [Collections](/kempt-yt/docs/features/timeline/#collections) tabs. Channels layout: Grid or List; channels per row | On, Grid, 5 per row |
 | | [Playlist pages](/kempt-yt/docs/features/search-and-playlists/#playlist-pages) | Library layout: List or Grid | On, List |
 | | [Downloads page](/kempt-yt/docs/features/search-and-playlists/#downloads-page) | | On |
 | | [Search filters and grid](/kempt-yt/docs/features/search-and-playlists/#search-filters) | Results layout: Grid or List | On, Grid |

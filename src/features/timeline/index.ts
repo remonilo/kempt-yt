@@ -19,7 +19,7 @@ function head(label: string, el: HTMLElement = document.createElement('div')): H
 }
 
 // The observer fires only when a header crosses mid-screen, scrolling or when content above loads.
-function spy(signal: AbortSignal) {
+export function spy(signal: AbortSignal) {
   const heads = new Set<HTMLElement>();
   let cur: HTMLElement | undefined;
   const pick = () => {
@@ -75,7 +75,8 @@ const TYPES: Type[] = ['all', 'videos', 'live', 'shorts'];
 const html = document.documentElement;
 const opt = (key: string, def: string) => html.getAttribute(`kyt-timeline-${key}`) ?? def;
 
-function toolbar(state: { type: Type; range: Range; query: string }, onChange: () => void, signal: AbortSignal): HTMLElement {
+/** Also the toolbar of a collection's feed (subs-tabs). */
+export function toolbar(state: { type: Type; range: Range; query: string }, onChange: () => void, signal: AbortSignal): HTMLElement {
   const bar = document.createElement('kyt-bar');
   const words = { ...local(COMMON), ...local(WORDS) };
   // View as and the layout chips write the same options as the popup; the runner mirrors them back onto <html>.

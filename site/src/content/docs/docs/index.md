@@ -12,7 +12,7 @@ Kempt is a browser extension that restyles YouTube in your accent color. It runs
 | Where                  | Change                                                                                                               |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | Watch page | Info, Comments, Videos, Live chat and Ask AI as tabs beside the player. Readable captions, chips and search for comments, a Watch later button and an optional fun progress bar. |
-| Subscriptions, History | A timeline with date headers. Subscriptions also gets type chips, a date range, search and a Channels tab. |
+| Subscriptions, History | A timeline with date headers. Subscriptions also gets type chips, a date range, search, a Channels tab and Collections (feeds of only the channels you pick). |
 | Search, playlists, Library | Filter chips with a custom date range and grid results; a playlist header card with bulk select; Library and Downloads in History's layout. |
 | Sidebar | Explore, Subscriptions and Playlists as dropdowns. Hide the entries you don't use. |
 | Everywhere | One accent color, tinted hover and selection, one icon set, one font, an outlined search bar, Settings in the top bar, an optional accent logo. |
