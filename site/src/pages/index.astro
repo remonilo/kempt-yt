@@ -31,7 +31,7 @@ const groups = [
   },
   {
     id: 'collections', date: 'Collections', title: 'Channel collections',
-    text: 'Sort channels into groups like Science or Music, then open a group to see only its videos.',
+    text: 'Sort channels into groups like Science or History, then open a group to see only its videos.',
     shot: 'collections', docs: 'docs/features/timeline/#collections',
   },
   {
@@ -51,7 +51,7 @@ const groups = [
   },
   {
     id: 'popup', date: 'Settings', title: 'Settings popup',
-    text: 'Each feature turns off on its own, and YouTube\'s page comes back without a reload.',
+    text: 'Each feature can be turned off on its own, and YouTube\'s page changes without a reload.',
     shot: 'popup-web', docs: 'docs/settings/',
   },
 ];
@@ -66,8 +66,8 @@ const icon = (d: string) => `<svg class="card-icon" viewBox="0 0 24 24" width="2
 
 const facts = [
   ['11 languages', 'Labels follow YouTube\'s UI language.'],
-  ['Light on battery', 'CSS first. No background timers; observers stop once done.'],
-  ['Private', 'No data collected, no remote code, no analytics. One permission: storage.'],
+  ['Light on battery', 'CSS first. No background timers, observers stop once done.'],
+  ['Private', 'No data or analytics collected. It needs one permission: storage.'],
   ['Light and dark', 'Follows YouTube\'s theme.'],
 ];
 ---
@@ -78,7 +78,7 @@ const facts = [
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kempt for YouTube</title>
-  <meta name="description" content="Kempt is a free, open-source browser extension that restyles YouTube in your accent color." />
+  <meta name="description" content="Kempt is a free, open-source browser extension that restyles YouTube" />
   <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
 </head>
 <body>
@@ -103,7 +103,7 @@ const facts = [
     <section class="hero wrap">
       <img class="mark" src={`${base}logo.svg`} alt="" width="88" height="88" />
       <h1>Kempt</h1>
-      <p class="lead">Restyles YouTube in your accent color.</p>
+      <p class="lead">This restyles and tidies YouTube.</p>
       <div class="buttons">
         <a class="btn light" href="#install">Install</a>
         <a class="btn" href={repo}>Source</a>

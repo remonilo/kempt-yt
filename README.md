@@ -21,7 +21,7 @@
   <a href="https://github.com/remonilo/kempt-yt/commits/main"><img src="https://img.shields.io/github/last-commit/remonilo/kempt-yt?style=flat-square" alt="Last commit"></a>
 </p>
 
-### This styles and tidies Youtube.
+### This restyles and tidies Youtube.
 
 Free and open source, for Firefox and Chrome.
 
@@ -30,8 +30,8 @@ Free and open source, for Firefox and Chrome.
 <div align="center">
   <table>
     <tr>
-      <td colspan="2">
-        <img src="site/src/assets/screenshots/tabs.png" alt="Watch page with the Comments tab beside the player" />
+      <td colspan="2">  
+        <img src="site/src/assets/screenshots/sidebar.png" alt="Sidebar with Subscriptions open" />
       </td>
     </tr>
     <tr>
@@ -39,7 +39,7 @@ Free and open source, for Firefox and Chrome.
         <img src="site/src/assets/screenshots/timeline.png" alt="Subscriptions on a timeline with date headers" />
       </td>
       <td width="50%">
-        <img src="site/src/assets/screenshots/sidebar.png" alt="Sidebar with Subscriptions open" />
+        <img src="site/src/assets/screenshots/tabs.png" alt="Watch page with the Comments tab beside the player" />
       </td>
     </tr>
   </table>
