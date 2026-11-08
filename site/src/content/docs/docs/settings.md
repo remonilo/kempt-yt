@@ -1,8 +1,6 @@
 ---
 title: Settings
 description: What each switch and option in the popup does.
-banner:
-  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 Click the Kempt icon in the browser toolbar. The tabs at the top switch between the groups below (Look, Menus, Watch, Feeds, Hide), and the popup reopens on the last one. Changes apply to open YouTube tabs at once.
@@ -14,27 +12,36 @@ Click the Kempt icon in the browser toolbar. The tabs at the top switch between 
 | Group | Switch | Options | Default |
 | --- | --- | --- | --- |
 | Look | [Accent color](/kempt-yt/docs/features/look/) | Any color | On, `#cb274a` |
-| | [Tinted hover & selected](/kempt-yt/docs/features/look/#tinted-hover-and-selected) | | On |
+| | [Logo](/kempt-yt/docs/features/look/#logo) | Style: Pixel play button, Snake, Comet, Paper boat | Off, Pixel play button |
 | | [Font](/kempt-yt/docs/features/look/#font) | Plus Jakarta Sans, Inter, Geist, Figtree, System | On, Plus Jakarta Sans |
+| | [Tinted hover & selected](/kempt-yt/docs/features/look/#tinted-hover-and-selected) | | On |
 | | [Accent Subscribe button](/kempt-yt/docs/features/look/#subscribe-button) | | On |
 | | [Outlined search bar](/kempt-yt/docs/features/look/#search-bar) | | On |
 | | [Icons](/kempt-yt/docs/features/icons/) | | On |
+| | [Hide button labels](/kempt-yt/docs/features/look/#hide-button-labels) | | On |
+| | [Channel tabs](/kempt-yt/docs/features/look/#channel-tabs) | | On |
 | Menus | [Redesigned sidebar](/kempt-yt/docs/features/sidebar/) | Hide "You", "Your channel", "Your videos", "Courses" | On, all hidden |
 | | [Settings in top bar](/kempt-yt/docs/features/top-bar/) | | On |
 | | [Watch later button](/kempt-yt/docs/features/top-bar/#watch-later-button) | | On |
 | | [Notification actions](/kempt-yt/docs/features/top-bar/#notification-actions) | | On |
-| Watch | [Tabs](/kempt-yt/docs/features/watch-tabs/) | Ask AI on or off; as an icon button or a tab; dot on Info for cards | On, dot on |
+| Watch | [Tabs](/kempt-yt/docs/features/watch-tabs/) | Ask AI on or off; as an icon button or a tab; dot on Info for tickets, merch, donations | On, Ask AI as a button, dot on |
+| | [Captions](/kempt-yt/docs/features/captions/) | Style: Shadow, Box or Blur; Size 50% to 200% | On, Shadow, 100% |
 | | [Comment sort as buttons](/kempt-yt/docs/features/comment-sort/) | | On |
 | | [Comment search](/kempt-yt/docs/features/comment-search/) | | On |
-| | Comment layout | | On |
-| | [Captions](/kempt-yt/docs/features/captions/) | Style Shadow, Box or Blur; Size 50% to 200% | On, Shadow, 100% |
-| | [Wavy progress bar](/kempt-yt/docs/features/progress-bar/) | Animate wave | Off |
-| Feeds | [Timeline](/kempt-yt/docs/features/timeline/) | | On |
-| | [Grid size](/kempt-yt/docs/features/grid/) | Videos per row (2 to 8), Shorts per row (3 to 10) | Off |
+| | [Comment layout](/kempt-yt/docs/features/comment-sort/#comment-layout) | | On |
+| | [Fun progress bar](/kempt-yt/docs/features/progress-bar/) | Style: Wave, Snake, Comet, Paper boat; Animate | Off, Wave, animated |
+| Feeds | [Timeline](/kempt-yt/docs/features/timeline/) | Subscriptions view: Timeline, Plain, Channels; layout: Grid or List | On, Timeline, Grid |
+| | [Subscriptions tabs](/kempt-yt/docs/features/timeline/#subscriptions-tabs) | Videos, Channels and [Collections](/kempt-yt/docs/features/timeline/#collections) tabs. Channels layout: Grid or List; channels per row | On, Grid, 5 per row |
+| | [Playlist pages](/kempt-yt/docs/features/search-and-playlists/#playlist-pages) | Library layout: List or Grid | On, List |
+| | [Downloads page](/kempt-yt/docs/features/search-and-playlists/#downloads-page) | | On |
+| | [Search filters and grid](/kempt-yt/docs/features/search-and-playlists/#search-filters) | Results layout: Grid or List | On, Grid |
+| | [Grid size](/kempt-yt/docs/features/grid/) | Videos per row, Shorts per row | Off, 4 and 6 |
 | Hide | [Shorts](/kempt-yt/docs/features/shorts/) | | On |
-| | [Home feed, chips, Explore, Subscriptions, watch page parts, top bar buttons, Mixes, Playables, search shelves](/kempt-yt/docs/features/hide/) | | Off |
 | | [Subscriptions as Home](/kempt-yt/docs/features/hide/#subscriptions-as-home) | | Off |
 | | [Autoplay](/kempt-yt/docs/features/hide/#autoplay) | | Off |
+| | [22 more: Explore, Subscriptions, top bar buttons, Special logos, Home feed and chips, Mixes, Playables, Search extras, watch page parts](/kempt-yt/docs/features/hide/) | | Off |
+
+The Hide tab groups its switches under sub-headings by page. A switch another one already covers is dimmed, and says which switch covers it.
 
 ## The color picker
 
@@ -42,7 +49,7 @@ The dot in the Accent color row opens a picker: swatches, a hue and saturation w
 
 ## Sync and reset
 
-Kempt saves settings with `chrome.storage.sync`, so they follow your browser account to other computers. The popup footer shows the version and a **Reset all** button; click it twice to confirm.
+Kempt saves settings with `chrome.storage.sync`, so they follow your browser account to other computers. The popup footer shows the version and a **Reset all** button; click it twice to confirm. The **Rate** and **Sponsor** buttons at the top of the popup open the store page and GitHub Sponsors.
 
 ## How it works
 

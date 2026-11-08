@@ -1,8 +1,6 @@
 ---
 title: YouTube quirks
 description: Behaviour of YouTube's page that shaped how Kempt's features are built.
-banner:
-  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 Short comments in the source point here. Each entry is a constraint YouTube imposes, found by breaking something. Read this before you "fix" something that looks odd, and add an entry when a bug takes a real debugging round.
@@ -88,6 +86,12 @@ Auto-captions use a rollup window (`.ytp-caption-window-rollup`, permanent). `.y
 - YouTube orders streams by end time but labels them by start time ("Streamed 21 hr ago" between 14 and 15 hr). Grouping therefore only moves back in time: an item that looks newer stays in the current group, and so does one Kempt can't read.
 - Seconds to days give the upload day (YouTube rounds down, so "13 days ago" is still one day). Weeks, months and years only give a range, so they group by YouTube's own wording.
 - Feed ages are compact in the text ("hace 11 m" is months) and long in the `aria-label`, so Kempt parses the label. The age regex is built from `Intl`'s words, which match YouTube's long form in the ten languages checked: "vor 2 Wochen", "hace 2 semanas", "2 週間前", "2주 전".
+
+## Collections
+
+- YouTube's router drops a URL's hash, so Kempt pushes `#collection=<id>` entries itself (`navigate` in `src/page/core.ts`, `setHash` in `subs-tabs/page.ts`). A pushState with `history.state` kept is safe.
+- Back or forward between two entries that differ only in the hash makes YouTube reload the whole page from its `popstate` handler. A capture-phase `popstate` listener on `window` (`collectionPops`) stops those pops when either hash is a Collections one, and `hashchange` still fires, so Kempt switches the view itself.
+- A hash survives a full load of `/feed/subscriptions#collection=…`.
 
 ## Grid
 

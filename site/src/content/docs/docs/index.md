@@ -1,25 +1,24 @@
 ---
 title: Kempt
 description: What Kempt changes on YouTube, and how these docs are organized.
-banner:
-  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
-Kempt is a browser extension that restyles YouTube into one consistent design. It runs on Firefox 128+ and on Chromium 120+ browsers.
+Kempt is a browser extension that restyles YouTube in your accent color. It runs on Firefox 128+ and on Chromium 120+ browsers.
 
-![Kempt on a YouTube watch page](../../../assets/screenshots/demo.png)
+![YouTube's Home page with Kempt](../../../assets/screenshots/demo.png)
 
 ## What changes
 
 | Where                  | Change                                                                                                               |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Watch page             | Info, Comments, Videos, Live chat and Ask AI as tabs beside the player. Apple-style captions, chips for comment sort, a Watch later button and an optional wavy progress bar. |
-| Subscriptions, History | A timeline with date headers. Subscriptions also gets type chips and search.                                         |
-| Sidebar                | Explore, Subscriptions and Playlists as dropdowns. Hide the entries you don't use.                                   |
-| Everywhere             | One accent color, tinted hover and selection, one icon set, an outlined search bar, Settings in the top bar.         |
-| Shorts                 | Hidden. Shorts links open in the normal player.                                                                      |
+| Watch page | Info, Comments, Videos, Live chat and Ask AI as tabs beside the player. Readable captions, chips and search for comments, a Watch later button and an optional fun progress bar. |
+| Subscriptions, History | A timeline with date headers. Subscriptions also gets type chips, a date range, search, a Channels tab and Collections (feeds of only the channels you pick). |
+| Search, playlists, Library | Filter chips with a custom date range and grid results; a playlist header card with bulk select; Library and Downloads in History's layout. |
+| Sidebar | Explore, Subscriptions and Playlists as dropdowns. Hide the entries you don't use. |
+| Everywhere | One accent color, tinted hover and selection, one icon set, one font, an outlined search bar, Settings in the top bar, an optional accent logo. |
+| Hide | Shorts, with Shorts links opening in the normal player, plus 22 more switches in the Hide tab. |
 
-Every change is a switch in the popup. When you turn one off, its CSS and code stop, and anything it moved goes back.
+Each feature turns off on its own in the popup. Its CSS and code stop, and anything it moved goes back, without a reload.
 
 ## How these docs are organized
 

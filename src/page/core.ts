@@ -155,12 +155,23 @@ export const core = {
     if (url.startsWith('kyt:')) return; // a guide entry with no URL and no endpoint: nothing to open
     const u = new URL(url, location.origin);
     if (!/^https?:$/.test(u.protocol)) return; // page scripts can call this too: no javascript: (guide links to YouTube Music stay)
+    // Kempt's own hashes (Collections): YouTube's router drops them, so they're pushed here. YouTube reloads on a
+    // popstate between them; subs-tabs swallows those (docs/internals/youtube-quirks).
+    if (u.hash && u.origin === location.origin) {
+      const setHash = (push: boolean) => {
+        history[push ? 'pushState' : 'replaceState'](history.state, '', u.pathname + u.search + u.hash);
+        dispatchEvent(new HashChangeEvent('hashchange'));
+      };
+      if (u.pathname + u.search === location.pathname + location.search) return setHash(location.hash !== u.hash);
+      document.addEventListener('yt-navigate-finish', () => location.pathname === u.pathname && setHash(false), { once: true });
+      url = u.pathname + u.search;
+    }
     const videoId = u.searchParams.get('v');
     const endpoint = endpoints.get(url) ?? (videoId && {
       commandMetadata: { webCommandMetadata: { url, webPageType: 'WEB_PAGE_TYPE_WATCH', rootVe: 3832 } },
       watchEndpoint: { videoId },
     });
-    if (!endpoint) return location.assign(url);
+    if (!endpoint) return location.assign(u.href); // a full load keeps the hash
     const app = document.querySelector<any>('ytd-app');
     // The guide's Shorts entry is a seedless reel: yt-navigate opens /shorts/ with no sequence, so nothing plays.
     // YouTube's guide entry tap handler starts it; a detached entry lends it, hosted on ytd-app.

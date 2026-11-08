@@ -1,8 +1,6 @@
 ---
 title: Sidebar
 description: Explore, Subscriptions and Playlists as dropdowns, and fewer entries.
-banner:
-  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 ![Redesigned sidebar](../../../../assets/screenshots/sidebar.png)
@@ -13,13 +11,13 @@ The sidebar becomes three short groups:
 2. History, Liked videos, Downloads, Watch later, Playlists
 3. Subscriptions
 
-Explore, Playlists and Subscriptions are dropdowns. Their children sit one step in, under a thin guide line. Channels with new uploads get YouTube's blue dot, and so does the closed Subscriptions row.
+Explore, Playlists and Subscriptions are dropdowns. Their children sit one step in, under a thin guide line. Channels with new uploads get YouTube's blue dot, and the closed Subscriptions row shows it on its icon.
 
 At the bottom, the Google LLC line opens **More from YouTube** (Music, Kids) and the footer links.
 
 ## Settings
 
-The switch is **Navigation → Redesigned sidebar**. Its options are **Hide "You"**, **Hide "Your channel"**, **Hide "Your videos"** and **Hide "Courses"**, all on by default.
+The switch is **Menus → Redesigned sidebar**. Its options are **Hide "You"**, **Hide "Your channel"**, **Hide "Your videos"** and **Hide "Courses"**, all on by default.
 
 ## The collapsed sidebar
 

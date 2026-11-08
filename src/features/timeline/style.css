@@ -109,7 +109,8 @@ html[kyt-timeline] ytd-browse[page-subtype="history"] ytd-item-section-renderer 
 html[kyt-timeline] ytd-browse[page-subtype="subscriptions"] #contents:has(> kyt-bar) {
   --kyt-bar: 83px;
 }
-html[kyt-timeline] kyt-bar {
+html[kyt-timeline] kyt-bar,
+.kyt-col-feed > kyt-bar {
   order: -2;
   flex: 0 0 100%;
   margin: 0 0 24px;
@@ -124,24 +125,29 @@ html[kyt-timeline] #contents:has(> .kyt-tl-head) > kyt-bar {
   flex-basis: calc(100% + 30px);
   margin: 0 0 47px -30px;
 }
-html[kyt-timeline] kyt-bar .kyt-chips {
+html[kyt-timeline] kyt-bar .kyt-chips,
+.kyt-col-feed > kyt-bar .kyt-chips {
   display: flex;
   gap: 8px;
 }
 /* Figma: thin dividers between View as, the type chips and the layout chips. */
-html[kyt-timeline] kyt-bar .kyt-bar-sep {
+html[kyt-timeline] kyt-bar .kyt-bar-sep,
+.kyt-col-feed > kyt-bar .kyt-bar-sep {
   flex: none;
   width: 1px;
   height: 24px;
   background: var(--kyt-outline);
 }
-html[kyt-timeline] kyt-bar .kyt-search {
+html[kyt-timeline] kyt-bar .kyt-search,
+.kyt-col-feed > kyt-bar .kyt-search {
   margin-left: auto;
 }
-html[kyt-timeline] kyt-bar .kyt-dd-btn > .kyt-icon:not(.kyt-dd-arrow) {
+html[kyt-timeline] kyt-bar .kyt-dd-btn > .kyt-icon:not(.kyt-dd-arrow),
+.kyt-col-feed > kyt-bar .kyt-dd-btn > .kyt-icon:not(.kyt-dd-arrow) {
   margin: 0 4px 0 -4px; /* calendar before the label (Figma), the arrow keeps its own spacing */
 }
-html[kyt-timeline] kyt-bar .kyt-chips > button {
+html[kyt-timeline] kyt-bar .kyt-chips > button,
+.kyt-col-feed > kyt-bar .kyt-chips > button {
   height: var(--kyt-chip-h);
   padding: 0 16px;
 }
@@ -169,7 +175,8 @@ html[kyt-timeline][kyt-timeline-layout="list"] ytd-browse[page-subtype="subscrip
 html[kyt-timeline][kyt-shorts] kyt-bar [data-type="shorts"] {
   display: none;
 }
-html[kyt-timeline] kyt-bar .kyt-search {
+html[kyt-timeline] kyt-bar .kyt-search,
+.kyt-col-feed > kyt-bar .kyt-search {
   flex: 1 1 180px; /* wrap decides on the basis: the pill gives way first, the row wraps under 180px */
   max-width: 314px;
 }

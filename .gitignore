@@ -13,3 +13,6 @@ site/.astro
 .env*
 
 *.zip
+
+# store listing images (proposal set, uploaded by hand)
+!store/*.png

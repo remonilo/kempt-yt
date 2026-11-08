@@ -36,31 +36,39 @@ button { cursor: pointer; }
 }
 
 .kp-header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 10px; padding: 16px 12px 4px; }
-.kp-header > .kp-title { padding: 0 4px; }
-/* Rate (gold star) and Sponsor (pink heart, GitHub Sponsors' color): tinted circles, the glyph pops on hover. */
-.kp-links { display: flex; gap: 8px; margin-left: auto; }
+/* The brand lockup: ink follows the text color, the cap keeps the brand red (DESIGN rule: the logo ignores the accent). */
+.kp-logo { display: block; height: 24px; width: auto; margin-left: 4px; color: var(--kp-fg); }
+/* Rate and Sponsor: small labeled pills (the glyphs alone don't say what they do); hover tints them gold / Sponsors pink. */
+.kp-links { display: flex; gap: 6px; margin-left: auto; }
 .kp-icon-link {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  color: var(--c);
-  background: color-mix(in srgb, var(--c) 14%, transparent);
-  transition: background-color 150ms;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 10px 0 8px;
+  border-radius: 14px;
+  background: var(--kp-card);
+  color: var(--kp-muted);
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 150ms, color 150ms;
 }
+.kp-icon-link > .kp-icon { width: 16px; height: 16px; transition: transform 200ms var(--kp-ease); }
 .kp-icon-link.star { --c: #f5c518; }
 .kp-icon-link.heart { --c: #ea4aaa; }
-.kp-icon-link:hover { background: color-mix(in srgb, var(--c) 26%, transparent); }
-.kp-icon-link > .kp-icon { transition: transform 200ms var(--kp-ease); }
-.kp-icon-link:hover > .kp-icon { transform: scale(1.15); }
-.kp-icon-link.star:hover > .kp-icon { transform: scale(1.15) rotate(-12deg); }
+.kp-icon-link:hover { color: var(--c); background: color-mix(in srgb, var(--c) 14%, transparent); }
+.kp-icon-link.star:hover > .kp-icon { transform: rotate(-15deg) scale(1.15); }
+.kp-icon-link.heart:hover > .kp-icon { animation: kp-beat 600ms var(--kp-ease); }
+@keyframes kp-beat { 30% { transform: scale(1.3); } 60% { transform: scale(0.95); } }
+@media (prefers-reduced-motion: reduce) {
+  .kp-icon-link > .kp-icon { transition: none; }
+  .kp-icon-link.heart:hover > .kp-icon { animation: none; }
+}
 /* Group tabs: the segmented control at full width, a bit taller than the in-row ones. */
 .kp-tabs { flex: 1 0 100%; font-size: 13px; }
 .kp-tabs button { padding: 6px 4px; }
 #app { flex: 1; overflow-y: auto; scrollbar-width: none; }
-.kp-title { font-weight: 500; font-size: 16px; line-height: 18px; }
-.kp-title small { display: block; color: var(--kp-muted); font-size: 12px; font-weight: 400; line-height: 14px; }
 
 .kp-section { padding: 8px 12px; }
 /* Sticky, so a long tab still shows which part of YouTube the switches below belong to. */

@@ -1,21 +1,27 @@
 ---
-title: Wavy progress bar
-description: The played part of the seek bar becomes a sine wave that drifts while the video plays.
-banner:
-  content: These docs are outdated and will be updated once v1.0 is released.
+title: Fun progress bar
+description: The seek bar as a wave, a snake, a comet or a paper boat, in the accent color.
 ---
 
-The seek bar draws as a thin sine wave. The played part is the accent color, the buffered part is light, and the rest of the track is dark, so the accent line looks like it swallows the dark one as the video plays. On chaptered videos the wave stays continuous across the gaps between chapters.
+The seek bar takes one of four playful styles. In each, the played part is the accent color, the buffered part is light and the rest of the track is dark. On chaptered videos the style stays continuous across the gaps between chapters, and SponsorBlock segments follow it.
+
+| Style | Looks like |
+| --- | --- |
+| Wave | A thin sine wave; the accent line swallows the dark one as the video plays |
+| Snake | A thick snake with eyes and a flicking tongue; each chapter start ahead of it is an apple |
+| Comet | A glowing line with sparkles streaming back and a turning star for a head |
+| Paper boat | The played part is water with a lighter crest, and a paper boat rocks on it |
 
 ## Settings
 
-The switch is **Watch page → Wavy progress bar**, off by default.
+The switch is **Watch → Fun progress bar**, off by default.
 
-| Option | Default |
-| --- | --- |
-| Animate wave | On |
+| Option | Choices | Default |
+| --- | --- | --- |
+| Style | Wave, Snake, Comet, Paper boat | Wave |
+| Animate | On or off | On |
 
-With Animate wave off, the wave stays still. Reduced motion in your system settings also turns the drift off.
+With Animate off, the style stays still. Reduced motion in your system settings also turns the motion off.
 
 ## How it works
 

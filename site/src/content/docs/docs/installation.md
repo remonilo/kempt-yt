@@ -1,8 +1,6 @@
 ---
 title: Installation
 description: Install Kempt from a store or build it from source.
-banner:
-  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 ## From a store
@@ -10,7 +8,7 @@ banner:
 - For Firefox 128 or later, use [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/kempt-for-youtube/).
 - For Chrome 120 or later, Edge, Brave and other Chromium browsers, use the [Chrome Web Store](https://chromewebstore.google.com/detail/kempt-for-youtube/dpiheahglgggkdjcgdkiogpmhbmppfmg).
 
-Reload any YouTube tab that was open before you installed. Kempt starts with every feature on except Grid size and Wavy progress bar.
+Reload any YouTube tab that was open before you installed. Kempt starts with most features on. Logo, Fun progress bar, Grid size and every Hide switch except Shorts start off.
 
 ## Build from source
 

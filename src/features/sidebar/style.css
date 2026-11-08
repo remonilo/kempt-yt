@@ -47,6 +47,7 @@ html[kyt-sidebar-hide-courses] .kyt-nav-item[data-icon^='COURSE'] {
 :is(.kyt-nav-link, .kyt-mini-link)[aria-current='page'] { background-color: var(--kyt-selected-bg); }
 :is(.kyt-nav-link, .kyt-mini-link)[aria-current='page'] .kyt-icon { color: var(--kyt-accent); }
 .kyt-nav-link {
+  position: relative; /* .kyt-nav-new badge */
   flex: 1;
   min-width: 0;
   gap: 24px;
@@ -61,9 +62,12 @@ html[kyt-sidebar-hide-courses] .kyt-nav-item[data-icon^='COURSE'] {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-/* New uploads: YouTube's own blue dot (its call-to-action colour). On a dropdown head only while closed. */
+/* New uploads: YouTube's own blue dot (its call-to-action colour). On a dropdown head only while closed.
+   A badge on the icon's corner, out of the flow, so it doesn't push "Subscriptions" into an ellipsis. */
 .kyt-nav-new {
-  flex: none;
+  position: absolute;
+  inset-inline-start: 34px;
+  top: 8px;
   width: 4px;
   height: 4px;
   border-radius: 50%;

@@ -1,8 +1,6 @@
 ---
 title: Watch page tabs
 description: Info, Comments, Videos, Live chat and Ask AI in one panel beside the player.
-banner:
-  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 ![Watch page tabs](../../../../assets/screenshots/tabs.png)
@@ -21,7 +19,7 @@ The title, channel row and action buttons stay under the player. Only the descri
 
 ## Settings
 
-The switch is **Watch page → Tabs**, with two options:
+The switch is **Watch → Tabs**, with three options:
 
 - **Ask AI** shows the Ask AI entry. It's on by default.
 - **Dot on Info** puts a small accent dot on the Info tab when it holds one of YouTube's cards (tickets, merch, a donation shelf, a context panel). The dot goes once you open Info and comes back on the next video with a card. It's on by default.

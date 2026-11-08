@@ -1,8 +1,6 @@
 ---
 title: Testing
 description: Unit tests, and the headless scripts that load Kempt into a real YouTube page.
-banner:
-  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 ## Commands

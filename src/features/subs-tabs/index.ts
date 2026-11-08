@@ -8,8 +8,11 @@ import { COMMON, layoutToggle } from '../../core/layout.ts';
 import { matcher } from '../../core/text.ts';
 import { sortChannels, type Sort } from './sort.ts';
 import type { Bell, SubChannel, SubWords } from './page.ts';
+import { collectionsView, WORDS as COL_WORDS } from './collections-view.ts';
+import { hashRoute } from './collections.ts';
 
-type Tab = 'videos' | 'channels';
+/** `feed`: one collection's videos, under the Collections tab. */
+type Tab = 'videos' | 'channels' | 'collections' | 'feed';
 
 const WORDS = {
   en: { channels: 'Channels', search: 'Search channels', relevance: 'Relevance', newUploads: 'New uploads' },
@@ -35,7 +38,7 @@ const bigAvatar = (url: string) => url.replace(/=s\d+-/, '=s240-');
 
 export const subsTabs: Feature = {
   id: 'subs-tabs',
-  label: 'Subscriptions tabs', hint: 'Videos and Channels', group: 'feeds', icon: 'subs',
+  label: 'Subscriptions tabs', hint: 'Videos, Channels and Collections', group: 'feeds', icon: 'subs',
   defaultOn: true,
   routes: ['subscriptions'],
   options: {
@@ -46,20 +49,25 @@ export const subsTabs: Feature = {
     const grid = await waitFor(S.subsRichGrid, { signal, timeout: Infinity });
     const contents = grid?.querySelector(':scope > #contents');
     if (!grid || !contents || signal.aborted) return;
-    const words = { ...local(COMMON), ...local(WORDS) };
+    const words = { ...local(COMMON), ...local(WORDS), ...local(COL_WORDS) };
     let tab: Tab = 'videos';
+    // /feed/channels: once per visit, for the Channels tab and Collections.
+    let subsOnce: Promise<Awaited<ReturnType<typeof call<'subsChannels'>>> | null> | null = null;
+    const subsRes = () => (subsOnce ??= call('subsChannels').catch((e) => (console.warn('kyt: /feed/channels failed', e), null)));
 
     // Header: the two tabs.
     const tabs = el('div', 'kyt-subs-tabs');
     tabs.role = 'tablist';
     const count = el('span', 'kyt-subs-count');
-    const tabBtn = (t: Tab, ...kids: (Node | string)[]) => {
+    const colCount = el('span', 'kyt-subs-count');
+    const tabBtn = (t: Exclude<Tab, 'feed'>, ...kids: (Node | string)[]) => {
       const b = el('button', 'kyt-subs-tab', el('span', '', words[t]), ...kids);
       b.role = 'tab';
       b.dataset.tab = t;
       return b;
     };
-    tabs.append(tabBtn('videos'), el('span', 'kyt-subs-sep'), tabBtn('channels', count));
+    tabs.append(tabBtn('videos'), el('span', 'kyt-subs-sep'), tabBtn('channels', count), el('span', 'kyt-subs-sep'),
+      tabBtn('collections', colCount));
     const toggle = layoutToggle('subs-tabs', 'channels', 'grid', signal);
     const head = el('div', 'kyt-subs-head', tabs);
 
@@ -85,16 +93,38 @@ export const subsTabs: Feature = {
     const view = el('div', 'kyt-subs-channels', el('div', 'kyt-subs-bar', left, el('label', 'kyt-search', icon('search'), input)), list);
     view.hidden = true;
 
+    // Collections live in the URL hash (#collections, #collection=<id>), so the sidebar and back/forward reach them.
+    call('collectionPops');
+    const col = collectionsView({
+      signal, call,
+      subs: () => subsRes().then((r) => r?.channels ?? []),
+      navigate: (url, push) => call('setHash', new URL(url, location.origin).hash, push),
+      onList: (l) => (colCount.textContent = l.length ? String(l.length) : ''),
+    });
+
     const sync = () => {
       grid.setAttribute('kyt-subs-tab', tab);
       view.hidden = tab !== 'channels';
-      for (const b of tabs.querySelectorAll<HTMLElement>('[role=tab]')) b.ariaSelected = String(b.dataset.tab === tab);
+      col.tab.hidden = tab !== 'collections';
+      col.feed.hidden = tab !== 'feed';
+      const shown = tab === 'feed' ? 'collections' : tab;
+      for (const b of tabs.querySelectorAll<HTMLElement>('[role=tab]')) b.ariaSelected = String(b.dataset.tab === shown);
     };
+    const route = () => {
+      const r = hashRoute(location.hash);
+      tab = r ? ('feed' in r ? 'feed' : 'collections') : tab === 'collections' || tab === 'feed' ? 'videos' : tab;
+      col.show(r && 'feed' in r ? r.feed : null);
+      sync();
+    };
+    addEventListener('hashchange', route, { signal });
 
     tabs.addEventListener('click', (e) => {
       const t = (e.target as Element).closest<HTMLElement>('[role=tab]')?.dataset.tab as Tab | undefined;
       if (!t || t === tab) return;
+      // Tab switches replace the hash: back leaves the page, as it does from the Channels tab.
+      if (t === 'collections' || location.hash) call('setHash', t === 'collections' ? '#collections' : '', false);
       tab = t;
+      col.show(null);
       sync();
     }, { signal });
     // The popup can change it too.
@@ -142,10 +172,13 @@ export const subsTabs: Feature = {
     keep(head, grid, () => {
       if (grid.firstElementChild !== head) grid.prepend(head);
       if (contents.nextElementSibling !== view) contents.after(view);
+      if (view.nextElementSibling !== col.tab) view.after(col.tab, col.feed);
     }, signal, { childList: true });
-    sync();
+    route();
     signal.addEventListener('abort', () => {
       view.remove();
+      col.tab.remove();
+      col.feed.remove();
       grid.removeAttribute('kyt-subs-tab');
     }, { once: true });
 
@@ -221,6 +254,15 @@ export const subsTabs: Feature = {
         item.dataset.bell = String(i);
         return item;
       }), el('div', 'kyt-subs-menu-sep'), Object.assign(el('button', 'kyt-dd-item', icon('exclude'), yt.unsubscribe), { role: 'menuitem' }));
+      // Add to collection: one checkbox row per collection.
+      const cols = col.list();
+      if (cols.length) menu.append(el('div', 'kyt-subs-menu-sep'), el('div', 'kyt-subs-menu-label', words.addTo), ...cols.map((c) => {
+        const item = el('button', 'kyt-dd-item', icon(c.channels.includes(ch.id) ? 'check' : 'collection'), c.name);
+        item.role = 'menuitemcheckbox';
+        item.ariaChecked = String(c.channels.includes(ch.id));
+        item.dataset.col = c.id;
+        return item;
+      }));
       btn.parentElement!.append(menu);
       placeMenu(btn.parentElement!, menu);
       btn.parentElement!.setAttribute('open', '');
@@ -251,6 +293,7 @@ export const subsTabs: Feature = {
       if (!item || !btn || !ch) return;
       close();
       btn.focus();
+      if (item.dataset.col) return col.toggle(item.dataset.col, ch.id);
       if (item.dataset.bell) {
         const i = Number(item.dataset.bell);
         if (ch.bells[i].bell !== ch.bell) change(btn, ch, { bell: ch.bells[i].bell }, () => call('setBell', ch.id, i));
@@ -284,7 +327,7 @@ export const subsTabs: Feature = {
       loaded = true;
       list.ariaBusy = 'true';
       const [res, g] = await Promise.all([
-        call('subsChannels').catch((e) => (console.warn('kyt: /feed/channels failed, using the guide', e), null)),
+        subsRes(),
         guide,
       ]);
       if (signal.aborted) return;

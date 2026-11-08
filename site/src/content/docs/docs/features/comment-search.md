@@ -1,8 +1,6 @@
 ---
 title: Comment search
 description: Filter the comments already loaded under a video.
-banner:
-  content: These docs are outdated and will be updated once v1.0 is released.
 ---
 
 A search icon sits at the right end of the sort chips row. Click it and a search field opens beside the chips. The fullscreen comments panel has the same row under its title. Type to filter: a comment stays if its text or author name contains every word you typed. Case and accents don't matter, so "cafe" finds "café".
@@ -17,7 +15,7 @@ A thread shows if its top comment or one of its open replies matches. If only a 
 
 ## Settings
 
-The switch is **Watch page → Comment search**, with no options. It works with Comment sort on or off: with sort off and Comment layout off, the field replaces YouTube's Sort by menu.
+The switch is **Watch → Comment search**, with no options. It works with Comment sort on or off: with sort off and Comment layout off, the field replaces YouTube's Sort by menu.
 
 ## How it works
 

@@ -1,6 +1,6 @@
 // Dev check: real YouTube caption windows in headless Chromium (Helium). Headless gets an empty timedtext body,
 // so this answers it with a fake auto-caption (rollup) track. Firefox never requests timedtext headless.
-// usage: node scripts/captions-chrome.mjs <watch url> <eval.js> [module.mjs]
+// usage: [DPR=2] node scripts/captions-chrome.mjs <watch url> <eval.js> [module.mjs]
 //   eval.js is an async function body run in the page (turn captions on there: player.setOption('captions', 'track', ...)).
 //   module.mjs default-exports async (page) => {} for mouse work (e.g. dragging the caption). Logs starting "DBG" are printed.
 import puppeteer from 'puppeteer-core';
@@ -15,7 +15,7 @@ const json3 = JSON.stringify({ wireMagic: 'pb3', pens: [{}], wsWinStyles: [{}, {
   wpWinPositions: [{}, { apPoint: 6, ahHorPos: 20, avVerPos: 100, rcRows: 2, ccCols: 32 }], events });
 const b = await puppeteer.launch({ executablePath: '/Applications/Helium.app/Contents/MacOS/Helium', headless: 'new',
   args: ['--disable-extensions-except=' + process.cwd() + '/dist', '--load-extension=' + process.cwd() + '/dist', '--mute-audio', '--window-size=1400,900', '--autoplay-policy=no-user-gesture-required'],
-  defaultViewport: { width: 1400, height: 900 }, userDataDir: '/tmp/kyt-chrome-profile' });
+  defaultViewport: { width: 1400, height: 900, deviceScaleFactor: Number(process.env.DPR ?? 1) }, userDataDir: '/tmp/kyt-chrome-profile' });
 const page = await b.newPage();
 await page.setRequestInterception(true);
 page.on('request', (r) => /\/api\/timedtext/.test(r.url()) ? r.respond({ status: 200, contentType: 'application/json', body: json3 }) : r.continue());

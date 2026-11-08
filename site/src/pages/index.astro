@@ -15,46 +15,59 @@ const formats = ['avif', 'webp'] as const;
 /** One timeline group per area of YouTube, in the order you meet them. */
 const groups = [
   {
-    id: 'watch', date: 'Watch page', title: 'Comments one click away',
-    text: 'Info, Comments, Videos, Live chat and Ask AI share one panel beside the player. Only the open tab scrolls, so the video stays in view. Comment sort becomes two chips, Watch later gets its own button, and the seek bar can ripple as a wave.',
+    id: 'watch', date: 'Watch page', title: 'Tabs beside the video',
+    text: 'Info, Comments, Videos and Live chat share one panel next to the player. Only the open tab scrolls.',
     shot: 'tabs', docs: 'docs/features/watch-tabs/',
   },
   {
-    id: 'captions', date: 'Captions', title: 'Subtitles you can read',
-    text: 'Captions in your font, white and semibold, sized to the player. Pick a soft shadow, a dark box or a blurred plate, at any size from 50 to 200%. They slide up out of the way when the controls show.',
+    id: 'captions', date: 'Captions', title: 'Resizable captions',
+    text: 'Captions in your font, with a shadow, a box or a blurred plate, from 50 to 200%.',
     shot: 'captions', docs: 'docs/features/captions/',
   },
   {
-    id: 'timeline', date: 'Subscriptions', title: 'Your feed, by day',
-    text: 'Uploads sit under date headers on a timeline: Today, Yesterday, 2 weeks ago. Chips filter All, Videos, Live and Shorts; the search box filters by title or channel. History gets the same headers.',
+    id: 'timeline', date: 'Subscriptions', title: 'Subscriptions by date',
+    text: 'Videos sit under date headers, with type filters and search. A Channels tab lists who you follow.',
     shot: 'timeline', docs: 'docs/features/timeline/',
   },
   {
-    id: 'sidebar', date: 'Sidebar', title: 'Everything in its place',
-    text: 'Explore folds into a dropdown under Home. Subscriptions and Playlists open in place, and channels with new uploads get a dot. The entries you never use can go.',
+    id: 'collections', date: 'Collections', title: 'Channel collections',
+    text: 'Sort channels into groups like Science or Music, then open a group to see only its videos.',
+    shot: 'collections', docs: 'docs/features/timeline/#collections',
+  },
+  {
+    id: 'sidebar', date: 'Sidebar', title: 'Sidebar dropdowns',
+    text: 'Explore, Subscriptions and Playlists open in place.',
     shot: 'sidebar', docs: 'docs/features/sidebar/',
   },
   {
-    id: 'look', date: 'Look', title: 'One accent, one icon set',
-    text: 'Chips, tabs, the progress bar and Subscribe share one color, and you pick it. A single icon set replaces YouTube\'s three in buttons and menus, drawn over YouTube\'s own so they keep working. The search bar becomes one outlined pill, and all text is set in Plus Jakarta Sans or a font you pick.',
+    id: 'look', date: 'Look', title: 'Your accent color',
+    text: 'Chips, tabs, the progress bar and Subscribe use the color you pick, with one icon set across buttons and menus.',
     shot: 'look', docs: 'docs/features/look/',
   },
   {
-    id: 'shorts', date: 'Shorts', title: 'Shorts, gone',
-    text: 'Shorts shelves disappear from Home, Subscriptions, search and channels. A Shorts link opens in the normal player, with a seek bar.',
-    shot: 'shorts', docs: 'docs/features/shorts/',
+    id: 'shorts', date: 'Hide', title: 'Hide parts of YouTube',
+    text: 'Shorts are hidden by default and open in the normal player. The Hide tab in settings can also remove 22 other parts.',
+    shot: 'shorts', docs: 'docs/features/hide/',
   },
   {
-    id: 'popup', date: 'Settings', title: 'Every change is a switch',
-    text: 'Turn any feature off in the popup and its CSS and code are gone at once, with YouTube\'s page back as it was. No reload.',
+    id: 'popup', date: 'Settings', title: 'Settings popup',
+    text: 'Each feature turns off on its own, and YouTube\'s page comes back without a reload.',
     shot: 'popup-web', docs: 'docs/settings/',
   },
 ];
 
+// Brand marks from Simple Icons (CC0), 24x24.
+const icons = {
+  firefox: 'M8.824 7.287c.008 0 .004 0 0 0zm-2.8-1.4c.006 0 .003 0 0 0zm16.754 2.161c-.505-1.215-1.53-2.528-2.333-2.943.654 1.283 1.033 2.57 1.177 3.53l.002.02c-1.314-3.278-3.544-4.6-5.366-7.477-.091-.147-.184-.292-.273-.446a3.545 3.545 0 01-.13-.24 2.118 2.118 0 01-.172-.46.03.03 0 00-.027-.03.038.038 0 00-.021 0l-.006.001a.037.037 0 00-.01.005L15.624 0c-2.585 1.515-3.657 4.168-3.932 5.856a6.197 6.197 0 00-2.305.587.297.297 0 00-.147.37c.057.162.24.24.396.17a5.622 5.622 0 012.008-.523l.067-.005a5.847 5.847 0 011.957.222l.095.03a5.816 5.816 0 01.616.228c.08.036.16.073.238.112l.107.055a5.835 5.835 0 01.368.211 5.953 5.953 0 012.034 2.104c-.62-.437-1.733-.868-2.803-.681 4.183 2.09 3.06 9.292-2.737 9.02a5.164 5.164 0 01-1.513-.292 4.42 4.42 0 01-.538-.232c-1.42-.735-2.593-2.121-2.74-3.806 0 0 .537-2 3.845-2 .357 0 1.38-.998 1.398-1.287-.005-.095-2.029-.9-2.817-1.677-.422-.416-.622-.616-.8-.767a3.47 3.47 0 00-.301-.227 5.388 5.388 0 01-.032-2.842c-1.195.544-2.124 1.403-2.8 2.163h-.006c-.46-.584-.428-2.51-.402-2.913-.006-.025-.343.176-.389.206-.406.29-.787.616-1.136.974-.397.403-.76.839-1.085 1.303a9.816 9.816 0 00-1.562 3.52c-.003.013-.11.487-.19 1.073-.013.09-.026.181-.037.272a7.8 7.8 0 00-.069.667l-.002.034-.023.387-.001.06C.386 18.795 5.593 24 12.016 24c5.752 0 10.527-4.176 11.463-9.661.02-.149.035-.298.052-.448.232-1.994-.025-4.09-.753-5.844z',
+  chrome: 'M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001h-.002l-5.344 9.257c.206.01.413.016.621.016 6.627 0 12-5.373 12-12 0-1.54-.29-3.011-.818-4.364zM12 16.364a4.364 4.364 0 1 1 0-8.728 4.364 4.364 0 0 1 0 8.728Z',
+  github: 'M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12',
+};
+const icon = (d: string) => `<svg class="card-icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="${d}"/></svg>`;
+
 const facts = [
   ['11 languages', 'Labels follow YouTube\'s UI language.'],
   ['Light on battery', 'CSS first. No background timers; observers stop once done.'],
-  ['Private', 'One permission: storage. No server, no analytics.'],
+  ['Private', 'No data collected, no remote code, no analytics. One permission: storage.'],
   ['Light and dark', 'Follows YouTube\'s theme.'],
 ];
 ---
@@ -65,7 +78,7 @@ const facts = [
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kempt for YouTube</title>
-  <meta name="description" content="A browser extension that gives YouTube one consistent, quiet design." />
+  <meta name="description" content="Kempt is a free, open-source browser extension that restyles YouTube in your accent color." />
   <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
 </head>
 <body>
@@ -88,8 +101,9 @@ const facts = [
 
   <main class="frame">
     <section class="hero wrap">
+      <img class="mark" src={`${base}logo.svg`} alt="" width="88" height="88" />
       <h1>Kempt</h1>
-      <p class="lead">YouTube but kempt. One accent color and icon set, and less clutter.</p>
+      <p class="lead">Restyles YouTube in your accent color.</p>
       <div class="buttons">
         <a class="btn light" href="#install">Install</a>
         <a class="btn" href={repo}>Source</a>
@@ -102,7 +116,7 @@ const facts = [
     <div class="cross wrap" aria-hidden="true"></div>
     <figure class="shot hero-shot wrap">
       <Picture src={shot('demo')} formats={formats} fallbackFormat="webp" widths={[640, 1280, 2200]} sizes="(max-width: 1148px) calc(100vw - 48px), 1100px"
-        alt="Kempt on a YouTube watch page" loading="eager" fetchpriority="high" />
+        alt="YouTube's Home page with Kempt" loading="eager" fetchpriority="high" />
     </figure>
 
     <section id="what" class="wrap">
@@ -132,19 +146,18 @@ const facts = [
     </section>
 
     <section id="install" class="wrap install">
-      <p class="kicker">Install</p>
-      <h2>Two clicks, then reload YouTube</h2>
+      <h2>Install</h2>
       <div class="cards">
-        <a class="card" href={firefox}><h3>Firefox</h3><p>Version 128 or later, from Firefox Add-ons.</p></a>
-        <a class="card" href={chrome}><h3>Chrome</h3><p>Chrome, Edge, Brave and other Chromium browsers.</p></a>
-        <a class="card" href={`${base}docs/installation/#build-from-source`}><h3>From source</h3><p><code>npm i && npm run build</code>, then load <code>dist/</code>.</p></a>
+        <a class="card" href={firefox}><Fragment set:html={icon(icons.firefox)} /><h3>Firefox</h3><p>Version 128 or later, from Firefox Add-ons.</p></a>
+        <a class="card" href={chrome}><Fragment set:html={icon(icons.chrome)} /><h3>Chrome</h3><p>Chrome, Edge, Brave and other Chromium browsers.</p></a>
+        <a class="card" href={`${base}docs/installation/#build-from-source`}><Fragment set:html={icon(icons.github)} /><h3>From source</h3><p><code>npm i && npm run build</code>, then load <code>dist/</code>.</p></a>
       </div>
     </section>
   </main>
 
   <footer class="wrap foot">
     <span>Kempt for YouTube · <a href={`${repo}/blob/main/LICENSE`}>MIT License</a> · <a href={sponsor}>Sponsor</a></span>
-    <span>Not affiliated with YouTube or Google.</span>
+    <span>Not affiliated with or endorsed by YouTube or Google. YouTube is a trademark of Google LLC.</span>
   </footer>
 
   <script>
@@ -217,6 +230,7 @@ const facts = [
 
   /* Hero */
   .hero { text-align: center; padding: 96px 0 72px; }
+  .hero .mark { display: block; margin: 0 auto 24px; width: 88px; height: 88px; } /* logo slot: swap public/logo.svg */
   .hero h1 { font-size: clamp(56px, 10vw, 96px); line-height: 1; font-weight: 700; letter-spacing: -0.05em; }
   .lead { color: var(--muted); font-size: 19px; margin: 20px auto 32px; max-width: 520px; }
   .buttons { display: flex; gap: 10px; justify-content: center; }
@@ -277,11 +291,12 @@ const facts = [
 
   /* Install */
   .install { padding-bottom: 120px; }
-  .install h2 { font-size: clamp(28px, 4vw, 40px); margin-bottom: 32px; }
-  .install .kicker { margin-bottom: 16px; }
+  .install h2 { font-size: clamp(28px, 4vw, 40px); margin: 120px 0 32px; }
   .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .card { padding: 24px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); transition: border-color .15s ease; }
   .card:hover { border-color: var(--accent); }
+  .card-icon { display: block; color: var(--muted); margin-bottom: 16px; transition: color .15s ease; }
+  .card:hover .card-icon { color: var(--fg); }
   .card h3 { font-size: 18px; }
   .card p { color: var(--muted); font-size: 14px; margin-top: 6px; }
   @media (max-width: 760px) { .cards { grid-template-columns: 1fr; } }
@@ -291,6 +306,6 @@ const facts = [
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .tl-head::before, .btn, .card { transition: none; }
+    .tl-head::before, .btn, .card, .card-icon { transition: none; }
   }
 </style>

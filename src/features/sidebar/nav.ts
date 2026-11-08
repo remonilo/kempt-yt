@@ -19,8 +19,8 @@ export interface Section {
 
 export interface Row {
   entry: Entry;
-  /** 'playlists' = fetched on first open. */
-  children?: Entry[] | 'playlists';
+  /** 'playlists' and 'collections' = read on first open. */
+  children?: Entry[] | 'playlists' | 'collections';
   toggle?: boolean;
 }
 
@@ -31,10 +31,12 @@ export interface Nav {
 
 export const EXPLORE = 'kyt:EXPLORE';
 
-/** A sub-page of a channel counts as the channel. */
-export function isHere(url: string, { pathname: here, search }: { pathname: string; search: string }): boolean {
+/** A sub-page of a channel counts as the channel. Hashes (Collections) must match. */
+export function isHere(url: string, { pathname: here, search, hash }: { pathname: string; search: string; hash: string }): boolean {
   if (!url.startsWith('/')) return false;
-  const [path, query] = url.split('?');
+  const [page, want = ''] = url.split('#');
+  if ((want && `#${want}`) !== hash) return false;
+  const [path, query] = page.split('?');
   if (path !== here && (path === '/' || !here.startsWith(path.endsWith('/') ? path : `${path}/`))) return false; // Shorts: /shorts/
   const params = new URLSearchParams(search);
   return [...new URLSearchParams(query)].every(([k, v]) => params.get(k) === v);
@@ -48,9 +50,10 @@ const rank = (e: Entry) => {
   const i = LIBRARY.findIndex((t) => is(e, t));
   return i < 0 ? LIBRARY.length : i;
 };
-const rows = (...r: (Row | false | undefined)[]) => r.filter((x): x is Row => !!x);
+const rows = (...r: (Row | false | null | undefined)[]) => r.filter((x): x is Row => !!x);
 
-export function buildNav(sections: Section[]): Nav {
+/** `collections`: the Collections row under Subscriptions (signed in, subs-tabs on), else null. */
+export function buildNav(sections: Section[], collections: Entry | null = null): Nav {
   const moreAt = sections.findIndex((s) => s.entries.some((e) => is(e, 'YOUTUBE_')));
   const top = moreAt < 0 ? sections : sections.slice(0, moreAt);
   const tail = moreAt < 0 ? [] : sections.slice(moreAt);
@@ -80,7 +83,10 @@ export function buildNav(sections: Section[]): Nav {
       },
     ),
     library.map((entry) => ({ entry, children: is(entry, 'PLAYLISTS') ? ('playlists' as const) : undefined })),
-    rows(subsHead && { entry: subsHead, children: channels.length ? channels : undefined }),
+    rows(
+      subsHead && { entry: subsHead, children: channels.length ? channels : undefined },
+      collections && channels.length > 0 && { entry: collections, children: 'collections' },
+    ),
   ].filter((g) => g.length);
 
   return { groups, more: tail.map((s) => s.entries).filter((g) => g.length) };

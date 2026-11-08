@@ -1,5 +1,6 @@
 // Screenshot of the popup for the README and site: dist/popup.html in headless Firefox with a stubbed chrome API.
 // usage: node scripts/popup-shot.mjs [out.png] [--light] [--scale=3] [--open=sidebar,grid] [--height=N]
+//   --hover=<selector> hovers that element before the shot (e.g. .kp-icon-link.star).
 //   --tab=feeds shows that group's tab (look, navigation, watch, feeds).
 //   --scroll=N scrolls the tab's content by N px.
 //   --open expands the rows whose label contains those words; --height crops the shot (default: the whole popup).
@@ -54,6 +55,11 @@ try {
   const height = Number(flag('height') ?? (await page.evaluate(() => document.documentElement.scrollHeight)));
   await page.setViewport({ width: 360, height, deviceScaleFactor: Number(flag('scale') ?? 3) });
   if (flag('scroll')) await page.evaluate((y) => document.getElementById('app').scrollTo(0, y), Number(flag('scroll')));
+  if (flag('hover')) {
+    // page.hover hangs under Firefox BiDi; moving the mouse to the element's centre works.
+    const r = await page.evaluate((s) => { const b = document.querySelector(s)?.getBoundingClientRect(); return b && [b.x + b.width / 2, b.y + b.height / 2]; }, flag('hover'));
+    if (r) await page.mouse.move(r[0], r[1]);
+  }
   await new Promise((r) => setTimeout(r, 300));
   await page.screenshot({ path: out });
   console.log('saved', out, `360x${height}`, 'opened:', opened.join(',') || 'none');
