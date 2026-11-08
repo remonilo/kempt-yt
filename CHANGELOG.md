@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.0.0](https://github.com/remonilo/kempt-yt/compare/v0.11.0...v1.0.0) (2026-11-08)
+
+
+### Features
+
+* broom logo, brand assets and fresh screenshots ([22a2389](https://github.com/remonilo/kempt-yt/commit/22a2389940dcc6c01c5177098600f19baefabd49))
+* Collections, channel groups with their own feed ([351b3c5](https://github.com/remonilo/kempt-yt/commit/351b3c5abd97ed77d003209ecc449dcc3c7a82fb))
+
+
+### Bug Fixes
+
+* boat water color stops at the end of SponsorBlock segments ([fab4602](https://github.com/remonilo/kempt-yt/commit/fab46023e90f2110a6239db9f1cb5d00f0cd8792))
+* skip missing YouTube nodes ([d38b509](https://github.com/remonilo/kempt-yt/commit/d38b5097373b89b9301c0203918a754451bf962a))
+* skip missing YouTube nodes and reshaped guide data ([526f045](https://github.com/remonilo/kempt-yt/commit/526f04549a92a747587ec55f13c384a92fccec68))
+
 ## [0.11.0](https://github.com/remonilo/kempt-yt/compare/v0.10.0...v0.11.0) (2026-11-06)
 
 
