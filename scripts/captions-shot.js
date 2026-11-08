@@ -1,6 +1,7 @@
 // captions-chrome.mjs eval for the captions store shot: skips the ad, turns on captions, pauses on a frame with picture.
 // DPR=2 node scripts/captions-chrome.mjs 'https://www.youtube.com/watch?v=GdzdAWAU9WY' scripts/captions-shot.js
 // then crop the player with the returned rect x2: magick samples/captions-chrome.png -crop WxH+X+Y +repage out.png
+document.documentElement.setAttribute('kyt-captions-style', 'blur'); // the store shot shows the Blur style
 const p = document.querySelector('#movie_player'); const v = p.querySelector('video');
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
 v.muted = true; v.play();
