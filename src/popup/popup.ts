@@ -271,9 +271,9 @@ for (const b of tabs.el.querySelectorAll('button')) b.role = 'tab';
 const store = chrome.runtime.getURL('').startsWith('moz-extension:')
   ? 'https://addons.mozilla.org/firefox/addon/kempt-for-youtube/reviews/'
   : 'https://chromewebstore.google.com/detail/kempt-for-youtube/dpiheahglgggkdjcgdkiogpmhbmppfmg/reviews';
-const link = (cls: string, label: string, href: string) =>
-  Object.assign(el('a', `kp-icon-link ${cls}`, icon(cls)), { href, target: '_blank', rel: 'noopener', title: label, ariaLabel: label });
-const links = el('nav', 'kp-links', link('star', 'Rate Kempt', store), link('heart', 'Sponsor', 'https://github.com/sponsors/remonilo'));
+const link = (cls: string, label: string, title: string, href: string) =>
+  Object.assign(el('a', `kp-icon-link ${cls}`, icon(cls), label), { href, target: '_blank', rel: 'noopener', title });
+const links = el('nav', 'kp-links', link('star', 'Rate', 'Rate Kempt', store), link('heart', 'Sponsor', 'Sponsor on GitHub', 'https://github.com/sponsors/remonilo'));
 document.querySelector('.kp-header')!.append(links, tabs.el);
 const first = localStorage.getItem('kp-tab') ?? 'look';
 const start = first in GROUPS ? first : 'look';

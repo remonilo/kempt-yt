@@ -1,7 +1,9 @@
 # Store listing (proposal)
 
-Copy for the Chrome Web Store and Firefox Add-ons (AMO) pages. Images in this folder come from
-`node scripts/store-art.mjs` (captioned) and `--plain` (full bleed); see `store/preview.html` for both stores laid out.
+Copy for the Chrome Web Store and Firefox Add-ons (AMO) pages. The screenshots and promo tiles are designed in
+PhotoCraft (`~/Documents/PhotoCraft/kempt-store/`, built by `node scripts/store-pcraft.mjs`) and exported here with
+`node scripts/store-pcraft.mjs --export`. The `-plain` files (full bleed) come from `node scripts/store-art.mjs --plain`.
+See `store/preview.html` for both stores laid out.
 
 Rules this copy follows (sources in `samples/listing-research.md`): no superlatives, no other extensions or brands
 named, no keyword lists, "for YouTube" naming plus a trademark line, permissions explained in plain words.
@@ -98,8 +100,8 @@ Firefox: `data_collection_permissions: { required: ["none"] }` is already in `ma
 
 1. `screenshot-1-home.png` Home grid with the sidebar ("Your accent color")
 2. `screenshot-2-watch.png` Watch page with the Comments tab ("Tabs beside the video")
-3. `screenshot-3-captions.png` Captions ("Resizable captions")
-4. `screenshot-4-subscriptions.png` Subscriptions timeline ("Subscriptions by date")
+3. `screenshot-3-subscriptions.png` Subscriptions timeline, light theme ("Subscriptions by date")
+4. `screenshot-4-collections.png` Collections tab ("Collections")
 5. `screenshot-5-settings.png` The popup over Home ("Settings popup")
 
 AMO takes more than five; the same five work there (it shows them at 1.6:1, which 1280x800 is).
@@ -109,10 +111,6 @@ and `promo-marquee-1400x560.png` (optional, only used if Google features the ext
 
 ## Open points for you
 
-- Screenshots are placeholders (decision 53): they get reshot on your own profile after Collections ships, each cropped to
-  the feature it shows, and Collections gets its own shot.
-- The captions shot is from logged-out Chromium with a stand-in caption track (headless Firefox never loads
-  captions). The styling is the real one; the words are not from the video.
 - The store icon (`src/brand/128.png`) fills the whole 128x128 square. Chrome asks for 96x96 artwork with 16 px of
   transparent padding, otherwise the icon looks larger than its neighbours in the store grid. A padded copy for the
   store upload is `store/icon-128-padded.png`.

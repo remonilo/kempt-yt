@@ -1,8 +1,8 @@
 // Store images from the screenshot masters: five 1280x800 screenshots, the 440x280 small promo tile and the
 // 1400x560 marquee, rendered from HTML in headless Firefox so the type matches the extension (Plus Jakarta Sans).
-// usage: node scripts/store-art.mjs [--in=samples/shots] [--out=store] [--plain]
+// usage: node scripts/store-art.mjs [--in=samples/shots] [--out=samples/store-art, or store with --plain] [--plain]
 //   --plain writes the screenshots full bleed (no caption bar), the other proposal.
-// Masters come from scripts/shots.mjs (signed in, 2880x1800), scripts/captions-shot.js and scripts/popup-shot.mjs.
+// Masters come from scripts/shots.mjs (signed in to ~/.kempt-shots, 2880x1800; subs with --light) and scripts/popup-shot.mjs.
 import puppeteer from 'puppeteer-core';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
@@ -10,7 +10,8 @@ import { pathToFileURL } from 'node:url';
 
 const flag = (name) => process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
 const src = resolve(flag('in') ?? 'samples/shots');
-const out = flag('out') ?? 'store';
+// The captioned set is a draft: the store files are designed in PhotoCraft (scripts/store-pcraft.mjs --export).
+const out = flag('out') ?? (process.argv.includes('--plain') ? 'store' : 'samples/store-art');
 const plain = process.argv.includes('--plain');
 const url = (p) => pathToFileURL(resolve(p)).href;
 const shot = (name) => pathToFileURL(join(src, `${name}.png`)).href;
@@ -24,24 +25,26 @@ const base = `
 `;
 
 // Caption bar on top, the shot below with rounded top corners, cut off by the bottom edge like a window rising out.
-const captioned = (title, sub, img, { pos = 'top', crop = '', style = '' } = {}) => `
+// box: [x, y, width] of the 1440x900 master (CSS px) to fill the 1120px-wide shot with, so it shows the feature, not a whole window.
+const boxBg = ([x, y, w]) => { const k = 1120 / w; return `${-x * k}px ${-y * k}px / ${1440 * k}px auto`; };
+const captioned = (title, sub, img, { pos = 'top', crop = '', style = '', box } = {}) => `
   <style>${base}
     body { width: 1280px; height: 800px; position: relative; }
     header { position: relative; text-align: center; padding-top: 46px; }
     h1 { font-size: 46px; font-weight: 700; letter-spacing: -0.02em; }
     p { margin-top: 10px; font-size: 21px; color: #b8b8b8; font-weight: 500; }
     .shot { position: absolute; left: 80px; right: 80px; top: 196px; height: 640px; border-radius: 16px 16px 0 0; overflow: hidden;
-      box-shadow: 0 0 0 1px #ffffff1f, 0 30px 80px #000c; background: url(${img}) ${pos} / ${crop || 'cover'} no-repeat; ${style} }
+      box-shadow: 0 0 0 1px #ffffff1f, 0 30px 80px #000c; background: url(${img}) ${box ? boxBg(box) : `${pos} / ${crop || 'cover'}`} no-repeat; ${style} }
   </style>
   <div class="glow"></div><header><h1>${title}</h1><p>${sub}</p></header><div class="shot"></div>`;
 
 const full = (img) => `<style>${base} body { width: 1280px; height: 800px; background: url(${img}) center / cover; }</style>`;
 
 const SHOTS = [
-  ['1-home', 'Your accent color', 'Chips, tabs, the progress bar and Subscribe use the color you pick.', shot('home')],
-  ['2-watch', 'Tabs beside the video', 'Info, Comments, Videos and Live chat share one panel next to the player.', shot('comments')],
-  ['3-captions', 'Resizable captions', 'Captions in your font, from 50 to 200%.', shot('captions-player'), { pos: 'bottom', style: 'height: auto; bottom: 0; border-radius: 16px 16px 0 0' }],
-  ['4-subscriptions', 'Subscriptions by date', 'Videos under date headers, with type filters and search.', shot('subs')],
+  ['1-home', 'Your accent color', 'Chips, tabs, the progress bar and Subscribe use the color you pick.', shot('home-accent-f97316'), { box: [0, 0, 1000] }],
+  ['2-watch', 'Tabs beside the video', 'Info, Comments, Videos and Live chat share one panel next to the player.', shot('comments'), { box: [300, 56, 1140] }],
+  ['3-subscriptions', 'Subscriptions by date', 'Videos under date headers, with type filters and search.', shot('subs-light'), { box: [240, 0, 1180] }],
+  ['4-collections', 'Collections', 'Group channels into feeds of their own.', shot('collections'), { box: [0, 56, 1420] }],
   ['5-settings', 'Settings popup', 'Each feature turns off on its own, without a reload.', null],
 ];
 

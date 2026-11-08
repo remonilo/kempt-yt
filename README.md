@@ -21,7 +21,7 @@
   <a href="https://github.com/remonilo/kempt-yt/commits/main"><img src="https://img.shields.io/github/last-commit/remonilo/kempt-yt?style=flat-square" alt="Last commit"></a>
 </p>
 
-### Restyles YouTube in your accent color.
+### This styles and tidies Youtube.
 
 Free and open source, for Firefox and Chrome.
 
@@ -39,13 +39,13 @@ Free and open source, for Firefox and Chrome.
         <img src="site/src/assets/screenshots/timeline.png" alt="Subscriptions on a timeline with date headers" />
       </td>
       <td width="50%">
-        <img src="site/src/assets/screenshots/sidebar.png" alt="Sidebar with Explore and Subscriptions open" />
+        <img src="site/src/assets/screenshots/sidebar.png" alt="Sidebar with Subscriptions open" />
       </td>
     </tr>
   </table>
 </div>
 <p align="center">
-  <sub>Follows YouTube's light and dark theme. The accent is yours to pick.</sub>
+  <sub>Follows YouTube's light and dark theme. The accent color is changeable.</sub>
 </p>
 <br>
 
@@ -62,17 +62,17 @@ Free and open source, for Firefox and Chrome.
 - Collections: your own groups of channels, each with its own feed and a sidebar entry
   - History gets the same date headers
   - optionally open Subscriptions as your Home page
-- Sidebar with dropdowns for Explore, Subscriptions and Playlists
+- Sidebar with dropdowns for Explore, Subscriptions, Collections and Playlists
 - One accent color and one icon set across chips, tabs, the progress bar, Subscribe, buttons and menus
-  - an optional accent logo and progress bar styles
+  - an optional accented logo and progress bar styles
 - Font choice, bundled in the extension: Plus Jakarta Sans by default, or Inter, Geist, Figtree or your system font
-- Grid size for Home, Subscriptions and channels; search results as a grid or a list, with a custom date range
+- Grid size for Home, Subscriptions and channels, and search results as a grid or a list, with a custom date range
 - Shorts links open in the normal player, with a seek bar
 - Shorts hidden by default, plus 22 more switches in the Hide tab
 - Smaller fixes: outlined search bar, Watch later button, comment sort as chips, comment search, Watch later and Share in the notifications panel
 - Each feature turns off on its own, and YouTube's page comes back without a reload. <details> <summary><sup>click to see the popup</sup></summary><img src="site/src/assets/screenshots/popup.png" alt="Kempt popup" width="260" /></details>
 - Labels in 11 languages that follow YouTube's UI language
-- CSS first, no background timers, observers that disconnect once done, and reduced motion respected ([measured](https://remonilo.github.io/kempt-yt/docs/internals/performance/))
+- CSS first, no background timers, observers that disconnect once done, and respereduced motion ([measured](https://remonilo.github.io/kempt-yt/docs/internals/performance/))
 
 ## Quick start
 
@@ -111,10 +111,10 @@ Reload any YouTube tab that was open before.
 
 Kempt collects no data and has no server. It loads no remote code and runs no analytics.
 
-| Permission | Why |
-| --- | --- |
-| `storage` | Saves your settings. Your browser may sync them through your own browser account. |
-| `https://www.youtube.com/*` | Runs Kempt on YouTube. It runs on no other site. |
+| Permission                  | Why                                                                               |
+| --------------------------- | --------------------------------------------------------------------------------- |
+| `storage`                   | Saves your settings. Your browser may sync them through your own browser account. |
+| `https://www.youtube.com/*` | Runs Kempt on YouTube. It runs on no other site.                                  |
 
 The few requests it makes go to YouTube with your session, and YouTube's own menus send the same ones. [Details][privacy_link].
 
@@ -128,7 +128,7 @@ npm run check    # typecheck
 npm test         # node --test
 ```
 
-Kempt is TypeScript with no framework or runtime dependencies. A feature is one folder in `src/features/<id>/` plus one line in `src/features/index.ts`. Start with [Adding a feature][add_link]. [YouTube quirks][quirks_link] records the lessons learned about YouTube's DOM.
+Kempt is TypeScript with no framework or runtime dependencies. A feature is one folder in `src/features/<id>/` and one line in `src/features/index.ts`. Start with [Adding a feature][add_link]. [YouTube quirks][quirks_link] records the lessons learned about YouTube's DOM.
 
 A bug report helps most when it includes your browser, window width, YouTube language, signed in or out, and the steps to reproduce.
 

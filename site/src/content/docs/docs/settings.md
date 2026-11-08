@@ -49,7 +49,7 @@ The dot in the Accent color row opens a picker: swatches, a hue and saturation w
 
 ## Sync and reset
 
-Kempt saves settings with `chrome.storage.sync`, so they follow your browser account to other computers. The popup footer shows the version and a **Reset all** button; click it twice to confirm. The two buttons at the top of the popup open the store page, to rate Kempt, and GitHub Sponsors.
+Kempt saves settings with `chrome.storage.sync`, so they follow your browser account to other computers. The popup footer shows the version and a **Reset all** button; click it twice to confirm. The **Rate** and **Sponsor** buttons at the top of the popup open the store page and GitHub Sponsors.
 
 ## How it works
 

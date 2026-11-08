@@ -53,7 +53,7 @@
 </section>
 
 <script type="module">
-  const names = ['1-home', '2-watch', '3-captions', '4-subscriptions', '5-settings'];
+  const names = ['1-home', '2-watch', '3-subscriptions', '4-collections', '5-settings'];
   window.swap = (v) => document.querySelectorAll('[data-shots]').forEach((el) => {
     el.replaceChildren(...names.map((n) => Object.assign(new Image(), { src: `screenshot-${n}${v}.png`, alt: '' })));
   });

@@ -11,7 +11,7 @@ The sidebar becomes three short groups:
 2. History, Liked videos, Downloads, Watch later, Playlists
 3. Subscriptions
 
-Explore, Playlists and Subscriptions are dropdowns. Their children sit one step in, under a thin guide line. Channels with new uploads get YouTube's blue dot, and so does the closed Subscriptions row.
+Explore, Playlists and Subscriptions are dropdowns. Their children sit one step in, under a thin guide line. Channels with new uploads get YouTube's blue dot, and the closed Subscriptions row shows it on its icon.
 
 At the bottom, the Google LLC line opens **More from YouTube** (Music, Kids) and the footer links.
 
