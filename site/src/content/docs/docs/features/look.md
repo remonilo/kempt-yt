@@ -3,7 +3,7 @@ title: Look
 description: Accent color, font, tinted hover and selection, Subscribe button and search bar.
 ---
 
-![Search results with the outlined search bar, filter chips and accent](../../../../assets/screenshots/look.png)
+![A watch page in a blue accent: logo, Subscribe, chips and progress bar](../../../../assets/screenshots/look.png)
 
 The Look tab's switches make YouTube's surfaces agree with each other. Most are CSS only.
 

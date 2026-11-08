@@ -3,7 +3,7 @@ title: Search, playlists and Library
 description: Filter chips and a grid on search results, a redesigned playlist page, and Library and Downloads in History's layout.
 ---
 
-![Search results with filter chips in a grid](../../../../assets/screenshots/look.png)
+![Search results with filter chips in a grid](../../../../assets/screenshots/search.png)
 
 Three Feeds switches restyle the pages you reach from the sidebar and the search box. All three are on by default.
 
