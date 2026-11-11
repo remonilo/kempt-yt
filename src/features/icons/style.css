@@ -366,6 +366,13 @@ html[kyt-icons] .ytp-fullscreen-quick-actions {
   & dislike-button-view-model .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-dislike); }
   & dislike-button-view-model [aria-pressed="true"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-dislike-selected); }
   & [kyt-icon="COMMENT"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-comments); }
+  /* A Comments variant renders no icon element (empty slot even in plain YouTube), so ours goes on the button. */
+  & [kyt-icon="YTICON_OUTLINE_TEXT_BUBBLE_S24"] .ytSpecButtonShapeNextIcon { display: none; }
+  & [kyt-icon="YTICON_OUTLINE_TEXT_BUBBLE_S24"] button::before {
+    content: ""; flex: none; width: 24px; height: 24px;
+    background-color: currentColor;
+    mask: var(--kyt-i-comments) center / contain no-repeat;
+  }
   & [kyt-icon="SHARE"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-share); }
   & [kyt-icon="SPARK"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-ask); }
   & [kyt-icon="MORE_HORIZ"] .ytSpecButtonShapeNextIcon { --kyt-i: var(--kyt-i-more); rotate: 90deg; }

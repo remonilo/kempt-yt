@@ -1,1 +1,1 @@
-html[kyt-hide-comments] :is(ytd-watch-flexy #comments, ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-comments-section"], .ytp-fullscreen-quick-actions [kyt-icon="COMMENT"]) { display: none !important; }
+html[kyt-hide-comments] :is(ytd-watch-flexy #comments, ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-comments-section"], .ytp-fullscreen-quick-actions :is([kyt-icon="COMMENT"], [kyt-icon="YTICON_OUTLINE_TEXT_BUBBLE_S24"])) { display: none !important; }
