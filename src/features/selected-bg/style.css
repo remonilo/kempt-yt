@@ -41,8 +41,9 @@ html[kyt-selected-bg] ytd-masthead yt-icon-button:hover {
 html[kyt-selected-bg] ytd-masthead #buttons > ytd-notification-topbar-button-renderer:hover {
   background-color: transparent !important;
 }
-/* Hiding yt-interaction also drops the keyboard focus ring on these buttons; use the browser's own ring, as Create does. */
-html[kyt-selected-bg] ytd-masthead yt-icon-button > button:focus-visible {
+/* Hiding yt-interaction also drops the keyboard focus ring on these buttons; use the browser's own ring, as Create does.
+   Only after Tab (index.ts): YouTube's scripted focus on ☰ also matches :focus-visible. */
+html[kyt-selected-bg][kyt-selected-bg-tab] ytd-masthead yt-icon-button > button:focus-visible {
   border-radius: 50%;
   outline: auto;
 }

@@ -31,7 +31,7 @@ Short comments in the source point here. Each entry is a constraint YouTube impo
 - YouTube stacks its own hover layers: 10% white on the guide's `#endpoint`, a 1px rim on active rows, 20% white on the notifications button. Clear each on its own element. A broad `#buttons > *:hover` rule also kills Kempt's own Settings hover.
 - Old `yt-icon-button` hovers through `yt-interaction`; button-shape components hover differently. Cover both.
 - The search box gains a second magnifier on focus (Kempt hides it). The grey mic circle is the `#voice-search-button` wrapper.
-- Submitting a search moves focus from the box to ☰ by script, so ☰ shows the keyboard focus ring (`:focus-visible`) after a typed search. `search-bar` blurs ☰ when focus arrives from the search box; Tab never takes that path.
+- YouTube focuses ☰ by script on page load and after a search. Firefox counts that focus as `:focus-visible`, so a ring drawn on `:focus-visible` shows without any Tab press. `selected-bg` draws its masthead ring only after a Tab keydown, until the next pointerdown.
 - Setting `input.value` doesn't open search suggestions. Only real key events do (`ext.mjs --type`).
 
 ## Sidebar
