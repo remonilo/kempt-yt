@@ -7,7 +7,7 @@ The seek bar takes one of four playful styles. In each, the played part is the a
 
 | Style | Looks like |
 | --- | --- |
-| Wave | A thin sine wave; the accent line swallows the dark one as the video plays |
+| Wave | A thin sine wave; the accent line swallows the dark one as the video plays, with an upright pill for a head |
 | Snake | A thick snake with eyes and a flicking tongue; each chapter start ahead of it is an apple |
 | Comet | A glowing line with sparkles streaming back and a turning star for a head |
 | Paper boat | The played part is water with a lighter crest, and a paper boat rocks on it |

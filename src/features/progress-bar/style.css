@@ -99,6 +99,14 @@ html[kyt-progress-bar-drift] .html5-video-player.playing-mode:not(.ytp-autohide)
   html[kyt-progress-bar-drift] :is(.kyt-wave, .kyt-wave i, .kyt-seg, #previewbar > li)::before { animation: none; }
 }
 
+/* Wave: YouTube's round scrubber becomes a Material You style upright pill, centred in the 12px container. YouTube's
+   own hover scale (1.67) still applies. */
+html[kyt-progress-bar-style="wave"] .ytp-scrubber-button {
+  width: 4px;
+  margin-left: 4px;
+  border-radius: 2px;
+}
+
 /* Heads are svg backgrounds, not clip-paths: a clip-path can move Firefox's transform animation to the main thread.
    Other styles: a straight track, the played layer drawn by --kyt-wave, and a head on the scrubber container (always
    there while the controls show, unlike YouTube's button, which only scales in on hover). The button stays for its
