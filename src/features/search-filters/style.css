@@ -219,6 +219,26 @@ html[kyt-search-filters][kyt-search-filters-layout="grid"] ytd-search ytd-sectio
     align-items: start;
   }
   /* Cards: thumbnail on top, then title, channel, views and age; no description snippet or chapters. */
+  /* Card hover: the accent-tinted box a little past the card, as on Collections (subs-tabs .kyt-col-video). */
+  & :is(ytd-item-section-renderer > #contents, ytd-vertical-list-renderer > #items) > ytd-video-renderer,
+  & > ytd-item-section-renderer > #contents > yt-lockup-view-model {
+    position: relative;
+    isolation: isolate;
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      z-index: -1;
+      border-radius: 16px;
+      background: var(--kyt-hover-bg);
+      opacity: 0;
+      transition: opacity 150ms;
+      pointer-events: none;
+    }
+    &:hover::before {
+      opacity: 1;
+    }
+  }
   & :is(ytd-item-section-renderer > #contents, ytd-vertical-list-renderer > #items) > ytd-video-renderer {
     min-width: 0;
     margin: 0 0 32px;

@@ -13,7 +13,7 @@ Three Feeds switches restyle the pages you reach from the sidebar and the search
 
 Upload date also offers a **Custom range**: exact days, or whole years picked as chips. YouTube honours `after:` and `before:` in the search query, so Kempt adds those to your search and the range survives sharing the URL.
 
-Results show as a grid or a list (option **Results layout**, default Grid, or the chips at the end of the row). Shelves of videos inside the results join the grid.
+Results show as a grid or a list (option **Results layout**, default Grid, or the chips at the end of the row). Shelves of videos inside the results join the grid. Hovering a grid card tints it in the accent, as on Collections.
 
 ## Playlist pages
 
