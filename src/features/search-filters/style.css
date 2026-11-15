@@ -180,6 +180,11 @@ html[kyt-search-filters] .kyt-range-actions {
   }
 }
 
+/* Showing results for / Did you mean: sit where the first result would, not 24px further down. */
+html[kyt-search-filters] ytd-search yt-search-query-correction {
+  margin-top: 0;
+}
+
 /* Grid layout, like Home: video and playlist cards side by side. Every results section (each continuation adds one)
    flattens into one grid on the section list, so a partial last row never leaves a gap before the next page of
    results. Everything else (channels, shelves, ads, the spinner) spans the full row and goes below the cards
@@ -202,6 +207,10 @@ html[kyt-search-filters][kyt-search-filters-layout="grid"] ytd-search ytd-sectio
   /* The grid has no row gap (cards carry 32px below), so a channel row would touch the cards under it. */
   & ytd-item-section-renderer > #contents > ytd-channel-renderer {
     margin-bottom: 32px;
+  }
+  /* Showing results for / Did you mean: YouTube's list keeps 16px under it. */
+  & ytd-item-section-renderer > #contents > :has(> yt-search-query-correction) {
+    margin-bottom: 16px;
   }
   & ytd-shelf-renderer ytd-vertical-list-renderer > #items {
     display: grid;
