@@ -10,6 +10,7 @@ export const S = {
   guideRenderer: 'ytd-guide-renderer',
   miniGuide: 'ytd-mini-guide-renderer',
   guideButton: 'ytd-masthead #guide-button button', // ☰
+  searchbox: 'ytd-masthead yt-searchbox',
   channelTabs: 'ytd-browse[page-subtype="channels"] yt-tab-group-shape',
   channelSubMenu: 'ytd-browse[page-subtype="channels"]:not([hidden]) ytd-channel-sub-menu-renderer', // Playlists tab: Sort by
   sortItems: '#sort-menu tp-yt-paper-listbox > a', // inside channelSubMenu or a comments header
