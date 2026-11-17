@@ -21,6 +21,14 @@ export const progressBar: Feature = {
     const player = bar?.closest<HTMLElement>('#movie_player');
     if (!bar || !player) return;
 
+    const drifts = (e: Element) =>
+      e.getAnimations({ subtree: true }).filter((a) => a instanceof CSSAnimation && a.animationName === 'kyt-wave-drift');
+    // Puts layers on ref's clock once both are ready: copying into a pending animation would lag by a frame.
+    const align = (ref: Animation | undefined, layers: Animation[]) => {
+      if (ref) for (const a of layers) if (a !== ref)
+        void Promise.all([ref.ready, a.ready]).then(() => { a.currentTime = ref.currentTime; }, () => {}); // cancelled: the layer is gone
+    };
+
     // Chapters split the bar into segments. Shifting each segment's wave by its x (mod one wavelength, done in
     // style.css) keeps one continuous sine across the gaps.
     const sync = () => {
@@ -78,18 +86,22 @@ export const progressBar: Feature = {
       // Layers added later (chapter lists, SponsorBlock rerenders) start their drift at 0: put them on the clock of
       // the existing ones so every piece stays in phase.
       if (fresh.length) {
-        const drifts = (e: Element) =>
-          e.getAnimations({ subtree: true }).filter((a) => a instanceof CSSAnimation && a.animationName === 'kyt-wave-drift');
         const old = [...bar.querySelectorAll('.kyt-wave')].find((w) => !fresh.includes(w));
-        const ref = old && drifts(old)[0];
-        // After both are ready: a running ref has a startTime, while copying currentTime into a pending animation
-        // would lag by a frame.
-        if (ref) for (const e of fresh) for (const a of drifts(e))
-          void Promise.all([ref.ready, a.ready]).then(() => {
-            if (ref.startTime != null) a.startTime = ref.startTime; else a.currentTime = ref.currentTime;
-          }, () => {}); // cancelled: the layer is gone
+        align(old && drifts(old)[0], fresh.flatMap(drifts));
       }
     };
+
+    // The drift pauses whenever the controls hide or the video pauses (style.css). Firefox doesn't always resume every
+    // layer on the same frame, so over a long session the track, played wave and SponsorBlock pieces slide apart:
+    // realign them all on each pause/resume.
+    let running = false;
+    observe(player, { attributes: true, attributeFilter: ['class'] }, () => {
+      const now = player.matches('.playing-mode:not(.ytp-autohide)');
+      if (now === running) return;
+      running = now;
+      const all = drifts(bar);
+      align(all[0], all);
+    }, signal);
 
     // Media events don't bubble: capture them on the player. pointermove with a button held covers scrubbing,
     // where the bar moves before the video does; plain hovering changes nothing.

@@ -80,6 +80,8 @@ Auto-captions use a rollup window (`.ytp-caption-window-rollup`, permanent). `.y
 
 `#movie_player` can hold two `.ytp-progress-bar`: the real one in `.ytp-chrome-bottom`, and a hidden 0x0 spare that comes first in DOM order. A bare `.ytp-progress-bar` selector matches the spare. Scope to `#movie_player .ytp-chrome-bottom .ytp-progress-bar`. The Home hover preview (`#inline-preview-player`) is a second player with no bar.
 
+YouTube squashes `.ytp-progress-list` to `scaleY(0.667)` (fullscreen `.ytp-big-mode`: 0.625) and lifts it on `.ytp-progress-bar-container:hover`, `.ytp-drag` and `.ytp-touch-mode`. The container also holds the heat map above the bar, so `.ytp-progress-bar:hover` misses part of that. Anything that counters the squash must use the same triggers.
+
 ## Timeline
 
 - YouTube matches the Subscriptions grid's children to its data by index whenever the row count changes (sidebar toggle, resize). Any Kempt node between YouTube's items shifts every index, and YouTube then moves every card in the feed (a freeze of about a second). Kempt's toolbar and headers sit after all of YouTube's children and flex `order` draws them in place.

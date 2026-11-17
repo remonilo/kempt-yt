@@ -30,10 +30,13 @@ html[kyt-progress-bar] {
    mask ancestor to the main thread (measured ~40% of a core with the controls showing). No transition, so a seek
    doesn't sweep every chapter at once. */
 /* YouTube squashes the lists to 0.667 tall at rest and stretches the hovered chapter to 1.667 on hover. Undo both
-   (same 0.2s as YouTube's list transition): every chapter keeps one size, matching the unscaled SponsorBlock pieces. */
+   (same 0.2s as YouTube's list transition): every chapter keeps one size, matching the unscaled SponsorBlock pieces.
+   Same triggers as YouTube's: the container is taller than the bar, and hovering only its edge already unsquashes the
+   lists (a .ytp-progress-bar:hover trigger left the wave 1.5x bold there). Fullscreen squashes to 0.625. */
 html[kyt-progress-bar] .kyt-wave { scale: 1 1.5; transition: scale 0.2s; }
-html[kyt-progress-bar] .ytp-progress-bar:hover .kyt-wave { scale: 1; }
-html[kyt-progress-bar] .ytp-progress-bar:hover .ytp-exp-chapter-hover-effect .kyt-wave { scale: 1 0.6; }
+html[kyt-progress-bar] .ytp-big-mode .kyt-wave { scale: 1 1.6; }
+html[kyt-progress-bar] :is(.ytp-drag, .ytp-touch-mode, .ytp-progress-bar-container:hover) .kyt-wave { scale: 1; }
+html[kyt-progress-bar] :is(.ytp-drag, .ytp-touch-mode, .ytp-progress-bar-container:hover) .ytp-exp-chapter-hover-effect .kyt-wave { scale: 1 0.6; }
 .kyt-wave i,
 .kyt-seg {
   position: absolute;
