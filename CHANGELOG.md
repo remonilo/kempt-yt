@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.1.0](https://github.com/remonilo/kempt-yt/compare/v1.0.0...v1.1.0) (2026-11-17)
+
+
+### Features
+
+* **progress-bar:** pill head for the ([9c586a0](https://github.com/remonilo/kempt-yt/commit/9c586a0879112c32dc5c3aed279262b6f9515eb9))
+* **search-filters:** hover ([6bfa5ee](https://github.com/remonilo/kempt-yt/commit/6bfa5ee138e3f5fa62c1448367a2ffbf107afd7d))
+
+
+### Bug Fixes
+
+* **icons:** fullscreen Comments icon on YouTube's new button variant ([3746055](https://github.com/remonilo/kempt-yt/commit/374605588d813a67b1a4d8a62e6b9b1662b5bac0))
+* **progress-bar:** keep wave layers in phase and one size on hover ([a2b6a36](https://github.com/remonilo/kempt-yt/commit/a2b6a361c7a071f94b3052ee2b0afc6d16ee7b71))
+* **search-filters:** query correction spacing under the chips ([9b48974](https://github.com/remonilo/kempt-yt/commit/9b489742090d36cc038077abb32634f19dae88d5))
+* **selected-bg:** masthead focus ring only after Tab ([8373e93](https://github.com/remonilo/kempt-yt/commit/8373e93f682f5c048cdc1d205c03ddef6a1d6229))
+
 ## [1.0.0](https://github.com/remonilo/kempt-yt/compare/v0.11.0...v1.0.0) (2026-11-08)
 
 
